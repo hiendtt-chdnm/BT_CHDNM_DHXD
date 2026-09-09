@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7.1 — Khái niệm Nền Móng & Sự cố</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge-hdr{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:2px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:12px 15px 9px;font-size:14px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 7px;border-radius:4px;margin-right:6px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opt{padding:9px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal-ok{background:var(--Glt)!important;opacity:.6}.mcq-opt.reveal-ok .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:#b71c1c}
+/* Sự cố accordion */
+.sc-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:12px;overflow:hidden}
+.sc-hd{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .12s}
+.sc-hd:hover{background:var(--Plt)}
+.sc-hd.open{background:var(--Plt);border-bottom-color:var(--brd)}
+.sc-icon{font-size:1.4rem;flex-shrink:0}
+.sc-name{font-size:14px;font-weight:700;color:var(--Pdk)}
+.sc-type{font-size:11px;color:var(--muted);margin-top:1px;font-family:var(--mono)}
+.sc-chevron{margin-left:auto;font-size:16px;color:var(--muted);transition:transform .2s}
+.sc-chevron.open{transform:rotate(90deg)}
+.sc-body{display:none;padding:14px 18px 16px}
+.sc-body.open{display:block}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:540px){.sc-grid{grid-template-columns:1fr}}
+.sc-field{background:#F8FBFF;border:1px solid var(--Plt);border-radius:8px;padding:10px 13px}
+.sc-field-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.sc-field-val{font-size:13px;color:var(--text);line-height:1.5}
+.sc-field.full{grid-column:1/-1}
+.sc-lesson{background:var(--Glt);border:1px solid #A5D6A7;border-radius:8px;padding:10px 13px;margin-top:2px}
+.sc-lesson .sc-field-lbl{color:var(--Gdk)}
+.sc-lesson .sc-field-val{color:var(--Gdk);font-weight:500}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+/* Sticky nav */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-p{background:var(--P);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C7.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 7</a>
+    <div class="hdr-title">
+      <h1>7.1 — Khái niệm Nền Móng & Sự cố Công trình</h1>
+      <p>10 câu MCQ khái niệm · 5 tình huống sự cố thực tế</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 7.1 — Khái niệm & Sự cố</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Câu hỏi lý thuyết — <span id="sv-display">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Phần này không sinh số liệu ngẫu nhiên — đáp án cố định</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- PHẦN A: MCQ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-list-check"></i>
+    <div><h2>Phần A — Trắc nghiệm khái niệm & phân loại (10 câu)</h2><p>Chọn đáp án đúng nhất. Giải thích hiện ngay sau khi chọn.</p></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C1</span>Theo định nghĩa kỹ thuật, "Nền" công trình là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,1)"><span class="mkey">A</span><span>Là một bộ phận của kết cấu móng bê tông.</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,1)"><span class="mkey">B</span><span>Là vùng đất đá chịu ảnh hưởng và trực tiếp nhận tải trọng móng truyền xuống.</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,1)"><span class="mkey">C</span><span>Là lớp bê tông lót dưới đáy móng.</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,1)"><span class="mkey">D</span><span>Là phần kết cấu nằm trên mặt đất tự nhiên.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q1">✓ Nền là <b>vùng đất đá</b>, không phải kết cấu — phân biệt với "móng" là bộ phận bê tông/thép. Nền tiếp nhận tải trọng do móng truyền xuống và phân tán vào khối đất xung quanh.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C2</span>Đặc điểm cơ bản nhất của "Móng" so với kết cấu bên trên (cột, tường) là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1)"><span class="mkey">A</span><span>Làm bằng vật liệu nhẹ hơn kết cấu bên trên.</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1)"><span class="mkey">B</span><span>Có kích thước mở rộng hơn để phân phối tải trọng ra diện tích lớn hơn.</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1)"><span class="mkey">C</span><span>Luôn được đặt trực tiếp trên mặt đất tự nhiên.</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1)"><span class="mkey">D</span><span>Không chịu tác động của nước ngầm.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q2">✓ Móng mở rộng hơn cột/tường để tăng diện tích đáy, từ đó giảm áp lực đơn vị q = N/A truyền vào đất xuống mức an toàn.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C3</span>Theo Terzaghi (1943), móng nông được xác định bằng điều kiện nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,1)"><span class="mkey">A</span><span>Chiều sâu chôn móng h<sub>m</sub> &gt; 15m</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,1)"><span class="mkey">B</span><span>Tỷ lệ h<sub>m</sub>/B ≤ 1 (chiều sâu không vượt quá bề rộng đáy móng)</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,1)"><span class="mkey">C</span><span>Tỷ lệ L/B &gt; 10</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,1)"><span class="mkey">D</span><span>Chiều sâu chôn móng h<sub>m</sub> = 5m</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q3">✓ Terzaghi định nghĩa: móng nông khi h<sub>m</sub>/B ≤ 1. Ngược lại h<sub>m</sub>/B &gt; 1 → móng sâu (pile, caisson). Đây là ranh giới kinh điển, thực tế còn dùng thêm tiêu chí D<sub>f</sub>/B theo Meyerhof.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C4</span>Móng bè (raft/mat foundation) thường được ưu tiên sử dụng trong tình huống nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,1)"><span class="mkey">A</span><span>Tải trọng nhỏ, đất rất tốt, tiết kiệm vật liệu.</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,1)"><span class="mkey">B</span><span>Tải trọng lớn phân bố rộng hoặc đất yếu cần tăng diện tích đáy móng.</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,1)"><span class="mkey">C</span><span>Chỉ dùng cho nhà phố 1 tầng ở vùng đồng bằng.</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,1)"><span class="mkey">D</span><span>Khi muốn thi công nhanh nhất.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q4">✓ Móng bè trải toàn bộ diện tích mặt bằng công trình, làm tăng diện tích đáy tối đa → giảm áp lực đơn vị lên nền. Phù hợp khi đất yếu hoặc tải lớn mà không thể dùng cọc.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C5</span>Tải trọng công trình truyền xuống nền đất qua bộ phận nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,1)"><span class="mkey">A</span><span>Tường xây bên ngoài công trình.</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,1)"><span class="mkey">B</span><span>Móng — bộ phận kết cấu dưới cùng của công trình.</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,1)"><span class="mkey">C</span><span>Mái nhà và hệ thống thoát nước mưa.</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,1)"><span class="mkey">D</span><span>Sàn tầng trệt tiếp xúc trực tiếp mặt đất.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q5">✓ Toàn bộ tải trọng (trọng lượng bản thân + hoạt tải + gió + động đất...) tập hợp về cột/tường rồi truyền vào nền qua móng. Đây là chức năng cơ bản của móng.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C6</span>Trạng thái giới hạn nhóm 1 (TTGH-1) trong thiết kế nền móng liên quan đến vấn đề gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,1)"><span class="mkey">A</span><span>Độ lún và nứt trong quá trình sử dụng.</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,1)"><span class="mkey">B</span><span>Cường độ và ổn định: trượt, lật, sụp đổ.</span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,1)"><span class="mkey">C</span><span>Thẩm mỹ bề ngoài của công trình.</span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,1)"><span class="mkey">D</span><span>Tiến độ và phương pháp thi công.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q6">✓ TTGH-1 (về cường độ): kiểm tra trượt, lật, sụp đổ — liên quan an toàn tính mạng. TTGH-2 (về điều kiện khai thác): lún, nứt, rung — liên quan khả năng sử dụng bình thường.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C7</span>Sự cố lún quá mức hoặc nứt công trình khi đang sử dụng thuộc nhóm trạng thái giới hạn nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,2)"><span class="mkey">A</span><span>Nhóm 1 — vì lún có thể dẫn đến sụp đổ.</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,2)"><span class="mkey">B</span><span>Nhóm đặc biệt — chỉ xét với công trình quan trọng.</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,2)"><span class="mkey">C</span><span>Nhóm 2 — liên quan điều kiện khai thác và sử dụng bình thường.</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,2)"><span class="mkey">D</span><span>Nhóm 3 — dành riêng cho vấn đề thẩm mỹ.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q7">✓ Lún, nứt, rung ảnh hưởng đến điều kiện sinh hoạt và khai thác → TTGH-2. Chỉ khi lún dẫn đến mất ổn định (lật, trượt) mới xét TTGH-1.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C8</span>Yếu tố nào sau đây KHÔNG ảnh hưởng trực tiếp đến việc lựa chọn độ sâu đặt móng?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,2)"><span class="mkey">A</span><span>Điều kiện địa chất và mực nước ngầm.</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,2)"><span class="mkey">B</span><span>Tải trọng và đặc điểm kết cấu bên trên.</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,2)"><span class="mkey">C</span><span>Màu sơn ngoại thất và phong cách kiến trúc.</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,2)"><span class="mkey">D</span><span>Công trình lân cận và khả năng thi công.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q8">✓ Màu sơn/kiến trúc không liên quan đến kỹ thuật đặt móng. Các yếu tố kỹ thuật quyết định độ sâu: địa tầng, nước ngầm, tải trọng, công trình lân cận, mùa vụ thi công.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C9</span>Nguyên lý đầu tiên khi lựa chọn phương án móng là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q9-0" onclick="pickMCQ('q9',0,1)"><span class="mkey">A</span><span>Luôn chọn móng rẻ nhất để tiết kiệm chi phí.</span></div>
+        <div class="mcq-opt" id="mco-q9-1" onclick="pickMCQ('q9',1,1)"><span class="mkey">B</span><span>Móng phải được đặt vào lớp đất có đủ sức chịu tải và biến dạng nhỏ.</span></div>
+        <div class="mcq-opt" id="mco-q9-2" onclick="pickMCQ('q9',2,1)"><span class="mkey">C</span><span>Luôn dùng móng cọc để đảm bảo an toàn tuyệt đối.</span></div>
+        <div class="mcq-opt" id="mco-q9-3" onclick="pickMCQ('q9',3,1)"><span class="mkey">D</span><span>Tránh thi công vào mùa mưa bất kể điều kiện đất.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q9">✓ Nguyên lý căn bản: móng phải đặt vào đất đủ cường độ (R<sub>n</sub>) và biến dạng ≤ giới hạn cho phép [S]. Sau đó mới xét kinh tế, thi công. Chọn cọc khi không có lựa chọn nào khác.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">C10</span>Móng nông phân loại theo vật liệu bao gồm những loại nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q10-0" onclick="pickMCQ('q10',0,0)"><span class="mkey">A</span><span>Móng gạch, móng đá hộc, móng bê tông cốt thép (BTCT).</span></div>
+        <div class="mcq-opt" id="mco-q10-1" onclick="pickMCQ('q10',1,0)"><span class="mkey">B</span><span>Móng đơn, móng băng, móng bè.</span></div>
+        <div class="mcq-opt" id="mco-q10-2" onclick="pickMCQ('q10',2,0)"><span class="mkey">C</span><span>Móng cứng và móng mềm.</span></div>
+        <div class="mcq-opt" id="mco-q10-3" onclick="pickMCQ('q10',3,0)"><span class="mkey">D</span><span>Móng nông và móng sâu.</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q10">✓ Phân loại theo vật liệu: gạch (nhà nhỏ cũ), đá hộc (vùng núi), BTCT không cốt thép (móng cứng), BTCT có cốt thép (móng mềm/linh hoạt). Đây là phân loại theo vật liệu, khác với phân loại theo hình dạng (đơn/băng/bè).</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHẦN B: SỰ CỐ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-alert-triangle"></i>
+    <div><h2>Phần B — Phân tích Sự cố Công trình (5 tình huống)</h2><p>Đọc và phân tích từng sự cố, rút ra bài học quản lý rủi ro và chi phí.</p></div>
+    <span class="cbadge">SỰ CỐ</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" style="background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E">
+      <i class="ti ti-info-circle"></i> <b>Lưu ý học tập:</b> Các sự cố dưới đây đều có nguyên nhân từ khâu <b>khảo sát địa chất, lựa chọn phương án móng, hoặc biện pháp thi công</b>. Hiểu sự cố giúp tránh lặp lại trong thực hành kỹ thuật.
+    </div>
+
+    <div id="sc-zone"></div>
+
+  </div>
+</div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>7.1 · Khái niệm & Sự cố</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/10</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="7.2_DANG_2.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — DỮ LIỆU CỐ ĐỊNH: CASE STUDY SỰ CỐ NỀN MÓNG
+   SC_DATA: mảng 5 case study thực tế (Pisa, đường HCM, cầu, chung cư, hố móng)
+   Mỗi phần tử: { id, icon, name, type, mo_ta, nguyen_nhan,
+                   hau_qua, bai_hoc, chi_phi }
+================================================================ */
+var SC_DATA=[
+  {id:'sc1',icon:'🏛️',name:'Tháp nghiêng Pisa (Italy)',type:'Công trình đặc biệt · Thế kỷ 12',
+   mo_ta:'Tháp cao 56m bắt đầu nghiêng ngay từ khi xây tầng 2 (năm 1178). Hiện đỉnh tháp lệch hơn 5m so với trục đứng.',
+   nguyen_nhan:'Lún lệch (differential settlement): lớp đất mềm phía Nam dày hơn phía Bắc nên lún nhiều hơn theo thời gian. Khảo sát địa chất không đủ để phát hiện sự bất đồng nhất này.',
+   hau_qua:'Công trình bị nghiêng liên tục trong nhiều thế kỷ, phải đóng cửa nhiều lần và thực hiện gia cố tốn kém (hút đất phía Bắc, neo đất phía Nam) từ 1990–2001.',
+   bai_hoc:'Cần khảo sát địa chất trên toàn bộ diện tích móng, không chỉ tại 1–2 điểm. Lún lệch nguy hiểm hơn lún đều — cần kiểm tra cả độ biến dạng lẫn độ đồng đều.',
+   chi_phi:'Ước tính hàng chục triệu EUR cho gia cố và bảo tồn'},
+  {id:'sc2',icon:'🛣️',name:'Sụt lún Đường Hồ Chí Minh — Chư Sê, Gia Lai',type:'Đường giao thông',
+   mo_ta:'Mặt đường xuất hiện vết nứt rộng 50–80cm, sụt lún sâu hơn 1,2m, kéo dài hàng chục mét, gây mất an toàn giao thông nghiêm trọng ngay trong giai đoạn khai thác.',
+   nguyen_nhan:'Địa chất dọc tuyến phức tạp: tồn tại túi bùn cục bộ và dòng chảy ngầm không được phát hiện trong khảo sát. Nền đắp không được xử lý phù hợp tại vị trí đất yếu.',
+   hau_qua:'Phải đình chỉ giao thông, đào bỏ và làm lại toàn bộ đoạn sụt. Ảnh hưởng lớn đến kinh tế và giao thông vùng Tây Nguyên.',
+   bai_hoc:'Mật độ lỗ khoan khảo sát dọc tuyến đường phải đủ dày (mỗi 50–100m), đặc biệt qua vùng địa hình chuyển tiếp. Phải xử lý nền đất yếu trước khi đắp nền đường.',
+   chi_phi:'Hàng chục tỷ đồng cho sửa chữa và làm lại'},
+  {id:'sc3',icon:'🌉',name:'Lún tiếp giáp mố cầu — Cao tốc Đà Nẵng–Quảng Ngãi',type:'Cầu đường bộ',
+   mo_ta:'Vị trí tiếp giáp giữa đường đắp và mố cầu bị nứt gãy, sụt lún kéo dài. Xe cộ qua lại xóc mạnh, gây hư hỏng xe và mất an toàn.',
+   nguyen_nhan:'Lún dư tại đất đắp sau mố: (1) đầm nén không đạt độ chặt K ≥ 0.98; (2) nền đất tự nhiên dưới mố chưa ổn định cố kết trong khi mố cầu trên cọc gần như không lún → chênh lệch lún giữa hai phần.',
+   hau_qua:'Hư hỏng kết cấu mặt đường và bản mặt cầu đầu dầm, giảm tuổi thọ công trình, chi phí sửa chữa định kỳ.',
+   bai_hoc:'Kiểm soát chặt độ chặt đất đắp sau mố (thí nghiệm nhanh bằng phễu cát hoặc CBR). Cần bố trí bản quá độ để giảm chênh lún đột ngột. Đợi đất đắp ổn định trước khi thảm bê tông nhựa.',
+   chi_phi:'Trung bình — chi phí sửa chữa, bù lún định kỳ suốt vòng đời dự án'},
+  {id:'sc4',icon:'🏢',name:'Chung cư lún nghiêng trên nền đất bùn — Hà Nội',type:'Nhà dân / Chung cư',
+   mo_ta:'Khu chung cư lún hơn 1,2m so với cốt nền ban đầu, thềm nhà tách khối so với sàn, khe hở giữa các khối nhà ngày càng rộng, tường nứt nghiêm trọng.',
+   nguyen_nhan:'Xây dựng trên nền đất bùn sét không được gia cố phù hợp (dùng móng băng nông thay vì cọc). Tải trọng lâu dài vượt quá sức chịu tải của đất, gây cố kết thứ cấp kéo dài nhiều năm.',
+   hau_qua:'Nghiêng lún, nứt kết cấu, nguy hiểm cho cư dân, phải di dời và phá dỡ một số hạng mục. Gây tranh chấp pháp lý giữa chủ đầu tư và người dân.',
+   bai_hoc:'Nhà từ 3 tầng trở lên trên đất bùn bắt buộc phải dùng móng cọc hoặc xử lý nền triệt để. Không được tiết kiệm chi phí nền móng — đây là phần quan trọng và ẩn nhất của công trình.',
+   chi_phi:'Lớn — chi phí di dời, gia cố, bồi thường và xây mới'},
+  {id:'sc5',icon:'🏗️',name:'Sụt tường nhà lân cận do thi công hố móng sâu',type:'Nhà cao tầng / Sự cố thi công',
+   mo_ta:'Khi thi công hố đào sâu cho tầng hầm cao ốc văn phòng, bức tường cao 5,2m của chung cư lân cận bị sụp đổ xuống hố móng đang thi công, gây thiệt hại tài sản nghiêm trọng.',
+   nguyen_nhan:'Thi công hố đào sâu không có biện pháp chống đỡ thành hố (tường vây, cọc ván thép, văng chống) phù hợp. Đất nền lân cận bị mất áp lực ngang → mất ổn định → sụt lở.',
+   bai_hoc:'Thiết kế biện pháp thi công hố đào sâu là BẮT BUỘC khi có tầng hầm gần công trình lân cận. Chi phí tường chắn phải có trong dự toán từ đầu. Cần quan trắc lún và chuyển vị công trình lân cận trong suốt quá trình đào.',
+   chi_phi:'Cao — bao gồm bồi thường pháp lý, gia cố lại, đình chỉ thi công và phạt hợp đồng'}
+];
+
+/* ================================================================
+   KHỐI 2 — HIỂN THỊ CASE STUDY
+   renderSC() : tạo HTML accordion cho từng case study trong SC_DATA,
+                chèn vào #sc-zone (gọi một lần trong window.onload)
+   toggleSC(i): mở/đóng body thẻ case study thứ i khi click header
+================================================================ */
+function renderSC(){
+  var z=document.getElementById('sc-zone');
+  SC_DATA.forEach(function(sc,i){
+    var h='<div class="sc-card">';
+    h+='<div class="sc-hd" id="sch'+i+'" onclick="toggleSC('+i+')">';
+    h+='<span class="sc-icon">'+sc.icon+'</span>';
+    h+='<div><div class="sc-name">'+sc.name+'</div><div class="sc-type">'+sc.type+'</div></div>';
+    h+='<i class="ti ti-chevron-right sc-chevron" id="scc'+i+'"></i></div>';
+    h+='<div class="sc-body" id="scb'+i+'">';
+    h+='<div class="sc-grid">';
+    h+='<div class="sc-field full"><div class="sc-field-lbl"><i class="ti ti-zoom-in"></i> Mô tả sự cố</div><div class="sc-field-val">'+sc.mo_ta+'</div></div>';
+    h+='<div class="sc-field"><div class="sc-field-lbl"><i class="ti ti-alert-triangle"></i> Nguyên nhân nền móng</div><div class="sc-field-val">'+sc.nguyen_nhan+'</div></div>';
+    h+='<div class="sc-field"><div class="sc-field-lbl"><i class="ti ti-flame"></i> Hậu quả</div><div class="sc-field-val">'+sc.hau_qua+'</div></div>';
+    h+='</div>';
+    h+='<div class="sc-lesson"><div class="sc-field-lbl"><i class="ti ti-check"></i> Bài học quản lý rủi ro</div><div class="sc-field-val">'+sc.bai_hoc+'</div></div>';
+    h+='<div class="sc-field" style="margin-top:8px"><div class="sc-field-lbl"><i class="ti ti-coin"></i> Chi phí ước tính</div><div class="sc-field-val">'+sc.chi_phi+'</div></div>';
+    h+='</div></div>';
+    z.innerHTML+=h;
+  });
+}
+
+function toggleSC(i){
+  var body=document.getElementById('scb'+i);
+  var hd=document.getElementById('sch'+i);
+  var chev=document.getElementById('scc'+i);
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  hd.classList.toggle('open',!open);
+  chev.classList.toggle('open',!open);
+}
+
+/* ================================================================
+   KHỐI 3 — BIẾN TOÀN CỤC & ĐĂNG KÝ CÂU HỎI
+   ANS            : lưu kết quả 10 câu MCQ (null=chưa làm, true/false)
+   _submitted     : cờ ngăn nộp bài lần 2
+   TOTAL_QUESTIONS: tổng số câu = 10 (gán sau khi đăng ký xong)
+   forEach bên dưới: đăng ký 10 key MCQ khái niệm nền móng (q1..q10)
+                     → ANS['mcq-q1'] ... ANS['mcq-q10'] = null
+================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'].forEach(function(k){ANS['mcq-'+k]=null;});
+
+/* ================================================================
+   KHỐI 4 — CHẤM CÂU HỎI MCQ & CẬP NHẬT TIẾN ĐỘ
+   getSV()    : đọc thông tin SV từ sessionStorage 'ncm_sv'
+   pickMCQ(id, picked, correct):
+     - Khóa tất cả lựa chọn sau khi SV đã bấm chọn
+     - Tô xanh nếu đúng / đỏ nếu sai / reveal đáp án đúng
+     - Lưu ANS['mcq-id'] và gọi updateProg()
+   updateProg(): tính tiến độ attempted/done, cập nhật thanh %,
+     lưu localStorage 'prog_c7_71', kích hoạt nút Nộp bài
+================================================================ */
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+function pickMCQ(id,picked,correct){
+  if(ANS['mcq-'+id]!==undefined&&ANS['mcq-'+id]!==null)return;
+  document.querySelectorAll('[id^="mco-'+id+'-"]').forEach(function(el,i){
+    el.onclick=null;
+    if(i===picked&&picked===correct)el.classList.add('ok');
+    else if(i===picked)el.classList.add('no');
+    else if(i===correct)el.classList.add('reveal-ok');
+  });
+  var exp=document.getElementById('exp-'+id);
+  if(exp){exp.classList.add('show');exp.classList.add(picked===correct?'ok-exp':'no-exp');}
+  ANS['mcq-'+id]=(picked===correct);updateProg();
+}
+
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c7_71',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN SERVER
+   submitResult(): POST kết quả lên Cloudflare Worker
+   chapterId   : 'C7-71-KhaiNiem'
+   WORKER_URL / MIN_ATTEMPT_PCT: đọc từ config.js nếu có,
+     mặc định Worker URL và minPct=5%
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C7-71-KhaiNiem',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){_submitted=true;var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');}
+    else{alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+   1. Đọc SV từ sessionStorage, hiện tên/STT lên header
+   2. Gọi renderSC() → render 5 thẻ accordion case study sự cố nền móng
+   3. Gán TOTAL_QUESTIONS = Object.keys(ANS).length (=10 MCQ đã đăng ký)
+   4. Khởi tạo nút Nộp bài (trạng thái khóa) và gọi updateProg() lần đầu
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  renderSC();
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

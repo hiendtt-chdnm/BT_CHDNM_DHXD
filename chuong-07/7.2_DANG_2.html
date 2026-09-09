@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7.2 — Chọn Phương Án Móng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge-hdr{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.cbadge-g{background:var(--G)}
+.cbadge-a{background:var(--A)}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7}
+.theory-lbl{font-weight:700;color:var(--P);font-size:11px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.earth-box{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:500}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* Diagrams */
+.diag-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px}
+@media(max-width:620px){.diag-row{grid-template-columns:1fr}}
+.diag-box{background:#F8FBFF;border:1px solid var(--brd);border-radius:var(--r);padding:12px;overflow:hidden}
+.diag-title{font-size:11px;font-weight:700;color:var(--P);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+/* Soil table */
+.soil-tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.soil-tbl th{background:var(--Plt);color:var(--Pdk);font-weight:700;padding:6px 8px;text-align:left;border-bottom:1.5px solid var(--brd)}
+.soil-tbl td{padding:6px 8px;border-bottom:1px solid #EBF5FB;color:var(--text)}
+.soil-tbl tr:last-child td{border-bottom:none}
+.q-yeu{color:var(--R);font-weight:700}
+.q-ryeu{color:#b71c1c;font-weight:700}
+.q-tb{color:var(--A);font-weight:600}
+.q-tot{color:var(--G);font-weight:600}
+.q-rtot{color:var(--Gdk);font-weight:700}
+/* Step guide */
+.step-list{display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:11px;align-items:flex-start}
+.step-num{background:var(--P);color:#fff;font-size:11px;font-weight:800;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)}
+.step-text{font-size:13px;color:var(--text);line-height:1.5}
+.step-text strong{color:var(--P)}
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-top:6px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-opts{display:grid;gap:0}
+.mcq-opt{padding:8px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal-ok{background:var(--Glt)!important;opacity:.6}.mcq-opt.reveal-ok .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:8px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:#b71c1c}
+/* Ex accordion */
+.ex-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden}
+.ex-hd{padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .12s}
+.ex-hd:hover{background:var(--Plt)}
+.ex-hd.open{background:var(--Plt);border-bottom:1px solid var(--brd)}
+.ex-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.eb-a{background:var(--Alt);color:#E65100}
+.eb-b{background:var(--Plt);color:var(--Pdk)}
+.eb-easy{background:var(--Glt);color:var(--Gdk)}
+.eb-med{background:var(--Alt);color:#5D4037}
+.eb-hard{background:var(--Rlt);color:var(--R)}
+.ex-title{flex:1;font-size:14px;font-weight:700;color:var(--Pdk)}
+.ex-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.ex-chev{font-size:16px;color:var(--muted);transition:transform .2s}
+.ex-chev.open{transform:rotate(90deg)}
+.ex-body{display:none;padding:14px 16px 16px}
+.ex-body.open{display:block}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+@media(max-width:520px){.info-row{grid-template-columns:1fr}}
+.info-field{background:#F8FBFF;border:1px solid var(--Plt);border-radius:8px;padding:9px 12px}
+.info-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--P);margin-bottom:3px}
+.info-val{font-size:13px;color:var(--text);font-family:var(--mono)}
+/* hint */
+.btn-hint{background:none;border:1px solid var(--brd);color:var(--muted);font-size:12px;font-family:var(--sans);border-radius:6px;padding:5px 12px;cursor:pointer;margin:6px 0;transition:all .15s}
+.btn-hint:hover{border-color:var(--P);color:var(--P)}
+.hint-box{display:none;background:var(--Alt);border-left:3px solid var(--A);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12px;line-height:1.6;color:#4E342E;margin-bottom:6px}
+/* Legend chips */
+.legend-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.lchip{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid;font-family:var(--mono)}
+/* Sticky nav */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+svg text{font-family:'Plus Jakarta Sans',sans-serif}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C7.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 7</a>
+    <div class="hdr-title">
+      <h1>7.2 — Chọn Phương Án Móng Theo Địa Tầng</h1>
+      <p>2 bài mẫu hướng dẫn (Nhóm A) · 13 bài luyện tập đa dạng (Nhóm B)</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 7.2 — Phương án móng</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Bài tập phương án móng — <span id="sv-display">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Phân tích địa tầng → Chọn loại móng phù hợp nhất</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT + BIỂU ĐỒ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-sitemap"></i>
+    <div><h2>Nguyên lý chung & Sơ đồ phân loại móng</h2><p>Đọc kỹ trước khi làm bài tập</p></div>
+    <span class="cbadge">LÝ THUYẾT</span>
+  </div>
+  <div class="card-body">
+
+    <div class="sec-lbl"><i class="ti ti-list-numbers"></i> Ba nguyên lý chọn móng</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div class="theory"><div class="theory-lbl"><i class="ti ti-number-1"></i> Nguyên lý 1 — Đặt vào lớp đất tốt</div>Móng phải đặt vào lớp đất có sức chịu tải R<sub>n</sub> đủ lớn và biến dạng S ≤ [S] cho phép. Đây là điều kiện không thể bỏ qua.</div>
+      <div class="theory"><div class="theory-lbl"><i class="ti ti-number-2"></i> Nguyên lý 2 — Nông nhất có thể</div>Nếu lớp đất tốt ở gần mặt đất → ưu tiên <b>móng nông</b> (chi phí thấp hơn móng cọc 3–5 lần). Chỉ chọn cọc khi thực sự cần thiết.</div>
+      <div class="theory"><div class="theory-lbl"><i class="ti ti-number-3"></i> Nguyên lý 3 — Xét toàn diện</div>Kết hợp: địa chất + tải trọng + công trình lân cận + khả năng thi công + chi phí. Không có công thức cứng nhắc cho mọi trường hợp.</div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-photo"></i> Sơ đồ minh họa</div>
+    <div class="diag-row">
+      <!-- Diagram 1: cross section -->
+      <div class="diag-box">
+        <div class="diag-title"><i class="ti ti-layout-bottombar"></i> Hình 1 — Mặt cắt móng nông vs móng cọc</div>
+        <svg viewBox="0 0 310 230" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <rect x="0" y="0" width="310" height="230" fill="#F8FBFF"/>
+          <!-- Ground line -->
+          <rect x="0" y="0" width="310" height="44" fill="#E3F2FD"/>
+          <text x="4" y="14" fill="#1565C0" font-size="8.5" font-weight="700">Mặt đất ±0.00</text>
+          <line x1="0" y1="44" x2="310" y2="44" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Layer 1 weak -->
+          <rect x="0" y="44" width="310" height="50" fill="#FFEBEE" opacity="0.7"/>
+          <text x="5" y="60" fill="#C62828" font-size="8.5" font-weight="700">Lớp 1: Đất yếu / Đất lấp (SPT &lt; 5)</text>
+          <text x="5" y="72" fill="#7a96aa" font-size="7.5">→ Không đặt móng ở đây</text>
+          <!-- Layer 2 medium -->
+          <rect x="0" y="94" width="310" height="52" fill="#FFF8E1" opacity="0.8"/>
+          <text x="5" y="110" fill="#FF8F00" font-size="8.5" font-weight="700">Lớp 2: Đất trung bình (SPT 8–20)</text>
+          <text x="5" y="122" fill="#7a96aa" font-size="7.5">→ Có thể đặt móng nông nếu tải nhỏ</text>
+          <!-- Layer 3 good -->
+          <rect x="0" y="146" width="310" height="84" fill="#E8F5E9" opacity="0.9"/>
+          <text x="5" y="162" fill="#2E7D32" font-size="8.5" font-weight="700">Lớp 3–4: Đất tốt / Rất tốt (SPT &gt; 25)</text>
+          <text x="5" y="174" fill="#7a96aa" font-size="7.5">→ Đặt móng nông sâu hoặc mũi cọc</text>
+          <!-- shallow foundation (left) -->
+          <rect x="32" y="28" width="26" height="18" rx="2" fill="#1565C0" opacity="0.9"/>
+          <text x="45" y="22" fill="#1565C0" font-size="7.5" text-anchor="middle">Cột</text>
+          <rect x="20" y="46" width="50" height="13" rx="2" fill="#1565C0" opacity="0.85"/>
+          <text x="45" y="77" fill="#1565C0" font-size="8" text-anchor="middle" font-weight="700">Móng nông</text>
+          <text x="45" y="88" fill="#546E7A" font-size="7" text-anchor="middle">hm ≤ B</text>
+          <line x1="18" y1="44" x2="18" y2="59" stroke="#1565C0" stroke-width="1" marker-end="url(#a1)"/>
+          <text x="1" y="55" fill="#1565C0" font-size="7">hm</text>
+          <!-- pile (right) -->
+          <rect x="222" y="28" width="26" height="18" rx="2" fill="#FF8F00" opacity="0.9"/>
+          <text x="235" y="22" fill="#FF8F00" font-size="7.5" text-anchor="middle">Cột</text>
+          <rect x="210" y="46" width="50" height="13" rx="2" fill="#FF8F00" opacity="0.8"/>
+          <rect x="228" y="59" width="14" height="108" rx="2" fill="#E65100" opacity="0.75"/>
+          <polygon points="228,167 242,167 235,178" fill="#E65100" opacity="0.9"/>
+          <text x="272" y="120" fill="#E65100" font-size="8" font-weight="700">Cọc</text>
+          <text x="272" y="131" fill="#546E7A" font-size="7">L=15–40m</text>
+          <defs>
+            <marker id="a1" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1565C0"/></marker>
+          </defs>
+        </svg>
+      </div>
+      <!-- Diagram 2: decision flow -->
+      <div class="diag-box">
+        <div class="diag-title"><i class="ti ti-git-branch"></i> Hình 2 — Quy trình quyết định phương án</div>
+        <svg viewBox="0 0 290 230" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <rect x="0" y="0" width="290" height="230" fill="#F8FBFF"/>
+          <!-- Start -->
+          <rect x="85" y="6" width="120" height="24" rx="12" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+          <text x="145" y="22" fill="#1565C0" font-size="9" text-anchor="middle" font-weight="700">ĐỌC ĐỊA TẦNG</text>
+          <line x1="145" y1="30" x2="145" y2="44" stroke="#90CAF9" stroke-width="1.2" marker-end="url(#a2)"/>
+          <!-- D1 -->
+          <polygon points="145,44 200,66 145,88 90,66" fill="#FFF8E1" stroke="#FF8F00" stroke-width="1.5"/>
+          <text x="145" y="63" fill="#FF8F00" font-size="8.5" text-anchor="middle" font-weight="700">Đất tốt</text>
+          <text x="145" y="75" fill="#FF8F00" font-size="8.5" text-anchor="middle">nông ≤3m?</text>
+          <!-- Yes left -->
+          <line x1="90" y1="66" x2="38" y2="66" stroke="#2E7D32" stroke-width="1.2" marker-end="url(#a3)"/>
+          <text x="63" y="61" fill="#2E7D32" font-size="8">Có</text>
+          <rect x="4" y="78" width="70" height="22" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+          <text x="39" y="93" fill="#2E7D32" font-size="8.5" text-anchor="middle" font-weight="700">Móng nông</text>
+          <!-- check lun -->
+          <line x1="39" y1="100" x2="39" y2="114" stroke="#90CAF9" stroke-width="1" marker-end="url(#a2)"/>
+          <rect x="4" y="114" width="70" height="22" rx="4" fill="#F8FBFF" stroke="#90CAF9" stroke-width="1"/>
+          <text x="39" y="129" fill="#546E7A" font-size="7.5" text-anchor="middle">Kiểm tra lún S</text>
+          <line x1="39" y1="136" x2="39" y2="150" stroke="#90CAF9" stroke-width="1" marker-end="url(#a2)"/>
+          <rect x="4" y="150" width="70" height="22" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1"/>
+          <text x="39" y="161" fill="#2E7D32" font-size="7.5" text-anchor="middle">S≤[S]: Dùng</text>
+          <text x="39" y="171" fill="#2E7D32" font-size="7" text-anchor="middle">được ✓</text>
+          <rect x="4" y="186" width="70" height="22" rx="4" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+          <text x="39" y="197" fill="#C62828" font-size="7.5" text-anchor="middle">S&gt;[S]: Cần</text>
+          <text x="39" y="207" fill="#C62828" font-size="7" text-anchor="middle">cọc ↓</text>
+          <line x1="39" y1="172" x2="39" y2="186" stroke="#90CAF9" stroke-width="1" marker-end="url(#a4)"/>
+          <!-- No down -->
+          <line x1="145" y1="88" x2="145" y2="104" stroke="#546E7A" stroke-width="1.2" marker-end="url(#a2)"/>
+          <text x="150" y="98" fill="#546E7A" font-size="8">Không</text>
+          <!-- D2 -->
+          <polygon points="145,104 200,126 145,148 90,126" fill="#FFF8E1" stroke="#FF8F00" stroke-width="1.5"/>
+          <text x="145" y="122" fill="#FF8F00" font-size="8.5" text-anchor="middle" font-weight="700">Đất yếu</text>
+          <text x="145" y="134" fill="#FF8F00" font-size="8.5" text-anchor="middle">dày &gt;10m?</text>
+          <!-- Yes pile -->
+          <line x1="200" y1="126" x2="248" y2="126" stroke="#C62828" stroke-width="1.2" marker-end="url(#a4)"/>
+          <text x="224" y="121" fill="#C62828" font-size="8">Có</text>
+          <rect x="216" y="136" width="70" height="22" rx="4" fill="#FFEBEE" stroke="#C62828" stroke-width="1.2"/>
+          <text x="251" y="151" fill="#C62828" font-size="8.5" text-anchor="middle" font-weight="700">Móng cọc</text>
+          <!-- No xulynnen -->
+          <line x1="145" y1="148" x2="145" y2="164" stroke="#90CAF9" stroke-width="1" marker-end="url(#a2)"/>
+          <text x="150" y="158" fill="#546E7A" font-size="8">Không</text>
+          <rect x="88" y="164" width="114" height="22" rx="4" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.2"/>
+          <text x="145" y="179" fill="#1565C0" font-size="8.5" text-anchor="middle" font-weight="700">Xử lý nền / Móng bè</text>
+          <defs>
+            <marker id="a2" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#90CAF9"/></marker>
+            <marker id="a3" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2E7D32"/></marker>
+            <marker id="a4" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C62828"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="legend-row">
+      <span class="lchip" style="background:#FFEBEE;color:#C62828;border-color:#FFCDD2">🔴 Rất yếu SPT&lt;5</span>
+      <span class="lchip" style="background:#FFF8E1;color:#FF8F00;border-color:#FFE082">🟡 Trung bình SPT 5–20</span>
+      <span class="lchip" style="background:#E8F5E9;color:#2E7D32;border-color:#A5D6A7">🟢 Tốt SPT 20–40</span>
+      <span class="lchip" style="background:#E3F2FD;color:#1565C0;border-color:#90CAF9">🔵 Rất tốt SPT&gt;40</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- NHÓM A -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-book-2"></i>
+    <div><h2>Nhóm A — Bài mẫu hướng dẫn từng bước</h2><p>Đọc kỹ quy trình phân tích trước khi làm bài luyện tập</p></div>
+    <span class="cbadge cbadge-a">NHÓM A</span>
+  </div>
+  <div class="card-body">
+
+    <!-- A1 -->
+    <div class="sec-lbl"><i class="ti ti-home"></i> Bài A1 — Nhà phố 3 tầng, N = 450 kN, đất thổ cư</div>
+    <div class="info-row">
+      <div class="info-field"><div class="info-lbl">Công trình</div><div class="info-val">Nhà phố 3 tầng</div></div>
+      <div class="info-field"><div class="info-lbl">Tải trọng & MNN</div><div class="info-val">N = 450 kN · MNN: −3.5m</div></div>
+    </div>
+    <table class="soil-tbl">
+      <tr><th>Lớp</th><th>Tên đất</th><th>Dày (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ</th><th>SPT</th><th>Đánh giá</th></tr>
+      <tr><td>1</td><td>Đất lấp</td><td>1.0</td><td>17.0</td><td>5</td><td>10°</td><td>2</td><td class="q-ryeu">Rất yếu</td></tr>
+      <tr><td>2</td><td>Sét pha nửa cứng</td><td>4.5</td><td>18.5</td><td>25</td><td>18°</td><td>12</td><td class="q-tb">Trung bình</td></tr>
+      <tr><td>3</td><td>Cát hạt trung</td><td>6.0</td><td>19.0</td><td>2</td><td>30°</td><td>25</td><td class="q-tot">Tốt</td></tr>
+      <tr><td>4</td><td>Sét cứng</td><td>&gt;10</td><td>20.0</td><td>45</td><td>22°</td><td>35</td><td class="q-tot">Tốt</td></tr>
+    </table>
+    <div class="earth-box" style="margin-bottom:4px"><b>Hướng dẫn phân tích 5 bước:</b></div>
+    <div class="step-list">
+      <div class="step"><span class="step-num">1</span><div class="step-text"><strong>Loại bỏ lớp không dùng được:</strong> Lớp 1 (Đất lấp, SPT=2) → Quá yếu, không đặt móng.</div></div>
+      <div class="step"><span class="step-num">2</span><div class="step-text"><strong>Xác định lớp gần nhất có thể dùng:</strong> Lớp 2 (SPT=12, c=25 kPa, nửa cứng) → Trung bình, bắt đầu từ độ sâu 1.0m.</div></div>
+      <div class="step"><span class="step-num">3</span><div class="step-text"><strong>Sơ bộ kiểm tra SCT:</strong> R ≈ 150–180 kPa (sét pha nửa cứng). Cần A = N/R = 450/150 = 3.0 m² → B ≈ 1.7m. Hợp lý cho móng đơn.</div></div>
+      <div class="step"><span class="step-num">4</span><div class="step-text"><strong>Kiểm tra MNN:</strong> MNN ở −3.5m, sâu hơn đáy móng → không ảnh hưởng thi công.</div></div>
+      <div class="step"><span class="step-num">5</span><div class="step-text"><strong>Kết luận:</strong> Móng nông đơn BTCT, h<sub>m</sub> = 1.5m vào lớp 2. Không cần cọc (tốn kém không cần thiết cho nhà 3 tầng).</div></div>
+    </div>
+    <div class="succ-box" style="margin-top:4px">✅ <b>Đáp án:</b> Móng nông đơn BTCT, đặt tại độ sâu h<sub>m</sub> = 1.5m trong lớp 2 (Sét pha nửa cứng). Kích thước sơ bộ B×L ≈ 1.5×1.5m.</div>
+    <p style="font-size:12px;color:var(--muted);margin-top:4px">❓ Câu xác nhận bài A1:</p>
+    <div class="mcq-wrap">
+      <div class="mcq-q">Phương án móng phù hợp nhất cho bài A1 là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1-0" onclick="pickMCQ('a1',0,1)"><span class="mkey">A</span><span>Cọc ép BTCT dài 12m xuyên qua lớp 2 và lớp 3</span></div>
+        <div class="mcq-opt" id="mco-a1-1" onclick="pickMCQ('a1',1,1)"><span class="mkey">B</span><span>Móng nông đơn BTCT, đặt sâu 1.5m vào lớp 2 (sét pha nửa cứng)</span></div>
+        <div class="mcq-opt" id="mco-a1-2" onclick="pickMCQ('a1',2,1)"><span class="mkey">C</span><span>Móng bè toàn diện tích vì lớp 1 yếu</span></div>
+        <div class="mcq-opt" id="mco-a1-3" onclick="pickMCQ('a1',3,1)"><span class="mkey">D</span><span>Đặt cột thẳng vào lớp 1 vì nhà chỉ 3 tầng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-a1">✓ Nhà 3 tầng tải nhỏ (450 kN), lớp 2 trung bình vừa đủ. Móng nông đơn kinh tế nhất. Không cần cọc.</div>
+    </div>
+
+    <!-- A2 -->
+    <div class="sec-lbl" style="margin-top:8px"><i class="ti ti-building-skyscraper"></i> Bài A2 — Chung cư 12 tầng, N = 6500 kN, bùn sét dày</div>
+    <div class="info-row">
+      <div class="info-field"><div class="info-lbl">Công trình</div><div class="info-val">Chung cư 12 tầng</div></div>
+      <div class="info-field"><div class="info-lbl">Tải trọng & MNN</div><div class="info-val">N = 6500 kN/cột · MNN: −2.0m</div></div>
+    </div>
+    <table class="soil-tbl">
+      <tr><th>Lớp</th><th>Tên đất</th><th>Dày (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ</th><th>SPT</th><th>Đánh giá</th></tr>
+      <tr><td>1</td><td>Sét pha mềm</td><td>4.0</td><td>17.0</td><td>12</td><td>7°</td><td>3</td><td class="q-yeu">Yếu</td></tr>
+      <tr><td>2</td><td>Bùn sét bão hòa</td><td>18.0</td><td>15.0</td><td>6</td><td>3°</td><td>1</td><td class="q-ryeu">Rất yếu</td></tr>
+      <tr><td>3</td><td>Cát hạt thô chặt</td><td>15.0</td><td>19.5</td><td>0</td><td>35°</td><td>45</td><td class="q-rtot">Rất tốt</td></tr>
+      <tr><td>4</td><td>Sét cứng</td><td>&gt;10</td><td>20.5</td><td>55</td><td>24°</td><td>40</td><td class="q-tot">Tốt</td></tr>
+    </table>
+    <div class="earth-box" style="margin-bottom:4px"><b>Hướng dẫn phân tích 5 bước:</b></div>
+    <div class="step-list">
+      <div class="step"><span class="step-num">1</span><div class="step-text"><strong>Xác định vị trí lớp tốt:</strong> Lớp 3 (Cát thô chặt, SPT=45) bắt đầu ở độ sâu 4+18 = <strong>22m</strong>. Lớp 1+2 toàn bộ đều yếu.</div></div>
+      <div class="step"><span class="step-num">2</span><div class="step-text"><strong>Loại trừ móng nông:</strong> Đất tốt quá sâu (22m). Tải N=6500 kN → Cần A = 6500/40 ≈ 163m² (bùn SPT=1 R≈40 kPa) → Không thể bố trí móng nông.</div></div>
+      <div class="step"><span class="step-num">3</span><div class="step-text"><strong>Chọn cọc khoan nhồi:</strong> D=800–1000mm, L ≥ 25m, mũi cọc cắm vào Lớp 3 chịu lực cả ma sát thân lẫn lực cản mũi.</div></div>
+      <div class="step"><span class="step-num">4</span><div class="step-text"><strong>Lưu ý lún cố kết:</strong> Tải trọng qua cọc vẫn gây ứng suất trong lớp bùn dày 18m → Phải tính lún theo TCVN 10304:2014.</div></div>
+      <div class="step"><span class="step-num">5</span><div class="step-text"><strong>Thi công:</strong> MNN ở −2.0m → cần biện pháp hạ mực nước khi thi công hố móng. Nếu có tầng hầm → cần tường vây.</div></div>
+    </div>
+    <div class="succ-box" style="margin-top:4px">✅ <b>Đáp án:</b> Bắt buộc dùng <b>cọc khoan nhồi D=800–1000mm, L=25–28m</b>, mũi cọc cắm vào Lớp 3 (Cát thô SPT=45). Tuyệt đối không thể dùng móng nông.</div>
+    <p style="font-size:12px;color:var(--muted);margin-top:4px">❓ Câu xác nhận bài A2:</p>
+    <div class="mcq-wrap">
+      <div class="mcq-q">Phương án móng bắt buộc cho bài A2 là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a2-0" onclick="pickMCQ('a2',0,3)"><span class="mkey">A</span><span>Móng băng đặt tại độ sâu 1.5m, phân bố tải đều</span></div>
+        <div class="mcq-opt" id="mco-a2-1" onclick="pickMCQ('a2',1,3)"><span class="mkey">B</span><span>Móng bè toàn mặt bằng tại độ sâu 3.0m</span></div>
+        <div class="mcq-opt" id="mco-a2-2" onclick="pickMCQ('a2',2,3)"><span class="mkey">C</span><span>Gia cố nền bằng đệm cát rồi đặt móng nông</span></div>
+        <div class="mcq-opt" id="mco-a2-3" onclick="pickMCQ('a2',3,3)"><span class="mkey">D</span><span>Cọc khoan nhồi D=800–1000mm, L≥25m, mũi cắm vào lớp cát thô</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-a2">✓ Bùn sét dày 22m (SPT=1) không thể chịu tải chung cư 12 tầng. Chỉ có cọc khoan nhồi xuyên sâu qua 22m bùn mới đáp ứng.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NHÓM B -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-barbell"></i>
+    <div><h2>Nhóm B — Bài luyện tập tự phân tích (13 bài)</h2><p>Đọc địa tầng → Chọn phương án móng phù hợp nhất. Mở gợi ý khi cần.</p></div>
+    <span class="cbadge cbadge-g">NHÓM B</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box"><i class="ti ti-info-circle"></i> Chiều dày các lớp đất thay đổi theo từng bài để đa dạng hóa địa tầng thực tế.</div>
+    <div id="ex-zone" style="margin-top:4px"></div>
+  </div>
+</div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>7.2 · Phương án móng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/15</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="index_C7.html" class="btn btn-sm btn-ghost">← Chương 7</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — DỮ LIỆU BÀI TẬP CHỌN PHƯƠNG ÁN MÓNG
+   EX: mảng 13 bài tập thực tế (nhà dân, VP, cầu, silo, bể chứa, kho...)
+   Mỗi phần tử: { id, title, type, load, gwl, diff,
+     layers: [{n, name, h, g, c, phi, spt, q}],  ← địa tầng 4 lớp
+     opts: {A/B/C/D: mô tả phương án},
+     ans: chỉ số đúng (0-based), hint: giải thích kỹ thuật }
+================================================================ */
+var EX=[
+  {id:'b1',title:'Nhà dân 2 tầng ven sông · N=300 kN',type:'Nhà dân',load:'N=300 kN (móng đơn)',gwl:'−1.2m',diff:'easy',
+   layers:[{n:1,name:'Bùn sét',h:3.5,g:15.5,c:8,phi:'5°',spt:1,q:'ryeu'},{n:2,name:'Sét pha dẻo mềm',h:5.0,g:17.5,c:15,phi:'12°',spt:7,q:'tb'},{n:3,name:'Cát mịn chặt vừa',h:8.0,g:18.2,c:0,phi:'28°',spt:18,q:'tb'},{n:4,name:'Cát thô chặt',h:12.0,g:19.5,c:0,phi:'34°',spt:40,q:'rtot'}],
+   opts:{A:'Móng nông đơn đặt vào lớp bùn, sâu 0.5m',B:'Móng nông kết hợp đệm cát hoặc cừ tràm, bỏ qua lớp bùn',C:'Cọc khoan nhồi D=600mm dài 15m',D:'Móng bè toàn công trình'},
+   ans:1,hint:'Tải nhỏ (300kN) nhưng lớp 1 là bùn. Với nhà 2 tầng, xử lý nền nhẹ (cừ tràm, đệm cát) + móng nông là kinh tế nhất, không cần cọc.'},
+  {id:'b2',title:'Biệt thự 4 tầng · N=800 kN · Vùng đồng bằng',type:'Nhà dân',load:'N=800 kN (móng đơn)',gwl:'−4.0m',diff:'med',
+   layers:[{n:1,name:'Sét pha dẻo chảy',h:2.5,g:16.8,c:12,phi:'8°',spt:4,q:'yeu'},{n:2,name:'Cát pha chặt vừa',h:4.0,g:18.0,c:10,phi:'24°',spt:15,q:'tb'},{n:3,name:'Sét pha nửa cứng',h:7.0,g:19.2,c:28,phi:'20°',spt:22,q:'tot'},{n:4,name:'Cuội sỏi',h:5.0,g:21.0,c:0,phi:'38°',spt:50,q:'rtot'}],
+   opts:{A:'Móng nông tại lớp 1 sâu 1.0m',B:'Móng nông hoặc băng tại lớp 2, độ sâu ~3.0m',C:'Móng cọc cắm vào lớp 4 (cuội sỏi)',D:'Móng bè trên lớp bùn'},
+   ans:1,hint:'Lớp 2 (SPT=15) đủ chịu tải nhà 4 tầng. Đặt sâu 3.0m vào lớp 2, kiểm tra lún. MNN ở -4m không ảnh hưởng.'},
+  {id:'b3',title:'Nhà VP 5 tầng · Móng băng · N=180 kN/m',type:'Văn phòng',load:'N=180 kN/m dài (móng băng)',gwl:'−1.5m',diff:'med',
+   layers:[{n:1,name:'Sét pha mềm',h:2.0,g:17.2,c:14,phi:'9°',spt:5,q:'yeu'},{n:2,name:'Cát mịn bão hòa',h:3.5,g:18.4,c:0,phi:'26°',spt:14,q:'tb'},{n:3,name:'Sét cứng',h:12.0,g:19.8,c:42,phi:'21°',spt:30,q:'tot'},{n:4,name:'Đá phong hóa',h:999,g:23.0,c:200,phi:'40°',spt:99,q:'rtot'}],
+   opts:{A:'Móng băng nông tại lớp 1, sâu 1.5m',B:'Cọc ép BTCT 25×25cm cắm vào lớp 3 (sét cứng)',C:'Gia cố nền bằng đệm cát tại lớp 1',D:'Móng bè trên lớp 2'},
+   ans:1,hint:'Lớp 2 bão hòa nước dễ bị xói; lớp 1 mỏng và yếu. Cọc ép vào sét cứng lớp 3 là phù hợp nhất cho văn phòng 5 tầng.'},
+  {id:'b4',title:'Trụ sở 3 tầng vùng đồi bazan · N=550 kN',type:'Nhà công sở',load:'N=550 kN (móng đơn)',gwl:'−10.0m',diff:'easy',
+   layers:[{n:1,name:'Đất đỏ bazan cứng',h:8.0,g:19.0,c:35,phi:'25°',spt:28,q:'tot'},{n:2,name:'Sét pha cứng',h:5.0,g:19.5,c:40,phi:'20°',spt:32,q:'tot'},{n:3,name:'Sét bạc màu',h:4.0,g:18.8,c:30,phi:'18°',spt:20,q:'tb'},{n:4,name:'Đá gốc',h:999,g:25.0,c:500,phi:'45°',spt:99,q:'rtot'}],
+   opts:{A:'Cọc sâu 15m vào đá gốc để chắc chắn',B:'Móng nông đơn tại lớp 1, sâu 1.5–2.0m',C:'Gia cố nền đệm cát dưới móng',D:'Móng bè toàn diện tích'},
+   ans:1,hint:'Đất bazan lớp 1 SPT=28 rất tốt, MNN sâu 10m. Đất tốt ngay mặt → móng nông là tối ưu, không cần cọc lãng phí.'},
+  {id:'b5',title:'Chung cư mini 7 tầng · N=2000 kN · Đất yếu dày',type:'Chung cư',load:'N=2000 kN/cột',gwl:'−1.5m',diff:'med',
+   layers:[{n:1,name:'Bùn sét',h:12.0,g:15.2,c:7,phi:'4°',spt:2,q:'ryeu'},{n:2,name:'Sét pha mềm',h:5.0,g:17.0,c:15,phi:'10°',spt:8,q:'yeu'},{n:3,name:'Cát thô chặt vừa',h:10.0,g:18.8,c:0,phi:'31°',spt:24,q:'tot'},{n:4,name:'Sét nửa cứng',h:6.0,g:19.2,c:32,phi:'20°',spt:25,q:'tot'}],
+   opts:{A:'Móng bè tại độ sâu 1.5m trong lớp bùn',B:'Cọc tre dưới móng băng',C:'Cọc ly tâm hoặc cọc ép BTCT cắm vào lớp 3 (sâu 18–20m)',D:'Đệm cát thay lớp 1 rồi đặt móng nông'},
+   ans:2,hint:'Bùn 12m + sét mềm 5m = 17m đất yếu. Tải 2000 kN. Chỉ cọc sâu vào lớp 3 mới đáp ứng. Cọc tre và đệm cát không đủ cho 7 tầng.'},
+  {id:'b6',title:'VP 6 tầng · N=1800 kN · Địa tầng Tốt–Xấu–Tốt',type:'Văn phòng',load:'N=1800 kN/cột',gwl:'−5.0m',diff:'hard',
+   layers:[{n:1,name:'Cát thô rất chặt',h:3.5,g:19.5,c:0,phi:'36°',spt:35,q:'rtot'},{n:2,name:'Sét dẻo chảy',h:6.0,g:16.5,c:10,phi:'6°',spt:4,q:'yeu'},{n:3,name:'Sét pha cứng',h:12.0,g:19.5,c:45,phi:'21°',spt:35,q:'tot'},{n:4,name:'Cát chặt',h:999,g:20.0,c:0,phi:'34°',spt:42,q:'rtot'}],
+   opts:{A:'Cọc ép xuyên qua lớp 1 và lớp 2 xuống lớp 3',B:'Móng nông tại lớp 1, kiểm tra ảnh hưởng lớp 2',C:'Móng bè trên lớp 1 để phân tải, giảm áp lực xuống lớp 2',D:'Gia cố lớp 2 bằng cột xi măng đất'},
+   ans:2,hint:'Địa tầng TXT (Tốt–Xấu–Tốt). Lớp 1 dày 3.5m rất chặt. Móng bè phân tải đều trên lớp 1 → giảm áp lực q truyền xuống lớp 2 yếu bên dưới. Đây là bài toán kinh tế vs kỹ thuật điển hình.'},
+  {id:'b7',title:'Khách sạn 8 tầng ven biển · N=3500 kN · Cát rời',type:'Khách sạn',load:'N=3500 kN/cột',gwl:'−1.0m',diff:'med',
+   layers:[{n:1,name:'Cát mịn rời bão hòa',h:5.0,g:17.8,c:0,phi:'22°',spt:6,q:'yeu'},{n:2,name:'Cát hạt trung chặt vừa',h:10.0,g:18.6,c:0,phi:'30°',spt:22,q:'tb'},{n:3,name:'Cát thô rất chặt',h:12.0,g:20.2,c:0,phi:'38°',spt:48,q:'rtot'},{n:4,name:'Đá cuội',h:5.0,g:21.5,c:0,phi:'42°',spt:99,q:'rtot'}],
+   opts:{A:'Móng đơn tại lớp 1, sâu 1.5m',B:'Móng băng tại lớp 2, sâu 6m',C:'Cọc ép BTCT 35×35cm cắm vào lớp 3 (cát rất chặt)',D:'Gia cố cát bằng phụt xi măng'},
+   ans:2,hint:'Lớp 1 cát rời bão hòa có nguy cơ hóa lỏng (liquefaction) khi có tải rung hoặc động đất. Tải lớn (3500kN). Cọc vào lớp 3 cát rất chặt là giải pháp tiêu chuẩn cho khách sạn ven biển.'},
+  {id:'b8',title:'VP 10 tầng có 1 tầng hầm · N=5000 kN',type:'VP cao tầng',load:'N=5000 kN/cột',gwl:'−4.5m',diff:'hard',
+   layers:[{n:1,name:'Sét pha nửa cứng',h:5.0,g:18.8,c:28,phi:'19°',spt:18,q:'tot'},{n:2,name:'Sét dẻo mềm',h:10.0,g:17.5,c:18,phi:'12°',spt:9,q:'tb'},{n:3,name:'Cát pha chặt',h:8.0,g:19.2,c:8,phi:'28°',spt:26,q:'tot'},{n:4,name:'Sét cứng',h:999,g:20.0,c:50,phi:'23°',spt:38,q:'tot'}],
+   opts:{A:'Móng bè tại cốt sàn hầm −3.5m trong lớp 1, kiểm tra lún kỹ lớp 2',B:'Móng đơn riêng lẻ tại lớp 1',C:'Cọc ép dài 30m xuyên hết lớp 2 và 3',D:'Không cần móng đặc biệt vì lớp 1 đã tốt'},
+   ans:0,hint:'Lớp 1 tốt nhưng lớp 2 yếu ở ngay dưới. Nhà có tầng hầm → đáy móng tự nhiên ở −3.5m trong lớp 1. Móng bè phân tải đều; phải kiểm tra lún kỹ qua lớp 2 và so sánh với [S].'},
+  {id:'b9',title:'Bể chứa nước ngầm · p=150 kPa phân bố đều',type:'Công trình đặc biệt',load:'p=150 kPa toàn đáy bể',gwl:'−1.0m',diff:'hard',
+   layers:[{n:1,name:'Sét pha mềm',h:3.0,g:17.0,c:12,phi:'9°',spt:4,q:'yeu'},{n:2,name:'Cát mịn bão hòa',h:5.0,g:18.2,c:0,phi:'27°',spt:16,q:'tb'},{n:3,name:'Sét cứng',h:10.0,g:19.6,c:40,phi:'22°',spt:28,q:'tot'},{n:4,name:'Cuội sỏi',h:999,g:21.0,c:0,phi:'40°',spt:50,q:'rtot'}],
+   opts:{A:'Móng băng đặt tại lớp 1',B:'Móng bè + gia cố nền đệm cát/cột xi măng đất + chống đẩy nổi khi bể rỗng',C:'Cọc khoan nhồi cắm xuống lớp 4',D:'Không cần móng đặc biệt'},
+   ans:1,hint:'Bể ngầm có 2 vấn đề đặc biệt: (1) nền yếu cần gia cố, (2) khi bể rỗng lực đẩy nổi Archimedes có thể nhấc bổng bể lên! Phải thiết kế chống đẩy nổi bằng neo đất hoặc tải trọng đối trọng.'},
+  {id:'b10',title:'Nhà máy có thiết bị rung · N=1200 kN',type:'Công nghiệp',load:'N=1200 kN + Tải trọng động',gwl:'−6.0m',diff:'med',
+   layers:[{n:1,name:'Cát pha chặt vừa',h:6.0,g:18.5,c:15,phi:'26°',spt:18,q:'tb'},{n:2,name:'Sét pha cứng',h:12.0,g:19.8,c:45,phi:'20°',spt:30,q:'tot'},{n:3,name:'Cát thô chặt',h:8.0,g:20.0,c:0,phi:'35°',spt:45,q:'rtot'},{n:4,name:'Đá gốc',h:999,g:25.0,c:500,phi:'45°',spt:99,q:'rtot'}],
+   opts:{A:'Móng nông tại lớp 1, sâu 2.0m',B:'Cọc BTCT cắm vào lớp 2 (sét cứng), tránh đất rời lớp 1',C:'Móng bè toàn nhà máy trên lớp 1',D:'Cọc vào đá gốc lớp 4 để tuyệt đối ổn định'},
+   ans:1,hint:'Tải rung động nguy hiểm cho cát pha rời lớp 1 (dễ tái sắp xếp hạt, giảm sức chịu tải). Cọc vào sét cứng lớp 2 vừa đủ tải vừa tránh được ảnh hưởng rung lên nền.'},
+  {id:'b11',title:'Mố cầu vượt sông · N=8000 kN + Moment',type:'Cầu',load:'N=8000 kN + Moment lật lớn',gwl:'0.0m (mặt nước)',diff:'med',
+   layers:[{n:1,name:'Cát mịn rời (lòng sông)',h:4.0,g:17.5,c:0,phi:'20°',spt:5,q:'yeu'},{n:2,name:'Sét dẻo chảy',h:15.0,g:15.8,c:10,phi:'5°',spt:3,q:'ryeu'},{n:3,name:'Cát thô rất chặt',h:20.0,g:20.2,c:0,phi:'38°',spt:50,q:'rtot'},{n:4,name:'Đá gốc phong hóa',h:999,g:24.0,c:300,phi:'40°',spt:99,q:'rtot'}],
+   opts:{A:'Móng bè đặt dưới lòng sông tại lớp 1',B:'Cọc khoan nhồi D≥1000mm cắm sâu vào lớp 3 hoặc lớp 4',C:'Gia cố cát lòng sông bằng phụt xi măng',D:'Móng giếng chìm hơi ép'},
+   ans:1,hint:'Công trình cầu: tải và moment rất lớn, đất yếu dày 19m, luôn ngập nước và có lực đẩy nổi, lực ngang từ dòng chảy. Cọc khoan nhồi đường kính lớn là giải pháp tiêu chuẩn cho mố cầu vượt sông.'},
+  {id:'b12',title:'Silo xi măng nặng · N=15000 kN · Bùn dày 25m',type:'Công trình công nghiệp',load:'N=15000 kN (tải tập trung rất lớn)',gwl:'−2.0m',diff:'hard',
+   layers:[{n:1,name:'Bùn sét dày',h:25.0,g:14.8,c:5,phi:'2°',spt:1,q:'ryeu'},{n:2,name:'Sét nửa cứng',h:10.0,g:18.5,c:35,phi:'18°',spt:22,q:'tot'},{n:3,name:'Cát chặt',h:15.0,g:19.5,c:0,phi:'35°',spt:45,q:'rtot'},{n:4,name:'Đá gốc',h:999,g:26.0,c:1000,phi:'45°',spt:99,q:'rtot'}],
+   opts:{A:'Móng bè trên lớp bùn',B:'Cọc khoan nhồi D=1000–1200mm dài &gt;35m cắm vào lớp 3 hoặc 4',C:'Đệm cát thay lớp 1',D:'Cọc cát gia cố lớp bùn'},
+   ans:1,hint:'Bùn SPT=1 dày 25m, tải 15000kN cực lớn. Chỉ cọc khoan nhồi đường kính lớn xuyên sâu &gt;35m qua 25m bùn + 10m sét mới đáp ứng. Đây là trường hợp điển hình của nhà máy xi măng Hải Phòng, Hoàng Thạch.'},
+  {id:'b13',title:'Kho hàng rộng · p=40 kPa · Đất yếu bão hòa',type:'Kho công nghiệp',load:'p=40 kPa phân bố đều 40×80m',gwl:'−1.0m',diff:'hard',
+   layers:[{n:1,name:'Sét pha yếu bão hòa',h:15.0,g:16.5,c:10,phi:'6°',spt:3,q:'yeu'},{n:2,name:'Sét dẻo cứng',h:8.0,g:18.2,c:30,phi:'15°',spt:20,q:'tb'},{n:3,name:'Cát mịn chặt vừa',h:12.0,g:19.0,c:0,phi:'30°',spt:28,q:'tot'},{n:4,name:'Sét cứng',h:10.0,g:20.0,c:50,phi:'24°',spt:40,q:'tot'}],
+   opts:{A:'Cọc khoan nhồi dưới từng cột kho',B:'Bấc thấm + gia tải trước (hoặc hút chân không), chờ lún xong rồi làm nền sàn',C:'Đệm cát dày 2m thay lớp 1',D:'Móng bè BTCT kết hợp cọc'},
+   ans:1,hint:'Tải phân bố rộng, nhỏ (40 kPa). Cọc không cần thiết và rất tốn kém cho kho phân phối. Bấc thấm + gia tải trước là giải pháp phổ biến nhất cho đất yếu dưới nền kho — đã áp dụng rộng rãi ở ĐBSCL.'}
+];
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH HIỂN THỊ
+   qClass(q)     : mã chất lượng → class CSS (ryeu/yeu/tb/tot/rtot)
+   qLabel(q)     : mã chất lượng → nhãn tiếng Việt ("Rất yếu"..."Rất tốt")
+   diffBadge(d)  : độ khó → badge HTML có class màu tương ứng
+   renderEX()    : tạo HTML accordion cho 13 bài EX, chèn vào #ex-zone;
+                   mỗi bài có bảng địa tầng + 4 lựa chọn phương án + hint
+   toggleEx(id)  : mở/đóng accordion của bài EX theo id
+   toggleHint(id): hiện/ẩn hộp gợi ý kỹ thuật
+================================================================ */
+function qClass(q){var m={ryeu:'q-ryeu',yeu:'q-yeu',tb:'q-tb',tot:'q-tot',rtot:'q-rtot'};return m[q]||'';}
+function qLabel(q){var m={ryeu:'Rất yếu',yeu:'Yếu',tb:'Trung bình',tot:'Tốt',rtot:'Rất tốt'};return m[q]||q;}
+function diffBadge(d){
+  var m={easy:'eb-easy',med:'eb-med',hard:'eb-hard'};
+  var l={easy:'Dễ',med:'Trung bình',hard:'Khó'};
+  return '<span class="ex-badge '+m[d]+'">'+l[d]+'</span>';
+}
+
+/* ================================================================
+   KHỐI 3 — BIẾN TOÀN CỤC
+   ANS            : kết quả từng bài/câu
+                    key = id bài EX (b1..b13) hoặc 'mcq-a1'/'mcq-a2'
+   _submitted     : cờ ngăn nộp bài lần 2
+   TOTAL_QUESTIONS: 15 (cố định: 13 bài EX + 2 câu MCQ lý thuyết a1, a2)
+================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=15;
+
+function renderEX(){
+  var z=document.getElementById('ex-zone');
+  EX.forEach(function(ex,i){
+    ANS[ex.id]=null;
+    var h='<div class="ex-card">';
+    h+='<div class="ex-hd" id="exhd_'+ex.id+'" onclick="toggleEx(\''+ex.id+'\')">';
+    h+='<span class="ex-badge eb-b">B'+(i+1)+'</span>'+diffBadge(ex.diff);
+    h+='<div style="flex:1"><div class="ex-title">'+ex.title+'</div><div class="ex-meta">'+ex.type+' · MNN: '+ex.gwl+'</div></div>';
+    h+='<i class="ti ti-chevron-right ex-chev" id="exch_'+ex.id+'"></i></div>';
+    h+='<div class="ex-body" id="exbd_'+ex.id+'">';
+    h+='<div class="info-row"><div class="info-field"><div class="info-lbl">Loại CT</div><div class="info-val">'+ex.type+'</div></div>';
+    h+='<div class="info-field"><div class="info-lbl">Tải trọng</div><div class="info-val">'+ex.load+'</div></div></div>';
+    h+='<table class="soil-tbl"><tr><th>Lớp</th><th>Tên đất</th><th>Dày (m)</th><th>γ</th><th>c</th><th>φ</th><th>SPT</th><th>Đánh giá</th></tr>';
+    ex.layers.forEach(function(l){
+      h+='<tr><td>'+l.n+'</td><td>'+l.name+'</td><td>'+l.h+'</td><td>'+l.g+'</td><td>'+l.c+'</td><td>'+l.phi+'</td><td>'+l.spt+'</td><td class="'+qClass(l.q)+'">'+qLabel(l.q)+'</td></tr>';
+    });
+    h+='</table>';
+    h+='<p style="font-size:12px;color:var(--muted);margin-bottom:5px">❓ Chọn phương án móng phù hợp nhất:</p>';
+    h+='<div class="mcq-wrap"><div class="mcq-opts">';
+    var keys=Object.keys(ex.opts);
+    keys.forEach(function(k,ki){
+      h+='<div class="mcq-opt" id="mco-'+ex.id+'-'+ki+'" onclick="pickEX(\''+ex.id+'\','+ki+','+ex.ans+')"><span class="mkey">'+k+'</span><span>'+ex.opts[k]+'</span></div>';
+    });
+    h+='</div><div class="mcq-exp" id="exp-'+ex.id+'">✓ '+ex.hint+'</div></div>';
+    h+='<button class="btn-hint" onclick="toggleHint(\'hint_'+ex.id+'\')"><i class="ti ti-bulb"></i> Xem gợi ý</button>';
+    h+='<div class="hint-box" id="hint_'+ex.id+'">💡 '+ex.hint+'</div>';
+    h+='</div></div>';
+    z.innerHTML+=h;
+  });
+}
+
+function toggleEx(id){
+  var bd=document.getElementById('exbd_'+id);
+  var hd=document.getElementById('exhd_'+id);
+  var ch=document.getElementById('exch_'+id);
+  var op=bd.classList.contains('open');
+  bd.classList.toggle('open',!op);
+  hd.classList.toggle('open',!op);
+  ch.classList.toggle('open',!op);
+}
+
+function toggleHint(id){
+  var el=document.getElementById(id);
+  if(el)el.style.display=el.style.display==='block'?'none':'block';
+}
+
+/* ================================================================
+   KHỐI 4 — CHẤM CÂU HỎI & CẬP NHẬT TIẾN ĐỘ
+   getSV()    : đọc thông tin SV từ sessionStorage 'ncm_sv'
+   pickMCQ(id, picked, correct): chấm câu MCQ lý thuyết (a1/a2),
+                KHÔNG tự động hiện hint sau khi chọn
+   pickEX(id, picked, correct) : chấm bài chọn phương án móng;
+                TỰ ĐỘNG mở hint giải thích kỹ thuật sau khi SV trả lời
+   updateProg(): tính tiến độ attempted/done, lưu localStorage 'prog_c7_72'
+                (dùng TOTAL_QUESTIONS=15 cố định, không đếm Object.keys)
+================================================================ */
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+function pickMCQ(id,picked,correct){
+  if(ANS['mcq-'+id]!==undefined&&ANS['mcq-'+id]!==null)return;
+  document.querySelectorAll('[id^="mco-'+id+'-"]').forEach(function(el,i){
+    el.onclick=null;
+    if(i===picked&&picked===correct)el.classList.add('ok');
+    else if(i===picked)el.classList.add('no');
+    else if(i===correct)el.classList.add('reveal-ok');
+  });
+  var exp=document.getElementById('exp-'+id);
+  if(exp){exp.classList.add('show');exp.classList.add(picked===correct?'ok-exp':'no-exp');}
+  ANS['mcq-'+id]=(picked===correct);updateProg();
+}
+
+function pickEX(id,picked,correct){
+  if(ANS[id]!==null&&ANS[id]!==undefined)return;
+  document.querySelectorAll('[id^="mco-'+id+'-"]').forEach(function(el,i){
+    el.onclick=null;
+    if(i===picked&&picked===correct)el.classList.add('ok');
+    else if(i===picked)el.classList.add('no');
+    else if(i===correct)el.classList.add('reveal-ok');
+  });
+  var exp=document.getElementById('exp-'+id);
+  if(exp){exp.classList.add('show');exp.classList.add(picked===correct?'ok-exp':'no-exp');}
+  // show hint
+  var hint=document.getElementById('hint_'+id);
+  if(hint)hint.style.display='block';
+  ANS[id]=(picked===correct);updateProg();
+}
+
+function updateProg(){
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var total=TOTAL_QUESTIONS;
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c7_72',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN SERVER
+   submitResult(): POST kết quả lên Cloudflare Worker
+   ⚠️ Trước khi POST: tự động mở hết accordion + hiện toàn bộ hint
+      để SV xem lại toàn bộ bài trước khi kết quả được ghi nhận
+   chapterId   : 'C7-72-PhuongAnMong'
+   WORKER_URL / MIN_ATTEMPT_PCT: đọc từ config.js nếu có
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu!');return;}
+  // expand all for review
+  EX.forEach(function(ex){
+    var bd=document.getElementById('exbd_'+ex.id);
+    var hd=document.getElementById('exhd_'+ex.id);
+    var ch=document.getElementById('exch_'+ex.id);
+    if(bd&&!bd.classList.contains('open')){bd.classList.add('open');if(hd)hd.classList.add('open');if(ch)ch.classList.add('open');}
+    var hint=document.getElementById('hint_'+ex.id);
+    if(hint)hint.style.display='block';
+  });
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C7-72-PhuongAnMong',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){_submitted=true;var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');}
+    else{alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+   1. Hiển thị tên SV/STT từ sessionStorage lên header
+   2. Đăng ký 2 câu MCQ lý thuyết: ANS['mcq-a1']=null, ANS['mcq-a2']=null
+   3. Gọi renderEX() → render 13 bài tập chọn phương án vào #ex-zone
+   4. Gán TOTAL_QUESTIONS=15, khởi tạo nút Nộp bài, gọi updateProg()
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  // init ANS for group A MCQs
+  ANS['mcq-a1']=null; ANS['mcq-a2']=null;
+  renderEX();
+  TOTAL_QUESTIONS=15;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>
