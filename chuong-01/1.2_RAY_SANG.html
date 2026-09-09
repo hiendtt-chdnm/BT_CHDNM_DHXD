@@ -1,0 +1,823 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.2 — Cấu Tạo Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tcard{border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.65}
+svg.diag{width:100%;max-width:460px;display:block;margin:8px auto}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* Đúng/Sai toggle */
+.tf-item{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.tf-stmt{padding:10px 14px;font-size:13px;font-weight:600;background:#FAFCFF;line-height:1.5;border-bottom:1px solid var(--Plt)}
+.tf-btns{display:flex}
+.tf-btn{flex:1;padding:9px 12px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;border-right:1px solid var(--Plt);transition:background .12s}
+.tf-btn:last-child{border-right:none}
+.tf-btn:hover{background:var(--Plt)}
+.tf-btn.ok{background:var(--Glt)!important;color:var(--Gdk)}
+.tf-btn.no{background:var(--Rlt)!important;color:var(--R)}
+.tf-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.tf-exp.show{display:block}
+.tf-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.tf-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* Select-list */
+.sel-item{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px;padding:10px 14px;background:#FAFCFF}
+.sel-q{font-size:13px;font-weight:600;margin-bottom:8px;line-height:1.5}
+.sel-dropdown{width:100%;padding:8px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--sans);font-size:13px;background:#fff;color:var(--text)}
+.sel-dropdown.ok{border-color:var(--G);background:var(--Glt)}
+.sel-dropdown.no{border-color:var(--R);background:var(--Rlt)}
+.sel-exp{padding:9px 0 0;font-size:12px;line-height:1.6;display:none}
+.sel-exp.show{display:block}
+.sel-exp.ok-e{color:var(--Gdk)}
+.sel-exp.no-e{color:#b71c1c}
+@media(max-width:620px){.three-col{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C1.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 1</a>
+    <div class="hdr-title">
+      <h1>1.2 — Cấu Tạo Đất</h1>
+      <p>Đất 3 pha · Cấp phối hạt · Rây sàng · Khối lượng tích lũy</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 1.2 — Cấu Tạo Đất</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-filter"></i>
+    <div><h2>Công thức Rây Sàng</h2></div>
+    <span class="cbadge">CÔNG THỨC</span></div>
+  <div class="card-body">
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Quy ước bảng rây chuẩn</div>
+      <div class="frow">Rây 1: d=10mm · Rây 2: d=5mm · Rây 3: d=2mm · Rây 4: d=1mm</div>
+      <div class="frow">Rây 5: d=0.5mm · Rây 6: d=0.25mm · Rây 7: d=0.1mm</div>
+      <div class="frow" style="margin-top:6px;font-size:12px;color:var(--muted)">Hạt nằm <b>trên</b> rây d<sub>i</sub> có kích thước &gt; d<sub>i</sub> (và &lt; d<sub>i-1</sub> của rây phía trên)</div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-calculator"></i> Khối lượng tích lũy & hàm lượng P(&lt;d)</div>
+      <div class="frow">m(d &lt; d<sub>i</sub>) = tổng khối lượng các rây có đường kính nhỏ hơn d<sub>i</sub></div>
+      <div class="frow">P(&lt;d) = m(d&lt;d<sub>i</sub>) / m<sub>tổng</sub> × 100%</div>
+    </div>
+    <div class="earth-box">💡 Ví dụ: hạt d&lt;0.5mm = khối lượng rây 6 (0.25mm) + rây 7 (0.1mm), vì các hạt này đã lọt qua rây 5 (0.5mm).</div>
+  </div>
+</div>
+
+<!-- ══ LÝ THUYẾT MỚI: CẤU TẠO 3 PHA ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-atom-2"></i>
+    <div><h2>Cấu tạo 3 pha của đất — Nền tảng của mọi tính toán</h2></div>
+    <span class="cbadge" style="background:#6A1B9A">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Đất là vật thể <b>3 pha</b>: pha rắn (hạt khoáng vật), pha lỏng (nước trong lỗ rỗng), pha khí (không khí trong lỗ rỗng). <b>Toàn bộ các chỉ tiêu vật lý của đất (n, e, w, S, γ...) đều xuất phát từ tỷ lệ giữa 3 pha này.</b> Hiểu đúng cấu tạo 3 pha là chìa khóa để hiểu mọi công thức ở các chương sau.</div>
+
+    <svg class="diag" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+      <text x="190" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#0D47A1">Mô hình 3 pha của đất (phase diagram)</text>
+      <!-- Khối thể tích bên trái -->
+      <rect x="30" y="35" width="120" height="190" fill="none" stroke="#0D47A1" stroke-width="1.5"/>
+      <rect x="30" y="35" width="120" height="55" fill="#90CAF9" opacity="0.85"/>
+      <rect x="30" y="90" width="120" height="50" fill="#B3E5FC" opacity="0.85"/>
+      <rect x="30" y="140" width="120" height="85" fill="#8D6E63" opacity="0.9"/>
+      <text x="90" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#0D47A1">Khí (V<tspan font-size="8" dy="2">k</tspan><tspan dy="-2">)</tspan></text>
+      <text x="90" y="119" text-anchor="middle" font-size="11" font-weight="700" fill="#01579B">Nước (V<tspan font-size="8" dy="2">w</tspan><tspan dy="-2">)</tspan></text>
+      <text x="90" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Hạt rắn (V<tspan font-size="8" dy="2">h</tspan><tspan dy="-2">)</tspan></text>
+      <text x="90" y="245" text-anchor="middle" font-size="10" fill="#546E7A">Thể tích V</text>
+      <!-- Mũi tên sang khối khối lượng -->
+      <line x1="155" y1="130" x2="195" y2="130" stroke="#546E7A" stroke-width="1.5" marker-end="url(#arrM)"/>
+      <defs><marker id="arrM" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/></marker></defs>
+      <!-- Khối khối lượng bên phải -->
+      <rect x="210" y="35" width="120" height="190" fill="none" stroke="#0D47A1" stroke-width="1.5"/>
+      <rect x="210" y="35" width="120" height="20" fill="#fff"/>
+      <rect x="210" y="55" width="120" height="50" fill="#B3E5FC" opacity="0.85"/>
+      <rect x="210" y="105" width="120" height="120" fill="#8D6E63" opacity="0.9"/>
+      <text x="270" y="48" text-anchor="middle" font-size="10" fill="#90A4AE">Q<tspan font-size="8" dy="2">khí</tspan><tspan dy="-2">≈0</tspan></text>
+      <text x="270" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="#01579B">Nước (Q<tspan font-size="8" dy="2">w</tspan><tspan dy="-2">)</tspan></text>
+      <text x="270" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Hạt rắn (Q<tspan font-size="8" dy="2">k</tspan><tspan dy="-2">)</tspan></text>
+      <text x="270" y="245" text-anchor="middle" font-size="10" fill="#546E7A">Khối lượng Q</text>
+    </svg>
+    <div class="earth-box" style="margin-top:-4px">📌 <b>Lưu ý quan trọng:</b> Khối lượng khí coi như xấp xỉ <b>bằng 0</b> (Q≈0) vì khí rất nhẹ so với nước và hạt rắn. Nhưng <b>thể tích khí KHÔNG bỏ qua được</b> — nó vẫn chiếm không gian đáng kể trong lỗ rỗng, ảnh hưởng trực tiếp đến độ rỗng n và độ bão hòa S.</div>
+
+    <div class="three-col">
+      <div class="tcard" style="background:#EFEBE9;border-left:4px solid #5D4037">
+        <b style="color:#3E2723">PHA RẮN (HẠT ĐẤT)</b><br>
+        Khung xương chịu lực chính của đất<br>
+        Quyết định: tỷ trọng Δ, thành phần hạt, hình dạng hạt, khoáng vật
+      </div>
+      <div class="tcard" style="background:#E1F5FE;border-left:4px solid #0277BD">
+        <b style="color:#01579B">PHA LỎNG (NƯỚC)</b><br>
+        Lấp đầy 1 phần hoặc toàn bộ lỗ rỗng<br>
+        Quyết định: độ ẩm w, độ bão hòa S, áp lực nước lỗ rỗng u (chương sau)
+      </div>
+      <div class="tcard" style="background:#ECEFF1;border-left:4px solid #607D8B">
+        <b style="color:#37474F">PHA KHÍ (KHÔNG KHÍ)</b><br>
+        Lấp đầy phần lỗ rỗng còn lại (không có nước)<br>
+        Khối lượng ≈0, nhưng thể tích ảnh hưởng đến n, S
+      </div>
+    </div>
+
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Tại sao pha rắn quan trọng nhất?</div>
+      <div class="frow">Pha rắn là <b>khung cố định</b> — thể tích hạt V<sub>h</sub> hầu như không đổi khi đất chịu tải hay thay đổi độ ẩm (trong điều kiện thông thường).</div>
+      <div class="frow">Mọi biến dạng (lún, nén) hay thay đổi trạng thái của đất thực chất là <b>sự thay đổi tỷ lệ giữa pha lỏng và pha khí trong lỗ rỗng</b> — khi nước/khí bị ép ra hoặc hút vào, chứ bản thân hạt rắn không co giãn.</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)">→ Đây là lý do tại sao toàn bộ chương 3 (độ lún) dùng V<sub>h</sub>=const làm điểm tựa để tính toán mọi thay đổi.</div>
+    </div>
+
+    <!-- MCQ -->
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Trong mô hình 3 pha của đất, khối lượng pha nào được coi là xấp xỉ bằng 0?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,2,'❌ Khối lượng hạt rắn luôn lớn nhất, không thể bỏ qua.')"><span class="mkey">A</span><span>Pha rắn</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,2,'❌ Khối lượng nước (Qw) luôn được tính đến trong mọi công thức.')"><span class="mkey">B</span><span>Pha lỏng</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,2,'✓ Khối lượng riêng của khí rất nhỏ so với nước và hạt rắn nên Q_khí ≈ 0 trong mọi tính toán.')"><span class="mkey">C</span><span>Pha khí</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,2,'❌')"><span class="mkey">D</span><span>Không pha nào</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>Khi đất bị lún (nén lại) dưới tải trọng, điều gì xảy ra với pha rắn?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1,'❌ Hạt rắn không co lại — thực chất nước/khí trong lỗ rỗng bị ép thoát ra.')"><span class="mkey">A</span><span>Thể tích hạt rắn V<sub>h</sub> co lại</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1,'✓ V_h gần như không đổi; độ lún thực chất là do nước/khí trong lỗ rỗng bị ép thoát ra ngoài, làm thể tích lỗ rỗng Vr giảm.')"><span class="mkey">B</span><span>V<sub>h</sub> hầu như không đổi, nước/khí bị ép thoát ra</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1,'❌')"><span class="mkey">C</span><span>Hạt rắn bị nén vỡ thành hạt nhỏ hơn</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1,'❌')"><span class="mkey">D</span><span>Không có hiện tượng gì xảy ra với các pha</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+
+    <!-- ĐÚNG/SAI -->
+    <div class="sec-lbl" style="margin:10px 0 8px"><i class="ti ti-check" style="font-size:12px"></i> Trắc nghiệm Đúng/Sai</div>
+    <div class="tf-item"><div class="tf-stmt"><span class="mcq-num">Đ/S 1</span>Thể tích khí trong đất có thể bỏ qua hoàn toàn khi tính các chỉ tiêu vật lý, giống như khối lượng khí.</div>
+      <div class="tf-btns">
+        <div class="tf-btn" id="tf1-D" onclick="pickTF('tf1','D',false)">ĐÚNG</div>
+        <div class="tf-btn" id="tf1-S" onclick="pickTF('tf1','S',false)">SAI</div>
+      </div>
+      <div class="tf-exp" id="exptf-tf1"></div>
+    </div>
+    <div class="tf-item"><div class="tf-stmt"><span class="mcq-num">Đ/S 2</span>Trong đất bão hòa nước hoàn toàn (S=100%), pha khí không còn tồn tại trong lỗ rỗng.</div>
+      <div class="tf-btns">
+        <div class="tf-btn" id="tf2-D" onclick="pickTF('tf2','D',true)">ĐÚNG</div>
+        <div class="tf-btn" id="tf2-S" onclick="pickTF('tf2','S',true)">SAI</div>
+      </div>
+      <div class="tf-exp" id="exptf-tf2"></div>
+    </div>
+    <div class="tf-item"><div class="tf-stmt"><span class="mcq-num">Đ/S 3</span>Thể tích pha rắn V<sub>h</sub> được coi là không đổi trong hầu hết các bài toán cơ học đất, kể cả khi đất bị nén lún.</div>
+      <div class="tf-btns">
+        <div class="tf-btn" id="tf3-D" onclick="pickTF('tf3','D',true)">ĐÚNG</div>
+        <div class="tf-btn" id="tf3-S" onclick="pickTF('tf3','S',true)">SAI</div>
+      </div>
+      <div class="tf-exp" id="exptf-tf3"></div>
+    </div>
+    <div class="tf-item"><div class="tf-stmt"><span class="mcq-num">Đ/S 4</span>Đất khô tuyệt đối (w=0) vẫn có thể có pha khí chiếm toàn bộ thể tích lỗ rỗng.</div>
+      <div class="tf-btns">
+        <div class="tf-btn" id="tf4-D" onclick="pickTF('tf4','D',true)">ĐÚNG</div>
+        <div class="tf-btn" id="tf4-S" onclick="pickTF('tf4','S',true)">SAI</div>
+      </div>
+      <div class="tf-exp" id="exptf-tf4"></div>
+    </div>
+
+    <!-- CHỌN LIST -->
+    <div class="sec-lbl" style="margin:10px 0 8px"><i class="ti ti-list-check" style="font-size:12px"></i> Chọn đáp án đúng nhất</div>
+    <div class="sel-item">
+      <div class="sel-q"><span class="mcq-num">Chọn 1</span>Thể tích lỗ rỗng V<sub>r</sub> của đất bao gồm những thành phần nào?</div>
+      <select class="sel-dropdown" id="sel1" onchange="pickSEL('sel1',this.value,'B')">
+        <option value="">— Chọn đáp án —</option>
+        <option value="A">Chỉ thể tích nước V<sub>w</sub></option>
+        <option value="B">Thể tích nước V<sub>w</sub> + thể tích khí V<sub>k</sub></option>
+        <option value="C">Chỉ thể tích khí V<sub>k</sub></option>
+        <option value="D">Toàn bộ thể tích mẫu đất V</option>
+      </select>
+      <div class="sel-exp" id="expsel-sel1"></div>
+    </div>
+    <div class="sel-item">
+      <div class="sel-q"><span class="mcq-num">Chọn 2</span>Yếu tố nào sau đây KHÔNG do pha rắn (hạt đất) quyết định trực tiếp?</div>
+      <select class="sel-dropdown" id="sel2" onchange="pickSEL('sel2',this.value,'C')">
+        <option value="">— Chọn đáp án —</option>
+        <option value="A">Tỷ trọng hạt Δ</option>
+        <option value="B">Thành phần khoáng vật</option>
+        <option value="C">Độ bão hòa S</option>
+        <option value="D">Cấp phối hạt (kích thước hạt)</option>
+      </select>
+      <div class="sel-exp" id="expsel-sel2"></div>
+    </div>
+    <div class="sel-item">
+      <div class="sel-q"><span class="mcq-num">Chọn 3</span>Vì sao mô hình 3 pha là nền tảng quan trọng nhất của Cơ học đất?</div>
+      <select class="sel-dropdown" id="sel3" onchange="pickSEL('sel3',this.value,'B')">
+        <option value="">— Chọn đáp án —</option>
+        <option value="A">Vì nó chỉ dùng để tính khối lượng mẫu đất</option>
+        <option value="B">Vì hầu hết các chỉ tiêu vật lý (n, e, w, S, γ...) đều được suy ra từ tỷ lệ giữa 3 pha</option>
+        <option value="C">Vì nó chỉ áp dụng cho đất sét</option>
+        <option value="D">Vì nó không liên quan đến các chương sau</option>
+      </select>
+      <div class="sel-exp" id="expsel-sel3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Đọc bảng rây, xác định khoảng kích thước -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Đọc bảng rây: xác định khoảng kích thước hạt</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Nguyên tắc</div>
+      <div class="frow">Hạt nằm trên rây d<sub>i</sub> → kích thước trong khoảng (d<sub>i</sub>, d<sub>i-1</sub>) — rây phía trên</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Xác định: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Khối lượng hạt d < ngưỡng (1 mức) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Tính khối lượng hạt có kích thước d &lt; ngưỡng</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">m(d&lt;d<sub>i</sub>) = tổng khối lượng các rây có d &lt; d<sub>i</sub></div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Khối lượng hạt d < ngưỡng (nhiều mức) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Tính khối lượng tích lũy ở nhiều ngưỡng</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">m(d&lt;0.5mm) = m<sub>rây6</sub>+m<sub>rây7</sub></div>
+      <div class="frow">m(d&lt;1.0mm) = m<sub>rây5</sub>+m<sub>rây6</sub>+m<sub>rây7</sub></div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+  </div>
+</div>
+
+<!-- A4: Hàm lượng tích lũy P(<d) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Tính hàm lượng tích lũy P(&lt;d) (%)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① m<sub>tổng</sub> = tổng khối lượng tất cả các rây</div>
+      <div class="frow">② P(&lt;d) = m(d&lt;d<sub>i</sub>) / m<sub>tổng</sub> × 100%</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- A5: Cỡ hạt chiếm tỷ trọng nhiều nhất -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Xác định cỡ hạt chiếm tỷ trọng nhiều nhất</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">So sánh khối lượng giữ lại trên từng rây, tìm giá trị lớn nhất</div>
+      <div class="frow" id="a5-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">So sánh: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>1.2 · Cấu Tạo Đất & Rây Sàng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="1.3_CHI_TIEU.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS     : lưu kết quả từng câu hỏi { id: true/false/null }
+   _submitted : cờ ngăn nộp lại sau khi đã gửi lên server
+   TOTAL_QUESTIONS : tổng số câu, gán sau khi init xong (window.onload)
+================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   r1/r2     : làm tròn 1 / 2 chữ số thập phân
+   seededRng : sinh ngẫu nhiên theo seed (LCG: s = s*16807 mod 2^31-1)
+               → cùng STT luôn cho cùng số liệu
+   getSV     : đọc thông tin sinh viên từ sessionStorage 'ncm_sv'
+   scrollNext: cuộn tới ô nhập đầu tiên chưa đúng
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ================================================================
+   KHỐI 3 — CÂU HỎI TRẮC NGHIỆM MCQ (phần lý thuyết cấu tạo 3 pha)
+   pickMCQ(name, picked, correct, expText):
+     name    : ID câu (q1, q2...)
+     picked  : index đáp án SV chọn (0-based)
+     correct : index đáp án đúng
+     expText : câu giải thích hiển thị sau khi trả lời
+================================================================ */
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-exp':'no-exp');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+/* ================================================================
+   KHỐI 4 — CÂU HỎI ĐÚNG/SAI (True/False — phần lý thuyết)
+   TF_EXP  : câu giải thích hiển thị sau khi SV trả lời
+   pickTF(name, picked, correctIsTrue): xử lý khi SV bấm ĐÚNG/SAI
+     correctIsTrue = true  nếu đáp án đúng là "ĐÚNG"
+     correctIsTrue = false nếu đáp án đúng là "SAI"
+================================================================ */
+var TF_EXP={
+  tf1:'❌ <b>SAI.</b> Khối lượng khí có thể bỏ qua (Q≈0), nhưng THỂ TÍCH khí thì không — nó vẫn chiếm không gian trong lỗ rỗng và ảnh hưởng đến n, S.',
+  tf2:'✓ <b>ĐÚNG.</b> Khi S=100% (bão hòa hoàn toàn), nước lấp đầy toàn bộ lỗ rỗng, không còn chỗ cho khí (Vk=0).',
+  tf3:'✓ <b>ĐÚNG.</b> V_h gần như không đổi trong điều kiện thông thường — đây là giả thiết nền tảng để tính độ lún (chương 3).',
+  tf4:'✓ <b>ĐÚNG.</b> Khi w=0, không có nước trong lỗ rỗng, nên toàn bộ thể tích lỗ rỗng Vr do khí chiếm giữ (Vk=Vr).'
+};
+function pickTF(name,picked,correctIsTrue){
+  if(ANS['tf-'+name]!=null)return;
+  var ok=(picked==='D')===correctIsTrue;
+  document.getElementById(name+'-D').style.pointerEvents='none';
+  document.getElementById(name+'-S').style.pointerEvents='none';
+  document.getElementById(name+'-'+picked).className='tf-btn '+(ok?'ok':'no');
+  var correctKey=correctIsTrue?'D':'S';
+  if(!ok)document.getElementById(name+'-'+correctKey).className='tf-btn ok';
+  var exp=document.getElementById('exptf-'+name);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-e':'no-e');exp.innerHTML=TF_EXP[name]||'';}
+  ANS['tf-'+name]=ok;updateProg();
+}
+/* ================================================================
+   KHỐI 5 — CÂU HỎI CHỌN-TỪ-DANH-SÁCH (Select — phần lý thuyết)
+   SEL_EXP : câu giải thích hiển thị sau khi SV chọn
+   pickSEL(id, val, correct): xử lý khi SV chọn từ dropdown
+     val     : giá trị option SV chọn (A/B/C/D)
+     correct : giá trị option đúng
+================================================================ */
+var SEL_EXP={
+  sel1:{ok:'✓ Lỗ rỗng Vr = Vw + Vk, vì lỗ rỗng chỉ có thể chứa nước hoặc khí (hoặc cả hai).',no:'❌ Lỗ rỗng gồm cả nước và khí, không chỉ 1 thành phần.'},
+  sel2:{ok:'✓ Độ bão hòa S phụ thuộc vào lượng nước trong lỗ rỗng (pha lỏng), không do bản thân hạt rắn quyết định.',no:'❌ Δ, khoáng vật, cấp phối hạt đều là tính chất nội tại của pha rắn.'},
+  sel3:{ok:'✓ Đây chính là lý do mô hình 3 pha được dùng xuyên suốt giáo trình — mọi công thức chỉ tiêu vật lý đều xuất phát từ tỷ lệ 3 pha.',no:'❌ Mô hình 3 pha áp dụng cho mọi loại đất và là nền tảng cho hầu hết các chương sau.'}
+};
+function pickSEL(id,val,correct){
+  if(!val)return;
+  if(ANS['sel-'+id]!=null)return;
+  var sel=document.getElementById(id);
+  var ok=(val===correct);
+  sel.disabled=true;
+  sel.className='sel-dropdown '+(ok?'ok':'no');
+  var exp=document.getElementById('expsel-'+id);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-e':'no-e');exp.innerHTML=ok?SEL_EXP[id].ok:SEL_EXP[id].no;}
+  ANS['sel-'+id]=ok;updateProg();
+}
+
+/* ================================================================
+   KHỐI 6 — CHẤM CÂU HỎI ĐIỀN SỐ
+   chkFill(id, ans, tol): kiểm tra ô nhập số, tô xanh nếu đúng/đỏ nếu sai
+     tol : sai số chấp nhận (ví dụ 0.5 → chênh ≤0.5 là đúng)
+   makeQ(id, label, ans, tol, unit): tạo HTML 1 hàng câu hỏi điền số
+     → Để thêm câu hỏi mới: gọi makeQ(...) và nối vào innerHTML
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+/* ================================================================
+   KHỐI 7 — THEO DÕI TIẾN ĐỘ
+   Đếm câu đã làm / số câu đúng, cập nhật thanh progress và nút nộp.
+   Lưu vào localStorage key 'prog_c1_12' để trang chủ đọc % tiến độ.
+   ⚠️ Không sửa key localStorage vì index_C1.html dùng đúng key này.
+================================================================ */
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c1_12',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 8 — NỘP BÀI LÊN CLOUDFLARE WORKER
+   Gửi POST đến WORKER_URL với: name, mssv, stt, classId,
+   chapterId 'C1-12-RaySang', score (%), correct, total.
+   - Chỉ cho nộp khi đã làm ≥ MIN_ATTEMPT_PCT% (lấy từ config.js)
+   - _submitted = true sau lần nộp đầu, ngăn nộp lại
+   - Worker giới hạn tối đa 2 lần nộp/chương (1 thường + 1 ôn tập)
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C1-12-RaySang',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 9 — SINH DỮ LIỆU THÍ NGHIỆM RAY SÀNG
+   bangRayHtml(ms): tạo bảng HTML hiển thị 7 rây chuẩn + khối lượng
+   genMs(rng)     : sinh mảng 7 khối lượng [m1..m7] theo seed STT
+     Công thức: ms[i] = hằng_số + a (a = 1..200, phụ thuộc seed)
+   Seed pattern   : seededRng(stt * prime + offset) — khác nhau mỗi bài
+================================================================ */
+function bangRayHtml(ms){
+  var ds=[10,5,2,1,0.5,0.25,0.1];
+  var rows=ds.map(function(d,i){return '<tr><td>Rây '+(i+1)+'</td><td>'+d+' mm</td><td>'+ms[i]+' g</td></tr>';}).join('');
+  return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Rây</th><th>d (mm)</th><th>Khối lượng (g)</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function genMs(rng){
+  var a=Math.floor(1+rng()*199);
+  return {a:a, ms:[45+a,25+a,100+a,60+a,5+5*a,20+3*a,15+2*a]};
+}
+
+/* ================================================================
+   KHỐI 10 — BÀI TẬP NHÓM A (hướng dẫn đầy đủ, có gợi ý từng bước)
+   Mỗi bài A là 1 IIFE (function(){...})() độc lập — có thể sửa 1 bài
+   mà không ảnh hưởng các bài khác.
+   Seed riêng biệt: seededRng(stt * prime + offset)
+     A1: Đọc bảng rây — xác định khoảng kích thước hạt   (seed *7+1101)
+     A2: Khối lượng hạt d < ngưỡng (1 mức)               (seed *11+1103)
+     A3: Khối lượng tích lũy nhiều mức                   (seed *13+1105)
+     A4: Hàm lượng tích lũy P(<d) %                      (seed *17+1107)
+     A5: Cỡ hạt chiếm tỷ trọng nhiều nhất               (seed *19+1109)
+================================================================ */
+function genA(stt){
+  // A1: Đọc bảng rây, xác định khoảng kích thước
+  (function(){
+    var rng=seededRng(stt*7+1101);
+    var d=genMs(rng);
+    var ms=d.ms;
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN rây sàng:<br>'+bangRayHtml(ms)
+      +'Khối lượng các hạt có kích thước <b>từ 0.5mm đến 1.0mm</b> nằm trên rây nào, và khối lượng bao nhiêu?';
+    document.getElementById('a1-hint').innerHTML=
+      'Hạt 0.5–1.0mm lọt qua rây 1mm (Rây 4) nhưng không lọt qua rây 0.5mm (Rây 5) → nằm <b>trên Rây 4</b> (d=1mm)';
+    document.getElementById('a1-q').innerHTML=makeQ('a1-m','Khối lượng trên Rây 4 (g)',ms[3],1,'g');
+  })();
+
+  // A2: Khối lượng hạt d < ngưỡng (1 mức)
+  (function(){
+    var rng=seededRng(stt*11+1103);
+    var d=genMs(rng);
+    var ms=d.ms;
+    var lt025=ms[6];
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN rây sàng:<br>'+bangRayHtml(ms)
+      +'Tính khối lượng hạt có kích thước <b>d &lt; 0.25mm</b>.';
+    document.getElementById('a2-hint').innerHTML=
+      'Hạt d&lt;0.25mm lọt qua Rây 6 → chỉ còn lại trên Rây 7 (d=0.1mm): m = '+ms[6]+' g';
+    document.getElementById('a2-q').innerHTML=makeQ('a2-m','m(d<0.25mm) (g)',lt025,1,'g');
+  })();
+
+  // A3: Khối lượng tích lũy nhiều mức
+  (function(){
+    var rng=seededRng(stt*13+1105);
+    var d=genMs(rng);
+    var ms=d.ms;
+    var lt05=ms[5]+ms[6];
+    var lt10=ms[4]+ms[5]+ms[6];
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN rây sàng:<br>'+bangRayHtml(ms)
+      +'Tính khối lượng hạt <b>d &lt; 0.5mm</b> và <b>d &lt; 1.0mm</b>.';
+    document.getElementById('a3-hint').innerHTML=
+      'm(d&lt;0.5) = m<sub>rây6</sub>+m<sub>rây7</sub> = '+ms[5]+'+'+ms[6]+' = ?<br>'
+      +'m(d&lt;1.0) = m<sub>rây5</sub>+m<sub>rây6</sub>+m<sub>rây7</sub> = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-lt05','m(d<0.5mm) (g)',lt05,1,'g')
+      +makeQ('a3-lt10','m(d<1.0mm) (g)',lt10,1,'g');
+  })();
+
+  // A4: Hàm lượng tích lũy P(<d)
+  (function(){
+    var rng=seededRng(stt*17+1107);
+    var d=genMs(rng);
+    var ms=d.ms;
+    var total=ms.reduce(function(a,b){return a+b;},0);
+    var lt05=ms[5]+ms[6];
+    var lt10=ms[4]+ms[5]+ms[6];
+    var lt50=ms[3]+ms[4]+ms[5]+ms[6];
+    var p05=r2(lt05/total*100);
+    var p10=r2(lt10/total*100);
+    var p50=r2(lt50/total*100);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN rây sàng:<br>'+bangRayHtml(ms)
+      +'Tính hàm lượng tích lũy P(&lt;d) tại d=0.5mm, 1.0mm và 5.0mm.';
+    document.getElementById('a4-hint').innerHTML=
+      'm<sub>tổng</sub> = '+total+' g<br>'
+      +'P(&lt;0.5) = m(d&lt;0.5)/'+total+'×100 = ?<br>'
+      +'P(&lt;1.0) = m(d&lt;1.0)/'+total+'×100 = ? &nbsp;·&nbsp; P(&lt;5.0) = m(d&lt;5.0)/'+total+'×100 = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-mtotal','m<sub>tổng</sub> (g)',total,1,'g')
+      +makeQ('a4-p05','P(d&lt;0.5mm) (%)',p05,0.5,'%')
+      +makeQ('a4-p10','P(d&lt;1.0mm) (%)',p10,0.5,'%')
+      +makeQ('a4-p50','P(d&lt;5.0mm) (%)',p50,0.5,'%');
+  })();
+
+  // A5: Cỡ hạt chiếm tỷ trọng nhiều nhất
+  (function(){
+    var rng=seededRng(stt*19+1109);
+    var d=genMs(rng);
+    var ms=d.ms;
+    var maxIdx=0,maxVal=ms[0];
+    for(var i=1;i<ms.length;i++){if(ms[i]>maxVal){maxVal=ms[i];maxIdx=i;}}
+    var dsLabel=['10','5','2','1','0.5','0.25','0.1'];
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN rây sàng:<br>'+bangRayHtml(ms)
+      +'Cỡ hạt nào (rây nào) chiếm tỷ trọng (khối lượng) nhiều nhất trong mẫu?';
+    document.getElementById('a5-hint').innerHTML=
+      'So sánh '+ms.join(' g, ')+' g → tìm giá trị lớn nhất, xác định số thứ tự rây tương ứng';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-idx','Số thứ tự rây có khối lượng lớn nhất (1-7)',maxIdx+1,0.4,'')
+      +makeQ('a5-val','Khối lượng lớn nhất (g)',maxVal,1,'g');
+  })();
+}
+
+/* ================================================================
+   KHỐI 11 — BÀI TẬP NHÓM B (có công thức, tự thay số)
+              VÀ NHÓM C (tự nhận biết, chỉ cho đầu bài)
+   genBC(stt): sinh HTML động cho cả 2 nhóm từ mảng CFG
+   genOne(id, type, stt, s1, s2): sinh 1 bài cụ thể theo type
+   CFG: mảng 5 dạng bài, mỗi phần tử gồm {id, title, fml, type}
+   ĐỂ THÊM DẠNG BÀI MỚI:
+     1. Thêm object vào CFG
+     2. Xử lý type mới trong switch/if trong genOne
+     3. Thêm HTML skeleton trong genA nếu cần bài hướng dẫn
+================================================================ */
+function genBC(stt){
+  var CFG=[
+    {id:'1',title:'Đọc bảng rây — khoảng kích thước hạt',fml:'Hạt trên rây d<sub>i</sub> có kích thước trong (d<sub>i</sub>, d<sub>i-1</sub>)',type:'doc'},
+    {id:'2',title:'Khối lượng hạt d &lt; ngưỡng (1 mức)',fml:'m(d&lt;d<sub>i</sub>) = tổng khối lượng các rây có d&lt;d<sub>i</sub>',type:'lt1'},
+    {id:'3',title:'Khối lượng tích lũy (nhiều mức)',fml:'m(d&lt;0.5)=m6+m7 &nbsp;·&nbsp; m(d&lt;1.0)=m5+m6+m7',type:'lt2'},
+    {id:'4',title:'Hàm lượng tích lũy P(&lt;d)',fml:'P(&lt;d) = m(d&lt;d<sub>i</sub>)/m<sub>tổng</sub> × 100%',type:'P'},
+    {id:'5',title:'Cỡ hạt chiếm tỷ trọng nhiều nhất',fml:'So sánh khối lượng các rây, tìm giá trị lớn nhất',type:'max'},
+  ];
+
+  var bhtml='',chtml='';
+  CFG.forEach(function(c,idx){
+    var bid='b'+c.id, cid='c'+c.id;
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>Bài '+bid.toUpperCase()+' · '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+bid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+bid+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+bid+'-q"></div></div></div>';
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>Bài '+cid.toUpperCase()+' · Tự nhận biết — '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+cid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+cid+'-prob">⏳</div>'
+      +'<div id="'+cid+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[23,29,31,37,41][idx];
+    genOne('b'+c.id,c.type,stt,seedBase,6101+idx*20);
+    genOne('c'+c.id,c.type,stt,seedBase+97,6201+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+  var d=genMs(rng);
+  var ms=d.ms;
+
+  if(type==='doc'){
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN rây sàng:<br>'+bangRayHtml(ms)+'Khối lượng hạt 0.5–1.0mm nằm trên rây nào, khối lượng bao nhiêu?';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-m','Khối lượng trên Rây 4 (g)',ms[3],1,'g');
+  }
+  else if(type==='lt1'){
+    var lt025=ms[6];
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN rây sàng:<br>'+bangRayHtml(ms)+'Tính khối lượng hạt d&lt;0.25mm.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-m','m(d<0.25mm) (g)',lt025,1,'g');
+  }
+  else if(type==='lt2'){
+    var lt05=ms[5]+ms[6];var lt10=ms[4]+ms[5]+ms[6];
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN rây sàng:<br>'+bangRayHtml(ms)+'Tính m(d&lt;0.5mm) và m(d&lt;1.0mm).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-lt05','m(d<0.5mm) (g)',lt05,1,'g')+makeQ(id+'-lt10','m(d<1.0mm) (g)',lt10,1,'g');
+  }
+  else if(type==='P'){
+    var total=ms.reduce(function(a,b){return a+b;},0);
+    var lt05=ms[5]+ms[6];var lt10=ms[4]+ms[5]+ms[6];
+    var p05=r2(lt05/total*100);var p10=r2(lt10/total*100);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN rây sàng:<br>'+bangRayHtml(ms)+'Tính P(d&lt;0.5mm) và P(d&lt;1.0mm).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-p05','P(d<0.5mm) (%)',p05,0.5,'%')+makeQ(id+'-p10','P(d<1.0mm) (%)',p10,0.5,'%');
+  }
+  else if(type==='max'){
+    var maxIdx=0,maxVal=ms[0];
+    for(var i=1;i<ms.length;i++){if(ms[i]>maxVal){maxVal=ms[i];maxIdx=i;}}
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN rây sàng:<br>'+bangRayHtml(ms)+'Cỡ hạt nào chiếm tỷ trọng nhiều nhất?';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-idx','Số thứ tự rây lớn nhất (1-7)',maxIdx+1,0.4,'')+makeQ(id+'-val','Khối lượng lớn nhất (g)',maxVal,1,'g');
+  }
+}
+
+/* ================================================================
+   KHỐI 12 — KHỞI TẠO TRANG (chạy sau khi toàn bộ HTML đã load)
+   Thứ tự khởi tạo:
+     1. Đọc SV từ sessionStorage → hiển thị tên/STT lên header
+     2. genA(stt)  → render 5 bài nhóm A vào các div đã có sẵn trong HTML
+     3. genBC(stt) → tạo HTML động cho nhóm B+C, sau đó gọi genOne()
+     4. Đăng ký câu lý thuyết (MCQ/TF/SEL) vào ANS với giá trị null
+     5. TOTAL_QUESTIONS = số key trong ANS (đếm sau khi mọi thứ đã đăng ký)
+     6. updateProg() → cập nhật thanh tiến độ lần đầu (0%)
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  ['q1','q2'].forEach(function(k){ANS['mcq-'+k]=null;});
+  ['tf1','tf2','tf3','tf4'].forEach(function(k){ANS['tf-'+k]=null;});
+  ['sel1','sel2','sel3'].forEach(function(k){ANS['sel-'+k]=null;});
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

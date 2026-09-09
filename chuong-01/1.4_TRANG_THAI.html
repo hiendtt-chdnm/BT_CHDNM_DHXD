@@ -1,0 +1,1054 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.4 — Trạng Thái & Phân Loại Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--sans)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;border-bottom:1px solid var(--Plt);text-align:center}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+table.tbl .hl{background:#FFF9C4!important;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tcard{border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.65}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-top:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C1.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 1</a>
+    <div class="hdr-title">
+      <h1>1.4 — Trạng Thái & Phân Loại Đất</h1>
+      <p>e, D<sub>r</sub>, SPT, CPT (đất rời) · w, B, SPT (đất dính) · Tên đất TCVN</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 1.4 — Trạng Thái Đất</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ Ý NGHĨA TRẠNG THÁI ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-gauge"></i>
+    <div><h2>Trạng thái đất là gì? — Bản chất vật lý</h2></div>
+    <span class="cbadge">KHÁI NIỆM</span></div>
+  <div class="card-body">
+    <div class="theory">💡 <b>Trạng thái đất</b> phản ánh <b>tỷ lệ giữa pha lỏng (nước) và pha khí trong lỗ rỗng</b>, hoặc <b>mức độ chặt của khung hạt rắn</b> — trong khi pha rắn (V<sub>h</sub>) không đổi. Đây chính là sự "lên xuống" của 2 pha biến đổi (lỏng/khí) mà sinh viên đã học ở bài 1.2.</div>
+    <div class="two-col">
+      <div class="tcard" style="background:#E1F5FE;border-left:4px solid #0277BD">
+        <b style="color:#01579B">ĐẤT DÍNH (sét, á sét, á cát)</b><br>
+        Trạng thái phụ thuộc <b>tỷ lệ nước/khí</b> trong lỗ rỗng → độ ẩm w càng cao, đất càng "nhão" (yếu đi)<br>
+        VD: đất sét khô (cứng, chịu lực tốt) vs đất sét sũng nước sau mưa (dẻo chảy, gần như mất khả năng chịu lực)
+      </div>
+      <div class="tcard" style="background:#FFF3E0;border-left:4px solid #E65100">
+        <b style="color:#BF360C">ĐẤT RỜI (cát, sỏi)</b><br>
+        Trạng thái phụ thuộc <b>mức độ chặt của khung hạt</b> (hệ số rỗng e) → e càng nhỏ, hạt sắp xếp càng khít, đất càng chặt (tốt lên)<br>
+        VD: cát rời (dễ lún sụt, SCT thấp) vs cát đã đầm chặt (ổn định, SCT cao)
+      </div>
+    </div>
+    <div class="earth-box">📌 <b>Ý nghĩa thực tế:</b> Cùng 1 loại đất, cùng 1 lượng hạt rắn, nhưng trạng thái khác nhau (do thay đổi pha lỏng/khí hoặc độ chặt) có thể khiến sức chịu tải chênh lệch <b>hàng chục lần</b>. Đây là lý do tại sao khảo sát địa chất luôn phải xác định trạng thái đất trước khi thiết kế móng.</div>
+  </div>
+</div>
+
+<!-- ══ PHẦN A: TRẠNG THÁI ĐẤT RỜI ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-stack-2"></i>
+    <div><h2>Trạng thái đất rời — 3 phương pháp xác định</h2><p>Hệ số rỗng e · Độ chặt tương đối D<sub>r</sub> · Thí nghiệm hiện trường SPT, CPT</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="fml-box">
+      <div class="ftitle">Phương pháp 1 — Theo hệ số rỗng e (tra bảng theo loại cát)</div>
+      <div class="frow">So sánh e thực tế với khoảng e chuẩn của từng loại cát</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Loại cát</th><th>Chặt</th><th>Chặt vừa</th><th>Rời</th></tr></thead>
+        <tbody>
+          <tr><td>Cát thô, cát vừa</td><td>e &lt; 0.55</td><td>0.55 ≤ e ≤ 0.70</td><td>e &gt; 0.70</td></tr>
+          <tr><td>Cát nhỏ</td><td>e &lt; 0.60</td><td>0.60 ≤ e ≤ 0.75</td><td>e &gt; 0.75</td></tr>
+          <tr><td>Cát bụi</td><td>e &lt; 0.60</td><td>0.60 ≤ e ≤ 0.80</td><td>e &gt; 0.80</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fml-box" style="margin-top:6px">
+      <div class="ftitle">Phương pháp 2 — Theo độ chặt tương đối D<sub>r</sub></div>
+      <div class="frow">D<sub>r</sub> = (e<sub>max</sub>−e) / (e<sub>max</sub>−e<sub>min</sub>) × 100%</div>
+      <div class="frow">D<sub>r</sub> &lt; 33%: Rời &nbsp;·&nbsp; 33–67%: Chặt vừa &nbsp;·&nbsp; D<sub>r</sub> ≥ 67%: Chặt</div>
+    </div>
+
+    <div class="fml-box" style="margin-top:6px">
+      <div class="ftitle">Phương pháp 3 — Thí nghiệm hiện trường SPT, CPT</div>
+      <div class="frow" style="font-size:12px;color:var(--muted)">SPT (Standard Penetration Test): đóng mẫu đếm số búa N → tra độ chặt</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>N-value (SPT)</th><th>Độ chặt D</th><th>Trạng thái</th></tr></thead>
+        <tbody>
+          <tr><td>0 ÷ 4</td><td>0.2</td><td>Rất rời</td></tr>
+          <tr><td>4 ÷ 10</td><td>0.2 ÷ 0.4</td><td>Rời</td></tr>
+          <tr><td>10 ÷ 30</td><td>0.4 ÷ 0.6</td><td>Chặt vừa</td></tr>
+          <tr><td>30 ÷ 50</td><td>0.6 ÷ 0.8</td><td>Chặt</td></tr>
+          <tr><td>&gt; 50</td><td>&gt; 0.8</td><td>Rất chặt</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="frow" style="font-size:12px;color:var(--muted);margin-top:2px">CPT (Cone Penetration Test): xuyên tĩnh đo sức kháng mũi q<sub>c</sub> (MPa) → tra độ chặt</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Loại cát</th><th>Chặt (q<sub>c</sub>)</th><th>Chặt vừa</th><th>Rời</th></tr></thead>
+        <tbody>
+          <tr><td>Cát thô, cát vừa</td><td>&gt;15</td><td>15–5</td><td>&lt;5</td></tr>
+          <tr><td>Cát nhỏ</td><td>&gt;12</td><td>12–4</td><td>&lt;4</td></tr>
+          <tr><td>Cát bụi ẩm, ít ẩm</td><td>&gt;10</td><td>10–3</td><td>&lt;3</td></tr>
+          <tr><td>Cát bụi bão hòa</td><td>&gt;7</td><td>7–2</td><td>&lt;2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="earth-box">💡 3 phương pháp cho cùng 1 kết quả trạng thái — chọn phương pháp nào tùy số liệu hiện có: e (TN trong phòng), D<sub>r</sub> (cần biết e<sub>max</sub>, e<sub>min</sub>), SPT/CPT (TN hiện trường, không cần lấy mẫu nguyên dạng — phù hợp đất rời khó lấy mẫu).</div>
+  </div>
+</div>
+
+<!-- ══ PHẦN B: TRẠNG THÁI ĐẤT DÍNH ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-droplet"></i>
+    <div><h2>Trạng thái đất dính — 3 phương pháp xác định</h2><p>Độ ẩm w · Độ sệt I<sub>L</sub> (B) · Thí nghiệm hiện trường SPT</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="fml-box">
+      <div class="ftitle">Phương pháp 1 — Theo độ ẩm w (so sánh W<sub>P</sub>, W<sub>L</sub>)</div>
+      <div class="frow">w &lt; W<sub>P</sub>: Cứng &nbsp;·&nbsp; W<sub>P</sub> ≤ w ≤ W<sub>L</sub>: Dẻo &nbsp;·&nbsp; w &gt; W<sub>L</sub>: Chảy</div>
+    </div>
+    <div class="fml-box" style="margin-top:6px">
+      <div class="ftitle">Phương pháp 2 — Theo độ sệt I<sub>L</sub> (ký hiệu B) — chính xác hơn</div>
+      <div class="frow">I<sub>P</sub> = W<sub>L</sub> − W<sub>P</sub> &nbsp;·&nbsp; I<sub>L</sub> (B) = (w − W<sub>P</sub>) / I<sub>P</sub></div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Trạng thái</th><th>Điều kiện I<sub>L</sub> (B)</th></tr></thead>
+        <tbody>
+          <tr><td>Cứng (rắn)</td><td>I<sub>L</sub> &lt; 0</td></tr>
+          <tr><td>Nửa cứng</td><td>0 ≤ I<sub>L</sub> &lt; 0.25</td></tr>
+          <tr><td>Dẻo cứng</td><td>0.25 ≤ I<sub>L</sub> &lt; 0.50</td></tr>
+          <tr><td>Dẻo mềm</td><td>0.50 ≤ I<sub>L</sub> &lt; 0.75</td></tr>
+          <tr><td>Dẻo chảy</td><td>0.75 ≤ I<sub>L</sub> ≤ 1.0</td></tr>
+          <tr><td>Chảy</td><td>I<sub>L</sub> &gt; 1.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="fml-box" style="margin-top:6px">
+      <div class="ftitle">Phương pháp 3 — Thí nghiệm hiện trường SPT (cho đất dính)</div>
+      <div class="frow" style="font-size:12px;color:var(--muted)">Số búa N cho đất dính phản ánh độ chặt/độ cứng tương ứng (xem bảng tra TCVN), giá trị N càng cao đất càng cứng/chặt.</div>
+    </div>
+    <div class="earth-box">📌 <b>Liên hệ thực tế:</b> Khi gặp mưa lớn, w tăng → I<sub>L</sub> tăng dần → đất chuyển từ "dẻo cứng" sang "dẻo mềm" rồi "dẻo chảy" — sức chịu tải giảm mạnh. Đây là nguyên nhân chính gây sạt lở mái dốc, lún sụt nền sau mưa lớn kéo dài.</div>
+  </div>
+</div>
+
+<!-- ══ PHẦN C: PHÂN LOẠI TÊN ĐẤT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-list-check"></i>
+    <div><h2>Phân loại tên đất theo thành phần hạt — TCVN</h2><p>Đất rời: theo % hạt thô · Đất dính: theo I<sub>P</sub></p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 <b>Tên đất</b> thể hiện <b>thành phần cấp phối hạt</b> (loại và tỷ lệ các nhóm hạt) — khác với trạng thái (thể hiện tỷ lệ pha lỏng/khí hoặc độ chặt). Hai loại đất khác tên (ví dụ cát và sét) sẽ có ứng xử cơ học hoàn toàn khác nhau dù ở cùng 1 trạng thái.</div>
+
+    <div class="ftitle" style="margin-top:4px">A — Đất rời (hạt thô, không dẻo) — theo % hạt lớn hơn cỡ rây d</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tên đất</th><th>Căn cứ phân loại</th></tr></thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:left;font-weight:700;background:#FFF3E0">Đất hòn lớn (hạt &gt;2mm chiếm &gt;50%)</td></tr>
+          <tr><td>Tảng lăn / Địa khối</td><td>p(d&gt;200) &gt; 50%</td></tr>
+          <tr><td>Dăm / Cuội</td><td>p(d&gt;10) &gt; 50%</td></tr>
+          <tr><td>Sỏi / Sạn</td><td>p(d&gt;2) &gt; 50%</td></tr>
+          <tr><td colspan="2" style="text-align:left;font-weight:700;background:#FFF3E0">Đất cát</td></tr>
+          <tr><td>Cát sạn</td><td>p(d&gt;2) &gt; 25%</td></tr>
+          <tr><td>Cát thô</td><td>p(d&gt;0.50) &gt; 50%</td></tr>
+          <tr><td>Cát vừa (cát hạt trung)</td><td>p(d&gt;0.25) &gt; 50%</td></tr>
+          <tr><td>Cát mịn</td><td>p(d&gt;0.10) &gt; 75%</td></tr>
+          <tr><td>Cát bụi</td><td>p(d&gt;0.10) &lt; 75%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ftitle" style="margin-top:8px">B — Đất dính (hạt mịn, có tính dẻo) — theo chỉ số dẻo I<sub>P</sub></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tên đất</th><th>Điều kiện I<sub>P</sub></th></tr></thead>
+        <tbody>
+          <tr><td>Cát pha (Á cát)</td><td>1 ≤ I<sub>P</sub> &lt; 7</td></tr>
+          <tr><td>Sét pha (Á sét)</td><td>7 ≤ I<sub>P</sub> &lt; 17</td></tr>
+          <tr><td>Sét</td><td>I<sub>P</sub> ≥ 17</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="earth-box">📌 <b>Nguyên tắc chung:</b> Xét từ nhóm hạt lớn nhất trở xuống, nhóm nào đạt tỷ lệ % yêu cầu trước thì lấy tên đó (xét theo thứ tự ưu tiên trong bảng). Với đất rời, càng nhiều hạt thô (sỏi, sạn) thì tên đất "nặng" hơn (thoát nước tốt, không dẻo); với đất dính, I<sub>P</sub> càng lớn thì hàm lượng hạt sét càng cao, đất càng dẻo và giữ nước tốt hơn.</div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A: TRẠNG THÁI ĐẤT RỜI ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Trạng thái đất rời (A1–A4)</div>
+
+<!-- A1: theo e -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Xác định trạng thái đất rời theo hệ số rỗng e</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Tra bảng e theo loại cát</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+    <div class="mcq-wrap" id="a1-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái đất:</div>
+      <div class="mcq-opts" id="a1-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A2: theo Dr -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Xác định trạng thái đất rời theo độ chặt tương đối D<sub>r</sub></h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">D<sub>r</sub> = (e<sub>max</sub>−e)/(e<sub>max</sub>−e<sub>min</sub>) × 100%</div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+    <div class="mcq-wrap" id="a2-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái đất rời:</div>
+      <div class="mcq-opts" id="a2-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A3: theo SPT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Xác định trạng thái đất rời theo thí nghiệm SPT</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Tra bảng N-value</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Tra bảng: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+    <div class="mcq-wrap" id="a3-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái đất theo SPT:</div>
+      <div class="mcq-opts" id="a3-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A4: theo CPT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Xác định trạng thái đất rời theo thí nghiệm CPT (xuyên tĩnh)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Tra bảng q<sub>c</sub> theo loại cát</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Tra bảng: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+    <div class="mcq-wrap" id="a4-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái đất theo CPT:</div>
+      <div class="mcq-opts" id="a4-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A: TRẠNG THÁI ĐẤT DÍNH ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Trạng thái đất dính (A5–A7)</div>
+
+<!-- A5: theo w -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Xác định trạng thái đất dính theo độ ẩm w (so với W<sub>P</sub>, W<sub>L</sub>)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> So sánh w với W<sub>P</sub>, W<sub>L</sub></div>
+      <div class="frow">w &lt; W<sub>P</sub>: Cứng &nbsp;·&nbsp; W<sub>P</sub>≤w≤W<sub>L</sub>: Dẻo &nbsp;·&nbsp; w &gt; W<sub>L</sub>: Chảy</div>
+      <div class="frow" id="a5-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+    <div class="mcq-wrap" id="a5-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái (theo w):</div>
+      <div class="mcq-opts" id="a5-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A6: theo IL (B) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A6 — Xác định trạng thái đất dính theo độ sệt I<sub>L</sub> (B)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A6</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a6-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">I<sub>P</sub> = W<sub>L</sub>−W<sub>P</sub> &nbsp;·&nbsp; I<sub>L</sub> = (w−W<sub>P</sub>)/I<sub>P</sub></div>
+      <div class="frow" id="a6-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a6-q"></div>
+    <div class="mcq-wrap" id="a6-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái (theo I<sub>L</sub>):</div>
+      <div class="mcq-opts" id="a6-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A7: theo SPT (đất dính) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A7 — Xác định trạng thái đất dính theo thí nghiệm SPT</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A7</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a7-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Tra bảng N-value cho đất dính (TCVN)</div>
+      <div class="frow" id="a7-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Tra bảng: (...)</div>
+    </div>
+    <div id="a7-q"></div>
+    <div class="mcq-wrap" id="a7-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái đất dính theo SPT:</div>
+      <div class="mcq-opts" id="a7-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A: PHÂN LOẠI TÊN ĐẤT ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-list-check" style="font-size:12px"></i> Nhóm A — Phân loại tên đất (A8–A10)</div>
+
+<!-- A8: phân loại đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A8 — Phân loại tên đất dính theo I<sub>P</sub></h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A8</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a8-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">I<sub>P</sub> = W<sub>L</sub> − W<sub>P</sub></div>
+      <div class="frow">1≤I<sub>P</sub>&lt;7: Cát pha &nbsp;·&nbsp; 7≤I<sub>P</sub>&lt;17: Sét pha &nbsp;·&nbsp; I<sub>P</sub>≥17: Sét</div>
+      <div class="frow" id="a8-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a8-q"></div>
+    <div class="mcq-wrap" id="a8-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Tên đất:</div>
+      <div class="mcq-opts" id="a8-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A9: phân loại đất rời 1 -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A9 — Phân loại tên đất rời theo thành phần hạt (1)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A9</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a9-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">Xét lần lượt từ nhóm hạt lớn nhất: kiểm tra p(d&gt;d<sub>i</sub>) so với ngưỡng %, nhóm nào đạt trước thì lấy tên đó</div>
+      <div class="frow" id="a9-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Kiểm tra: (...)</div>
+    </div>
+    <div id="a9-q"></div>
+    <div class="mcq-wrap" id="a9-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Tên đất rời:</div>
+      <div class="mcq-opts" id="a9-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A10: phân loại đất rời 2 -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A10 — Phân loại tên đất rời theo thành phần hạt (2)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A10</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a10-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">Tính % tích lũy từng ngưỡng d, so sánh với bảng phân loại TCVN</div>
+      <div class="frow" id="a10-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Kiểm tra: (...)</div>
+    </div>
+    <div id="a10-q"></div>
+    <div class="mcq-wrap" id="a10-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Tên đất rời:</div>
+      <div class="mcq-opts" id="a10-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>1.4 · Trạng Thái Đất</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="1.5_TONG_HOP.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS            : lưu kết quả từng câu { id: true/false/null }
+   _submitted     : cờ ngăn nộp lại sau khi đã gửi
+   TOTAL_QUESTIONS: tổng số câu, gán sau window.onload
+================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   r1/r2/r3  : làm tròn 1/2/3 chữ số thập phân
+   seededRng : sinh ngẫu nhiên LCG theo seed STT
+   getSV     : đọc thông tin SV từ sessionStorage 'ncm_sv'
+   scrollNext: cuộn tới ô nhập đầu tiên chưa đúng
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI ĐIỀN SỐ
+   chkFill: kiểm tra ô nhập, sau khi đúng sẽ gọi checkShowMCQ
+     để hiện MCQ kết luận (đặc điểm riêng của file 1.4)
+   checkShowMCQ(id): sau khi SV điền số xong, hiện ô chọn kết luận
+     (ví dụ: tính Dr xong → hiện MCQ "Đất rời / Chặt vừa / Chặt")
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;
+  checkShowMCQ(id);
+  updateProg();
+}
+function checkShowMCQ(id){
+  ['a1','a2','a3','a4','a5','a6','a7','a8','a9','a10'].forEach(function(p){
+    if(id.indexOf(p+'-')===0){
+      var el=document.getElementById(p+'-mcq-wrap');
+      if(el)el.style.display='block';
+    }
+  });
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+/* ================================================================
+   KHỐI 4 — XỬ LÝ MCQ VÀ SINH MCQ ĐỘNG
+   pickMCQ: xử lý click MCQ có sẵn trong HTML (câu lý thuyết)
+   makeMCQGeneric(id, opts, correct): tạo MCQ động từ mảng opts[]
+     → dùng cho bài tập kết luận trạng thái (A1-A10, B1-B10, C1-C10)
+================================================================ */
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function makeMCQGeneric(id,opts,correct){
+  var html=opts.map(function(o,i){return '<div class="mcq-opt" id="mco-'+id+'-'+i+'" onclick="pickMCQ(\''+id+'\','+i+','+correct+')"><span class="mkey">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></div>';}).join('');
+  document.getElementById(id+'-opts').innerHTML=html;
+  ANS['mcq-'+id]=null;
+}
+
+/* ================================================================
+   KHỐI 5 — BẢNG TRA TRẠNG THÁI ĐẤT (TCVN)
+   E_TABLE : ngưỡng e cho đất rời (cát thô/nhỏ/bụi) → Chặt/Chặt vừa/Rời
+   getTrangThaiE(loai, e)    : tra bảng theo e
+   getTrangThaiDrIdx(Dr)     : phân loại theo Dr (%) — 0=Rời,1=Chặt vừa,2=Chặt
+   getTrangThaiDinhIdx(IL)   : phân loại đất dính theo IL/B (6 mức)
+   getTenDatIdx(Ip)          : phân loại tên đất dính theo Ip
+   getSptRoiIdx(N)           : tra bảng SPT đất rời (5 mức)
+   getSptDinhIdx(N)          : tra bảng SPT đất dính (6 mức)
+   getCptIdx(loai, qc)       : tra bảng CPT theo loại cát và qc (MPa)
+   ⚠️ Sửa ngưỡng ở đây nếu muốn cập nhật theo TCVN mới
+================================================================ */
+// ── Bảng tra trạng thái đất rời theo e ──
+var E_TABLE={
+  tho:{chat:0.55,chatvua:0.70},
+  nho:{chat:0.60,chatvua:0.75},
+  bui:{chat:0.60,chatvua:0.80}
+};
+function getTrangThaiE(loai,e){
+  var t=E_TABLE[loai];
+  if(e<t.chat)return 0; // Chặt
+  if(e<=t.chatvua)return 1; // Chặt vừa
+  return 2; // Rời
+}
+function getTrangThaiDrIdx(Dr){ if(Dr<33)return 0; if(Dr<67)return 1; return 2; } // 0=Rời,1=Chặt vừa,2=Chặt(theo thứ tự khác Dr)
+function getTrangThaiDinhIdx(IL){
+  if(IL<0)return 0; if(IL<0.25)return 1; if(IL<0.5)return 2; if(IL<0.75)return 3; if(IL<=1.0)return 4; return 5;
+}
+function getTenDatIdx(Ip){ if(Ip<7)return 0; if(Ip<17)return 1; return 2; }
+function getSptRoiIdx(N){ if(N<4)return 0; if(N<10)return 1; if(N<30)return 2; if(N<50)return 3; return 4; }
+function getSptDinhIdx(N){ if(N<2)return 0; if(N<4)return 1; if(N<8)return 2; if(N<15)return 3; if(N<30)return 4; return 5; }
+function getCptIdx(loai,qc){
+  var bound={tho:[5,15],nho:[4,12],buiAm:[3,10],buiBh:[2,7]}[loai];
+  if(qc<bound[0])return 2; // Rời
+  if(qc<=bound[1])return 1; // Chặt vừa
+  return 0; // Chặt
+}
+
+/* ================================================================
+   KHỐI 6 — THEO DÕI TIẾN ĐỘ
+   Cập nhật thanh progress, nút nộp bài, và lưu localStorage.
+   ⚠️ Key localStorage là 'prog_c1_14' — index_C1.html đọc đúng key này.
+================================================================ */
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c1_14',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 7 — NỘP BÀI LÊN CLOUDFLARE WORKER
+   chapterId: 'C1-14-TrangThai' — định danh bài này trên server.
+   Worker giới hạn 2 lần nộp/chương. MIN_ATTEMPT_PCT từ config.js.
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C1-14-TrangThai',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 8 — BÀI TẬP NHÓM A (hướng dẫn đầy đủ, 10 dạng phân loại)
+   Mỗi bài là IIFE độc lập. Cấu trúc bài: sinh số liệu → điền số → MCQ kết luận.
+   MCQ kết luận ẩn ban đầu, hiện ra sau khi SV điền đủ ô số (checkShowMCQ).
+     A1  : trạng thái đất rời theo e (tra bảng E_TABLE)
+     A2  : trạng thái đất rời theo Dr = (emax-e)/(emax-emin)×100%
+     A3  : trạng thái đất rời theo SPT (getSptRoiIdx)
+     A4  : trạng thái đất rời theo CPT (getCptIdx)
+     A5  : trạng thái đất dính theo w (so sánh w với WP, WL)
+     A6  : trạng thái đất dính theo IL/B = (w-WP)/IP
+     A7  : trạng thái đất dính theo SPT (getSptDinhIdx)
+     A8  : phân loại tên đất dính theo IP (getTenDatIdx)
+     A9  : phân loại tên đất rời nhóm 1 (hạt thô d>2mm, >0.5mm, >0.25mm)
+     A10 : phân loại tên đất rời nhóm 2 (cát mịn/bụi theo p(d>0.1mm))
+================================================================ */
+function genA(stt){
+  // A1: theo e
+  (function(){
+    var rng=seededRng(stt*7+1101);
+    var loaiArr=['tho','nho','bui'];
+    var loaiLabel={tho:'cát thô/vừa',nho:'cát nhỏ',bui:'cát bụi'};
+    var loai=loaiArr[Math.floor(rng()*3)];
+    var e=r2(0.40+rng()*0.55);
+    var ttIdx=getTrangThaiE(loai,e);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất rời loại <b>'+loaiLabel[loai]+'</b> có hệ số rỗng tự nhiên e=<b>'+e+'</b>. '
+      +'Tra bảng xác định trạng thái của đất.';
+    document.getElementById('a1-hint').innerHTML='So sánh e='+e+' với khoảng e của '+loaiLabel[loai]+' trong bảng → trạng thái?';
+    document.getElementById('a1-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng và chọn đáp án bên dưới (không cần tính số).</div>';
+    ANS['a1-dummy']=true; // đánh dấu đã có ít nhất 1 "câu điền" ảo để hiện MCQ luôn
+    setTimeout(function(){document.getElementById('a1-mcq-wrap').style.display='block';},0);
+    makeMCQGeneric('a1',['Chặt','Chặt vừa','Rời'],ttIdx);
+  })();
+
+  // A2: theo Dr
+  (function(){
+    var rng=seededRng(stt*11+1103);
+    var eMin=r3(0.40+rng()*0.15);
+    var eMax=r3(eMin+0.35+rng()*0.25);
+    var DrPct=r2(10+rng()*85);
+    var e=r3(eMax-DrPct/100*(eMax-eMin));
+    var ttIdx=getTrangThaiDrIdx(DrPct);
+    var ttArr=['Rời','Chặt vừa','Chặt'];
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất cát có hệ số rỗng tự nhiên e=<b>'+e+'</b>. TN xác định e<sub>max</sub>=<b>'+eMax+'</b>, e<sub>min</sub>=<b>'+eMin+'</b>. '
+      +'Tính D<sub>r</sub> và xác định trạng thái.';
+    document.getElementById('a2-hint').innerHTML='D<sub>r</sub> = ('+eMax+'−'+e+')/('+eMax+'−'+eMin+')×100 = ?';
+    document.getElementById('a2-q').innerHTML=makeQ('a2-Dr','D<sub>r</sub> (%)',DrPct,1,'%');
+    makeMCQGeneric('a2',ttArr,ttIdx);
+  })();
+
+  // A3: theo SPT (đất rời)
+  (function(){
+    var rng=seededRng(stt*13+1105);
+    var N=Math.round(2+rng()*55);
+    var idx=getSptRoiIdx(N);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Hố khoan khảo sát đất cát, thí nghiệm SPT cho số búa N=<b>'+N+'</b>. '
+      +'Tra bảng xác định độ chặt D và trạng thái đất.';
+    document.getElementById('a3-hint').innerHTML='Tra bảng N-value='+N+' → khoảng nào? → trạng thái tương ứng?';
+    document.getElementById('a3-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng N-value và chọn đáp án bên dưới.</div>';
+    setTimeout(function(){document.getElementById('a3-mcq-wrap').style.display='block';},0);
+    makeMCQGeneric('a3',['Rất rời','Rời','Chặt vừa','Chặt','Rất chặt'],idx);
+  })();
+
+  // A4: theo CPT
+  (function(){
+    var rng=seededRng(stt*17+1107);
+    var loaiArr=['tho','nho','buiAm','buiBh'];
+    var loaiLabel={tho:'cát thô/vừa',nho:'cát nhỏ',buiAm:'cát bụi ẩm/ít ẩm',buiBh:'cát bụi bão hòa'};
+    var loai=loaiArr[Math.floor(rng()*4)];
+    var qc=r1(1+rng()*18);
+    var idx=getCptIdx(loai,qc);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Thí nghiệm xuyên tĩnh CPT trên nền <b>'+loaiLabel[loai]+'</b> cho sức kháng mũi q<sub>c</sub>=<b>'+qc+' MPa</b>. '
+      +'Tra bảng xác định trạng thái đất.';
+    document.getElementById('a4-hint').innerHTML='So sánh q<sub>c</sub>='+qc+' MPa với bảng tra theo '+loaiLabel[loai]+' → trạng thái?';
+    document.getElementById('a4-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng q<sub>c</sub> và chọn đáp án bên dưới.</div>';
+    setTimeout(function(){document.getElementById('a4-mcq-wrap').style.display='block';},0);
+    makeMCQGeneric('a4',['Chặt','Chặt vừa','Rời'],idx);
+  })();
+
+  // A5: theo w
+  (function(){
+    var rng=seededRng(stt*19+1109);
+    var Wp=r2(18+rng()*10);
+    var Ip=r2(8+rng()*18);
+    var WL=r2(Wp+Ip);
+    var caseIdx=Math.floor(rng()*3);
+    var w;
+    if(caseIdx===0)w=r2(Wp-3-rng()*5);
+    else if(caseIdx===1)w=r2(Wp+rng()*Ip);
+    else w=r2(WL+2+rng()*8);
+    var ttIdx=caseIdx; // 0=Cứng,1=Dẻo,2=Chảy
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất dính có giới hạn dẻo W<sub>P</sub>=<b>'+Wp+'%</b>, giới hạn chảy W<sub>L</sub>=<b>'+WL+'%</b>, độ ẩm tự nhiên w=<b>'+w+'%</b>. '
+      +'Xác định trạng thái theo phương pháp so sánh w với W<sub>P</sub>, W<sub>L</sub>.';
+    document.getElementById('a5-hint').innerHTML='So sánh w='+w+'% với W<sub>P</sub>='+Wp+'% và W<sub>L</sub>='+WL+'% → trạng thái?';
+    document.getElementById('a5-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">So sánh trực tiếp w với W<sub>P</sub>, W<sub>L</sub> và chọn đáp án.</div>';
+    setTimeout(function(){document.getElementById('a5-mcq-wrap').style.display='block';},0);
+    makeMCQGeneric('a5',['Cứng (w&lt;W<sub>P</sub>)','Dẻo (W<sub>P</sub>≤w≤W<sub>L</sub>)','Chảy (w&gt;W<sub>L</sub>)'],ttIdx);
+  })();
+
+  // A6: theo IL (B)
+  (function(){
+    var rng=seededRng(stt*23+1111);
+    var Wp=r2(18+rng()*12);var Ip=r2(8+rng()*22);var WL=r2(Wp+Ip);
+    var w=r2(Wp+(-0.15+rng()*1.4)*Ip);var IL=r3((w-Wp)/Ip);
+    var ttIdx=getTrangThaiDinhIdx(IL);
+    document.getElementById('a6-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất sét W<sub>L</sub>=<b>'+WL+'%</b>, W<sub>P</sub>=<b>'+Wp+'%</b>, w=<b>'+w+'%</b>. '
+      +'Tính I<sub>P</sub>, I<sub>L</sub> (B) và xác định trạng thái.';
+    document.getElementById('a6-hint').innerHTML='I<sub>P</sub>='+WL+'−'+Wp+'=? &nbsp;·&nbsp; I<sub>L</sub>=('+w+'−'+Wp+')/I<sub>P</sub>=?';
+    document.getElementById('a6-q').innerHTML=makeQ('a6-Ip','I<sub>P</sub> (%)',Ip,0.15,'%')+makeQ('a6-IL','I<sub>L</sub> (B)',IL,0.02,'');
+    makeMCQGeneric('a6',['Cứng (rắn)','Nửa cứng','Dẻo cứng','Dẻo mềm','Dẻo chảy','Chảy'],ttIdx);
+  })();
+
+  // A7: theo SPT (đất dính)
+  (function(){
+    var rng=seededRng(stt*29+1113);
+    var N=Math.round(1+rng()*32);
+    var idx=getSptDinhIdx(N);
+    document.getElementById('a7-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Hố khoan khảo sát đất sét, thí nghiệm SPT cho số búa N=<b>'+N+'</b>. '
+      +'Tra bảng TCVN xác định trạng thái đất dính tương ứng.';
+    document.getElementById('a7-hint').innerHTML='Tra bảng N-value='+N+' cho đất dính → trạng thái?';
+    document.getElementById('a7-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng N-value đất dính và chọn đáp án.</div>';
+    setTimeout(function(){document.getElementById('a7-mcq-wrap').style.display='block';},0);
+    makeMCQGeneric('a7',['Chảy','Dẻo chảy','Dẻo mềm','Dẻo cứng','Nửa cứng','Cứng'],idx);
+  })();
+
+  // A8: phân loại đất dính
+  (function(){
+    var rng=seededRng(stt*31+1115);
+    var Wp=r2(16+rng()*14);var loaiIdx=Math.floor(rng()*3);var Ip;
+    if(loaiIdx===0){Ip=r2(1+rng()*5.9);}else if(loaiIdx===1){Ip=r2(7+rng()*9.9);}else{Ip=r2(17+rng()*18);}
+    var WL=r2(Wp+Ip);
+    document.getElementById('a8-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất dính có W<sub>L</sub>=<b>'+WL+'%</b>, W<sub>P</sub>=<b>'+Wp+'%</b>. '
+      +'Xác định I<sub>P</sub> và tên đất theo TCVN.';
+    document.getElementById('a8-hint').innerHTML='I<sub>P</sub> = '+WL+' − '+Wp+' = ?';
+    document.getElementById('a8-q').innerHTML=makeQ('a8-Ip','I<sub>P</sub> (%)',Ip,0.15,'%');
+    makeMCQGeneric('a8',['Cát pha (Á cát)','Sét pha (Á sét)','Sét'],loaiIdx);
+  })();
+
+  // A9: phân loại đất rời 1 - dựa trên 1 ngưỡng nổi bật
+  (function(){
+    var rng=seededRng(stt*37+1117);
+    var caseIdx=Math.floor(rng()*3);
+    var p,ten,html;
+    if(caseIdx===0){
+      p=r1(52+rng()*30);
+      ten='Sỏi/Sạn';
+      html='🏗️ <b>Đề bài</b> (STT '+stt+'): Mẫu đất có hàm lượng hạt d&gt;2mm chiếm p=<b>'+p+'%</b> (&gt;50%). Các nhóm hạt lớn hơn (d&gt;10mm, d&gt;200mm) chiếm tỷ lệ không đáng kể. Xác định tên đất.';
+    } else if(caseIdx===1){
+      p=r1(52+rng()*30);
+      ten='Cát thô';
+      html='🏗️ <b>Đề bài</b> (STT '+stt+'): Mẫu đất có hạt d&gt;2mm chiếm dưới 50% (không phải đất hòn lớn). Hàm lượng hạt d&gt;0.50mm chiếm p=<b>'+p+'%</b> (&gt;50%). Xác định tên đất.';
+    } else {
+      p=r1(52+rng()*30);
+      ten='Cát vừa (cát hạt trung)';
+      html='🏗️ <b>Đề bài</b> (STT '+stt+'): Mẫu đất có hạt d&gt;2mm và d&gt;0.5mm đều dưới 50%. Hàm lượng hạt d&gt;0.25mm chiếm p=<b>'+p+'%</b> (&gt;50%). Xác định tên đất.';
+    }
+    document.getElementById('a9-prob').innerHTML=html;
+    document.getElementById('a9-hint').innerHTML='Xét lần lượt các ngưỡng d theo bảng TCVN, ngưừng nào thỏa điều kiện trước → đó là tên đất.';
+    document.getElementById('a9-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Tra bảng phân loại đất rời và chọn đáp án.</div>';
+    setTimeout(function(){document.getElementById('a9-mcq-wrap').style.display='block';},0);
+    var opts=['Sỏi/Sạn','Cát thô','Cát vừa (cát hạt trung)','Cát mịn'];
+    var correctIdx=opts.indexOf(ten);
+    makeMCQGeneric('a9',opts,correctIdx);
+  })();
+
+  // A10: phân loại đất rời 2 - cát mịn / cát bụi
+  (function(){
+    var rng=seededRng(stt*41+1119);
+    var caseIdx=Math.floor(rng()*2);
+    var p,ten,html;
+    if(caseIdx===0){
+      p=r1(76+rng()*15);
+      ten='Cát mịn';
+      html='🏗️ <b>Đề bài</b> (STT '+stt+'): Mẫu đất có các nhóm hạt thô (d&gt;2mm, d&gt;0.5mm, d&gt;0.25mm) đều dưới 50%. Hàm lượng hạt d&gt;0.10mm chiếm p=<b>'+p+'%</b> (&gt;75%). Xác định tên đất.';
+    } else {
+      p=r1(40+rng()*30);
+      ten='Cát bụi';
+      html='🏗️ <b>Đề bài</b> (STT '+stt+'): Mẫu đất có các nhóm hạt thô đều dưới 50%. Hàm lượng hạt d&gt;0.10mm chỉ chiếm p=<b>'+p+'%</b> (&lt;75%). Xác định tên đất.';
+    }
+    document.getElementById('a10-prob').innerHTML=html;
+    document.getElementById('a10-hint').innerHTML='So sánh p(d&gt;0.10mm)='+p+'% với ngưỡng 75% → cát mịn hay cát bụi?';
+    document.getElementById('a10-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Tra bảng phân loại đất rời và chọn đáp án.</div>';
+    setTimeout(function(){document.getElementById('a10-mcq-wrap').style.display='block';},0);
+    var opts=['Cát vừa (cát hạt trung)','Cát mịn','Cát bụi','Cát sạn'];
+    var correctIdx=opts.indexOf(ten);
+    makeMCQGeneric('a10',opts,correctIdx);
+  })();
+}
+
+/* ================================================================
+   KHỐI 9 — BÀI TẬP NHÓM B VÀ C (10 dạng × 2 nhóm = 20 bài)
+   genBC: tạo HTML động cho nhóm B (có công thức) và C (tự nhận biết)
+   genOne(id, type, stt, s1, s2): sinh 1 bài theo type
+   CFG: 10 dạng bài tương ứng A1-A10, mỗi dạng có {id, title, type, fml}
+   ĐẶC ĐIỂM RIÊNG CỦA 1.4: mỗi card B/C có thêm mcq-wrap ẩn
+     → hiện ra sau khi SV điền số (checkShowMCQ trong genOne)
+================================================================ */
+function genBC(stt){
+  var CFG=[
+    {id:'1',title:'Trạng thái đất rời theo e',type:'e',fml:'So sánh e với bảng tra theo loại cát'},
+    {id:'2',title:'Trạng thái đất rời theo D<sub>r</sub>',type:'Dr',fml:'D<sub>r</sub>=(e<sub>max</sub>−e)/(e<sub>max</sub>−e<sub>min</sub>)×100%'},
+    {id:'3',title:'Trạng thái đất rời theo SPT',type:'sptRoi',fml:'Tra bảng N-value (đất rời)'},
+    {id:'4',title:'Trạng thái đất rời theo CPT',type:'cpt',fml:'Tra bảng q<sub>c</sub> theo loại cát'},
+    {id:'5',title:'Trạng thái đất dính theo w',type:'w',fml:'So sánh w với W<sub>P</sub>, W<sub>L</sub>'},
+    {id:'6',title:'Trạng thái đất dính theo I<sub>L</sub> (B)',type:'IL',fml:'I<sub>P</sub>=W<sub>L</sub>−W<sub>P</sub> &nbsp;·&nbsp; I<sub>L</sub>=(w−W<sub>P</sub>)/I<sub>P</sub>'},
+    {id:'7',title:'Trạng thái đất dính theo SPT',type:'sptDinh',fml:'Tra bảng N-value (đất dính, TCVN)'},
+    {id:'8',title:'Phân loại tên đất dính',type:'tenDinh',fml:'I<sub>P</sub>=W<sub>L</sub>−W<sub>P</sub> &nbsp;·&nbsp; Tra bảng theo I<sub>P</sub>'},
+    {id:'9',title:'Phân loại tên đất rời (1)',type:'tenRoi1',fml:'So sánh % tích lũy với ngưỡng bảng TCVN'},
+    {id:'10',title:'Phân loại tên đất rời (2)',type:'tenRoi2',fml:'So sánh p(d&gt;0.10mm) với ngưỡng 75%'},
+  ];
+
+  var bhtml='',chtml='';
+  CFG.forEach(function(c,idx){
+    var bid='b'+c.id, cid='c'+c.id;
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>Bài '+bid.toUpperCase()+' · '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+bid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+bid+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+bid+'-q"></div>'
+      +'<div class="mcq-wrap" id="'+bid+'-mcq-wrap" style="display:none"><div class="mcq-q"><span class="mcq-num">?</span>Kết luận:</div><div class="mcq-opts" id="'+bid+'-opts"></div></div>'
+      +'</div></div>';
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>Bài '+cid.toUpperCase()+' · Tự nhận biết — '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+cid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+cid+'-prob">⏳</div>'
+      +'<div id="'+cid+'-q"></div>'
+      +'<div class="mcq-wrap" id="'+cid+'-mcq-wrap" style="display:none"><div class="mcq-q"><span class="mcq-num">?</span>Kết luận:</div><div class="mcq-opts" id="'+cid+'-opts"></div></div>'
+      +'</div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[43,47,53,59,61,67,71,73,79,83][idx];
+    genOne('b'+c.id,c.type,stt,seedBase,5101+idx*20);
+    genOne('c'+c.id,c.type,stt,seedBase+97,5201+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+
+  if(type==='e'){
+    var loaiArr=['tho','nho','bui'];var loaiLabel={tho:'cát thô/vừa',nho:'cát nhỏ',bui:'cát bụi'};
+    var loai=loaiArr[Math.floor(rng()*3)];
+    var e=r2(0.40+rng()*0.55);
+    var ttIdx=getTrangThaiE(loai,e);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất '+loaiLabel[loai]+', e='+e+'. Tra bảng xác định trạng thái.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    makeMCQGeneric(id,['Chặt','Chặt vừa','Rời'],ttIdx);
+  }
+  else if(type==='Dr'){
+    var eMin=r3(0.40+rng()*0.15);var eMax=r3(eMin+0.35+rng()*0.25);
+    var DrPct=r2(10+rng()*85);var e=r3(eMax-DrPct/100*(eMax-eMin));
+    var ttIdx=getTrangThaiDrIdx(DrPct);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: e='+e+', e<sub>max</sub>='+eMax+', e<sub>min</sub>='+eMin+'. Tính D<sub>r</sub> và trạng thái.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Dr','D<sub>r</sub> (%)',DrPct,1,'%');
+    makeMCQGeneric(id,['Rời','Chặt vừa','Chặt'],ttIdx);
+  }
+  else if(type==='sptRoi'){
+    var N=Math.round(2+rng()*55);
+    var idx=getSptRoiIdx(N);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: SPT N='+N+'. Tra bảng xác định trạng thái đất rời.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng N-value và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    makeMCQGeneric(id,['Rất rời','Rời','Chặt vừa','Chặt','Rất chặt'],idx);
+  }
+  else if(type==='cpt'){
+    var loaiArr=['tho','nho','buiAm','buiBh'];var loaiLabel={tho:'cát thô/vừa',nho:'cát nhỏ',buiAm:'cát bụi ẩm',buiBh:'cát bụi bão hòa'};
+    var loai=loaiArr[Math.floor(rng()*4)];var qc=r1(1+rng()*18);
+    var idx=getCptIdx(loai,qc);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: CPT trên '+loaiLabel[loai]+', q<sub>c</sub>='+qc+' MPa. Tra bảng xác định trạng thái.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng q<sub>c</sub> và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    makeMCQGeneric(id,['Chặt','Chặt vừa','Rời'],idx);
+  }
+  else if(type==='w'){
+    var Wp=r2(18+rng()*10);var Ip=r2(8+rng()*18);var WL=r2(Wp+Ip);
+    var caseIdx=Math.floor(rng()*3);var w;
+    if(caseIdx===0)w=r2(Wp-3-rng()*5);else if(caseIdx===1)w=r2(Wp+rng()*Ip);else w=r2(WL+2+rng()*8);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: W<sub>P</sub>='+Wp+'%, W<sub>L</sub>='+WL+'%, w='+w+'%. Xác định trạng thái.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">So sánh w với W<sub>P</sub>, W<sub>L</sub> và chọn đáp án.</div>';
+    setTimeout(function(){var w2=document.getElementById(id+'-mcq-wrap');if(w2)w2.style.display='block';},0);
+    makeMCQGeneric(id,['Cứng','Dẻo','Chảy'],caseIdx);
+  }
+  else if(type==='IL'){
+    var Wp=r2(18+rng()*12);var Ip=r2(8+rng()*22);var WL=r2(Wp+Ip);
+    var w=r2(Wp+(-0.15+rng()*1.4)*Ip);var IL=r3((w-Wp)/Ip);
+    var ttIdx=getTrangThaiDinhIdx(IL);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: W<sub>L</sub>='+WL+'%, W<sub>P</sub>='+Wp+'%, w='+w+'%. Tính I<sub>P</sub>, I<sub>L</sub>, trạng thái.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ip','I<sub>P</sub> (%)',Ip,0.15,'%')+makeQ(id+'-IL','I<sub>L</sub>',IL,0.02,'');
+    makeMCQGeneric(id,['Cứng (rắn)','Nửa cứng','Dẻo cứng','Dẻo mềm','Dẻo chảy','Chảy'],ttIdx);
+  }
+  else if(type==='sptDinh'){
+    var N=Math.round(1+rng()*32);
+    var idx=getSptDinhIdx(N);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: SPT N='+N+' (đất dính). Tra bảng xác định trạng thái.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Đọc bảng N-value đất dính và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    makeMCQGeneric(id,['Chảy','Dẻo chảy','Dẻo mềm','Dẻo cứng','Nửa cứng','Cứng'],idx);
+  }
+  else if(type==='tenDinh'){
+    var Wp=r2(16+rng()*14);var loaiIdx=Math.floor(rng()*3);var Ip;
+    if(loaiIdx===0){Ip=r2(1+rng()*5.9);}else if(loaiIdx===1){Ip=r2(7+rng()*9.9);}else{Ip=r2(17+rng()*18);}
+    var WL=r2(Wp+Ip);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: W<sub>L</sub>='+WL+'%, W<sub>P</sub>='+Wp+'%. Tính I<sub>P</sub> và tên đất.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ip','I<sub>P</sub> (%)',Ip,0.15,'%');
+    makeMCQGeneric(id,['Cát pha','Sét pha','Sét'],loaiIdx);
+  }
+  else if(type==='tenRoi1'){
+    var caseIdx=Math.floor(rng()*3);var p,ten;
+    if(caseIdx===0){p=r1(52+rng()*30);ten='Sỏi/Sạn';}
+    else if(caseIdx===1){p=r1(52+rng()*30);ten='Cát thô';}
+    else{p=r1(52+rng()*30);ten='Cát vừa (cát hạt trung)';}
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Mẫu đất rời có hàm lượng hạt đạt p='+p+'% tại ngưỡng kích thước phù hợp. Xác định tên đất theo TCVN.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">Tra bảng phân loại và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    var opts=['Sỏi/Sạn','Cát thô','Cát vừa (cát hạt trung)','Cát mịn'];
+    makeMCQGeneric(id,opts,opts.indexOf(ten));
+  }
+  else if(type==='tenRoi2'){
+    var caseIdx=Math.floor(rng()*2);var p,ten;
+    if(caseIdx===0){p=r1(76+rng()*15);ten='Cát mịn';}else{p=r1(40+rng()*30);ten='Cát bụi';}
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Mẫu đất có p(d&gt;0.10mm)='+p+'%, các nhóm hạt thô khác đều dưới 50%. Xác định tên đất.';
+    document.getElementById(id+'-q').innerHTML='<div class="earth-box" style="background:#FAFCFF;border-left-color:var(--brd);font-size:12px">So sánh với ngưỡng 75% và chọn đáp án.</div>';
+    setTimeout(function(){var w=document.getElementById(id+'-mcq-wrap');if(w)w.style.display='block';},0);
+    var opts=['Cát vừa (cát hạt trung)','Cát mịn','Cát bụi','Cát sạn'];
+    makeMCQGeneric(id,opts,opts.indexOf(ten));
+  }
+}
+
+/* ================================================================
+   KHỐI 10 — KHỞI TẠO TRANG
+   1. Đọc SV từ sessionStorage → hiển thị tên/STT lên header
+   2. genA(stt)  → render 10 bài nhóm A (có MCQ ẩn ban đầu)
+   3. genBC(stt) → tạo HTML động nhóm B+C (20 bài), gọi genOne()
+   4. TOTAL_QUESTIONS = đếm tất cả key ANS đã đăng ký
+   5. updateProg() → cập nhật lần đầu (0%)
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

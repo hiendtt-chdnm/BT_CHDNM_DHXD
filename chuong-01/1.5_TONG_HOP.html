@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.5 — Tổng Hợp Công Thức Chương 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 60px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;color:var(--R);line-height:1.6}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;color:var(--Gdk);font-weight:600}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cf-card{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 10px 10px 0;padding:12px 15px}
+.cf-dang{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--P);letter-spacing:.7px;margin-bottom:6px}
+.cf-title{font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:8px}
+.cf-f{font-family:var(--mono);font-size:12.5px;color:var(--Pdk);line-height:2;background:rgba(21,101,192,.04);border-radius:6px;padding:8px 11px}
+.cf-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--sans)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;border-bottom:1px solid var(--Plt);text-align:center}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+.frow{font-family:var(--mono);font-size:13px;line-height:2;color:var(--Pdk)}
+@media(max-width:620px){.cf-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C1.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 1</a>
+    <div class="hdr-title">
+      <h1>1.5 — Tổng Hợp Công Thức Chương 1</h1>
+      <p>Toàn bộ công thức tính chất vật lý của đất — dùng để học và tra cứu khi thi</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="earth-box" style="margin-bottom:16px">📌 Trang này gom toàn bộ công thức Chương 1 vào một chỗ duy nhất để dễ ôn tập và tra cứu khi làm bài thi. Không có phần bài tập trắc nghiệm tại đây — bài tập áp dụng nằm ở các bài 1.2, 1.3, 1.4.</div>
+
+<!-- ══ PHẦN 1: CHỈ TIÊU KHÔNG THỨ NGUYÊN ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-ratio"></i>
+    <div><h2>Phần 1 — Chỉ tiêu không thứ nguyên (đặc tính trạng thái đất)</h2></div>
+    <span class="cbadge">📋 V–V & Q–Q</span>
+  </div>
+  <div class="card-body">
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">Quan hệ (V – V)</div>
+        <div class="cf-title">Tỷ lệ thể tích các pha</div>
+        <div class="cf-f">
+          Độ rỗng: &nbsp; n = V<sub>r</sub>/V<br>
+          Độ đặc: &nbsp; m = V<sub>h</sub>/V<br>
+          Hệ số rỗng: &nbsp; e = V<sub>r</sub>/V<sub>h</sub><br>
+          Mức bão hòa: &nbsp; S = V<sub>n</sub>/V<sub>r</sub>
+        </div>
+        <div class="cf-note">V<sub>r</sub>=thể tích lỗ rỗng, V<sub>h</sub>=thể tích hạt rắn, V<sub>n</sub>=thể tích nước</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Quan hệ (Q – Q)</div>
+        <div class="cf-title">Tỷ lệ khối lượng các pha</div>
+        <div class="cf-f">
+          Độ ẩm tự nhiên: &nbsp; W = Q<sub>n</sub>/Q<sub>h</sub><br>
+          Độ ẩm toàn phần: &nbsp; W<sub>tf</sub> = Q<sub>nbh</sub>/Q<sub>h</sub>
+        </div>
+        <div class="cf-note">Q<sub>n</sub>=khối lượng nước, Q<sub>h</sub>=khối lượng hạt rắn, Q<sub>nbh</sub>=khối lượng nước khi bão hòa hoàn toàn</div>
+      </div>
+    </div>
+    <div class="cf-card" style="margin-top:2px">
+      <div class="cf-dang">Liên hệ n và e</div>
+      <div class="cf-f">e = n/(1−n) &nbsp;·&nbsp; n(%) = e/(1+e)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 2: TRỌNG LƯỢNG RIÊNG ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-scale"></i>
+    <div><h2>Phần 2 — Trọng lượng riêng (Quan hệ Q – V)</h2><p>Đơn vị: kN/m³</p></div>
+    <span class="cbadge">📋 γ</span>
+  </div>
+  <div class="card-body">
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">Từ thí nghiệm trực tiếp (Q, V)</div>
+        <div class="cf-f">
+          γ (tự nhiên) = Q/V<br>
+          γ<sub>k</sub> (đất khô) = Q<sub>h</sub>/V<br>
+          γ<sub>bh</sub> (bão hòa) = Q<sub>bh</sub>/V<br>
+          γ<sub>h</sub> (hạt đất) = Q<sub>h</sub>/V<sub>h</sub>
+        </div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Trọng lượng riêng đẩy nổi</div>
+        <div class="cf-f">
+          γ<sub>đn</sub> = γ<sub>bh</sub> − γ<sub>0</sub><br>
+          γ<sub>đn</sub> = γ<sub>n</sub>(Δ−1) / (1+e)
+        </div>
+        <div class="cf-note">γ<sub>0</sub> = γ<sub>n</sub> = trọng lượng riêng nước (≈10 kN/m³)</div>
+      </div>
+    </div>
+    <div class="cf-card">
+      <div class="cf-dang">Quy đổi qua lại giữa γ, γ<sub>k</sub>, e, W, Δ</div>
+      <div class="cf-f">
+        γ<sub>k</sub> = γ / (1+W) &nbsp;·&nbsp; γ<sub>k</sub> = γ<sub>w</sub>/(1+W) &nbsp;(γ<sub>w</sub> là ký hiệu γ tự nhiên trong 1 số tài liệu)<br>
+        γ<sub>h</sub> = γ<sub>k</sub> / (1−n) &nbsp;·&nbsp; γ<sub>k</sub> = γ<sub>h</sub>×(1−n)<br>
+        e = Δγ<sub>n</sub>(1+W)/γ − 1 &nbsp;(suy từ γ tự nhiên, W, Δ)<br>
+        e = γ<sub>h</sub>/γ<sub>k</sub> − 1
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 3: CÔNG THỨC TỔNG QUÁT (THEO W, Δ) ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-sigma"></i>
+    <div><h2>Phần 3 — Bộ công thức tổng quát theo W, Δ, e (hay dùng nhất)</h2></div>
+    <span class="cbadge">📋 TRỌNG TÂM</span>
+  </div>
+  <div class="card-body">
+    <div class="warn-box">⚠️ Đây là bộ công thức được dùng nhiều nhất khi đề bài chỉ cho độ ẩm W, tỷ trọng hạt Δ — không cho trực tiếp Q, V từ thí nghiệm.</div>
+    <div class="cf-card">
+      <div class="cf-dang">Trọng lượng riêng đẩy nổi (γ<sub>đn</sub>)</div>
+      <div class="cf-f">
+        γ<sub>đn</sub> = [γ/(1+W)] × [1 − γ₀/γ<sub>h</sub>] = γ<sub>bh</sub> − γ₀ = (Δ−1)γ₀ / (1+e)
+      </div>
+    </div>
+    <div class="cf-card">
+      <div class="cf-dang">Độ bão hòa (G hoặc S)</div>
+      <div class="cf-f">
+        G(S) = V<sub>n</sub>/V<sub>r</sub> = [0.01Wγ] / [γ<sub>h</sub>(1+0.01W) − γ] = 0.01WΔ / e
+      </div>
+    </div>
+    <div class="cf-card">
+      <div class="cf-dang">Trọng lượng riêng bão hòa (γ<sub>bh</sub>)</div>
+      <div class="cf-f">
+        γ<sub>bh</sub> = Q<sub>bh</sub>/V = [γ/(1+W)] × [1 − γ₀/γ<sub>h</sub>] + γ₀ = (Δ−1)γ₀/(1+e) + γ₀
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 4: CÔNG THỨC SUY NGƯỢC & GHI NHỚ NHANH ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrows-shuffle"></i>
+    <div><h2>Phần 4 — Công thức suy ngược (tính nhanh từ đại lượng đã biết)</h2></div>
+    <span class="cbadge">📋 LƯU Ý</span>
+  </div>
+  <div class="card-body">
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">Hệ số rỗng e</div>
+        <div class="cf-f">
+          e = [Δγ<sub>n</sub>(1+W)] / γ − 1<br>
+          e = γ<sub>h</sub>/γ<sub>k</sub> − 1
+        </div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Độ ẩm W</div>
+        <div class="cf-f">
+          W = γ<sub>w</sub>/γ<sub>k</sub> − 1<br>
+          <span style="font-size:11px;color:var(--muted)">(γ<sub>w</sub> ở đây là γ tự nhiên, không phải trọng lượng riêng nước)</span>
+        </div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Độ rỗng n (%)</div>
+        <div class="cf-f">n(%) = e / (1+e)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Trọng lượng riêng đẩy nổi (gọn)</div>
+        <div class="cf-f">γ<sub>đn</sub> = γ<sub>n</sub>(Δ−1) / (1+e) = γ<sub>bh</sub> − γ<sub>n</sub></div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Trọng lượng riêng khô γ<sub>k</sub></div>
+        <div class="cf-f">γ<sub>k</sub> = γ<sub>n</sub> / (1+W)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Trọng lượng riêng hạt γ<sub>h</sub></div>
+        <div class="cf-f">γ<sub>h</sub> = γ<sub>k</sub> / (1−n)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Độ bão hòa G</div>
+        <div class="cf-f">G = ΔW / e</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 5: TRẠNG THÁI ĐẤT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-gauge"></i>
+    <div><h2>Phần 5 — Trạng thái đất (chương 1.4)</h2></div>
+    <span class="cbadge">📋 TRẠNG THÁI</span>
+  </div>
+  <div class="card-body">
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">Đất dính</div>
+        <div class="cf-f">
+          I<sub>P</sub> = W<sub>L</sub> − W<sub>P</sub><br>
+          I<sub>L</sub> (B) = (w − W<sub>P</sub>) / I<sub>P</sub>
+        </div>
+        <div class="cf-note">3 cách xác định: theo w, theo I<sub>L</sub>(B), theo SPT</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Đất rời</div>
+        <div class="cf-f">
+          D<sub>r</sub> = (e<sub>max</sub>−e) / (e<sub>max</sub>−e<sub>min</sub>) × 100%
+        </div>
+        <div class="cf-note">3 cách xác định: theo e, theo D<sub>r</sub>, theo SPT/CPT</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Trạng thái đất dính</th><th>I<sub>L</sub> (B)</th></tr></thead>
+        <tbody>
+          <tr><td>Cứng (rắn)</td><td>I<sub>L</sub> &lt; 0</td></tr>
+          <tr><td>Nửa cứng</td><td>0 ≤ I<sub>L</sub> &lt; 0.25</td></tr>
+          <tr><td>Dẻo cứng</td><td>0.25 ≤ I<sub>L</sub> &lt; 0.50</td></tr>
+          <tr><td>Dẻo mềm</td><td>0.50 ≤ I<sub>L</sub> &lt; 0.75</td></tr>
+          <tr><td>Dẻo chảy</td><td>0.75 ≤ I<sub>L</sub> ≤ 1.0</td></tr>
+          <tr><td>Chảy</td><td>I<sub>L</sub> &gt; 1.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Loại cát</th><th>Chặt</th><th>Chặt vừa</th><th>Rời</th></tr></thead>
+        <tbody>
+          <tr><td>Cát thô, cát vừa</td><td>e &lt; 0.55</td><td>0.55 ≤ e ≤ 0.70</td><td>e &gt; 0.70</td></tr>
+          <tr><td>Cát nhỏ</td><td>e &lt; 0.60</td><td>0.60 ≤ e ≤ 0.75</td><td>e &gt; 0.75</td></tr>
+          <tr><td>Cát bụi</td><td>e &lt; 0.60</td><td>0.60 ≤ e ≤ 0.80</td><td>e &gt; 0.80</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 6: TÊN ĐẤT THEO TCVN ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-list-check"></i>
+    <div><h2>Phần 6 — Phân loại tên đất theo TCVN</h2></div>
+    <span class="cbadge">📋 TÊN ĐẤT</span>
+  </div>
+  <div class="card-body">
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tên đất rời</th><th>Căn cứ phân loại</th></tr></thead>
+        <tbody>
+          <tr><td>Tảng lăn / Địa khối</td><td>p(d&gt;200) &gt; 50%</td></tr>
+          <tr><td>Dăm / Cuội</td><td>p(d&gt;10) &gt; 50%</td></tr>
+          <tr><td>Sỏi / Sạn</td><td>p(d&gt;2) &gt; 50%</td></tr>
+          <tr><td>Cát sạn</td><td>p(d&gt;2) &gt; 25%</td></tr>
+          <tr><td>Cát thô</td><td>p(d&gt;0.50) &gt; 50%</td></tr>
+          <tr><td>Cát vừa</td><td>p(d&gt;0.25) &gt; 50%</td></tr>
+          <tr><td>Cát mịn</td><td>p(d&gt;0.10) &gt; 75%</td></tr>
+          <tr><td>Cát bụi</td><td>p(d&gt;0.10) &lt; 75%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tên đất dính</th><th>Điều kiện I<sub>P</sub></th></tr></thead>
+        <tbody>
+          <tr><td>Cát pha (Á cát)</td><td>1 ≤ I<sub>P</sub> &lt; 7</td></tr>
+          <tr><td>Sét pha (Á sét)</td><td>7 ≤ I<sub>P</sub> &lt; 17</td></tr>
+          <tr><td>Sét</td><td>I<sub>P</sub> ≥ 17</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 7: RÂY SÀNG ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-filter"></i>
+    <div><h2>Phần 7 — Rây sàng (chương 1.2)</h2></div>
+    <span class="cbadge">📋 RÂY SÀNG</span>
+  </div>
+  <div class="card-body">
+    <div class="cf-card">
+      <div class="cf-f">
+        m(d&lt;d<sub>i</sub>) = Σ khối lượng các rây có d&lt;d<sub>i</sub><br>
+        P(&lt;d) = m(d&lt;d<sub>i</sub>) / m<sub>tổng</sub> × 100%
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 8: BẢNG TRA CỨU NHANH KÝ HIỆU ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-tags"></i>
+    <div><h2>Phần 8 — Bảng tra cứu ký hiệu nhanh</h2></div>
+    <span class="cbadge">📋 KÝ HIỆU</span>
+  </div>
+  <div class="card-body">
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Ký hiệu</th><th>Ý nghĩa</th><th>Đơn vị</th></tr></thead>
+        <tbody>
+          <tr><td>V, V<sub>h</sub>, V<sub>r</sub>, V<sub>n</sub></td><td>Thể tích mẫu, hạt rắn, lỗ rỗng, nước</td><td>cm³</td></tr>
+          <tr><td>Q, Q<sub>h</sub>, Q<sub>n</sub>, Q<sub>bh</sub></td><td>Khối lượng mẫu, hạt rắn, nước, nước bão hòa</td><td>g</td></tr>
+          <tr><td>n, m, e, S (G)</td><td>Độ rỗng, độ đặc, hệ số rỗng, độ bão hòa</td><td>không thứ nguyên / %</td></tr>
+          <tr><td>W</td><td>Độ ẩm tự nhiên</td><td>%</td></tr>
+          <tr><td>γ, γ<sub>k</sub>, γ<sub>bh</sub>, γ<sub>đn</sub>, γ<sub>h</sub></td><td>TLR tự nhiên, khô, bão hòa, đẩy nổi, hạt đất</td><td>kN/m³</td></tr>
+          <tr><td>Δ</td><td>Tỷ trọng hạt (Δ = γ<sub>h</sub>/γ<sub>n</sub>)</td><td>không thứ nguyên</td></tr>
+          <tr><td>γ<sub>0</sub> (γ<sub>n</sub>, γ<sub>w</sub>)</td><td>Trọng lượng riêng của nước ≈ 10</td><td>kN/m³</td></tr>
+          <tr><td>I<sub>P</sub>, I<sub>L</sub> (B)</td><td>Chỉ số dẻo, độ sệt</td><td>% / không thứ nguyên</td></tr>
+          <tr><td>W<sub>P</sub>, W<sub>L</sub></td><td>Giới hạn dẻo, giới hạn chảy</td><td>%</td></tr>
+          <tr><td>D<sub>r</sub></td><td>Độ chặt tương đối (đất rời)</td><td>%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="succ-box">📌 <b>Mẹo ghi nhớ:</b> Mọi công thức trong chương 1 đều xuất phát từ 3 quan hệ cơ bản (V-V, Q-Q, Q-V) của mô hình 3 pha — nắm chắc 3 quan hệ gốc, các công thức suy ngược chỉ là biến đổi đại số.</div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>1.5 · Tổng Hợp Công Thức</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="1.4_TRANG_THAI.html" class="btn btn-sm btn-ghost">← 1.4</a>
+    <a href="index_C1.html" class="btn btn-sm btn-ghost">Chương 1 ✓</a>
+  </div>
+</div>
+
+</body>
+</html>
