@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chương 0 — Mở Đầu · Cơ Học Đất & Nền Móng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;
+  --A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+
+/* HEADER */
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:900px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);transition:background .15s}
+.back-btn:hover{background:rgba(255,255,255,.1)}
+.hdr-title{flex:1}
+.hdr-title h1{font-size:15px;font-weight:700;line-height:1.2}
+.hdr-title p{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;white-space:nowrap}
+
+main{max-width:900px;margin:0 auto;padding:24px 20px 50px}
+
+/* CHAPTER PROGRESS */
+.prog-wrap{margin-bottom:22px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:16px 20px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:500}
+.prog-track{height:9px;background:var(--Plt);border-radius:5px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--P),var(--Pmd));border-radius:5px;transition:width .4s}
+
+.intro-box{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:14px 18px;font-size:13px;line-height:1.7;color:var(--Pdk);margin-bottom:22px}
+
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--P);display:flex;align-items:center;gap:8px;margin:24px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+
+/* LESSON CARDS */
+.lesson{display:block;background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;text-decoration:none;color:var(--text);overflow:hidden;transition:transform .15s,box-shadow .15s}
+.lesson:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(21,101,192,.18)}
+.lesson-in{display:flex;align-items:center;gap:16px;padding:18px 20px}
+.lesson-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--P);background:var(--Plt);min-width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lesson-body{flex:1}
+.lesson-body h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.lesson-body p{font-size:12.5px;color:var(--muted)}
+.lesson-meta{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lesson-status{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.st-todo{background:var(--Plt);color:var(--P)}
+.st-doing{background:var(--Alt);color:var(--Adk)}
+.st-done{background:var(--Glt);color:var(--Gdk)}
+.lesson-arrow{font-size:18px;color:var(--brd)}
+
+/* MINI PROGRESS RING (simplified bar under text on mobile) */
+.lesson-bar{height:5px;background:var(--Plt);border-radius:3px;overflow:hidden;margin-top:8px;width:100%}
+.lesson-bar i{display:block;height:100%;background:var(--P);border-radius:3px;transition:width .3s}
+
+.bottom-nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.btn{padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--P);color:#fff}
+.btn-ghost{background:var(--sur);color:var(--P);border:1px solid var(--brd)}
+.btn:hover{opacity:.85}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="../index.html" class="back-btn"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+    <div class="hdr-title">
+      <h1>Chương 0 — Mở Đầu</h1>
+      <p>Vai trò môn học · Sự cố thực tế · Tổng kết · Bộ môn CHDNM — ĐHXD Hà Nội</p>
+    </div>
+    <div class="hdr-prog" id="hdr-prog">0%</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- CHAPTER PROGRESS -->
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ Chương 0</span>
+      <span id="prog-text">0 / 3 bài hoàn thành</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="intro-box">
+    💡 Chương mở đầu giúp sinh viên hiểu <b>tại sao</b> phải học Cơ học đất & Nền móng trước khi đi vào các công thức kỹ thuật: vai trò của môn học trong vòng đời dự án, các sự cố nền móng điển hình trong thực tế, và tổng kết các khái niệm cốt lõi sẽ gặp lại xuyên suốt giáo trình.
+  </div>
+
+  <div class="sec-lbl">3 bài học</div>
+
+  <!-- LESSON 0.1 -->
+  <a href="0.1_VAI_TRO.html" class="lesson" data-key="0.1">
+    <div class="lesson-in">
+      <div class="lesson-num">0.1</div>
+      <div class="lesson-body">
+        <h3>Vai Trò Của Môn Học</h3>
+        <p>Vị trí Cơ học đất – Nền móng trong vòng đời dự án xây dựng; mối liên hệ với khảo sát, thiết kế, thi công và quản lý chi phí.</p>
+        <div class="lesson-bar"><i id="bar-01" style="width:0%"></i></div>
+      </div>
+      <div class="lesson-meta">
+        <span class="lesson-status st-todo" id="status-01">Chưa làm</span>
+        <i class="ti ti-chevron-right lesson-arrow"></i>
+      </div>
+    </div>
+  </a>
+
+  <!-- LESSON 0.2 -->
+  <a href="0.2_SU_CO.html" class="lesson" data-key="0.2">
+    <div class="lesson-in">
+      <div class="lesson-num">0.2</div>
+      <div class="lesson-body">
+        <h3>Sự Cố Nền Móng Trong Thực Tế</h3>
+        <p>Các sự cố lún, nghiêng, sạt trượt, mất ổn định công trình điển hình — bài học và nguyên nhân địa kỹ thuật.</p>
+        <div class="lesson-bar"><i id="bar-02" style="width:0%"></i></div>
+      </div>
+      <div class="lesson-meta">
+        <span class="lesson-status st-todo" id="status-02">Chưa làm</span>
+        <i class="ti ti-chevron-right lesson-arrow"></i>
+      </div>
+    </div>
+  </a>
+
+  <!-- LESSON 0.3 -->
+  <a href="0.3_TONG_KET.html" class="lesson" data-key="0.3">
+    <div class="lesson-in">
+      <div class="lesson-num">0.3</div>
+      <div class="lesson-body">
+        <h3>Tổng Kết Chương Mở Đầu</h3>
+        <p>Hệ thống hóa các khái niệm cốt lõi (ứng suất, lún, trượt, thấm, đầm chặt, áp lực đất) sẽ gặp lại trong toàn giáo trình.</p>
+        <div class="lesson-bar"><i id="bar-03" style="width:0%"></i></div>
+      </div>
+      <div class="lesson-meta">
+        <span class="lesson-status st-todo" id="status-03">Chưa làm</span>
+        <i class="ti ti-chevron-right lesson-arrow"></i>
+      </div>
+    </div>
+  </a>
+
+  <div class="bottom-nav">
+    <a href="../chuong-01/index_C1.html" class="btn btn-p"><i class="ti ti-arrow-right"></i> Sang Chương 1 — Tính chất vật lý</a>
+    <a href="../index.html" class="btn btn-ghost"><i class="ti ti-home"></i> Trang chủ</a>
+  </div>
+
+</main>
+
+<script>
+// Đọc tiến độ từng bài từ localStorage theo chuẩn prog_cX_YY (vd prog_c0_01, prog_c0_02, prog_c0_03)
+var LESSONS = [
+  {key:'01', file:'0.1'},
+  {key:'02', file:'0.2'},
+  {key:'03', file:'0.3'}
+];
+
+function loadProgress(){
+  var totalDone = 0;
+  LESSONS.forEach(function(L){
+    var raw = localStorage.getItem('prog_c0_' + L.key);
+    var pct = 0, done = false;
+    if (raw){
+      try{
+        var d = JSON.parse(raw);
+        if (d && typeof d.total === 'number' && d.total > 0){
+          pct = Math.round((d.done || 0) / d.total * 100);
+        } else if (typeof d === 'number'){
+          pct = d;
+        }
+        done = pct >= 100;
+      }catch(e){}
+    }
+    var bar = document.getElementById('bar-' + L.key);
+    var status = document.getElementById('status-' + L.key);
+    if (bar) bar.style.width = pct + '%';
+    if (status){
+      if (done){
+        status.textContent = 'Hoàn thành';
+        status.className = 'lesson-status st-done';
+      } else if (pct > 0){
+        status.textContent = pct + '%';
+        status.className = 'lesson-status st-doing';
+      } else {
+        status.textContent = 'Chưa làm';
+        status.className = 'lesson-status st-todo';
+      }
+    }
+    if (done) totalDone++;
+  });
+  var chPct = Math.round(totalDone / LESSONS.length * 100);
+  document.getElementById('prog-fill').style.width = chPct + '%';
+  document.getElementById('prog-text').textContent = totalDone + ' / ' + LESSONS.length + ' bài hoàn thành';
+  document.getElementById('hdr-prog').textContent = chPct + '%';
+}
+
+window.onload = loadProgress;
+</script>
+</body>
+</html>

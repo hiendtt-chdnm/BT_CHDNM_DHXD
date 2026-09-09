@@ -1,0 +1,894 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0.1 Vai Trò Của Môn Học — Cơ Học Đất & Nền Móng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js"></script>
+<style>
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;
+  --A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --B:#1565C0;--Blt:#E3F2FD;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6;padding-bottom:70px}
+
+/* HEADER */
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:900px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);transition:background .15s}
+.back-btn:hover{background:rgba(255,255,255,.1)}
+.hdr-title{flex:1}
+.hdr-title h1{font-size:15px;font-weight:700;line-height:1.2}
+.hdr-title p{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;white-space:nowrap}
+
+/* TABS */
+.tabs-bar{background:#fff;border-bottom:2px solid var(--brd);position:sticky;top:60px;z-index:90}
+.tabs-in{max-width:900px;margin:0 auto;padding:0 20px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:12px 18px;font-size:13px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:color .15s}
+.tab.on{color:var(--P);border-bottom-color:var(--P)}
+.tab:hover{color:var(--P)}
+.tn{font-family:var(--mono);font-size:11px;background:var(--Plt);color:var(--P);padding:2px 6px;border-radius:5px;font-weight:700}
+.tab.on .tn{background:var(--P);color:#fff}
+
+main{max-width:900px;margin:0 auto;padding:24px 20px 40px}
+
+.prog-wrap{margin-bottom:20px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:14px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden}
+.card-hd{padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:15px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:12px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.7px;white-space:nowrap}
+.card-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+
+.theory{background:var(--Blt);border-left:4px solid var(--B);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7}
+.theory-lbl{font-weight:700;color:var(--B);font-size:12px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7;color:#4E342E}
+
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--P);display:flex;align-items:center;gap:8px;margin:4px 0 2px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 8px;border-radius:4px;margin-right:6px}
+.mcq-q{padding:14px 16px 10px;font-size:14px;font-weight:600;color:var(--text);line-height:1.5;border-bottom:1px solid var(--Plt);background:#FAFCFF}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2c{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:10px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:background .12s,color .12s}
+.mcq-opt.ok{background:var(--Glt)!important}
+.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}
+.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal-ok{background:var(--Glt)!important;opacity:.7}
+.mcq-opt.reveal-ok .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:10px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:var(--R)}
+
+/* MATCHING */
+.match-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.match-tbl td{padding:9px 8px;border-bottom:1px solid var(--Plt);vertical-align:middle}
+.match-tbl td.colA{font-weight:600;width:46%}
+.match-sel{width:100%;padding:7px 8px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--sans);font-size:12.5px;background:#fff}
+.match-sel.ok{border-color:var(--G);background:var(--Glt)}
+.match-sel.no{border-color:var(--R);background:var(--Rlt)}
+.match-legend{font-size:12px;color:var(--muted);margin-bottom:6px;background:var(--Plt);padding:8px 12px;border-radius:8px}
+.match-btn{margin-top:10px}
+.match-fb{font-size:12px;margin-top:8px;padding:8px 12px;border-radius:8px;display:none}
+.match-fb.show{display:block}
+.match-fb.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.match-fb.no-exp{background:var(--Rlt);color:var(--R)}
+
+/* RESULT */
+.result-card{background:var(--sur);border:2px solid var(--P);border-radius:var(--r);padding:24px;text-align:center;display:none}
+.result-card.show{display:block}
+.result-score{font-family:var(--mono);font-size:48px;font-weight:700;color:var(--P);line-height:1}
+.result-sub{font-size:14px;color:var(--muted);margin-top:8px}
+.result-grade{display:inline-block;margin-top:12px;padding:6px 20px;border-radius:20px;font-weight:700;font-size:14px}
+.grade-A{background:var(--Glt);color:var(--Gdk)}
+.grade-B{background:#E3F2FD;color:#0D47A1}
+.grade-C{background:var(--Alt);color:#E65100}
+.grade-D{background:var(--Rlt);color:var(--R)}
+
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px}
+.sticky-nav span{color:rgba(255,255,255,.7)}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-p{background:var(--P);color:#fff}
+.btn-a{background:var(--A);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.bottom-nav{max-width:900px;margin:0 auto;padding:12px 20px 24px;display:flex;gap:10px;flex-wrap:wrap}
+.btn-ghost-light{background:var(--sur);color:var(--P);border:1px solid var(--brd)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C0.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 0</a>
+    <div class="hdr-title">
+      <h1>0.1 — Vai Trò Của Môn Học</h1>
+      <p>Cơ Học Đất · Nền Móng · Bộ môn CHDNM — ĐHXD Hà Nội</p>
+    </div>
+    <div class="hdr-prog" id="hdr-prog">0 / 28</div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <div class="tabs-in">
+    <button class="tab on" onclick="goto('s-intro')"><span class="tn">A</span> Giới thiệu</button>
+    <button class="tab" onclick="goto('s-vai-tro')"><span class="tn">B</span> Vai trò KTXD</button>
+    <button class="tab" onclick="goto('s-vong-doi')"><span class="tn">C</span> Vòng đời dự án</button>
+    <button class="tab" onclick="goto('s-loai-hinh')"><span class="tn">D</span> Theo loại công trình</button>
+    <button class="tab" onclick="goto('s-nen-mong')"><span class="tn">F</span> Nền móng ứng dụng</button>
+    <button class="tab" onclick="goto('s-ghep-noi')"><span class="tn">G</span> Ghép nối</button>
+    <button class="tab" onclick="goto('s-result')"><span class="tn">KQ</span> Kết quả</button>
+  </div>
+</div>
+
+<main>
+
+<!-- PROGRESS -->
+<div class="prog-wrap">
+  <div class="prog-top">
+    <span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ bài 0.1</span>
+    <span id="prog-text">0 / 21 câu (0%)</span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Bài 0.1 — Vai Trò Của Môn Học</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:18px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 14px;border-radius:8px">–</div>
+</div>
+
+<div class="earth-box">
+  🎯 <b>Mục tiêu bài học:</b> Sau bài này, sinh viên trả lời được 3 câu hỏi cốt lõi — (1) Cơ học đất – Nền móng nghiên cứu cái gì? (2) Vì sao kỹ sư Kinh tế Xây dựng bắt buộc phải hiểu nó? (3) Vai trò đó thể hiện cụ thể như thế nào qua từng giai đoạn dự án và từng loại hình công trình (dân dụng, giao thông, cảng, điện, thủy lợi, lấn biển...)?
+</div>
+
+<!-- SECTION A: GIỚI THIỆU -->
+<div id="s-intro" class="card">
+  <div class="card-hd">
+    <i class="ti ti-info-circle"></i>
+    <div>
+      <h2>A. Giới thiệu môn học</h2>
+      <p>Định nghĩa · Phạm vi · Mối quan hệ với các môn khác</p>
+    </div>
+    <span class="cbadge">NỀN TẢNG</span>
+  </div>
+  <div class="card-body">
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-book-2"></i> Bản chất môn học</div>
+      <b>Cơ học đất</b> nghiên cứu ứng xử cơ học của đất dưới tác dụng của tải trọng — bao gồm biến dạng (lún), ổn định (sức chịu tải, trượt) và thấm. <b>Nền móng</b> ứng dụng kết quả đó để thiết kế bộ phận truyền tải trọng từ công trình xuống đất. Hai môn gắn liền nhau như lý thuyết và thực hành.
+    </div>
+    <div class="earth-box">
+      💡 Đất khác hoàn toàn vật liệu xây dựng thông thường: không đồng nhất, không đẳng hướng, tính chất thay đổi theo độ ẩm, lịch sử ứng suất và thời gian. Đây là lý do cơ học đất là một ngành riêng biệt — và cũng là lý do giá thành, rủi ro phần nền móng luôn khó dự báo hơn phần thân công trình.
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu 1–4</div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">01</span>Cơ học đất là môn khoa học nghiên cứu điều gì?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,2)"><span class="mkey">A</span><span>Thành phần khoáng vật và hóa học của đất</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,2)"><span class="mkey">B</span><span>Cách phân loại đất theo màu sắc và nguồn gốc</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,2)"><span class="mkey">C</span><span>Ứng xử cơ học của đất: biến dạng, ổn định, thấm dưới tác dụng tải trọng</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,2)"><span class="mkey">D</span><span>Quy trình thi công và đầm chặt nền đất</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q1">✓ Cơ học đất (Soil Mechanics) — do Karl Terzaghi sáng lập năm 1925 — tập trung vào 3 bài toán cốt lõi: <b>biến dạng</b> (tính lún), <b>ổn định</b> (sức chịu tải, mái đất) và <b>thấm</b> (dòng chảy qua đất). Thành phần khoáng vật hay quy trình thi công thuộc các môn học khác.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">02</span>Điểm khác biệt CƠ BẢN nhất của đất so với vật liệu xây dựng thông thường (thép, bê tông) là gì?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,0)"><span class="mkey">A</span><span>Đất là vật liệu <b>3 pha</b> (hạt–nước–khí), tính chất phụ thuộc trạng thái và lịch sử ứng suất</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,0)"><span class="mkey">B</span><span>Đất có màu sắc đa dạng, khó kiểm soát chất lượng</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,0)"><span class="mkey">C</span><span>Đất không chịu được lực kéo</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,0)"><span class="mkey">D</span><span>Đất rẻ hơn bê tông nên ít được nghiên cứu kỹ</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q2">✓ Đất gồm <b>hạt rắn + nước lỗ rỗng + khí</b>. Tỷ lệ 3 pha thay đổi làm tính chất thay đổi hoàn toàn. Áp lực nước lỗ rỗng quyết định ứng suất hữu hiệu — khái niệm cốt lõi Terzaghi đề xuất.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">03</span>Môn "Nền và Móng" ứng dụng kết quả của cơ học đất vào mục tiêu chính nào?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,1)"><span class="mkey">A</span><span>Phân tích thành phần hóa học của nền đất tại công trường</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,1)"><span class="mkey">B</span><span>Thiết kế bộ phận móng đảm bảo truyền tải trọng an toàn và không lún quá mức cho phép</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,1)"><span class="mkey">C</span><span>Lập kế hoạch tiến độ thi công đất và đào móng</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,1)"><span class="mkey">D</span><span>Xác định giá thành vật liệu và nhân công thi công nền móng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q3">✓ Thiết kế nền móng phải thỏa mãn 2 nhóm <b>trạng thái giới hạn</b>: (1) cường độ — nền không bị phá hoại, (2) biến dạng — lún không vượt giới hạn cho phép.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">04</span>Nhà khoa học nào được coi là "cha đẻ" của Cơ học đất hiện đại?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,2)"><span class="mkey">A</span><span>Charles Coulomb (1736–1806)</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,2)"><span class="mkey">B</span><span>William Rankine (1820–1872)</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,2)"><span class="mkey">C</span><span>Karl Terzaghi (1883–1963)</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,2)"><span class="mkey">D</span><span>Joseph Boussinesq (1842–1929)</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q4">✓ <b>Karl Terzaghi</b> xuất bản "Erdbaumechanik" (1925) — cuốn sách đầu tiên hệ thống hóa cơ học đất, đề xuất nguyên lý ứng suất hữu hiệu và lý thuyết cố kết.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION B: VAI TRÒ KINH TẾ XÂY DỰNG -->
+<div id="s-vai-tro" class="card">
+  <div class="card-hd">
+    <i class="ti ti-building-skyscraper"></i>
+    <div>
+      <h2>B. Vai trò trong Kinh tế Xây dựng</h2>
+      <p>Tỷ trọng chi phí · Bóc tách khối lượng · Lập đơn giá · Quản lý rủi ro</p>
+    </div>
+    <span class="cbadge">KINH TẾ</span>
+  </div>
+  <div class="card-body">
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-chart-pie"></i> Tỷ trọng chi phí nền móng</div>
+      Chi phí nền móng thường chiếm <b>10–30% tổng vốn đầu tư</b> công trình dân dụng & công nghiệp, có thể lên đến <b>40–50%</b> với công trình trên nền đất yếu. Sai lầm trong khảo sát địa chất hoặc thiết kế nền móng thường gây <b>đội vốn gấp nhiều lần</b> so với tiết kiệm ban đầu.
+    </div>
+    <div class="earth-box">
+      💼 Bốn nhóm nghiệp vụ của kỹ sư KTXD gắn trực tiếp với địa kỹ thuật: <b>bóc tách khối lượng</b> (góc đào taluy, hệ số tơi xốp, hệ số đầm chặt) · <b>lập đơn giá/thầu</b> (phân loại đất, biện pháp thi công, vật liệu xử lý nền) · <b>quản lý rủi ro</b> (dự báo lún, trượt, sạt lở, ảnh hưởng công trình lân cận) · <b>lựa chọn giải pháp kinh tế</b> (so sánh phương án móng theo chi phí vòng đời).
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu 5–9</div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">05</span>Chi phí nền móng thường chiếm bao nhiêu % tổng vốn đầu tư công trình dân dụng thông thường?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,1)"><span class="mkey">A</span><span>1–5%</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,1)"><span class="mkey">B</span><span>10–30%</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,1)"><span class="mkey">C</span><span>50–60%</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,1)"><span class="mkey">D</span><span>70–80%</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q5">✓ <b>10–30%</b> là con số điển hình. Với nền đất yếu (ĐBSCL, ven biển) tỷ lệ có thể đạt 40–50%. Đây là lý do kỹ sư KTXD phải hiểu nền móng để kiểm soát ngân sách dự án.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">06</span>Trong vai trò kỹ sư Kinh tế Xây dựng, hiểu biết về nền móng giúp ích trực tiếp cho công việc nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,0)"><span class="mkey">A</span><span>Lập dự toán chính xác, kiểm soát biến động chi phí khi thay đổi phương án móng, đánh giá rủi ro địa kỹ thuật trong thẩm định dự án</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,0)"><span class="mkey">B</span><span>Tự thiết kế móng cọc và móng bè mà không cần kỹ sư kết cấu</span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,0)"><span class="mkey">C</span><span>Điều hành máy khoan địa chất tại công trường</span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,0)"><span class="mkey">D</span><span>Phân tích thành phần khoáng vật của đất để chọn xi măng phù hợp</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q6">✓ KTXD cần hiểu nền móng để <b>lập dự toán</b>, <b>thẩm định</b> rủi ro địa chất, và <b>quản lý hợp đồng</b> khi địa chất thực tế khác khảo sát. Không cần tự thiết kế móng — đó là việc của kỹ sư kết cấu.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">07</span>Giai đoạn nào trong dự án xây dựng mà công tác khảo sát địa chất đóng vai trò QUAN TRỌNG NHẤT để kiểm soát chi phí?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,0)"><span class="mkey">A</span><span>Lập báo cáo nghiên cứu tiền khả thi và khả thi</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,0)"><span class="mkey">B</span><span>Giai đoạn thi công phần thân công trình</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,0)"><span class="mkey">C</span><span>Giai đoạn bàn giao và vận hành</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,0)"><span class="mkey">D</span><span>Giai đoạn thanh lý và phá dỡ</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q7">✓ Phát hiện địa chất xấu ở giai đoạn <b>tiền khả thi/khả thi</b> cho phép đổi vị trí hoặc điều chỉnh quy mô với chi phí thấp. Phát hiện muộn (khi đang thi công) chi phí xử lý tăng gấp 5–10 lần.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">08</span>Vì sao chi phí xử lý sự cố nền móng trong giai đoạn THI CÔNG thường lớn hơn rất nhiều so với giai đoạn THIẾT KẾ?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,0)"><span class="mkey">A</span><span>Vật liệu đắt hơn vào giai đoạn thi công</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,0)"><span class="mkey">B</span><span>Phải tháo dỡ kết cấu đã thi công, gián đoạn tiến độ, phát sinh chi phí gián tiếp (phạt hợp đồng, kéo dài thời gian vay vốn)</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,0)"><span class="mkey">C</span><span>Đơn giá nhân công tăng vào giai đoạn cuối dự án</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,0)"><span class="mkey">D</span><span>Nhà thầu yêu cầu bổ sung lợi nhuận khi thay đổi thiết kế</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q8">✓ Quy tắc "1–10–100": sửa lỗi ở <b>thiết kế</b> tốn 1 đơn vị, ở <b>thi công</b> tốn 10, ở <b>khai thác</b> tốn 100 — do phải tháo dỡ kết cấu, gia cố nền dưới công trình đang dở dang, và quan trọng nhất là gián đoạn tiến độ.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">09</span>Trong dự toán xây dựng, khoản mục nào thuộc "phần nền móng" cần kỹ sư KTXD hiểu rõ để lập giá đúng?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q9-0" onclick="pickMCQ('q9',0,3)"><span class="mkey">A</span><span>Chi phí khảo sát địa chất (khoan, thí nghiệm SPT, phòng thí nghiệm)</span></div>
+        <div class="mcq-opt" id="mco-q9-1" onclick="pickMCQ('q9',1,3)"><span class="mkey">B</span><span>Đào đất, vận chuyển đất, gia cố hố đào (cừ thép, neo đất)</span></div>
+        <div class="mcq-opt" id="mco-q9-2" onclick="pickMCQ('q9',2,3)"><span class="mkey">C</span><span>Thi công cọc (ép, đóng, khoan nhồi) và đài móng BTCT</span></div>
+        <div class="mcq-opt" id="mco-q9-3" onclick="pickMCQ('q9',3,3)"><span class="mkey">D</span><span>Tất cả các khoản mục trên</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q9">✓ Tất cả đều thuộc phần nền móng. Khoan cọc nhồi và gia cố hố đào sâu thường chiếm phần lớn dự toán nhà cao tầng đô thị — KTXD cần hiểu kỹ thuật để không bị nhà thầu "thổi giá".</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION C: VÒNG ĐỜI DỰ ÁN -->
+<div id="s-vong-doi" class="card">
+  <div class="card-hd">
+    <i class="ti ti-refresh"></i>
+    <div>
+      <h2>C. Cơ học đất trong Vòng đời Dự án</h2>
+      <p>Từ hình thành ý tưởng đến kết thúc sử dụng</p>
+    </div>
+    <span class="cbadge">VÒNG ĐỜI</span>
+  </div>
+  <div class="card-body">
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-timeline"></i> 5 giai đoạn & vai trò địa kỹ thuật</div>
+      <b>① Chuẩn bị đầu tư</b> — đánh giá địa điểm, sơ bộ địa chất<br>
+      <b>② Thực hiện đầu tư</b> — khảo sát chi tiết, thiết kế nền móng, lập dự toán<br>
+      <b>③ Thi công</b> — quan trắc lún, xử lý địa chất bất ngờ, kiểm tra chất lượng<br>
+      <b>④ Khai thác</b> — theo dõi lún dài hạn, duy tu bảo dưỡng, mở rộng<br>
+      <b>⑤ Kết thúc</b> — phá dỡ, xử lý ô nhiễm đất, tái sử dụng mặt bằng
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu 10–13</div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">10</span>Ở giai đoạn <b>lập báo cáo khả thi</b>, thông tin địa chất cần thiết tối thiểu để phân tích sơ bộ phương án móng là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q10-0" onclick="pickMCQ('q10',0,1)"><span class="mkey">A</span><span>Chưa cần thông tin gì — địa chất đánh giá sau khi có thiết kế</span></div>
+        <div class="mcq-opt" id="mco-q10-1" onclick="pickMCQ('q10',1,1)"><span class="mkey">B</span><span>Số liệu địa chất tổng quát (bản đồ địa chất, hồ sơ công trình lân cận, khoan thăm dò sơ bộ)</span></div>
+        <div class="mcq-opt" id="mco-q10-2" onclick="pickMCQ('q10',2,1)"><span class="mkey">C</span><span>Đầy đủ kết quả thí nghiệm 3 trục, cắt trực tiếp cho tất cả các lớp đất</span></div>
+        <div class="mcq-opt" id="mco-q10-3" onclick="pickMCQ('q10',3,1)"><span class="mkey">D</span><span>Chỉ cần quan sát mắt thường tại hiện trường là đủ</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q10">✓ Giai đoạn khả thi cần <b>địa chất tổng quát</b> — đủ để so sánh 2–3 phương án móng và ước tính chi phí ±30%. Khảo sát chi tiết thực hiện ở giai đoạn thiết kế kỹ thuật.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">11</span>Trong giai đoạn THI CÔNG, "quan trắc lún" có mục đích chính là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q11-0" onclick="pickMCQ('q11',0,0)"><span class="mkey">A</span><span>Xác nhận dự báo lún thiết kế và phát hiện sớm lún bất thường để can thiệp kịp thời</span></div>
+        <div class="mcq-opt" id="mco-q11-1" onclick="pickMCQ('q11',1,0)"><span class="mkey">B</span><span>Làm đẹp hồ sơ nghiệm thu bàn giao công trình</span></div>
+        <div class="mcq-opt" id="mco-q11-2" onclick="pickMCQ('q11',2,0)"><span class="mkey">C</span><span>Tính toán lại khối lượng đào đất để thanh toán hợp đồng</span></div>
+        <div class="mcq-opt" id="mco-q11-3" onclick="pickMCQ('q11',3,0)"><span class="mkey">D</span><span>Đo đạc để vẽ bản đồ địa hình mặt bằng công trình</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q11">✓ Quan trắc lún là <b>hệ thống cảnh báo sớm</b>: nếu tốc độ lún vượt ngưỡng, kỹ sư phải dừng thi công và điều tra nguyên nhân.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">12</span>Trong giai đoạn KHAI THÁC, hiện tượng nào dưới đây liên quan trực tiếp đến cơ học đất?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q12-0" onclick="pickMCQ('q12',0,3)"><span class="mkey">A</span><span>Cửa sổ bị kẹt do lún lệch giữa các cột</span></div>
+        <div class="mcq-opt" id="mco-q12-1" onclick="pickMCQ('q12',1,3)"><span class="mkey">B</span><span>Nứt tường do lún không đều gây ứng suất phụ trong kết cấu</span></div>
+        <div class="mcq-opt" id="mco-q12-2" onclick="pickMCQ('q12',2,3)"><span class="mkey">C</span><span>Nghiêng công trình khi lún không đều giữa các khu vực nền đất khác nhau</span></div>
+        <div class="mcq-opt" id="mco-q12-3" onclick="pickMCQ('q12',3,3)"><span class="mkey">D</span><span>Tất cả các hiện tượng trên</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q12">✓ <b>Lún lệch</b> (differential settlement) nguy hiểm hơn lún đều: gây nứt tường, kẹt cửa, nghiêng công trình. Tháp Pisa là ví dụ kinh điển.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">13</span>Khi phá dỡ và tái sử dụng mặt bằng một nhà máy cũ, vấn đề địa kỹ thuật nào cần ưu tiên kiểm tra?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q13-0" onclick="pickMCQ('q13',0,0)"><span class="mkey">A</span><span>Ô nhiễm đất (dầu, kim loại nặng, hóa chất) và cọc móng cũ còn lại trong đất</span></div>
+        <div class="mcq-opt" id="mco-q13-1" onclick="pickMCQ('q13',1,0)"><span class="mkey">B</span><span>Màu sắc và mùi của đất bề mặt</span></div>
+        <div class="mcq-opt" id="mco-q13-2" onclick="pickMCQ('q13',2,0)"><span class="mkey">C</span><span>Độ cao địa hình so với mực nước biển</span></div>
+        <div class="mcq-opt" id="mco-q13-3" onclick="pickMCQ('q13',3,0)"><span class="mkey">D</span><span>Tuổi của công trình cũ và hướng xây dựng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q13">✓ Mặt bằng nhà máy cũ thường có <b>đất ô nhiễm</b> và <b>cọc móng cũ</b> — chi phí phá dỡ, xử lý phải đưa vào dự toán từ giai đoạn khả thi.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION D: VAI TRÒ THEO LOẠI HÌNH CÔNG TRÌNH -->
+<div id="s-loai-hinh" class="card">
+  <div class="card-hd">
+    <i class="ti ti-category"></i>
+    <div>
+      <h2>D. Vai trò theo từng loại hình công trình</h2>
+      <p>Dân dụng · Giao thông · Cảng biển · Điện · Thủy lợi · Lấn biển</p>
+    </div>
+    <span class="cbadge">ỨNG DỤNG</span>
+  </div>
+  <div class="card-body">
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-map-2"></i> Dù công trình thuộc loại hình nào...</div>
+      ...các vấn đề cốt lõi mà kỹ sư KTXD luôn cần nắm là: <b>ứng suất trong đất, lún, trượt, thấm, đầm chặt, áp lực đất lên tường chắn</b> — vì đây là cơ sở chung để bóc tách khối lượng, lập đơn giá và quản lý rủi ro chi phí ở mọi dự án, từ nhà dân dụng đến cảng biển hay công trình lấn biển.
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu 14–19</div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">14</span>Đối với công trình điện (đường dây tải điện) đi qua vùng đồi núi, nội dung nào là trọng tâm để quản lý chi phí bảo trì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q14-0" onclick="pickMCQ('q14',0,1)"><span class="mkey">A</span><span>Áp lực nước lỗ rỗng trong đất bão hòa</span></div>
+        <div class="mcq-opt" id="mco-q14-1" onclick="pickMCQ('q14',1,1)"><span class="mkey">B</span><span>Gia cố mái dốc và ổn định nền móng trụ điện sau mưa bão, lũ quét</span></div>
+        <div class="mcq-opt" id="mco-q14-2" onclick="pickMCQ('q14',2,1)"><span class="mkey">C</span><span>Quy luật thấm dưới đáy bể chứa nước</span></div>
+        <div class="mcq-opt" id="mco-q14-3" onclick="pickMCQ('q14',3,1)"><span class="mkey">D</span><span>Tính toán độ lún cố kết của đất sét yếu</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q14">✓ Trụ điện vùng đồi núi đối mặt rủi ro <b>sạt trượt mái dốc</b> sau mưa bão — kỹ sư KTXD cần dự trù chi phí gia cố mái và kiểm tra ổn định móng trụ định kỳ.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">15</span>Đặc điểm tải trọng của công trình Cảng ảnh hưởng đến tính toán nền móng như thế nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q15-0" onclick="pickMCQ('q15',0,1)"><span class="mkey">A</span><span>Tải trọng tập trung vào một điểm nhỏ</span></div>
+        <div class="mcq-opt" id="mco-q15-1" onclick="pickMCQ('q15',1,1)"><span class="mkey">B</span><span>Tải trọng phân bố trên mặt bằng RỘNG và giá trị tải trọng LỚN</span></div>
+        <div class="mcq-opt" id="mco-q15-2" onclick="pickMCQ('q15',2,1)"><span class="mkey">C</span><span>Tải trọng biến đổi liên tục theo từng giờ trong ngày</span></div>
+        <div class="mcq-opt" id="mco-q15-3" onclick="pickMCQ('q15',3,1)"><span class="mkey">D</span><span>Tải trọng chỉ xuất hiện trong giai đoạn thi công</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q15">✓ Tải trọng cảng phân bố <b>rộng và lớn</b> (hàng hóa, cần cẩu, tàu cập bến), đòi hỏi giải pháp nền móng bền vững để tránh chi phí bảo trì do lún trong vòng đời khai thác dài hạn.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">16</span>Trong dự án lấn biển nghỉ dưỡng, kỹ sư KTXD cần nắm vững kiến thức về kè, đê biển để làm gì?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q16-0" onclick="pickMCQ('q16',0,0)"><span class="mkey">A</span><span>Bóc tách khối lượng vật liệu lọc và khối lượng đá hộc/bê tông bảo vệ chống xói lở</span></div>
+        <div class="mcq-opt" id="mco-q16-1" onclick="pickMCQ('q16',1,0)"><span class="mkey">B</span><span>Xác định độ cận thị của công nhân thi công</span></div>
+        <div class="mcq-opt" id="mco-q16-2" onclick="pickMCQ('q16',2,0)"><span class="mkey">C</span><span>Xác định vị trí đặt văn phòng ban quản lý dự án</span></div>
+        <div class="mcq-opt" id="mco-q16-3" onclick="pickMCQ('q16',3,0)"><span class="mkey">D</span><span>Tính toán chi phí trang trí cảnh quan ven biển</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q16">✓ Kè, đê biển đòi hỏi bóc tách khối lượng <b>vật liệu lọc ngược và đá hộc/bê tông bảo vệ mái</b> — khoản mục lớn trong dự toán công trình lấn biển.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">17</span>Hiện tượng "trượt sâu" (deep sliding) thường được cảnh báo, cần dự phòng chi phí phòng ngừa ở loại hình công trình nào?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q17-0" onclick="pickMCQ('q17',0,1)"><span class="mkey">A</span><span>Nhà phố trong đô thị bằng phẳng</span></div>
+        <div class="mcq-opt" id="mco-q17-1" onclick="pickMCQ('q17',1,1)"><span class="mkey">B</span><span>Công trình đường giao thông qua núi hoặc mái dốc taluy cao</span></div>
+        <div class="mcq-opt" id="mco-q17-2" onclick="pickMCQ('q17',2,1)"><span class="mkey">C</span><span>Bể chứa nước ngầm dưới mặt đất bằng phẳng</span></div>
+        <div class="mcq-opt" id="mco-q17-3" onclick="pickMCQ('q17',3,1)"><span class="mkey">D</span><span>Nhà xưởng một tầng trên nền đất tốt</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q17">✓ Đường giao thông qua núi/taluy cao luôn cần dự phòng chi phí gia cố mái dốc và hệ thống thoát nước để phòng <b>trượt sâu</b>.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">18</span>Đối với công trình thủy lợi (đập, hồ chứa), hiện tượng thấm qua thân và nền công trình ảnh hưởng trực tiếp đến yếu tố kinh tế nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q18-0" onclick="pickMCQ('q18',0,1)"><span class="mkey">A</span><span>Chi phí thiết kế kiến trúc mặt đập</span></div>
+        <div class="mcq-opt" id="mco-q18-1" onclick="pickMCQ('q18',1,1)"><span class="mkey">B</span><span>Chi phí thiết bị chống thấm, tường hào bentonite và rủi ro mất an toàn hồ chứa nếu không xử lý</span></div>
+        <div class="mcq-opt" id="mco-q18-2" onclick="pickMCQ('q18',2,1)"><span class="mkey">C</span><span>Chi phí nhân công vận hành ban ngày</span></div>
+        <div class="mcq-opt" id="mco-q18-3" onclick="pickMCQ('q18',3,1)"><span class="mkey">D</span><span>Không ảnh hưởng vì thấm là hiện tượng tự nhiên không kiểm soát được</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q18">✓ Thấm không kiểm soát qua thân/nền đập có thể dẫn đến <b>xói ngầm (piping)</b> và vỡ đập — chi phí chống thấm phải được dự trù đầy đủ ngay từ thiết kế.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">19</span> (Đúng/Sai) Đối với nhà xưởng công nghiệp có tải trọng động lớn (máy móc rung động), kỹ sư KTXD không cần quan tâm đến đặc tính động của nền đất vì đây là vấn đề kết cấu thuần túy.</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q19-0" onclick="pickMCQ('q19',0,1)"><span class="mkey">Đ</span><span>Đúng</span></div>
+        <div class="mcq-opt" id="mco-q19-1" onclick="pickMCQ('q19',1,1)"><span class="mkey">S</span><span>Sai</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q19">✓ <b>Sai.</b> Đặc tính động của nền (khả năng truyền/hấp thụ rung động) ảnh hưởng trực tiếp đến lựa chọn giải pháp móng máy, có thể phát sinh chi phí giảm chấn hoặc gia cố nền — không thể bỏ qua trong dự toán.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION F: NỀN MÓNG ỨNG DỤNG -->
+<div id="s-nen-mong" class="card">
+  <div class="card-hd">
+    <i class="ti ti-building-arch"></i>
+    <div>
+      <h2>F. Nền Móng ứng dụng — Loại móng, gia cố nền & BPTC</h2>
+      <p>Nếu Cơ học đất cho kỹ sư hiểu hiện tượng → thì Nền móng cho biết làm gì với hiện tượng đó</p>
+    </div>
+    <span class="cbadge" style="background:var(--G)">NỀN MÓNG</span>
+  </div>
+  <div class="card-body">
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-layer-difference"></i> Hai tầng kiến thức của kỹ sư KTXD</div>
+      <b>Cơ học đất</b> → hiểu <i>tại sao</i>: đất lún vì sao, trượt khi nào, thấm bao nhiêu → nắm được rủi ro và định lượng hiện tượng.<br>
+      <b>Nền và Móng</b> → biết <i>làm gì</i>: chọn loại móng nào, gia cố nền bằng phương pháp gì, thi công ra sao, mất bao nhiêu thời gian và tiền → kiểm soát được chi phí, tiến độ và BPTC.<br><br>
+      Kỹ sư KTXD cần cả hai lớp này mới lập được dự toán sát, thẩm định được thiết kế và quản lý được tiến độ phần ngầm.
+    </div>
+
+    <div class="earth-box">
+      🏗️ <b>Phân loại móng nhanh:</b><br>
+      <b>Móng nông</b> (D/B ≤ 1–2): móng đơn, móng băng, móng bè — thi công đơn giản, chi phí thấp, phù hợp nền đất tốt.<br>
+      <b>Móng sâu</b>: cọc ép, cọc đóng, cọc khoan nhồi, cọc barrette — đưa tải xuống lớp đất tốt sâu hơn, chi phí cao hơn 3–10 lần nhưng bắt buộc khi nền đất yếu hoặc tải trọng lớn.<br>
+      <b>Gia cố nền</b>: bấc thấm + gia tải, cọc cát, cọc xi măng đất (CDM/jet grouting), cừ ván thép, vải địa kỹ thuật — mỗi phương pháp có chi phí, tốc độ và điều kiện áp dụng khác nhau.
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu 20–26 — Nền móng & BPTC</div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">20</span>Điều kiện nào giúp kỹ sư KTXD ưu tiên chọn <b>móng nông</b> thay vì móng cọc khi lập dự toán so sánh phương án?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q20-0" onclick="pickMCQ('q20',0,0)"><span class="mkey">A</span><span>Nền đất tốt ngay dưới đáy móng (sức chịu tải đủ lớn, lún dự báo nằm trong giới hạn cho phép) → móng nông thi công nhanh, chi phí thấp hơn cọc 3–8 lần</span></div>
+        <div class="mcq-opt" id="mco-q20-1" onclick="pickMCQ('q20',1,0)"><span class="mkey">B</span><span>Khi chủ đầu tư yêu cầu thi công nhanh bất kể điều kiện địa chất</span></div>
+        <div class="mcq-opt" id="mco-q20-2" onclick="pickMCQ('q20',2,0)"><span class="mkey">C</span><span>Khi công trình có nhiều tầng hầm sâu</span></div>
+        <div class="mcq-opt" id="mco-q20-3" onclick="pickMCQ('q20',3,0)"><span class="mkey">D</span><span>Khi muốn tiết kiệm chi phí bê tông phần thân</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q20">✓ Móng nông (đơn/băng/bè) chỉ phù hợp khi <b>đất tốt nằm gần mặt đất</b>. Nếu đủ điều kiện, đây luôn là phương án kinh tế nhất: không cần thiết bị ép cọc, không cần kiểm tra chất lượng cọc (thử tải, PDA), thi công đơn giản và nhanh hơn. Kỹ sư KTXD cần đọc địa chất để xác nhận điều kiện này trước khi loại bỏ phương án móng nông.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">21</span>Cọc ép và cọc khoan nhồi khác nhau như thế nào về BPTC, tiến độ và chi phí — điều kỹ sư KTXD phải nắm để lập đơn giá?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q21-0" onclick="pickMCQ('q21',0,0)"><span class="mkey">A</span><span>Cọc ép: nhanh, ít bụi/ồn, đơn giá thấp hơn, phù hợp cọc tiết diện nhỏ ≤600mm; khoan nhồi: đường kính lớn (600–2500mm), sức chịu tải cao hơn nhiều nhưng chậm hơn và đơn giá cao gấp 2–5 lần</span></div>
+        <div class="mcq-opt" id="mco-q21-1" onclick="pickMCQ('q21',1,0)"><span class="mkey">B</span><span>Hai loại hoàn toàn giống nhau về tiến độ và chi phí, chỉ khác về tên gọi</span></div>
+        <div class="mcq-opt" id="mco-q21-2" onclick="pickMCQ('q21',2,0)"><span class="mkey">C</span><span>Cọc khoan nhồi luôn nhanh hơn vì không cần đầm nén từng đoạn</span></div>
+        <div class="mcq-opt" id="mco-q21-3" onclick="pickMCQ('q21',3,0)"><span class="mkey">D</span><span>Cọc ép không cần máy móc chuyên dụng, thi công bằng tay được</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q21">✓ Đây là 2 dòng đơn giá khác nhau hoàn toàn trong dự toán. <b>Cọc ép BTCT</b>: máy ép thủy lực, cọc đúc sẵn, năng suất 80–150 m/ngày/máy, chi phí ~300–700k VND/m. <b>Cọc khoan nhồi</b>: máy khoan rotary, đổ bê tông tươi tại chỗ, năng suất 10–30 m/ca, chi phí ~1,5–5M VND/m tùy đường kính. KTXD sai loại → sai đơn giá cả chục lần.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">22</span>Biện pháp gia cố nền "bấc thấm + gia tải trước" ảnh hưởng đến tiến độ tổng thể dự án như thế nào — và kỹ sư KTXD cần tính gì vào kế hoạch?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q22-0" onclick="pickMCQ('q22',0,1)"><span class="mkey">A</span><span>Không ảnh hưởng tiến độ vì bấc thấm thi công rất nhanh</span></div>
+        <div class="mcq-opt" id="mco-q22-1" onclick="pickMCQ('q22',1,1)"><span class="mkey">B</span><span>Bắt buộc có thời gian chờ lún cố kết (thường 3–18 tháng) trước khi thi công phần trên — KTXD phải tính chi phí vốn chờ, chi phí quan trắc lún và điều chỉnh tiến độ tổng thể</span></div>
+        <div class="mcq-opt" id="mco-q22-2" onclick="pickMCQ('q22',2,1)"><span class="mkey">C</span><span>Chỉ ảnh hưởng chi phí vật liệu, hoàn toàn không ảnh hưởng tiến độ</span></div>
+        <div class="mcq-opt" id="mco-q22-3" onclick="pickMCQ('q22',3,1)"><span class="mkey">D</span><span>Giúp rút ngắn tiến độ vì thay thế được móng cọc</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q22">✓ Bấc thấm giúp nước lỗ rỗng thoát nhanh hơn → lún cố kết nhanh hơn tự nhiên. Nhưng vẫn phải <b>chờ</b> cho đến khi lún đạt ≥90% dự báo mới được thi công lớp mặt đường hoặc kết cấu phía trên. Dự án ĐBSCL thường có 6–18 tháng "giai đoạn chờ lún" → ảnh hưởng toàn bộ tiến độ hợp đồng, lãi vay ngân hàng và cơ cấu vốn. KTXD không biết điều này dễ lập tiến độ sai hoàn toàn.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">23</span>Cọc xi măng đất (CDM / Jet grouting) khác với bấc thấm như thế nào về tiến độ và chi phí?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q23-0" onclick="pickMCQ('q23',0,1)"><span class="mkey">A</span><span>CDM rẻ hơn và nhanh hơn bấc thấm trong mọi trường hợp</span></div>
+        <div class="mcq-opt" id="mco-q23-1" onclick="pickMCQ('q23',1,1)"><span class="mkey">B</span><span>CDM tốn kém hơn (xi măng + thiết bị chuyên dụng) nhưng không cần thời gian chờ lún — phù hợp khi tiến độ gấp hoặc mặt bằng chật hẹp không cho phép đắp gia tải</span></div>
+        <div class="mcq-opt" id="mco-q23-2" onclick="pickMCQ('q23',2,1)"><span class="mkey">C</span><span>Hai phương pháp hoàn toàn thay thế nhau được mà không cần cân nhắc</span></div>
+        <div class="mcq-opt" id="mco-q23-3" onclick="pickMCQ('q23',3,1)"><span class="mkey">D</span><span>CDM chỉ dùng được ở đất cát, không dùng được ở đất sét</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q23">✓ Đây là bài toán so sánh kinh tế điển hình cho kỹ sư KTXD: <b>bấc thấm + gia tải</b> chi phí thấp (~30–80k VND/m bấc) nhưng cần 6–18 tháng chờ; <b>CDM</b> chi phí cao hơn 5–10 lần nhưng hoàn thành trong vài tuần, thi công được ngay phần trên. Khi chi phí vốn chờ và phạt chậm tiến độ lớn hơn chênh lệch đơn giá → CDM lại là phương án kinh tế hơn.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">24</span>Kỹ sư KTXD cần hiểu về "cừ ván thép" (sheet pile) để kiểm soát khoản chi phí nào thường bị bỏ sót trong dự toán?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q24-0" onclick="pickMCQ('q24',0,1)"><span class="mkey">A</span><span>Chi phí sơn phủ bề mặt cừ thép</span></div>
+        <div class="mcq-opt" id="mco-q24-1" onclick="pickMCQ('q24',1,1)"><span class="mkey">B</span><span>Chi phí thuê cừ theo thời gian sử dụng + chi phí đóng và nhổ cừ; nếu cừ bị chôn vĩnh viễn (không nhổ được) thì toàn bộ giá mua vật tư phải tính vào chi phí</span></div>
+        <div class="mcq-opt" id="mco-q24-2" onclick="pickMCQ('q24',2,1)"><span class="mkey">C</span><span>Chỉ tính chi phí vật liệu thép theo kg, không có khoản mục nào khác</span></div>
+        <div class="mcq-opt" id="mco-q24-3" onclick="pickMCQ('q24',3,1)"><span class="mkey">D</span><span>Chi phí cừ thép luôn nhỏ hơn 1% tổng dự toán, không đáng kể</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q24">✓ Cừ ván thép thường <b>thuê</b> (đóng → dùng → nhổ về) nên đơn giá tính theo m²×tháng thuê. Nhưng khi địa chất phức tạp, cừ bị kẹt không nhổ được → chôn vĩnh viễn → chi phí bằng giá mua mới. Rủi ro này phải có trong phân tích dự toán và điều khoản hợp đồng. Nhiều dự án bị đội vốn lớn vì không dự trù tình huống này.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">25</span>(Đúng/Sai) Kỹ sư KTXD không cần quan tâm đến biện pháp thi công (BPTC) cụ thể của từng loại móng, vì đó hoàn toàn là trách nhiệm của nhà thầu thi công.</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q25-0" onclick="pickMCQ('q25',0,1)"><span class="mkey">Đ</span><span>Đúng</span></div>
+        <div class="mcq-opt" id="mco-q25-1" onclick="pickMCQ('q25',1,1)"><span class="mkey">S</span><span>Sai</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q25">✓ <b>Sai.</b> BPTC quyết định trực tiếp đến: (1) đơn giá máy thi công (máy ép cọc, máy khoan, cẩu tháp…), (2) tiến độ thi công phần ngầm → ảnh hưởng toàn bộ tiến độ dự án, (3) chi phí gián tiếp (lãi vay, quản lý). Kỹ sư KTXD phải đọc và thẩm định BPTC để kiểm tra đơn giá có hợp lý không, có trùng hạng mục không, và tiến độ có khả thi không.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">26</span>Khi thi công cọc khoan nhồi trong đô thị, khoản chi phí nào kỹ sư KTXD thường bỏ sót khi lập dự toán?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q26-0" onclick="pickMCQ('q26',0,0)"><span class="mkey">A</span><span>Xử lý bùn khoan và dung dịch bentonite thải, chi phí thử tải (PDA/tĩnh), quan trắc siêu âm kiểm tra chất lượng cọc, và chi phí hạ mực nước ngầm tạm thời</span></div>
+        <div class="mcq-opt" id="mco-q26-1" onclick="pickMCQ('q26',1,0)"><span class="mkey">B</span><span>Chi phí sơn đầu cọc</span></div>
+        <div class="mcq-opt" id="mco-q26-2" onclick="pickMCQ('q26',2,0)"><span class="mkey">C</span><span>Chi phí vận chuyển cọc từ nhà máy đến công trường</span></div>
+        <div class="mcq-opt" id="mco-q26-3" onclick="pickMCQ('q26',3,0)"><span class="mkey">D</span><span>Chi phí cốt thép đai trong lồng cốt thép cọc</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q26">✓ Các khoản hay bị bỏ sót: <b>xử lý bùn thải khoan</b> (đô thị không cho đổ tùy tiện — phải vận chuyển đến bãi thải được cấp phép), <b>thử tải cọc</b> (PDA + kiểm tra siêu âm thường 0,2–0,5% giá trị cọc), <b>phá đầu cọc</b> (mỗi cọc mất 20–60 phút nhân công chuyên dụng). Tổng các khoản này có thể chiếm 5–15% tổng giá trị gói cọc — bỏ sót là lỗi dự toán nghiêm trọng.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION E: GHÉP NỐI TỔNG HỢP -->
+<div id="s-ghep-noi" class="card">
+  <div class="card-hd">
+    <i class="ti ti-arrows-right-left"></i>
+    <div>
+      <h2>E. Ghép nối — Vấn đề kỹ thuật & Vai trò kinh tế</h2>
+      <p>Hệ thống hóa mối liên hệ giữa kỹ thuật địa chất và nghiệp vụ KTXD</p>
+    </div>
+    <span class="cbadge">GHÉP NỐI</span>
+  </div>
+  <div class="card-body">
+
+    <div class="match-legend">📌 Chọn ở cột bên phải vai trò/ảnh hưởng kinh tế tương ứng với mỗi vấn đề kỹ thuật ở cột trái, sau đó bấm "Kiểm tra ghép nối".</div>
+
+    <!-- MATCH 1 -->
+    <div class="theory-lbl" style="color:var(--P)"><i class="ti ti-list-check"></i> Ghép nối 1 — Vấn đề kỹ thuật & ảnh hưởng kinh tế</div>
+    <table class="match-tbl">
+      <tr><td class="colA">1. Quy luật thấm nước trong đất</td>
+        <td><select class="match-sel" id="m1-0">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Dự tính chi phí bơm hút nước mặt và hạ mực nước ngầm</option>
+          <option value="b">b. Lựa chọn giữa móng băng, móng bè hay móng cọc để tối ưu giá thành</option>
+          <option value="c">c. Xác định hệ số tơi xốp để tính khối lượng xe đổ thải/đất đắp</option>
+        </select></td></tr>
+      <tr><td class="colA">2. Sức chịu tải của nền đất</td>
+        <td><select class="match-sel" id="m1-1">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Dự tính chi phí bơm hút nước mặt và hạ mực nước ngầm</option>
+          <option value="b">b. Lựa chọn giữa móng băng, móng bè hay móng cọc để tối ưu giá thành</option>
+          <option value="c">c. Xác định hệ số tơi xốp để tính khối lượng xe đổ thải/đất đắp</option>
+        </select></td></tr>
+      <tr><td class="colA">3. Hiện tượng đầm chặt đất</td>
+        <td><select class="match-sel" id="m1-2">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Dự tính chi phí bơm hút nước mặt và hạ mực nước ngầm</option>
+          <option value="b">b. Lựa chọn giữa móng băng, móng bè hay móng cọc để tối ưu giá thành</option>
+          <option value="c">c. Xác định hệ số tơi xốp để tính khối lượng xe đổ thải/đất đắp</option>
+        </select></td></tr>
+    </table>
+    <button class="btn btn-p btn-sm match-btn" onclick="checkMatch('m1',['a','b','c'])"><i class="ti ti-check"></i> Kiểm tra ghép nối 1</button>
+    <div class="match-fb" id="fb-m1"></div>
+
+    <!-- MATCH 2 -->
+    <div class="theory-lbl" style="color:var(--P);margin-top:8px"><i class="ti ti-list-check"></i> Ghép nối 2 — Loại công trình & vấn đề địa kỹ thuật trọng tâm</div>
+    <table class="match-tbl">
+      <tr><td class="colA">1. Đường giao thông qua núi</td>
+        <td><select class="match-sel" id="m2-0">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Trượt sâu mái dốc, gia cố taluy</option>
+          <option value="b">b. Xử lý nền đất yếu, đóng cọc trong môi trường phức tạp</option>
+          <option value="c">c. Xói lở, ổn định mái kè, vật liệu lọc ngược</option>
+          <option value="d">d. Ổn định móng trụ điện sau mưa bão</option>
+        </select></td></tr>
+      <tr><td class="colA">2. Công trình cảng biển</td>
+        <td><select class="match-sel" id="m2-1">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Trượt sâu mái dốc, gia cố taluy</option>
+          <option value="b">b. Xử lý nền đất yếu, đóng cọc trong môi trường phức tạp</option>
+          <option value="c">c. Xói lở, ổn định mái kè, vật liệu lọc ngược</option>
+          <option value="d">d. Ổn định móng trụ điện sau mưa bão</option>
+        </select></td></tr>
+      <tr><td class="colA">3. Đê, kè lấn biển</td>
+        <td><select class="match-sel" id="m2-2">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Trượt sâu mái dốc, gia cố taluy</option>
+          <option value="b">b. Xử lý nền đất yếu, đóng cọc trong môi trường phức tạp</option>
+          <option value="c">c. Xói lở, ổn định mái kè, vật liệu lọc ngược</option>
+          <option value="d">d. Ổn định móng trụ điện sau mưa bão</option>
+        </select></td></tr>
+      <tr><td class="colA">4. Đường dây tải điện vùng đồi núi</td>
+        <td><select class="match-sel" id="m2-3">
+          <option value="">— Chọn —</option>
+          <option value="a">a. Trượt sâu mái dốc, gia cố taluy</option>
+          <option value="b">b. Xử lý nền đất yếu, đóng cọc trong môi trường phức tạp</option>
+          <option value="c">c. Xói lở, ổn định mái kè, vật liệu lọc ngược</option>
+          <option value="d">d. Ổn định móng trụ điện sau mưa bão</option>
+        </select></td></tr>
+    </table>
+    <button class="btn btn-p btn-sm match-btn" onclick="checkMatch('m2',['a','b','c','d'])"><i class="ti ti-check"></i> Kiểm tra ghép nối 2</button>
+    <div class="match-fb" id="fb-m2"></div>
+
+  </div>
+</div>
+
+<!-- RESULT CARD -->
+<div id="s-result" class="result-card">
+  <div class="result-score" id="res-score">0/21</div>
+  <div class="result-sub" id="res-sub">Hoàn thành tất cả câu hỏi và ghép nối để xem kết quả</div>
+  <div class="result-grade" id="res-grade"></div>
+  <br>
+  <button class="btn btn-p" onclick="reviewAll()" style="margin-top:12px">Xem lại đáp án</button>
+</div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a href="index_C0.html" class="btn btn-ghost-light"><i class="ti ti-arrow-left"></i> Chương 0</a>
+  <button class="btn btn-a" onclick="goNext()">0.2 — Sự cố nền móng <i class="ti ti-arrow-right"></i></button>
+</div>
+
+<!-- STICKY NAV -->
+<div class="sticky-nav">
+  <span>0.1 · Vai trò của môn học</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/28</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+  </div>
+</div>
+
+<script>
+var ANS = {};
+var TOTAL = 28;
+
+var mcqIds = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10',
+              'q11','q12','q13','q14','q15','q16','q17','q18','q19',
+              'q20','q21','q22','q23','q24','q25','q26'];
+var matchIds = ['m1','m2'];
+var questions = mcqIds.concat(matchIds);
+questions.forEach(function(q){ ANS[q] = null; });
+
+function pickMCQ(id, picked, correct) {
+  if (ANS[id] !== null) return;
+  var opts = document.querySelectorAll('[id^="mco-' + id + '-"]');
+  opts.forEach(function(el, i) {
+    el.onclick = null;
+    if (i === picked && picked === correct) el.classList.add('ok');
+    else if (i === picked && picked !== correct) el.classList.add('no');
+    else if (i === correct) el.classList.add('reveal-ok');
+  });
+  var exp = document.getElementById('exp-' + id);
+  if (exp) {
+    exp.classList.add('show');
+    exp.classList.add(picked === correct ? 'ok-exp' : 'no-exp');
+  }
+  ANS[id] = (picked === correct);
+  updateProg();
+  checkComplete();
+}
+
+function checkMatch(mid, correctArr) {
+  if (ANS[mid] !== null) return;
+  var allOk = true;
+  var allFilled = true;
+  correctArr.forEach(function(c, i) {
+    var sel = document.getElementById(mid + '-' + i);
+    if (!sel.value) { allFilled = false; return; }
+    if (sel.value === c) {
+      sel.classList.add('ok');
+    } else {
+      sel.classList.add('no');
+      allOk = false;
+    }
+    sel.disabled = true;
+  });
+  if (!allFilled) {
+    alert('Vui lòng chọn đáp án cho tất cả các dòng trước khi kiểm tra.');
+    correctArr.forEach(function(c, i) {
+      var sel = document.getElementById(mid + '-' + i);
+      sel.disabled = false;
+      sel.classList.remove('ok','no');
+    });
+    return;
+  }
+  var fb = document.getElementById('fb-' + mid);
+  fb.classList.add('show');
+  fb.classList.add(allOk ? 'ok-exp' : 'no-exp');
+  fb.textContent = allOk ? '✓ Chính xác! Bạn đã ghép đúng toàn bộ.' : '✗ Có ít nhất 1 cặp ghép sai — các ô màu đỏ là sai, hãy xem lại bảng để rút kinh nghiệm.';
+  ANS[mid] = allOk;
+  updateProg();
+  checkComplete();
+}
+
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+function updateProg() {
+  var attempted = 0, correct = 0, total = TOTAL;
+  questions.forEach(function(q) {
+    if (ANS[q] !== null) { attempted++; if (ANS[q]) correct++; }
+  });
+  var attemPct = total ? Math.round(attempted / total * 100) : 0;
+  var donePct  = total ? Math.round(correct  / total * 100) : 0;
+  document.getElementById('prog-fill').style.width = attemPct + '%';
+  document.getElementById('prog-text').textContent = 'Đã làm: ' + attempted + '/' + total + ' (' + attemPct + '%) · Đúng: ' + correct + ' (' + donePct + '%)';
+  document.getElementById('nav-prog').textContent  = attempted + '/' + total;
+  document.getElementById('hdr-prog').textContent  = attempted + ' / ' + total;
+  try { localStorage.setItem('prog_c0_01', JSON.stringify({done: correct, total: total, attempted: attempted})); } catch(e) {}
+  if (!_submitted) {
+    var minPct = (typeof window.MIN_ATTEMPT_PCT !== 'undefined') ? window.MIN_ATTEMPT_PCT : 5;
+    var btn = document.getElementById('btn-nop');
+    if (btn) {
+      var ready = (attemPct >= minPct && attempted > 0);
+      btn.style.background    = ready ? 'rgba(46,125,50,.7)' : 'rgba(150,150,150,.35)';
+      btn.style.borderColor   = ready ? 'rgba(165,214,167,.6)' : 'rgba(200,200,200,.4)';
+      btn.innerHTML = (ready ? '✅' : '🔒') + ' Nộp bài <span style="font-size:10px;opacity:.8">(' + attemPct + '%/' + minPct + '%)</span>';
+    }
+  }
+}
+
+function checkComplete() {
+  var done = 0, correct = 0;
+  questions.forEach(function(q) {
+    if (ANS[q] !== null) { done++; if (ANS[q]) correct++; }
+  });
+  if (done < TOTAL) return;
+  var rc = document.getElementById('s-result');
+  rc.classList.add('show');
+  rc.scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('res-score').textContent = correct + ' / ' + TOTAL;
+  var pct = Math.round(correct / TOTAL * 100);
+  var gradeEl = document.getElementById('res-grade');
+  var subEl = document.getElementById('res-sub');
+  if (pct >= 90) {
+    gradeEl.textContent = '🏆 Xuất sắc — ' + pct + '%';
+    gradeEl.className = 'result-grade grade-A';
+    subEl.textContent = 'Nắm vững vai trò môn học. Sẵn sàng học sang bài 0.2 — Sự cố nền móng!';
+  } else if (pct >= 70) {
+    gradeEl.textContent = '✓ Khá tốt — ' + pct + '%';
+    gradeEl.className = 'result-grade grade-B';
+    subEl.textContent = 'Hiểu được phần lớn kiến thức. Xem lại các câu sai trước khi sang bài tiếp theo.';
+  } else if (pct >= 50) {
+    gradeEl.textContent = '⚠ Trung bình — ' + pct + '%';
+    gradeEl.className = 'result-grade grade-C';
+    subEl.textContent = 'Cần đọc lại lý thuyết và ôn tập thêm trước khi chuyển bài.';
+  } else {
+    gradeEl.textContent = '✗ Cần ôn luyện — ' + pct + '%';
+    gradeEl.className = 'result-grade grade-D';
+    subEl.textContent = 'Hãy đọc kỹ phần giải thích từng câu và làm lại bài.';
+  }
+  localStorage.setItem('prog_c0_01', JSON.stringify({done: TOTAL, total: TOTAL}));
+}
+
+function reviewAll() {
+  mcqIds.forEach(function(q) {
+    var exp = document.getElementById('exp-' + q);
+    if (exp) exp.classList.add('show');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goto(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+  var tabs = document.querySelectorAll('.tab');
+  var map = {'s-intro':0,'s-vai-tro':1,'s-vong-doi':2,'s-loai-hinh':3,'s-nen-mong':4,'s-ghep-noi':5,'s-result':6};
+  if (map[id] !== undefined) tabs[map[id]].classList.add('on');
+}
+
+function scrollNext() {
+  var unanswered = questions.filter(function(q){ return ANS[q] === null; });
+  if (!unanswered.length) return;
+  var firstQ = unanswered[0];
+  if (firstQ.indexOf('m') === 0) {
+    var sel = document.getElementById(firstQ + '-0');
+    if (sel) sel.closest('table').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  var el = document.querySelector('[id^="mco-' + firstQ + '-"]');
+  if (el) el.closest('.mcq-wrap').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function goNext() {
+  window.location.href = '0.2_SU_CO.html';
+}
+
+var _submitted = false;
+
+function submitResult() {
+  var sv = getSV();
+  if (!sv || !sv.name) { alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!'); return; }
+  if (_submitted) { return; }
+  var total = TOTAL, attempted = 0, correct = 0;
+  questions.forEach(function(q) { if (ANS[q] !== null) { attempted++; if (ANS[q]) correct++; } });
+  var attemPct = total ? Math.round(attempted / total * 100) : 0;
+  var scorePct = total ? Math.round(correct  / total * 100) : 0;
+  if (attempted === 0) { alert('⚠️ Chưa làm câu nào!'); return; }
+  var minPct = (typeof window.MIN_ATTEMPT_PCT !== 'undefined') ? window.MIN_ATTEMPT_PCT : 5;
+  if (attemPct < minPct) { alert('⚠️ Cần làm tối thiểu ' + minPct + '% số câu mới được nộp! Đã làm: ' + attemPct + '%'); return; }
+  var workerUrl = (typeof window.WORKER_URL !== 'undefined') ? window.WORKER_URL : 'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: sv.name, mssv: sv.mssv, stt: Number(sv.stt) || 0, classId: sv.classId,
+      chapterId: 'C0-01-VaiTro', score: scorePct, correct: correct, total: total, duration: 0 })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.ok) {
+      _submitted = true;
+      var btn = document.getElementById('btn-nop');
+      if (btn) { btn.innerHTML = '✓ Đã nộp (' + scorePct + '%)'; btn.disabled = true; btn.style.background = 'rgba(46,125,50,.5)'; }
+      alert('✅ Nộp thành công! Đúng: ' + scorePct + '% (' + correct + '/' + total + ')');
+    } else { alert('❌ Lỗi: ' + (d.error || 'Không rõ')); }
+  })
+  .catch(function(err) { alert('❌ Không kết nối được Worker: ' + err.message); });
+}
+
+window.onload = function() {
+  var sv = getSV();
+  if (sv) {
+    var el = document.getElementById('sv-display');
+    var chip = document.getElementById('sv-chip');
+    if (el) el.textContent = (sv.name || '–') + (sv.classId ? ' · ' + sv.classId : '');
+    if (chip) chip.textContent = 'STT ' + (sv.stt || '–');
+  }
+  updateProg();
+};
+</script>
+</body>
+</html>
