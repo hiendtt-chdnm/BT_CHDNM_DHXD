@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 · 2.0 — Lý Thuyết Tổng Quan Chương 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:12px}
+.hdr-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:12px;padding:5px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hdr-back:hover{color:#fff;background:rgba(255,255,255,.1)}
+.hdr-t{flex:1}.hdr-t h1{font-size:14px;font-weight:700}.hdr-t p{font-size:11px;color:rgba(255,255,255,.55)}
+.hdr-sv{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:4px 11px;border-radius:20px;flex-shrink:0}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 16px;margin-bottom:18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.prog-track{height:7px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-box{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:11px 18px;margin-bottom:18px;display:none;align-items:center;gap:12px}
+.sv-box.show{display:flex}
+.sv-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-name{font-size:13px;font-weight:700}.sv-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:var(--mono)}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{background:var(--Plt);border-bottom:1px solid var(--brd);padding:11px 18px;display:flex;align-items:center;gap:10px}
+.card-hd i{font-size:18px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--P);color:#fff;letter-spacing:.6px}
+.card-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.fml{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-family:var(--mono);font-size:13px;line-height:2}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px}
+.frow{color:var(--Pdk);margin-bottom:1px}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--R);line-height:1.6}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0 10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* Roadmap */
+.roadmap{display:flex;flex-direction:column;gap:8px}
+.rm-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:#FAFCFF;border:1px solid var(--brd);border-radius:10px}
+.rm-num{min-width:32px;height:32px;border-radius:50%;background:var(--P);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.rm-body h4{font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:2px}
+.rm-body p{font-size:12px;color:var(--muted);line-height:1.5}
+.rm-body a{color:var(--P);text-decoration:none;font-weight:600;font-size:12px}
+.rm-body a:hover{text-decoration:underline}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;box-shadow:0 -2px 12px rgba(0,0,0,.2);font-size:13px}
+.sticky-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:none;color:#fff;font-size:12px;cursor:pointer;font-family:var(--sans)}
+.sticky-btn:hover{background:rgba(255,255,255,.15)}
+#toast{position:fixed;bottom:56px;right:20px;background:var(--Pdk);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 6px 20px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;max-width:280px}
+#toast.show{opacity:1}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr"><div class="hdr-in">
+  <a href="index_C2.html" class="hdr-back"><i class="ti ti-arrow-left"></i> Chương 2</a>
+  <div class="hdr-t"><h1>2.0 — Lý Thuyết Ứng Suất Trong Đất</h1><p>Chương 2 · Cơ Học Đất · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p></div>
+  <div class="hdr-sv" id="hdr-sv">SV #–</div>
+</div></header>
+<div class="sv-box" id="sv-box"><div class="sv-av" id="sv-av">?</div><div><div class="sv-name" id="sv-name">–</div><div class="sv-meta" id="sv-meta">–</div></div></div>
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:3px"></i>2.0 — Lý Thuyết — Câu hỏi ôn tập</span><span id="prog-txt">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+</div>
+
+<!-- ══ 1. PHÂN LOẠI ỨNG SUẤT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-layers-difference"></i>
+    <div><h2>1 — Phân loại ứng suất trong đất</h2><p>Nguyên lý Terzaghi (1925) — nền tảng cơ học đất hiện đại</p></div>
+    <span class="cbadge">LT 2.0</span>
+  </div>
+  <div class="card-body">
+    <div class="theory">💡 <b>Ý nghĩa:</b> Ứng suất trong đất là nguyên nhân chính gây <b>lún và mất ổn định nền</b>. Gồm 2 nguồn: do <b>trọng lượng bản thân</b> (σ<sub>oz</sub>) và do <b>tải trọng ngoài</b> (Δσ<sub>z</sub>). Ứng suất gây lún thực sự là <b>ứng suất hữu hiệu</b> σ'.</div>
+    <div class="two-col">
+      <div class="fml">
+        <div class="ftitle">Nguyên lý Terzaghi</div>
+        <div class="frow">σ<sub>z</sub> = σ'<sub>z</sub> + u</div>
+        <div class="frow"><em>σ'<sub>z</sub></em> = σ<sub>z</sub> − u</div>
+        <div class="frow" style="margin-top:6px;font-size:11px;color:var(--muted)">σz = ứng suất tổng</div>
+        <div class="frow" style="font-size:11px;color:var(--muted)">u  = áp lực nước lỗ rỗng</div>
+        <div class="frow" style="font-size:11px;color:var(--muted)">σ'z = ứng suất hữu hiệu</div>
+      </div>
+      <div class="fml">
+        <div class="ftitle">Hai trường hợp thực tế</div>
+        <div class="frow">Không MNN: u = 0</div>
+        <div class="frow"><em>→ σ'<sub>z</sub> = σ<sub>z</sub></em></div>
+        <div class="frow" style="margin-top:6px">Dưới MNN: u > 0</div>
+        <div class="frow">u = γ<sub>w</sub>·(z − h<sub>nn</sub>)</div>
+        <div class="frow"><em>→ σ'<sub>z</sub> = σ<sub>z</sub> − u</em></div>
+      </div>
+    </div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Thành phần nào gây biến dạng và lún nền đất?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-lt1-0" onclick="pickMCQ('lt1',0,0,'✓ Chỉ ứng suất hữu hiệu σ\'z mới trực tiếp tác dụng lên khung hạt đất, gây biến dạng và lún. Terzaghi (1925).')"><span class="mkey">A</span><span>σ'<sub>z</sub> hữu hiệu</span></div>
+        <div class="mcq-opt" id="mco-lt1-1" onclick="pickMCQ('lt1',1,0,'❌ σz tổng bao gồm cả u — phần u do nước chịu, không gây lún.')"><span class="mkey">B</span><span>σ<sub>z</sub> tổng</span></div>
+        <div class="mcq-opt" id="mco-lt1-2" onclick="pickMCQ('lt1',2,0,'❌ u là áp lực nước, tác dụng đều mọi hướng, không gây biến dạng hạt.')"><span class="mkey">C</span><span>u áp lực nước</span></div>
+        <div class="mcq-opt" id="mco-lt1-3" onclick="pickMCQ('lt1',3,0,'❌ Chỉ σ\'z.')"><span class="mkey">D</span><span>Cả σ<sub>z</sub> và u</span></div>
+      </div><div class="mcq-exp" id="exp-lt1"></div></div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>σ'<sub>z</sub> và σ<sub>z</sub> liên hệ qua công thức nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-lt2-0" onclick="pickMCQ('lt2',0,0,'✓ σ\'z = σz − u. Đây là nguyên lý ứng suất hữu hiệu của Terzaghi.')"><span class="mkey">A</span><span>σ'<sub>z</sub> = σ<sub>z</sub> − u</span></div>
+        <div class="mcq-opt" id="mco-lt2-1" onclick="pickMCQ('lt2',1,0,'❌ Ngược chiều.')"><span class="mkey">B</span><span>σ'<sub>z</sub> = σ<sub>z</sub> + u</span></div>
+        <div class="mcq-opt" id="mco-lt2-2" onclick="pickMCQ('lt2',2,0,'❌')"><span class="mkey">C</span><span>σ'<sub>z</sub> = u − σ<sub>z</sub></span></div>
+        <div class="mcq-opt" id="mco-lt2-3" onclick="pickMCQ('lt2',3,0,'❌ Chỉ đúng khi không có MNN (u=0).')"><span class="mkey">D</span><span>σ'<sub>z</sub> = σ<sub>z</sub> luôn</span></div>
+      </div><div class="mcq-exp" id="exp-lt2"></div></div>
+  </div>
+</div>
+
+<!-- ══ 2. PHÂN BIỆT σ BẢN THÂN & TẢI NGOÀI ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrows-vertical"></i>
+    <div><h2>2 — Hai loại ứng suất theo nguồn gốc</h2></div>
+    <span class="cbadge">LT 2.0</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div style="background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:11px 14px;font-size:13px;line-height:1.7">
+        <div style="font-size:11px;font-weight:700;color:var(--Adk);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Ứng suất bản thân σ<sub>oz</sub></div>
+        Do <b>trọng lượng đất phía trên</b> điểm M gây ra.<br>
+        Tồn tại <b>từ trước</b> khi xây công trình.<br>
+        Công thức: σ<sub>oz</sub> = Σhᵢ·γᵢ<br>
+        → Dạng 1, 2 trong chương này
+      </div>
+      <div style="background:#F3E5F5;border-left:4px solid #8E24AA;border-radius:0 8px 8px 0;padding:11px 14px;font-size:13px;line-height:1.7">
+        <div style="font-size:11px;font-weight:700;color:#6A1B9A;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Ứng suất tải ngoài Δσ<sub>z</sub></div>
+        Do <b>tải trọng công trình</b> truyền xuống đất.<br>
+        <b>Tăng thêm</b> khi xây công trình.<br>
+        Phụ thuộc vào hình dạng, vị trí tải.<br>
+        → Dạng 3, 4, 5, 6 trong chương này
+      </div>
+    </div>
+    <div class="warn-box">⚠️ <b>Ứng suất gây lún</b> = Δσ<sub>z</sub> (tải ngoài), không phải σ<sub>oz</sub> bản thân. σ<sub>oz</sub> đã tồn tại từ trước → đất đã lún xong rồi.</div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q3</span>Ứng suất gây lún nền khi xây công trình là loại nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-lt3-0" onclick="pickMCQ('lt3',0,1,'❌ σoz bản thân đã tồn tại từ trước, đất đã cân bằng với nó.')"><span class="mkey">A</span><span>σ<sub>oz</sub> bản thân</span></div>
+        <div class="mcq-opt" id="mco-lt3-1" onclick="pickMCQ('lt3',1,1,'✓ Δσz do tải trọng công trình mới gây ra là ứng suất phụ thêm → gây lún.')"><span class="mkey">B</span><span>Δσ<sub>z</sub> tải ngoài</span></div>
+        <div class="mcq-opt" id="mco-lt3-2" onclick="pickMCQ('lt3',2,1,'❌ Cả hai không đúng.')"><span class="mkey">C</span><span>Cả hai bằng nhau</span></div>
+        <div class="mcq-opt" id="mco-lt3-3" onclick="pickMCQ('lt3',3,1,'❌')"><span class="mkey">D</span><span>u áp lực nước</span></div>
+      </div><div class="mcq-exp" id="exp-lt3"></div></div>
+  </div>
+</div>
+
+<!-- ══ 3. LỘ TRÌNH 6 DẠNG BÀI ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-map-route"></i>
+    <div><h2>3 — Lộ trình 6 dạng bài tập Chương 2</h2><p>Bấm vào từng dạng để làm bài tập</p></div>
+    <span class="cbadge">LT 2.0</span>
+  </div>
+  <div class="card-body">
+    <div class="roadmap">
+      <div class="rm-item">
+        <div class="rm-num">1</div>
+        <div class="rm-body">
+          <h4>Dạng 1 — σ<sub>oz</sub> bản thân, không có MNN</h4>
+          <p>Tính ứng suất tổng và hữu hiệu cho nền nhiều lớp. u = 0 nên σ'<sub>oz</sub> = σ<sub>oz</sub>.</p>
+          <a href="2.1_DANG_1.html">→ Làm bài tập Dạng 1</a>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-num">2</div>
+        <div class="rm-body">
+          <h4>Dạng 2 — σ<sub>oz</sub> bản thân, có MNN</h4>
+          <p>Khi có mực nước ngầm: trên MNN dùng γ tự nhiên; dưới MNN dùng γ<sub>bh</sub>. Tính thêm u và σ'<sub>oz</sub>.</p>
+          <a href="2.2_DANG_2.html">→ Làm bài tập Dạng 2</a>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-num">3</div>
+        <div class="rm-body">
+          <h4>Dạng 3 — Tải tập trung Boussinesq</h4>
+          <p>Δσ<sub>z</sub> = 3P·z³/(2π·R⁵), R = √(r²+z²). Hai tải dùng nguyên lý chồng chất.</p>
+          <a href="2.3_DANG_3.html">→ Làm bài tập Dạng 3</a>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-num">4</div>
+        <div class="rm-body">
+          <h4>Dạng 4 — Tải phân bố hình chữ nhật</h4>
+          <p>Tra bảng k₀ (tại tâm) và k<sub>c</sub> (tại góc) theo (l/b, z/b). Nội suy khi cần.</p>
+          <a href="2.4_DANG_4.html">→ Làm bài tập Dạng 4</a>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-num">5</div>
+        <div class="rm-body">
+          <h4>Dạng 5 — Tải phân bố hình băng (Flamant)</h4>
+          <p>Tải dải vô hạn: Δσ<sub>z</sub>=k<sub>z</sub>·p, Δσ<sub>x</sub>=k<sub>x</sub>·p, τ<sub>xz</sub>=k<sub>t</sub>·p. Tra bảng theo (x/b, z/b).</p>
+          <a href="2.5_DANG_5.html">→ Làm bài tập Dạng 5</a>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-num">6</div>
+        <div class="rm-body">
+          <h4>Dạng 6 — Áp lực tiếp xúc & tải gây lún</h4>
+          <p>p<sub>tx</sub> = N/F + γ<sub>tb</sub>·h<sub>m</sub>; p<sub>gl</sub> = p<sub>tx</sub> − γ'·h<sub>m</sub>. Dùng p<sub>gl</sub> tính Δσ<sub>z</sub>.</p>
+          <a href="2.6_DANG_6.html">→ Làm bài tập Dạng 6</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<div class="sticky-nav">
+  <span>C2 · 2.0 — Lý Thuyết Tổng Quan</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-size:12px">0/0</span>
+    <a href="index.html" class="sticky-btn">← Chương 2</a>
+    <a href="2.7_TONG_HOP.html" class="sticky-btn">Ôn tập →</a>
+    <a href="2.1_DANG_1.html" class="sticky-btn">Dạng 1 →</a>
+  </div>
+</div>
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   DANG_ID : 'lt' — định danh trang lý thuyết, tạo localStorage key
+   ANS     : lưu kết quả MCQ (null = chưa chọn, true/false)
+   Không có _submitted (trang lý thuyết không nộp bài)
+================================================================ */
+
+var DANG_ID = 'lt';
+var ANS = {};
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   toast(msg, dur)  : hiện thông báo nổi, tự tắt sau dur ms
+   getSV()          : đọc thông tin sinh viên từ sessionStorage
+   scrollNext()     : cuộn đến câu chưa làm tiếp theo
+   renderSV()       : hiển thị tên, MSSV, STT lên thanh header
+   (không có seededRng/r1/r2/togS vì trang LT không có bài số)
+================================================================ */
+function toast(msg,dur){dur=dur||3000;var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show');},dur);}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp){inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});inp.focus();}}
+function renderSV(){var sv=getSV();if(!sv||!sv.name)return;var box=document.getElementById('sv-box');if(box)box.classList.add('show');var av=document.getElementById('sv-av');if(av)av.textContent=sv.name.charAt(0).toUpperCase();var nm=document.getElementById('sv-name');if(nm)nm.textContent=sv.name;var mt=document.getElementById('sv-meta');if(mt)mt.textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;var hs=document.getElementById('hdr-sv');if(hs)hs.textContent='SV #'+sv.stt;}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & THEO DÕI TIẾN ĐỘ
+   pickMCQ(name,idx,correct,expText): chấm MCQ, lock sau khi chọn, hiện giải thích
+   updateProg(): cập nhật thanh tiến độ, lưu localStorage 'prog_c2_lt'
+   ⚠️ localStorage key: 'prog_c2_lt' — index_C2.html không đọc key này
+   (không có chkFill/makeQ vì trang LT không có ô nhập số)
+================================================================ */
+function pickMCQ(name,idx,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(idx===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+idx).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.style.display='block';exp.className='mcq-exp show '+(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function updateProg(){
+  var total=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){total++;if(ANS[k]===true)done++;}});
+  var pct=total?Math.round(done/total*100):0;
+  var fill=document.getElementById('prog-bar');if(fill)fill.style.width=pct+'%';
+  var pt=document.getElementById('prog-txt');if(pt)pt.textContent=done+' / '+total+' câu đúng ('+pct+'%)';
+  var np=document.getElementById('nav-prog');if(np)np.textContent=done+'/'+total;
+  localStorage.setItem('prog_c2_lt',JSON.stringify({done:done,total:total}));
+}
+
+/* ================================================================
+   KHỐI 4 — SINH BÀI TẬP (genAll)
+   genAll(): chỉ khởi tạo 3 MCQ keys (lt1, lt2, lt3), gọi updateProg
+   MCQ được hard-coded trong HTML — không sinh số theo STT
+   (không có seededRng vì trang LT không có bài tính số)
+================================================================ */
+function genAll(){
+  ANS['mcq-lt1']=null; ANS['mcq-lt2']=null; ANS['mcq-lt3']=null;
+  updateProg();
+}
+
+/* ================================================================
+   KHỐI 5 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: renderSV() → genAll() (genAll tự gọi updateProg)
+================================================================ */
+window.onload=function(){renderSV();genAll();};
+</script>
+</body>
+</html>

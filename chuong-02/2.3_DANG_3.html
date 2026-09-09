@@ -1,0 +1,903 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 &middot; D&#7841;ng 3 &mdash; T&#7843;i T&#7853;p Trung (Boussinesq)</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ════════════════════════════════════════
+   _shared.css — Chương 2 · Cơ Học Đất
+   Copy <style> này vào đầu mỗi file con
+   ════════════════════════════════════════ */
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;
+  --A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+/* HEADER */
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:12px}
+.hdr-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:12px;padding:5px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hdr-back:hover{color:#fff;background:rgba(255,255,255,.1)}
+.hdr-t{flex:1}.hdr-t h1{font-size:14px;font-weight:700}.hdr-t p{font-size:11px;color:rgba(255,255,255,.55)}
+.hdr-sv{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:4px 11px;border-radius:20px;flex-shrink:0}
+/* MAIN */
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+/* PROGRESS */
+.prog-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 16px;margin-bottom:18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.prog-track{height:7px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+/* SV BOX */
+.sv-box{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:11px 18px;margin-bottom:18px;display:none;align-items:center;gap:12px}
+.sv-box.show{display:flex}
+.sv-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-name{font-size:13px;font-weight:700}.sv-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:var(--mono)}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{background:var(--Plt);border-bottom:1px solid var(--brd);padding:11px 18px;display:flex;align-items:center;gap:10px}
+.card-hd i{font-size:18px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--P);color:#fff;letter-spacing:.6px}
+.card-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+/* STEP */
+.step{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.step-hd{padding:10px 14px;display:flex;align-items:center;gap:9px;cursor:pointer;background:#FAFCFF;user-select:none}
+.step-hd:hover{background:var(--Plt)}
+.snb{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.step-hd h3{font-size:13px;font-weight:700;color:var(--Pdk);flex:1}
+.stag{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600}
+.chev{font-size:15px;color:var(--muted);transition:transform .2s}
+.step-hd.open .chev{transform:rotate(180deg)}
+.step-body{display:none;padding:13px 15px;border-top:1px solid var(--brd);flex-direction:column;gap:10px}
+.step-body.open{display:flex}
+/* FORMULA */
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:.86rem;line-height:2.1}
+.fml-title{font-family:var(--sans);font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.fml-box em{color:var(--Pdk);font-style:normal;font-weight:700}
+.fml-box .num{color:#E65100;font-weight:600}
+.fml-box .res{color:var(--Gdk);font-weight:700;font-size:.92rem}
+.fml-box .cond{color:#7B1FA2;font-size:.78rem}
+.fml-box div{color:var(--Pdk);margin-bottom:2px}
+.frow em{color:var(--B,var(--P));font-weight:700;font-style:normal}
+/* INFO BOXES */
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.theory-lbl{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--P);margin-bottom:5px;letter-spacing:.6px}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--R);line-height:1.6}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--Gdk);font-weight:600}
+/* SEC LBL */
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:2px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* ANS ROW */
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:160px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;text-align:center}
+.ans-inp:focus{border-color:var(--P)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:11px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 9px;text-align:center}
+table.tbl td{padding:5px 9px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+/* 2 COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* DẠNG BADGE */
+.dang-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:700;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--P);color:#fff}.btn-p:hover{background:var(--Pdk)}
+.btn-a{background:var(--A);color:#fff}.btn-a:hover{background:var(--Adk)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--brd)}.btn-ghost:hover{border-color:var(--P);color:var(--P)}
+/* STICKY NAV */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;box-shadow:0 -2px 12px rgba(0,0,0,.2);font-size:13px}
+.sticky-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:none;color:#fff;font-size:12px;cursor:pointer;font-family:var(--sans)}
+.sticky-btn:hover{background:rgba(255,255,255,.15)}
+/* TOAST */
+#toast{position:fixed;bottom:56px;right:20px;background:var(--Pdk);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 6px 20px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;max-width:280px}
+#toast.show{opacity:1}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+
+.svg-wrap{display:flex;justify-content:center;padding:6px 0}
+.note-box{background:#F3E5F5;border-left:4px solid #8E24AA;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;line-height:1.7;color:#4A148C}
+.note-box b{color:#7B1FA2}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<header class="hdr"><div class="hdr-in">
+  <a href="index_C2.html" class="hdr-back"><i class="ti ti-arrow-left"></i> Ch&#432;&#417;ng 2</a>
+  <div class="hdr-t">
+    <h1>D&#7841;ng 3 &mdash; T&#7843;i T&#7853;p Trung (Boussinesq)</h1>
+    <p>Ch&#432;&#417;ng 2 &middot; C&#417; H&#7885;c &#272;&#7845;t &middot; B&#7897; m&ocirc;n C&#417; h&#7885;c &#273;&#7845;t &middot; NM &middot; &#272;HXD H&#224; N&#7897;i</p>
+  </div>
+  <div class="hdr-sv" id="hdr-sv">SV #&ndash;</div>
+</div></header>
+
+<div class="sv-box" id="sv-box">
+  <div class="sv-av" id="sv-av">?</div>
+  <div><div class="sv-name" id="sv-name">&ndash;</div>
+  <div class="sv-meta" id="sv-meta">&ndash;</div></div>
+</div>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top">
+    <span><i class="ti ti-target" style="vertical-align:-2px;margin-right:3px"></i>D&#7841;ng 3 &mdash; Ti&#7871;n &#273;&#7897;</span>
+    <span id="prog-txt">0 / 0 (0%)</span>
+  </div>
+  <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+</div>
+
+<!-- LY THUYET -->
+<div class="card">
+  <div class="card-hd">
+    <i class="ti ti-arrow-bar-down"></i>
+    <div>
+      <h2>L&yacute; thuy&#7871;t &mdash; C&#244;ng th&#7913;c Boussinesq (t&#7843;i t&#7853;p trung)</h2>
+      <p>&#7912;ng su&#7845;t th&#7859;ng &#273;&#7913;ng &Delta;&sigma;<sub>z</sub> do t&#7843;i tr&#7885;ng t&#7853;p trung P g&#226;y ra trong n&#7873;n &#273;&#7845;t</p>
+    </div>
+    <span class="cbadge">LT 2.3</span>
+  </div>
+  <div class="card-body">
+
+    <!-- NOTE KÝ HIỆU -->
+    <div style="background:#F3E5F5;border-left:4px solid #8E24AA;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;line-height:1.7;color:#4A148C">
+      &#128204; <b>Ký hi&#7879;u trong d&#7841;ng 3:</b><br>
+      &bull; <b>&Delta;&sigma;<sub>z</sub></b> = &#7912;ng su&#7845;t t&#259;ng th&#234;m theo ph&#432;&#417;ng &#273;&#7913;ng t&#7841;i M(r,z) do t&#7843;i t&#7853;p trung P g&#226;y ra<br>
+      &bull; <b>P</b> = T&#7843;i tr&#7885;ng t&#7853;p trung (kN) &nbsp;&bull;&nbsp; <b>r</b> = Kho&#7843;ng c&#225;ch ngang t&#7915; &#273;i&#7875;m &#273;&#7863;t l&#7921;c P &#273;&#7871;n M (m)<br>
+      &bull; <b>z</b> = Chi&#7873;u s&#226;u &#273;i&#7875;m M (m) &nbsp;&bull;&nbsp; <b>R</b> = Kho&#7843;ng c&#225;ch kh&#244;ng gian t&#7915; P &#273;&#7871;n M: R = &radic;(r&sup2;+z&sup2;)<br>
+      &bull; Hai t&#7843;i P&#8321;, P&#8322;: d&#249;ng <b>nguy&#234;n l&yacute; ch&#7891;ng ch&#7845;t</b> &rarr; &Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub>
+    </div>
+
+    <!-- SVG MINH HỌA -->
+    <div style="display:flex;justify-content:center;padding:6px 0">
+      <svg viewBox="0 0 580 310" xmlns="http://www.w3.org/2000/svg"
+        style="width:100%;max-width:580px;border-radius:10px;border:1px solid #BBDEFB;background:#F8FBFF">
+        <defs>
+          <marker id="a3Blue" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1565C0"/></marker>
+          <marker id="a3Red" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#E53935"/></marker>
+          <marker id="a3Grn" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2E7D32"/></marker>
+        </defs>
+
+        <!-- Đất nền -->
+        <rect x="40" y="55" width="320" height="240" fill="#D7C4A3" opacity="0.3"/>
+        <!-- Mặt đất -->
+        <line x1="40" y1="55" x2="360" y2="55" stroke="#333" stroke-width="2.5"/>
+        <text x="368" y="60" font-family="Plus Jakarta Sans,sans-serif" font-size="11" fill="#333">M&#7863;t &#273;&#7845;t</text>
+        <line x1="40" y1="55" x2="33" y2="65" stroke="#333" stroke-width="1.5"/>
+        <line x1="65" y1="55" x2="58" y2="65" stroke="#333" stroke-width="1.5"/>
+        <line x1="90" y1="55" x2="83" y2="65" stroke="#333" stroke-width="1.5"/>
+        <line x1="115" y1="55" x2="108" y2="65" stroke="#333" stroke-width="1.5"/>
+
+        <!-- Tải P (1 tải) -->
+        <circle cx="200" cy="55" r="5" fill="#1565C0"/>
+        <line x1="200" y1="12" x2="200" y2="50" stroke="#1565C0" stroke-width="3" marker-end="url(#a3Blue)"/>
+        <text x="207" y="28" font-family="JetBrains Mono,monospace" font-size="14" fill="#1565C0" font-weight="700">P</text>
+
+        <!-- Trục z đứng qua P -->
+        <line x1="200" y1="57" x2="200" y2="290" stroke="#1565C0" stroke-width="1" stroke-dasharray="5,4" opacity="0.5"/>
+
+        <!-- Điểm M(r,z) -->
+        <circle cx="300" cy="205" r="6" fill="#E53935"/>
+        <text x="310" y="210" font-family="Plus Jakarta Sans,sans-serif" font-size="11" fill="#E53935" font-weight="700">M(r, z)</text>
+
+        <!-- r ngang -->
+        <line x1="200" y1="205" x2="293" y2="205" stroke="#E65100" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="240" y="199" font-family="JetBrains Mono,monospace" font-size="12" fill="#E65100" font-weight="700">r</text>
+
+        <!-- z đứng từ mặt đất đến M -->
+        <line x1="200" y1="57" x2="200" y2="198" stroke="#E53935" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#a3Red)"/>
+        <text x="206" y="140" font-family="JetBrains Mono,monospace" font-size="13" fill="#E53935" font-weight="700">z</text>
+
+        <!-- R nghiêng -->
+        <line x1="200" y1="55" x2="295" y2="200" stroke="#2E7D32" stroke-width="2" stroke-dasharray="7,3"/>
+        <text x="248" y="115" font-family="JetBrains Mono,monospace" font-size="12" fill="#2E7D32" font-weight="700">R</text>
+
+        <!-- σz mũi tên xuống tại M -->
+        <line x1="300" y1="220" x2="300" y2="258" stroke="#C62828" stroke-width="2.5" marker-end="url(#a3Red)"/>
+        <text x="306" y="248" font-family="JetBrains Mono,monospace" font-size="10" fill="#C62828">&Delta;&sigma;z</text>
+
+        <!-- Box công thức bên phải -->
+        <rect x="410" y="30" width="160" height="250" rx="8" fill="#FFF8E1" stroke="#FF8F00" stroke-width="1.5"/>
+        <text x="418" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#E65100" font-weight="700">C&#212;NG TH&#7912;C BOUSSINESQ</text>
+        <line x1="413" y1="58" x2="565" y2="58" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="418" y="74" font-family="JetBrains Mono,monospace" font-size="10" fill="#0D47A1">R = &#8730;(r&#178; + z&#178;)</text>
+        <text x="418" y="92" font-family="JetBrains Mono,monospace" font-size="10" fill="#0D47A1">&Delta;&#963;z = 3P&#183;z&#179;</text>
+        <text x="418" y="108" font-family="JetBrains Mono,monospace" font-size="10" fill="#0D47A1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#247; (2&#960;&#183;R&#8309;)</text>
+        <line x1="413" y1="116" x2="565" y2="116" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="418" y="132" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#E65100" font-weight="700">Khi r = 0:</text>
+        <text x="418" y="148" font-family="JetBrains Mono,monospace" font-size="10" fill="#2E7D32">R = z</text>
+        <text x="418" y="164" font-family="JetBrains Mono,monospace" font-size="10" fill="#2E7D32">&Delta;&#963;z = 3P/(2&#960;z&#178;)</text>
+        <line x1="413" y1="172" x2="565" y2="172" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="418" y="188" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#E65100" font-weight="700">CH&#7890;NG CH&#7844;T 2 T&#7842;I:</text>
+        <text x="418" y="204" font-family="JetBrains Mono,monospace" font-size="10" fill="#6A1B9A">&Delta;&#963;z = &Delta;&#963;z1 + &Delta;&#963;z2</text>
+        <line x1="413" y1="212" x2="565" y2="212" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="418" y="228" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#E65100" font-weight="700">XU H&#431;&#7906;NG:</text>
+        <text x="418" y="244" font-family="JetBrains Mono,monospace" font-size="9" fill="#546E7A">z&#8593; &rarr; &Delta;&#963;z&#8595; (&prop;1/z&#178;)</text>
+        <text x="418" y="259" font-family="JetBrains Mono,monospace" font-size="9" fill="#546E7A">r&#8593; &rarr; &Delta;&#963;z&#8595;</text>
+        <text x="418" y="274" font-family="JetBrains Mono,monospace" font-size="9" fill="#546E7A">r=0 &rarr; &Delta;&#963;z l&#7899;n nh&#7845;t</text>
+      </svg>
+    </div>
+
+    <!-- CÔNG THỨC + QUY TRÌNH -->
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="fml-title"><i class="ti ti-math-function" style="font-size:11px"></i> C&#244;ng th&#7913;c Boussinesq</div>
+        <div><em>R</em> = &radic;(r&sup2; + z&sup2;) &nbsp;&nbsp;(m)</div>
+        <div><em>&Delta;&sigma;<sub>z</sub></em> = 3P &middot; z&sup3; / (2&pi; &middot; R&sup5;) &nbsp;(kN/m&sup2;)</div>
+        <div style="margin-top:6px">Tr&#432;&#7901;ng h&#7907;p ri&#234;ng r = 0:</div>
+        <div><em>&Delta;&sigma;<sub>z</sub></em> = 3P / (2&pi; &middot; z&sup2;)</div>
+      </div>
+      <div class="fml-box">
+        <div class="fml-title"><i class="ti ti-list-numbers" style="font-size:11px"></i> Quy tr&#236;nh t&#237;nh</div>
+        <div>&#9312; T&#237;nh R = &radic;(r&sup2; + z&sup2;)</div>
+        <div>&#9313; T&#237;nh R&sup5; = R&sup2; &times; R&sup2; &times; R</div>
+        <div>&#9314; &Delta;&sigma;<sub>z</sub> = 3P &middot; z&sup3; / (2&pi; &middot; R&sup5;)</div>
+        <div style="margin-top:5px;color:#6A1B9A;font-size:12px">Hai t&#7843;i: T&#237;nh ri&#234;ng t&#7915;ng P,<br>r&#7891;i c&#7897;ng l&#7841;i (ch&#7891;ng ch&#7845;t)</div>
+      </div>
+    </div>
+    <div class="earth-box">
+      &#128161; <b>Nh&#7853;n x&#233;t xu h&#432;&#7899;ng:</b><br>
+      &bull; z&uarr; (r=0 c&#7889; &#273;&#7883;nh): &Delta;&sigma;<sub>z</sub> gi&#7843;m nhanh theo 1/z&sup2; &nbsp;&bull;&nbsp;
+      r&uarr; (z c&#7889; &#273;&#7883;nh): &Delta;&sigma;<sub>z</sub> gi&#7843;m d&#7847;n<br>
+      &bull; T&#7841;i c&#249;ng &#273;&#7897; s&#226;u z: &#273;i&#7875;m tr&#234;n tr&#7909;c (r=0) c&#243; &Delta;&sigma;<sub>z</sub> l&#7899;n nh&#7845;t
+    </div>
+  </div>
+</div>
+
+<!-- NHOM A -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-player-play" style="font-size:12px"></i>
+  NHÓM A — Bài hướng dẫn đầy đủ · Tự bấm số kiểm tra
+</div>
+
+<!-- A1: 1 TẢI -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div>
+      <h2>B&#224;i A1 &middot; H&#432;&#7899;ng d&#7851;n &mdash; 1 t&#7843;i t&#7853;p trung P, &#273;i&#7875;m M(r,&thinsp;z) b&#7845;t k&#7923;
+        <span class="cbadge" style="background:#E65100;font-size:10px">T&#237;nh R &rarr; &Delta;&sigma;<sub>z</sub></span></h2>
+    </div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">&#9203; &#272;ang t&#7843;i s&#7889; li&#7879;u...</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh R = &radic;(r&sup2; + z&sup2;)</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Thay s&#7889;</div>
+          <div id="a1-step1">loading...</div></div>
+        <div id="a1-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = 3P&middot;z&sup3; / (2&pi;&middot;R&sup5;)</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Thay s&#7889;</div>
+          <div id="a1-step2">loading...</div></div>
+        <div id="a1-q2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A2: 2 TẢI -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div>
+      <h2>B&#224;i A2 &middot; H&#432;&#7899;ng d&#7851;n &mdash; 2 t&#7843;i t&#7853;p trung P&#8321;, P&#8322; &nbsp;&mdash; Nguy&#234;n l&yacute; ch&#7891;ng ch&#7845;t
+        <span class="cbadge" style="background:#6A1B9A;font-size:10px">&Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub></span></h2>
+    </div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">&#9203; &#272;ang t&#7843;i s&#7889; li&#7879;u...</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh R&#8321;, &Delta;&sigma;<sub>z1</sub> do P&#8321; g&#226;y ra t&#7841;i M</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">&#272;&#243;ng g&#243;p c&#7911;a P&#8321;</div>
+          <div id="a2-step1">loading...</div></div>
+        <div id="a2-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>T&#237;nh R&#8322;, &Delta;&sigma;<sub>z2</sub> do P&#8322; g&#226;y ra t&#7841;i M</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">&#272;&#243;ng g&#243;p c&#7911;a P&#8322;</div>
+          <div id="a2-step2">loading...</div></div>
+        <div id="a2-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9314;</div>
+      <h3>T&#7893;ng h&#7907;p: &Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub></h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Ch&#7891;ng ch&#7845;t</div>
+          <div id="a2-step3">loading...</div></div>
+        <div id="a2-q3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NHOM B -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-pencil" style="font-size:12px"></i>
+  NHÓM B — Có công thức · Tự thay số và tính
+</div>
+
+<!-- B1: r=0 -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>B&#224;i B1 &middot; C&#243; c&#244;ng th&#7913;c &mdash; 1 t&#7843;i, &#273;i&#7875;m tr&#234;n tr&#7909;c (r = 0)</h2></div>
+    <span class="cbadge" style="background:#6A1B9A">&#9999;&#65039; B1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="b1-prob">&#9203;</div>
+    <div class="fml-box"><div class="fml-title">&#272;&#417;n gi&#7843;n h&#243;a khi r = 0</div>
+      <div>r = 0 &rarr; R = z &nbsp;&rarr;&nbsp; <em>&Delta;&sigma;<sub>z</sub> = 3P / (2&pi; &middot; z&sup2;)</em></div>
+    </div>
+    <div id="b1-q"></div>
+  </div>
+</div>
+
+<!-- B2: 2 tải, điểm giữa -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>B&#224;i B2 &middot; C&#243; c&#244;ng th&#7913;c &mdash; 2 t&#7843;i, &#273;i&#7875;m gi&#7919;a hai t&#7843;i</h2></div>
+    <span class="cbadge" style="background:#6A1B9A">&#9999;&#65039; B2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="b2-prob">&#9203;</div>
+    <div class="fml-box"><div class="fml-title">C&#244;ng th&#7913;c &mdash; &#225;p d&#7909;ng l&#7847;n l&#432;&#7907;t r&#7891;i c&#7897;ng</div>
+      <div>R&#7522; = &radic;(r&#7522;&sup2; + z&sup2;) &nbsp;&rarr;&nbsp; &Delta;&sigma;<sub>zi</sub> = 3P&#7522;&middot;z&sup3; / (2&pi;&middot;R&#7522;&sup5;)</div>
+      <div>&Delta;&sigma;<sub>z</sub> = <em>&Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub></em></div>
+    </div>
+    <div id="b2-q"></div>
+  </div>
+</div>
+
+<!-- NHOM C -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-brain" style="font-size:12px"></i>
+  NHÓM C — Chỉ có đầu bài · Tự xác định công thức và tính
+</div>
+
+<!-- C1: 1 tải -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-brain"></i>
+    <div><h2>B&#224;i C1 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; 1 t&#7843;i t&#7853;p trung, &#273;i&#7875;m b&#7845;t k&#7923;</h2></div>
+    <span class="cbadge" style="background:#E65100">&#129504; C1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="c1-prob">&#9203;</div>
+    <div id="c1-q"></div>
+  </div>
+</div>
+
+<!-- C2: 2 tải -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-brain"></i>
+    <div><h2>B&#224;i C2 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; 2 t&#7843;i t&#7853;p trung, t&#7921; &#225;p d&#7909;ng ch&#7891;ng ch&#7845;t</h2></div>
+    <span class="cbadge" style="background:#E65100">&#129504; C2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="c2-prob">&#9203;</div>
+    <div id="c2-q"></div>
+  </div>
+</div>
+
+<!-- NHOM D -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-chart-line" style="font-size:12px"></i>
+  NHÓM D — Tổng hợp · Tính nhiều điểm, nhận xét xu hướng &Delta;&sigma;<sub>z</sub>
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-chart-line"></i>
+    <div>
+      <h2>B&#224;i D &middot; T&#7893;ng h&#7907;p &mdash; 1 t&#7843;i P, t&#237;nh t&#7841;i 6 &#273;i&#7875;m, ph&#226;n t&#237;ch xu h&#432;&#7899;ng</h2>
+      <p>3 &#273;i&#7875;m tr&#234;n tr&#7909;c (r=0, z kh&#225;c nhau) &middot; 3 &#273;i&#7875;m c&#249;ng z, kh&#225;c r</p>
+    </div>
+    <span class="cbadge" style="background:#1565C0">&#128218; D</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="d-prob">&#9203;</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>&#272;i&#7875;m</th><th>r (m)</th><th>z (m)</th><th>R (m)</th>
+          <th>&Delta;&sigma;<sub>z</sub> (kN/m&#178;)</th><th>Ghi ch&#250;</th>
+        </tr></thead>
+        <tbody id="d-tbody"></tbody>
+      </table>
+    </div>
+    <div id="d-q"></div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX1</span>C&#249;ng r = 0, khi t&#259;ng z t&#7915; z&#8321; l&#234;n z&#8323; (t&#259;ng 3 l&#7847;n), &Delta;&sigma;<sub>z</sub> thay &#273;&#7893;i th&#7871; n&#224;o?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-nx1-0" onclick="pickMCQ('nx1',0,1,'B &#273;&#250;ng. &Delta;&sigma;<sub>z</sub> = 3P/(2&pi;z&sup2;) khi r=0. T&#259;ng z 3 l&#7847;n &rarr; &Delta;&sigma;<sub>z</sub> gi&#7843;m 9 l&#7847;n (v&#236; t&#7881; l&#7879; ngh&#7883;ch v&#7899;i z&sup2;). T&#7843;i t&#7853;p trung lan r&#7897;ng r&#7845;t nhanh.')"><span class="mkey">A</span><span>Gi&#7843;m 3 l&#7847;n (&prop; 1/z)</span></div>
+        <div class="mcq-opt" id="mco-nx1-1" onclick="pickMCQ('nx1',1,1,'&#10003; &Delta;&sigma;<sub>z</sub> &prop; 1/z&sup2;. T&#259;ng z 3 l&#7847;n &rarr; gi&#7843;m 9 l&#7847;n. Nhanh h&#417;n nhi&#7873;u so v&#7899;i t&#7843;i ph&#226;n b&#7889; (&prop; 1/z).')"><span class="mkey">B</span><span>Gi&#7843;m 9 l&#7847;n (&prop; 1/z&sup2;)</span></div>
+        <div class="mcq-opt" id="mco-nx1-2" onclick="pickMCQ('nx1',2,1,'B &#273;&#250;ng.')"><span class="mkey">C</span><span>Kh&#244;ng &#273;&#7893;i</span></div>
+        <div class="mcq-opt" id="mco-nx1-3" onclick="pickMCQ('nx1',3,1,'B &#273;&#250;ng.')"><span class="mkey">D</span><span>T&#259;ng d&#7847;n</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx1"></div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX2</span>C&#249;ng &#273;&#7897; s&#226;u z, &#273;i&#7875;m n&#224;o c&#243; &Delta;&sigma;<sub>z</sub> l&#7899;n nh&#7845;t?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-nx2-0" onclick="pickMCQ('nx2',0,0,'&#10003; r = 0 &rarr; R = z (nh&#7887; nh&#7845;t) &rarr; R&sup5; nh&#7887; nh&#7845;t &rarr; &Delta;&sigma;<sub>z</sub> l&#7899;n nh&#7845;t. C&#224;ng xa tr&#7909;c, R t&#259;ng, &Delta;&sigma;<sub>z</sub> gi&#7843;m nhanh.')"><span class="mkey">A</span><span>r = 0 (tr&#234;n tr&#7909;c, R nh&#7887; nh&#7845;t)</span></div>
+        <div class="mcq-opt" id="mco-nx2-1" onclick="pickMCQ('nx2',1,0,'A &#273;&#250;ng.')"><span class="mkey">B</span><span>r l&#7899;n (xa tr&#7909;c nh&#7845;t)</span></div>
+        <div class="mcq-opt" id="mco-nx2-2" onclick="pickMCQ('nx2',2,0,'A &#273;&#250;ng.')"><span class="mkey">C</span><span>B&#7857;ng nhau m&#7885;i &#273;i&#7875;m</span></div>
+        <div class="mcq-opt" id="mco-nx2-3" onclick="pickMCQ('nx2',3,0,'A &#273;&#250;ng.')"><span class="mkey">D</span><span>Ph&#7909; thu&#7897;c P, kh&#244;ng r&#245; r&#224;ng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx2"></div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX3</span>2 t&#7843;i P&#8321; v&#224; P&#8322; &#273;&#7863;t g&#7847;n nhau, &#7913;ng su&#7845;t t&#7893;ng t&#7841;i &#273;i&#7875;m M tính b&#7857;ng c&#225;ch n&#224;o?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-nx3-0" onclick="pickMCQ('nx3',0,0,'&#10003; Nguy&#234;n l&yacute; ch&#7891;ng ch&#7845;t (superposition): v&#7853;t li&#7879;u &#273;&#224;n h&#7891;i tuy&#7871;n t&#237;nh &rarr; &#7913;ng su&#7845;t do nhi&#7873;u t&#7843;i = t&#7893;ng &#7913;ng su&#7845;t t&#7915;ng t&#7843;i.')"><span class="mkey">A</span><span>&Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub> (ch&#7891;ng ch&#7845;t, t&#237;nh r ri&#234;ng t&#7915;ng P r&#7891;i c&#7897;ng l&#7841;i)</span></div>
+        <div class="mcq-opt" id="mco-nx3-1" onclick="pickMCQ('nx3',1,0,'A &#273;&#250;ng. Ch&#7891;ng ch&#7845;t l&#224; quy t&#7855;c cho n&#7873;n &#273;&#224;n h&#7891;i.')"><span class="mkey">B</span><span>&Delta;&sigma;<sub>z</sub> = Max(&Delta;&sigma;<sub>z1</sub>, &Delta;&sigma;<sub>z2</sub>)</span></div>
+        <div class="mcq-opt" id="mco-nx3-2" onclick="pickMCQ('nx3',2,0,'A &#273;&#250;ng.')"><span class="mkey">C</span><span>Ch&#7881; l&#7845;y t&#7843;i l&#7899;n h&#417;n g&#226;y ra</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx3"></div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>C2 &middot; D&#7841;ng 3 &mdash; T&#7843;i T&#7853;p Trung (Boussinesq)</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-size:12px">0/0</span>
+    <button class="sticky-btn" onclick="scrollNext()">&#9660; C&#226;u ti&#7871;p</button>
+    <button class="sticky-btn" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 N&#7897;p b&#224;i &nbsp;<span style="font-size:10px;opacity:.8">(&#273;&#227; l&#224;m 0%/c&#7847;n ?%)</span></button>
+    <a href="2.2_DANG_2.html" class="sticky-btn">&larr; D&#7841;ng 2</a>
+    <a href="2.4_DANG_4.html" class="sticky-btn">D&#7841;ng 4 &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   DANG_ID         : 'dang3' — định danh dạng bài, tạo localStorage key
+   ANS             : lưu kết quả từng câu (null = chưa làm, true/false)
+   _submitted      : cờ ngăn nộp bài lần 2
+   TOTAL_QUESTIONS : đếm sau genAll() → dùng trong updateProg
+================================================================ */
+
+var DANG_ID = 'dang3';
+var ANS = {};
+var _submitted = false;
+var TOTAL_QUESTIONS = 0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   toast(msg, dur)  : hiện thông báo nổi (thay cho alert), tự tắt sau dur ms
+   getSV()          : đọc thông tin sinh viên từ sessionStorage
+   seededRng(seed)  : sinh số ngẫu nhiên deterministic theo STT SV
+   r1(v), r2(v)     : làm tròn 1 và 2 chữ số thập phân
+   togS(hd)         : thu gọn/mở rộng accordion section
+   scrollNext()     : cuộn đến câu chưa làm tiếp theo
+   renderSV()       : hiển thị tên, MSSV, STT lên thanh header
+================================================================ */
+function toast(msg,dur){dur=dur||3000;var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show');},dur);}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function r1(v){return Math.round(v*10)/10;}
+function r2(v){return Math.round(v*100)/100;}
+function togS(hd){hd.classList.toggle('open');hd.nextElementSibling.classList.toggle('open');}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp){inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});inp.focus();}}
+function renderSV(){var sv=getSV();if(!sv||!sv.name)return;var box=document.getElementById('sv-box');if(box)box.classList.add('show');var av=document.getElementById('sv-av');if(av)av.textContent=sv.name.charAt(0).toUpperCase();var nm=document.getElementById('sv-name');if(nm)nm.textContent=sv.name;var mt=document.getElementById('sv-meta');if(mt)mt.textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;var hs=document.getElementById('hdr-sv');if(hs)hs.textContent='SV #'+sv.stt;}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & CẬP NHẬT TIẾN ĐỘ
+   chkFill(id,ans,tol)             : chấm ô nhập số, gọi updateProg()
+   pickMCQ(name,idx,correct,exp)   : chấm MCQ, lock sau khi chọn
+   updateProg()                    : cập nhật thanh tiến độ + nút nộp
+                                     localStorage key: 'prog_c2_dang3'
+   makeQ(id,label,ans,tol,unit)    : tạo HTML cho 1 ô nhập số
+   makeLopMCQ(pid,opts,correct,exp): MCQ chọn vị trí lớp đất (TRÊN/DƯỚI MNN)
+================================================================ */
+
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);
+  var chip=document.getElementById('ck-'+id);
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,idx,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(idx===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+idx).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.style.display='block';exp.className='mcq-exp show '+(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){
+    if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}
+  });
+  var donePct =total?Math.round(done/total*100):0;
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var fill=document.getElementById('prog-bar');if(fill)fill.style.width=attemPct+'%';
+  var pt=document.getElementById('prog-txt');
+  if(pt)pt.textContent='Đã làm: '+attempted+'/'+total+' câu ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  var np=document.getElementById('nav-prog');if(np)np.textContent=attempted+'/'+total;
+  localStorage.setItem('prog_c2_dang3',JSON.stringify({done:done,total:total,attempted:attempted}));
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.7)':'rgba(200,200,200,.4)';
+      btn.title=ready?'Đủ điều kiện nộp bài':'Cần làm tối thiểu '+minPct+'% số câu (hiện: '+attemPct+'%)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài &nbsp;<span style="font-size:10px;opacity:.8">(đã làm '+attemPct+'%/cần '+minPct+'%)</span>';
+    }
+  }
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  var html='<div class="ans-row">'
+    +'<span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" '
+    +'oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span>'
+    +'<span class="chip" id="ck-'+id+'"></span></div>';
+  return html;
+}
+function makeLopMCQ(pid, opts, correct, expText) {
+  var html = opts.map(function(o,i){
+    return '<div class="mcq-opt" id="mco-'+pid+'-'+i+'" '
+      +'onclick="pickMCQ(\''+pid+'\','+i+','+correct+',this.dataset.exp)" '
+      +'data-exp="'+expText.replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'"><span class="mkey">'
+      +String.fromCharCode(65+i)+'</span><span>'+o+'</span></div>';
+  }).join('');
+  document.getElementById(pid+'-opts').innerHTML = html;
+  ANS['mcq-'+pid] = null;
+}
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI LÊN CLOUDFLARE WORKER
+   submitResult(): kiểm tra điều kiện → POST kết quả → Worker → Google Sheet
+   chapterId: 'C2-Dang3'
+   ⚠️ localStorage key: 'prog_c2_dang3' — index_C2.html đọc key này
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    var btn=document.getElementById('btn-nop');
+    if(btn){btn.style.transition='transform .08s';[0,1,2,3,4].forEach(function(i){setTimeout(function(){btn.style.transform=i%2?'translateX(5px)':'translateX(-5px)';},i*70);});setTimeout(function(){btn.style.transform='';},380);}
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C2-Dang3',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);}
+  })
+  .catch(function(err){toast('❌ Không kết nối được Worker: '+err.message,5000);});
+}
+
+/* ================================================================
+   KHỐI 5 — HÀM TÍNH BOUSSINESQ
+   boussi(P, r, z): tính Δσz theo công thức Boussinesq
+                    R = √(r²+z²), Δσz = 3P·z³ / (2π·R⁵)
+                    Trả về { R, sz } — đã làm tròn
+   r2(v): định nghĩa lại (trùng với KHỐI 2) — giữ để boussi dùng chắc chắn
+   r3(v): làm tròn 3 chữ số thập phân (đặc biệt cho dạng 3)
+================================================================ */
+function boussi(P, r, z) {
+  var R = Math.sqrt(r*r + z*z);
+  var sz = 3*P*Math.pow(z,3) / (2*Math.PI*Math.pow(R,5));
+  return {R: Math.round(R*1000)/1000, sz: Math.round(sz*100)/100};
+}
+function r2(v){return Math.round(v*100)/100;}
+function r3(v){return Math.round(v*1000)/1000;}
+
+/* ================================================================
+   KHỐI 6 — SINH BÀI TẬP THEO STT (genAll)
+   genAll(): sinh đề bài ngẫu nhiên deterministic theo STT SV
+   - A1: 1 tải tập trung P, tính Δσz tại điểm M(r, z)
+   - A2: 2 tải tập trung, nguyên lý chồng chất (Δσz = Δσz1 + Δσz2)
+   - B1: r = 0 (điểm M thẳng đứng dưới tải), R = z, công thức đơn giản
+   Mỗi bài là IIFE (function(){...})() độc lập — sửa 1 bài không ảnh hưởng bài khác
+   ĐỂ THÊM BÀI MỚI: thêm 1 IIFE với seededRng seed khác
+================================================================ */
+function genAll() {
+  var sv = getSV();
+  var stt = (sv && sv.stt) ? parseInt(sv.stt) : 1;
+
+  /* ── A1: 1 tải, điểm M(r,z) bất kỳ ── */
+  (function(){
+    var rng = seededRng(stt*43+301);
+    var P  = Math.round(150 + rng()*350);
+    var r  = r1(0.5 + rng()*3.5);
+    var z  = r1(1   + rng()*4);
+    var b  = boussi(P,r,z);
+    var z3 = r2(Math.pow(z,3));
+    var R5 = r2(Math.pow(b.R,5));
+    document.getElementById('a1-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): '
+      +'T&#7843;i tr&#7885;ng t&#7853;p trung <b>P = '+P+' kN</b> &#273;&#7863;t tr&#234;n m&#7863;t &#273;&#7845;t. '
+      +'T&#237;nh <b>&#7913;ng su&#7845;t th&#7859;ng &#273;&#7913;ng &Delta;&sigma;<sub>z</sub></b> t&#7841;i &#273;i&#7875;m M '
+      +'c&#225;ch tr&#7909;c ngang r = <b>'+r+' m</b>, chi&#7873;u s&#226;u z = <b>'+z+' m</b>.';
+    document.getElementById('a1-step1').innerHTML =
+      'R = &radic;(r&sup2; + z&sup2;) = &radic;('+r+'&sup2; + '+z+'&sup2;) = &radic;('+r2(r*r+z*z)+') = ?';
+    document.getElementById('a1-step2').innerHTML =
+      '&Delta;&sigma;<sub>z</sub> = 3P &times; z&sup3; / (2&pi; &times; R&sup5;)'
+      +'<br>= 3 &times; '+P+' &times; '+z3+' / (2&pi; &times; '+R5+') = ?';
+    document.getElementById('a1-q1').innerHTML =
+      makeQ('a1-R','R = &radic;(r&sup2;+z&sup2;) &nbsp;(m)', b.R, 0.05, 'm');
+    document.getElementById('a1-q2').innerHTML =
+      makeQ('a1-sz','&Delta;&sigma;<sub>z</sub> &nbsp;(kN/m&sup2;)', b.sz, r2(b.sz*0.04+0.2), 'kN/m&sup2;');
+  })();
+
+  /* ── A2: 2 tải, nguyên lý chồng chất ── */
+  (function(){
+    var rng = seededRng(stt*47+307);
+    var P1  = Math.round(150 + rng()*250);
+    var P2  = Math.round(100 + rng()*200);
+    var d   = r1(3 + rng()*5);      /* khoảng cách 2 tải */
+    var z   = r1(2 + rng()*4);      /* điểm M ngay dưới P2 */
+    var r1_ = d, r2_ = 0;
+    var b1  = boussi(P1,r1_,z);
+    var b2  = boussi(P2,r2_,z);
+    var tot = r2(b1.sz + b2.sz);
+    document.getElementById('a2-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): '
+      +'Hai t&#7843;i t&#7853;p trung <b>P&#8321; = '+P1+' kN</b> v&#224; <b>P&#8322; = '+P2+' kN</b> '
+      +'&#273;&#7863;t c&#225;ch nhau <b>d = '+d+' m</b> tr&#234;n m&#7863;t &#273;&#7845;t. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i &#273;i&#7875;m M n&#7857;m th&#7859;ng b&#234;n d&#432;&#7899;i P&#8322;, '
+      +'&#7903; &#273;&#7897; s&#226;u z = <b>'+z+' m</b>.';
+    document.getElementById('a2-step1').innerHTML =
+      'r&#8321; = d = '+d+' m &nbsp;(kho&#7843;ng c&#225;ch ngang t&#7915; P&#8321; &#273;&#7871;n M)<br>'
+      +'R&#8321; = &radic;('+d+'&sup2; + '+z+'&sup2;) = &radic;('+r2(d*d+z*z)+') = ?<br>'
+      +'&Delta;&sigma;<sub>z1</sub> = 3&times;'+P1+'&times;'+r2(Math.pow(z,3))+'/(2&pi;&times;R&#8321;&sup5;) = ?';
+    document.getElementById('a2-step2').innerHTML =
+      'r&#8322; = 0 &nbsp;(M n&#7857;m th&#7859;ng d&#432;&#7899;i P&#8322;) &nbsp;&rarr;&nbsp; R&#8322; = z = '+z+' m<br>'
+      +'&Delta;&sigma;<sub>z2</sub> = 3&times;'+P2+'/(2&pi;&times;'+z+'&sup2;) = 3&times;'+P2+'/('+r2(2*Math.PI*z*z)+') = ?';
+    document.getElementById('a2-step3').innerHTML =
+      '&Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub> + &Delta;&sigma;<sub>z2</sub> = ? + ? = ?<br>'
+      +'<span style="font-size:11px;color:#546E7A">(&#273;i&#7873;n k&#7871;t qu&#7843; &#244; b&#234;n d&#432;&#7899;i sau khi t&#237;nh &#9312; v&#224; &#9313;)</span>';
+    document.getElementById('a2-q1').innerHTML =
+      makeQ('a2-R1','R&#8321; = &radic;(d&sup2;+z&sup2;) &nbsp;(m)', b1.R, 0.05, 'm') +
+      makeQ('a2-sz1','&Delta;&sigma;<sub>z1</sub> do P&#8321; &nbsp;(kN/m&sup2;)', b1.sz, r2(b1.sz*0.05+0.2), 'kN/m&sup2;');
+    document.getElementById('a2-q2').innerHTML =
+      makeQ('a2-sz2','&Delta;&sigma;<sub>z2</sub> do P&#8322; (r=0) &nbsp;(kN/m&sup2;)', b2.sz, r2(b2.sz*0.05+0.2), 'kN/m&sup2;');
+    document.getElementById('a2-q3').innerHTML =
+      makeQ('a2-sz','&Delta;&sigma;<sub>z</sub> t&#7893;ng &nbsp;(kN/m&sup2;)', tot, r2(tot*0.04+0.3), 'kN/m&sup2;');
+  })();
+
+  /* ── B1: r=0, 1 tải ── */
+  (function(){
+    var rng = seededRng(stt*53+311);
+    var P   = Math.round(200 + rng()*400);
+    var z   = r1(1.5 + rng()*5);
+    var sz  = r2(3*P / (2*Math.PI*z*z));
+    document.getElementById('b1-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: T&#7843;i t&#7853;p trung <b>P = '+P+' kN</b>. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i &#273;i&#7875;m M n&#7857;m th&#7859;ng d&#432;&#7899;i (r = 0), '
+      +'&#273;&#7897; s&#226;u z = <b>'+z+' m</b>.';
+    document.getElementById('b1-q').innerHTML =
+      makeQ('b1-sz','&Delta;&sigma;<sub>z</sub> = 3P/(2&pi;z&sup2;) &nbsp;(kN/m&sup2;)', sz, r2(sz*0.04+0.2), 'kN/m&sup2;');
+  })();
+
+  /* ── B2: 2 tải, điểm giữa ── */
+  (function(){
+    var rng = seededRng(stt*59+317);
+    var P1  = Math.round(150 + rng()*250);
+    var P2  = Math.round(150 + rng()*250);
+    var d   = r1(4 + rng()*4);
+    var rm  = r1(d/2);              /* điểm M ở giữa, cách đều 2 tải */
+    var z   = r1(2 + rng()*4);
+    var b1  = boussi(P1,rm,z);
+    var b2  = boussi(P2,rm,z);
+    var tot = r2(b1.sz + b2.sz);
+    document.getElementById('b2-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: '
+      +'<b>P&#8321; = '+P1+' kN</b> v&#224; <b>P&#8322; = '+P2+' kN</b> c&#225;ch nhau <b>d = '+d+' m</b>. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i &#273;i&#7875;m M n&#7857;m &#7903; gi&#7919;a hai t&#7843;i '
+      +'(r = '+rm+' m k&#7875; t&#7915; m&#7895;i t&#7843;i), &#273;&#7897; s&#226;u z = <b>'+z+' m</b>.';
+    document.getElementById('b2-q').innerHTML =
+      makeQ('b2-R','R&#8321; = R&#8322; = &radic;('+rm+'&sup2;+'+z+'&sup2;) &nbsp;(m)', b1.R, 0.05, 'm') +
+      makeQ('b2-sz1','&Delta;&sigma;<sub>z1</sub> do P&#8321; &nbsp;(kN/m&sup2;)', b1.sz, r2(b1.sz*0.05+0.2), 'kN/m&sup2;') +
+      makeQ('b2-sz2','&Delta;&sigma;<sub>z2</sub> do P&#8322; &nbsp;(kN/m&sup2;)', b2.sz, r2(b2.sz*0.05+0.2), 'kN/m&sup2;') +
+      makeQ('b2-sz','&Delta;&sigma;<sub>z</sub> t&#7893;ng &nbsp;(kN/m&sup2;)', tot, r2(tot*0.04+0.3), 'kN/m&sup2;');
+  })();
+
+  /* ── C1: 1 tải, điểm bất kỳ ── */
+  (function(){
+    var rng = seededRng(stt*61+321);
+    var P   = Math.round(150 + rng()*350);
+    var r   = r1(0.5 + rng()*4);
+    var z   = r1(1   + rng()*5);
+    var b   = boussi(P,r,z);
+    document.getElementById('c1-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: '
+      +'T&#7843;i t&#7853;p trung <b>P = '+P+' kN</b>. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i M: '
+      +'r = <b>'+r+' m</b>, z = <b>'+z+' m</b>.';
+    document.getElementById('c1-q').innerHTML =
+      makeQ('c1-R','R = &radic;(r&sup2;+z&sup2;) &nbsp;(m)', b.R, 0.05, 'm') +
+      makeQ('c1-sz','&Delta;&sigma;<sub>z</sub> &nbsp;(kN/m&sup2;)', b.sz, r2(b.sz*0.05+0.2), 'kN/m&sup2;');
+  })();
+
+  /* ── C2: 2 tải, điểm bất kỳ ── */
+  (function(){
+    var rng = seededRng(stt*67+327);
+    var P1  = Math.round(150 + rng()*300);
+    var P2  = Math.round(100 + rng()*300);
+    var d   = r1(3 + rng()*6);
+    var xm  = r1(0.5 + rng()*(d-1));  /* vị trí M theo phương ngang */
+    var r1_ = xm;
+    var r2_ = r1(d - xm);
+    var z   = r1(2 + rng()*4);
+    var b1  = boussi(P1,r1_,z);
+    var b2  = boussi(P2,r2_,z);
+    var tot = r2(b1.sz + b2.sz);
+    document.getElementById('c2-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: '
+      +'<b>P&#8321; = '+P1+' kN</b> v&#224; <b>P&#8322; = '+P2+' kN</b> c&#225;ch nhau <b>d = '+d+' m</b>. '
+      +'&#272;i&#7875;m M c&#225;ch P&#8321; kho&#7843;ng r&#8321; = <b>'+r1_+' m</b> (ngang), '
+      +'c&#225;ch P&#8322; kho&#7843;ng r&#8322; = <b>'+r2_+' m</b>, &#7903; &#273;&#7897; s&#226;u z = <b>'+z+' m</b>. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i M.';
+    document.getElementById('c2-q').innerHTML =
+      makeQ('c2-R1','R&#8321; &nbsp;(m)', b1.R, 0.05, 'm') +
+      makeQ('c2-sz1','&Delta;&sigma;<sub>z1</sub> do P&#8321; &nbsp;(kN/m&sup2;)', b1.sz, r2(b1.sz*0.05+0.2), 'kN/m&sup2;') +
+      makeQ('c2-R2','R&#8322; &nbsp;(m)', b2.R, 0.05, 'm') +
+      makeQ('c2-sz2','&Delta;&sigma;<sub>z2</sub> do P&#8322; &nbsp;(kN/m&sup2;)', b2.sz, r2(b2.sz*0.05+0.2), 'kN/m&sup2;') +
+      makeQ('c2-sz','&Delta;&sigma;<sub>z</sub> = &Delta;&sigma;<sub>z1</sub>+&Delta;&sigma;<sub>z2</sub> &nbsp;(kN/m&sup2;)', tot, r2(tot*0.04+0.3), 'kN/m&sup2;');
+  })();
+
+  /* ── D: Xu hướng — 6 điểm ── */
+  (function(){
+    var rng = seededRng(stt*71+331);
+    var P   = Math.round(300 + rng()*300);
+    /* 3 điểm trên trục z, r=0 */
+    var z1  = r1(1   + rng()*0.5);
+    var z2  = r1(2.5 + rng()*1);
+    var z3  = r1(5   + rng()*2);
+    /* 3 điểm cùng z=z1, khác r */
+    var rb  = r1(1.5 + rng()*1.5);
+    var rc  = r1(rb  + 1.5 + rng()*1.5);
+    var pts = [
+      {lbl:'M&#8321;', r:0,  z:z1, note:'tr&#234;n tr&#7909;c, z='+z1},
+      {lbl:'M&#8322;', r:0,  z:z2, note:'tr&#234;n tr&#7909;c, z='+z2},
+      {lbl:'M&#8323;', r:0,  z:z3, note:'tr&#234;n tr&#7909;c, z='+z3},
+      {lbl:'M&#8324;', r:rb, z:z1, note:'c&#249;ng z='+z1+', r='+rb},
+      {lbl:'M&#8325;', r:rc, z:z1, note:'c&#249;ng z='+z1+', r='+rc},
+      {lbl:'M&#8326;', r:rb, z:z2, note:'r='+rb+', z='+z2},
+    ];
+    document.getElementById('d-prob').innerHTML =
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i t&#7893;ng h&#7907;p</b> (STT <b>'+stt+'</b>): '
+      +'T&#7843;i t&#7853;p trung <b>P = '+P+' kN</b>. '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i 6 &#273;i&#7875;m &#273;&#7875; ph&#226;n t&#237;ch xu h&#432;&#7899;ng. '
+      +'(z&#8321;=<b>'+z1+'</b>, z&#8322;=<b>'+z2+'</b>, z&#8323;=<b>'+z3+' m</b>; r&#8322;=<b>'+rb+'</b>, r&#8323;=<b>'+rc+' m</b>)';
+    var tbody = '';
+    pts.forEach(function(m) {
+      var b = boussi(P, m.r, m.z);
+      tbody += '<tr>'
+        + '<td>' + m.lbl + '</td>'
+        + '<td style="font-family:var(--mono)">' + m.r + '</td>'
+        + '<td style="font-family:var(--mono)">' + m.z + '</td>'
+        + '<td style="font-family:var(--mono)">' + b.R + '</td>'
+        + '<td style="font-family:var(--mono);color:var(--P)">?</td>'
+        + '<td style="font-size:10px;color:var(--muted)">' + m.note + '</td>'
+        + '</tr>';
+    });
+    document.getElementById('d-tbody').innerHTML = tbody;
+    var dq = '';
+    pts.forEach(function(m) {
+      var b = boussi(P, m.r, m.z);
+      dq += makeQ(
+        'd-' + m.r + '-' + m.z,
+        m.lbl + ' (r='+m.r+', z='+m.z+'): &Delta;&sigma;<sub>z</sub> &nbsp;(kN/m&sup2;)',
+        b.sz, r2(b.sz*0.05+0.2), 'kN/m&sup2;'
+      );
+    });
+    document.getElementById('d-q').innerHTML = dq;
+    ANS['mcq-nx1'] = null;
+    ANS['mcq-nx2'] = null;
+    ANS['mcq-nx3'] = null;
+  })();
+
+  updateProg();
+}
+
+/* ================================================================
+   KHỐI 7 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: renderSV() → genAll() → đếm TOTAL_QUESTIONS → set nhãn nút nộp
+================================================================ */
+
+window.onload = function(){
+  renderSV();
+  genAll();
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  (function(){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn)btn.innerHTML='🔒 Nộp bài &nbsp;<span style="font-size:10px;opacity:.8">(đã làm 0%/cần '+minPct+'%)</span>';
+  })();
+};
+</script>
+</body>
+</html>

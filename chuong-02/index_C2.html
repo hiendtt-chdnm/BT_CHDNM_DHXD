@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chương 2 — Ứng Suất Trong Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;
+  --A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,.2);position:sticky;top:0;z-index:100}
+.hdr a{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:5px}
+.hdr a:hover{color:#fff;background:rgba(255,255,255,.1)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.55)}
+.hdr-sv{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px}
+main{max-width:860px;margin:0 auto;padding:24px 20px 60px}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:24px 28px;margin-bottom:24px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-20px;top:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.hero h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6}
+.hero-stats{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap}
+.hstat{text-align:center}.hstat .n{font-family:var(--mono);font-size:22px;font-weight:700;display:block}.hstat .l{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.6px}
+/* SV BOX */
+.sv-box{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:14px 18px;margin-bottom:20px;box-shadow:var(--sh);display:none}
+.sv-box.show{display:block}
+.sv-box-in{display:flex;align-items:center;gap:12px}
+.sv-av{width:36px;height:36px;border-radius:50%;background:var(--P);color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-info .sv-name{font-weight:700;font-size:14px}.sv-info .sv-meta{font-size:11px;color:var(--muted);font-family:var(--mono)}
+/* PROGRESS */
+.prog-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+/* MODULE CARDS */
+.section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--P);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.section-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.modules{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.mod-card{background:var(--sur);border:1.5px solid var(--brd);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;transition:all .15s;cursor:pointer}
+.mod-card:hover{border-color:var(--P);box-shadow:0 4px 16px rgba(21,101,192,.12);transform:translateX(3px)}
+.mod-card.locked{opacity:.55;cursor:not-allowed}
+.mod-card.locked:hover{transform:none;box-shadow:none;border-color:var(--brd)}
+.mod-card.done{border-color:var(--G);background:var(--Glt)}
+.mod-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mod-info{flex:1}
+.mod-info h3{font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:2px}
+.mod-info p{font-size:11px;color:var(--muted);line-height:1.45}
+.mod-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.mod-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.badge-open{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.badge-locked{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.badge-done{background:var(--Plt);color:var(--P);border:1px solid #90CAF9}
+.mod-prog{display:flex;align-items:center;gap:5px}
+.mod-prog-track{width:50px;height:4px;background:var(--Plt);border-radius:3px;overflow:hidden}
+.mod-prog-fill{height:100%;background:var(--P);border-radius:3px}
+.mod-prog-pct{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--P)}
+/* BTN */
+.btn{padding:9px 18px;border-radius:8px;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn-p{background:var(--P);color:#fff}.btn-p:hover{background:var(--Pdk)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--brd)}.btn-ghost:hover{border-color:var(--P);color:var(--P)}
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--Pdk);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 6px 20px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<header class="hdr">
+  <a href="../index.html"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+  <div class="hdr-title">
+    <h1>Chương 2 — Ứng Suất Trong Đất</h1>
+    <p>NCM: Cơ Học Đất - Nền Móng · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p>
+  </div>
+  <div class="hdr-sv" id="hdr-sv">SV #–</div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Chương 2 · 6 Dạng Bài</div>
+    <h2>Ứng Suất Trong Đất</h2>
+    <p>Ứng suất tổng · Ứng suất hữu hiệu · Áp lực nước lỗ rỗng<br>Boussinesq · Tải phân bố · Áp lực tiếp xúc móng</p>
+    <div class="hero-stats">
+      <div class="hstat"><span class="n">6</span><span class="l">Dạng bài</span></div>
+      <div class="hstat"><span class="n">3</span><span class="l">Mức độ/dạng</span></div>
+      <div class="hstat"><span class="n">B3–B4</span><span class="l">Buổi học</span></div>
+    </div>
+  </div>
+
+  <!-- SV INFO -->
+  <div class="sv-box" id="sv-box">
+    <div class="sv-box-in">
+      <div class="sv-av" id="sv-av">?</div>
+      <div class="sv-info">
+        <div class="sv-name" id="sv-name">–</div>
+        <div class="sv-meta" id="sv-meta">–</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS CHƯƠNG -->
+  <div class="prog-wrap">
+    <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ chương 2</span><span id="prog-txt">0 / 0 (0%)</span></div>
+    <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+  </div>
+
+  <!-- LÝ THUYẾT -->
+  <div class="section-lbl"><i class="ti ti-books" style="font-size:12px"></i> Lý thuyết & Công thức</div>
+  <div class="modules">
+    <a class="mod-card" href="2.0_LY_THUYET.html" onclick="navTo(event,'2.0_LY_THUYET.html')">
+      <div class="mod-icon" style="background:#E3F2FD">📚</div>
+      <div class="mod-info">
+        <h3>2.0 — Lý Thuyết Tổng Quan</h3>
+        <p>Phân loại ứng suất · Nguyên lý Terzaghi · σ = σ' + u · Ý nghĩa thực tế</p>
+      </div>
+      <div class="mod-right">
+        <span class="mod-badge badge-open" id="badge-lt">✅ Lý thuyết</span>
+        <div class="mod-prog" id="prog-lt"></div>
+      </div>
+    </a>
+    <a class="mod-card" href="2.7_TONG_HOP.html" onclick="navTo(event,'2.7_TONG_HOP.html')">
+      <div class="mod-icon" style="background:#E8F5E9">📋</div>
+      <div class="mod-info">
+        <h3>2.7 — Tổng Hợp Công Thức</h3>
+        <p>Toàn bộ công thức chương 2 · Bảng tra nhanh · MCQ ôn tập</p>
+      </div>
+      <div class="mod-right">
+        <span class="mod-badge badge-open" id="badge-th">📋 Tổng hợp</span>
+        <div class="mod-prog" id="prog-th"></div>
+      </div>
+    </a>
+  </div>
+
+  <!-- BÀI TẬP -->
+  <div class="section-lbl"><i class="ti ti-pencil" style="font-size:12px"></i> Bài tập theo dạng</div>
+  <div class="modules" id="module-list">
+    <!-- render bởi JS -->
+  </div>
+
+  <!-- NAV -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+    <a href="../index.html" class="btn btn-ghost"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+    <a href="../chuong-03/index_C3.html" class="btn btn-p"><i class="ti ti-arrow-right"></i> Chương 3</a>
+  </div>
+</main>
+
+<script>
+/* ================================================================
+   KHỐI 1 — DỮ LIỆU MODULES CHƯƠNG 2
+   MODULES: mảng 6 dạng bài, mỗi phần tử có: id, file, icon, title, desc, badge
+   id khớp với localStorage key 'prog_c2_<id>' mà từng file dạng bài ghi
+   ĐỂ THÊM DẠNG BÀI MỚI: thêm object vào MODULES + tạo file HTML tương ứng
+================================================================ */
+var MODULES = [
+  {
+    id:'dang1', file:'2.1_DANG_1.html',
+    icon:'🗂️', bg:'#FFF8E1',
+    title:'Dạng 1 — Ứng Suất Bản Thân (Không MNN)',
+    desc:'Ứng suất tổng & hữu hiệu · Nền nhiều lớp · Không có mực nước ngầm',
+    badge:'BT 2.1'
+  },
+  {
+    id:'dang2', file:'2.2_DANG_2.html',
+    icon:'💧', bg:'#E3F2FD',
+    title:'Dạng 2 — Ứng Suất Bản Thân (Có MNN)',
+    desc:'σ<sub>z</sub> tổng · u áp lực nước · σ\'<sub>z</sub> hữu hiệu · Mực nước ngầm',
+    badge:'BT 2.2'
+  },
+  {
+    id:'dang3', file:'2.3_DANG_3.html',
+    icon:'⬇️', bg:'#F3E5F5',
+    title:'Dạng 3 — Tải Tập Trung (Boussinesq)',
+    desc:'σ<sub>z</sub> = (3P/2π)·z³/R⁵ · R = √(r²+z²) · Phân tán theo chiều sâu',
+    badge:'BT 2.3'
+  },
+  {
+    id:'dang4', file:'2.4_DANG_4.html',
+    icon:'▭', bg:'#E8F5E9',
+    title:'Dạng 4 — Tải Phân Bố Chữ Nhật',
+    desc:'Tại tâm: σ<sub>z</sub>=p·k₀ · Tại góc: σ<sub>z</sub>=p·k<sub>c</sub> · Tra bảng nội suy',
+    badge:'BT 2.4'
+  },
+  {
+    id:'dang5', file:'2.5_DANG_5.html',
+    icon:'▬', bg:'#FBE9E7',
+    title:'Dạng 5 — Tải Phân Bố Hình Băng (Flamant)',
+    desc:'σ<sub>z</sub>=k<sub>z</sub>·p · σ<sub>x</sub>=k<sub>x</sub>·p · τ<sub>xz</sub>=k<sub>t</sub>·p · Ứng suất chính σ₁,σ₃',
+    badge:'BT 2.5'
+  },
+  {
+    id:'dang6', file:'2.6_DANG_6.html',
+    icon:'🏛️', bg:'#F1F8E9',
+    title:'Dạng 6 — Tải Tiếp Xúc & Tải Gây Lún',
+    desc:'Móng chữ nhật & băng · Đúng tâm & lệch tâm · p<sub>gl</sub> = p<sub>tx</sub> − γ\'·h<sub>m</sub>',
+    badge:'BT 2.6'
+  },
+];
+
+/* ================================================================
+   KHỐI 2 — ĐỌC TIẾN ĐỘ & HIỂN THỊ MODULE
+   getProg(id)       : đọc localStorage 'prog_c2_<id>', trả về {done,total}
+   renderModules()   : render card cho từng module trong MODULES
+   updateTotalProg() : tổng hợp tiến độ tất cả module, lưu 'prog_c2' cho trang chủ
+   ⚠️ 'prog_c2' được trang chủ (index.html) đọc để hiển thị tiến độ chương 2
+================================================================ */
+function getProg(id){
+  // Key khớp với từng file dạng bài: localStorage.setItem('prog_c2_dang1',...)
+  try{var v=localStorage.getItem('prog_c2_'+id);return v?JSON.parse(v):{done:0,total:0};}
+  catch(e){return{done:0,total:0};}
+}
+
+
+function renderModules(){
+  var list=document.getElementById('module-list');
+  list.innerHTML='';
+  MODULES.forEach(function(m){
+    var p=getProg(m.id);
+    var pct=p.total?Math.round(p.done/p.total*100):0;
+    var isDone=(p.total>0&&p.done===p.total);
+    var badge=isDone
+      ?'<span class="mod-badge badge-done">✓ Hoàn thành</span>'
+      :(p.total>0
+        ?'<span class="mod-badge badge-open">'+pct+'%</span>'
+        :'<span class="mod-badge badge-open">'+m.badge+'</span>');
+    var progHtml=p.total>0
+      ?'<div class="mod-prog"><div class="mod-prog-track"><div class="mod-prog-fill" style="width:'+pct+'%"></div></div><span class="mod-prog-pct">'+pct+'%</span></div>'
+      :'';
+    var card=document.createElement('a');
+    card.className='mod-card'+(isDone?' done':'');
+    card.href=m.file;
+    card.innerHTML=
+      '<div class="mod-icon" style="background:'+m.bg+'">'+m.icon+'</div>'
+      +'<div class="mod-info"><h3>'+m.title+'</h3><p>'+m.desc+'</p></div>'
+      +'<div class="mod-right">'+badge+progHtml+'</div>';
+    card.addEventListener('click',function(e){
+      e.preventDefault();
+      navTo(e,m.file);
+    });
+    list.appendChild(card);
+  });
+}
+
+/* ================================================================
+   KHỐI 3 — ĐIỀU HƯỚNG & THÔNG TIN SINH VIÊN
+   navTo(e, file) : chuyển sang file dạng bài, lưu SV vào sessionStorage trước
+   getSV()        : đọc thông tin SV từ sessionStorage
+   renderSV()     : hiển thị tên, MSSV, STT lên thanh header
+================================================================ */
+function navTo(e,file){
+  e.preventDefault();
+  // Lưu SV vào sessionStorage để các file con đọc
+  var sv=getSV();
+  if(sv)sessionStorage.setItem('ncm_sv',JSON.stringify(sv));
+  window.location.href=file;
+}
+
+function getSV(){
+  try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}
+}
+
+function updateTotalProg(){
+  var done=0,total=0;
+  MODULES.forEach(function(m){
+    var p=getProg(m.id);
+    done+=(p.done||0);total+=(p.total||0);
+  });
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent=done+' / '+total+' ('+pct+'%)';
+  // Lưu key 'prog_c2' để trang chủ (index.html) đọc được
+  localStorage.setItem('prog_c2',JSON.stringify({done:done,total:total}));
+}
+
+function renderSV(){
+  var sv=getSV();
+  if(!sv||!sv.name)return;
+  document.getElementById('sv-box').classList.add('show');
+  document.getElementById('sv-av').textContent=sv.name.charAt(0).toUpperCase();
+  document.getElementById('sv-name').textContent=sv.name;
+  document.getElementById('sv-meta').textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;
+  document.getElementById('hdr-sv').textContent='SV #'+sv.stt;
+}
+
+/* ================================================================
+   KHỐI 4 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: renderSV() → renderModules() → updateTotalProg()
+================================================================ */
+window.onload=function(){
+  renderSV();
+  renderModules();
+  updateTotalProg();
+};
+</script>
+</body>
+</html>

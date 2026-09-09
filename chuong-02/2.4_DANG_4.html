@@ -1,0 +1,1380 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 &middot; D&#7841;ng 4 &mdash; T&#7843;i Ph&#226;n B&#7889; H&#236;nh Ch&#7919; Nh&#7853;t</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ════════════════════════════════════════
+   _shared.css — Chương 2 · Cơ Học Đất
+   Copy <style> này vào đầu mỗi file con
+   ════════════════════════════════════════ */
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;
+  --A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+/* HEADER */
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:12px}
+.hdr-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:12px;padding:5px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hdr-back:hover{color:#fff;background:rgba(255,255,255,.1)}
+.hdr-t{flex:1}.hdr-t h1{font-size:14px;font-weight:700}.hdr-t p{font-size:11px;color:rgba(255,255,255,.55)}
+.hdr-sv{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:4px 11px;border-radius:20px;flex-shrink:0}
+/* MAIN */
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+/* PROGRESS */
+.prog-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 16px;margin-bottom:18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.prog-track{height:7px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+/* SV BOX */
+.sv-box{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:11px 18px;margin-bottom:18px;display:none;align-items:center;gap:12px}
+.sv-box.show{display:flex}
+.sv-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-name{font-size:13px;font-weight:700}.sv-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:var(--mono)}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{background:var(--Plt);border-bottom:1px solid var(--brd);padding:11px 18px;display:flex;align-items:center;gap:10px}
+.card-hd i{font-size:18px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--P);color:#fff;letter-spacing:.6px}
+.card-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+/* STEP */
+.step{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.step-hd{padding:10px 14px;display:flex;align-items:center;gap:9px;cursor:pointer;background:#FAFCFF;user-select:none}
+.step-hd:hover{background:var(--Plt)}
+.snb{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.step-hd h3{font-size:13px;font-weight:700;color:var(--Pdk);flex:1}
+.stag{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600}
+.chev{font-size:15px;color:var(--muted);transition:transform .2s}
+.step-hd.open .chev{transform:rotate(180deg)}
+.step-body{display:none;padding:13px 15px;border-top:1px solid var(--brd);flex-direction:column;gap:10px}
+.step-body.open{display:flex}
+/* FORMULA */
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:.86rem;line-height:2.1}
+.fml-title{font-family:var(--sans);font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.fml-box em{color:var(--Pdk);font-style:normal;font-weight:700}
+.fml-box .num{color:#E65100;font-weight:600}
+.fml-box .res{color:var(--Gdk);font-weight:700;font-size:.92rem}
+.fml-box .cond{color:#7B1FA2;font-size:.78rem}
+.fml-box div{color:var(--Pdk);margin-bottom:2px}
+.frow em{color:var(--B,var(--P));font-weight:700;font-style:normal}
+/* INFO BOXES */
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.theory-lbl{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--P);margin-bottom:5px;letter-spacing:.6px}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--R);line-height:1.6}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--Gdk);font-weight:600}
+/* SEC LBL */
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:2px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* ANS ROW */
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:160px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;text-align:center}
+.ans-inp:focus{border-color:var(--P)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:11px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 9px;text-align:center}
+table.tbl td{padding:5px 9px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+/* 2 COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* DẠNG BADGE */
+.dang-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:700;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--P);color:#fff}.btn-p:hover{background:var(--Pdk)}
+.btn-a{background:var(--A);color:#fff}.btn-a:hover{background:var(--Adk)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--brd)}.btn-ghost:hover{border-color:var(--P);color:var(--P)}
+/* STICKY NAV */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;box-shadow:0 -2px 12px rgba(0,0,0,.2);font-size:13px}
+.sticky-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:none;color:#fff;font-size:12px;cursor:pointer;font-family:var(--sans)}
+.sticky-btn:hover{background:rgba(255,255,255,.15)}
+/* TOAST */
+#toast{position:fixed;bottom:56px;right:20px;background:var(--Pdk);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 6px 20px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;max-width:280px}
+#toast.show{opacity:1}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+
+.svg-wrap{display:flex;justify-content:center;padding:6px 0}
+.note-box{background:#F3E5F5;border-left:4px solid #8E24AA;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;line-height:1.7;color:#4A148C}
+.note-box b{color:#7B1FA2}
+</style>
+<style>
+/* Bảng tra đặc biệt */
+.btbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd);margin-bottom:4px}
+table.btbl{border-collapse:collapse;width:100%;font-size:11px;font-family:var(--mono)}
+table.btbl th{background:var(--Pdk);color:#fff;padding:5px 7px;text-align:center;white-space:nowrap;font-size:10px;letter-spacing:.3px}
+table.btbl th.sub{background:var(--Pmd)}
+table.btbl td{padding:4px 7px;text-align:center;border-bottom:1px solid var(--Plt);border-right:1px solid var(--Plt)}
+table.btbl tr:nth-child(even) td{background:#F0F7FF}
+table.btbl td.zb{background:var(--Plt);font-weight:700;color:var(--Pdk);border-right:2px solid var(--P)}
+table.btbl td.hi{background:#FFFDE7;color:#E65100;font-weight:700}
+.tbl-note{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<header class="hdr"><div class="hdr-in">
+  <a href="index_C2.html" class="hdr-back"><i class="ti ti-arrow-left"></i> Ch&#432;&#417;ng 2</a>
+  <div class="hdr-t">
+    <h1>D&#7841;ng 4 &mdash; T&#7843;i Ph&#226;n B&#7889; &#272;&#7873;u H&#236;nh Ch&#7919; Nh&#7853;t</h1>
+    <p>Ch&#432;&#417;ng 2 &middot; C&#417; H&#7885;c &#272;&#7845;t &middot; B&#7897; m&ocirc;n C&#417; h&#7885;c &#273;&#7845;t &middot; NM &middot; &#272;HXD H&#224; N&#7897;i</p>
+  </div>
+  <div class="hdr-sv" id="hdr-sv">SV #&ndash;</div>
+</div></header>
+
+<div class="sv-box" id="sv-box">
+  <div class="sv-av" id="sv-av">?</div>
+  <div><div class="sv-name" id="sv-name">&ndash;</div>
+  <div class="sv-meta" id="sv-meta">&ndash;</div></div>
+</div>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top">
+    <span><i class="ti ti-target" style="vertical-align:-2px;margin-right:3px"></i>D&#7841;ng 4 &mdash; Ti&#7871;n &#273;&#7897;</span>
+    <span id="prog-txt">0 / 0 (0%)</span>
+  </div>
+  <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+</div>
+
+<!-- ══ LÝ THUYẾT ══ -->
+<div class="card">
+  <div class="card-hd">
+    <i class="ti ti-rectangle"></i>
+    <div>
+      <h2>L&yacute; thuy&#7871;t &mdash; &#7912;ng su&#7845;t do t&#7843;i ph&#226;n b&#7889; &#273;&#7873;u h&#236;nh ch&#7919; nh&#7853;t</h2>
+      <p>T&#7841;i t&#226;m: &#963;z = p&middot;k&#8320; &nbsp;&bull;&nbsp; T&#7841;i g&oacute;c: &#963;z = p&middot;k<sub>c</sub> &nbsp;&bull;&nbsp; Tra b&#7843;ng v&#224; n&#7897;i suy</p>
+    </div>
+    <span class="cbadge">LT 2.4</span>
+  </div>
+  <div class="card-body">
+
+    <!-- Note ký hiệu -->
+    <div style="background:#F3E5F5;border-left:4px solid #8E24AA;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;line-height:1.7;color:#4A148C">
+      &#128204; <b>Ký hi&#7879;u trong d&#7841;ng 4:</b><br>
+      &bull; <b>&Delta;&sigma;<sub>z</sub></b> = &#7912;ng su&#7845;t t&#259;ng th&#234;m do t&#7843;i tr&#7885;ng ngo&#224;i (ph&#226;n b&#7889; &#273;&#7873;u h&#236;nh ch&#7919; nh&#7853;t)<br>
+      &bull; <b>p</b> = &#193;p l&#7921;c ph&#226;n b&#7889; &#273;&#7873;u (kN/m&#178;) &nbsp;&bull;&nbsp; <b>l, b</b> = chi&#7873;u d&#224;i v&#224; r&#7897;ng (l &ge; b) &nbsp;&bull;&nbsp; <b>z</b> = chi&#7873;u s&#226;u t&#237;nh t&#7915; &#273;&#225;y t&#7843;i<br>
+      &bull; <b>k&#8320;</b> = h&#7879; s&#7889; t&#7841;i T&#194;M m&#243;ng &nbsp;&#8901;&nbsp; <b>k<sub>c</sub></b> = h&#7879; s&#7889; t&#7841;i G&Oacute;C m&#243;ng &nbsp;&#8901;&nbsp; c&#7843; hai l&#224; h&#224;m s&#7889; c&#7911;a (l/b, z/b)<br>
+      &bull; T&#7841;i g&oacute;c: k<sub>c</sub> &#8776; k&#8320;/4 &nbsp;(m&#7895;i g&oacute;c ch&#7883;u 1/4 t&#7843;i so v&#7899;i t&#226;m)
+    </div>
+
+    <!-- SVG minh họa -->
+    <div style="display:flex;justify-content:center;padding:6px 0">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg"
+        style="width:100%;max-width:560px;border-radius:10px;border:1px solid #BBDEFB;background:#F8FBFF">
+        <defs>
+          <marker id="d4arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#1565C0"/></marker>
+          <marker id="d4red" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#E53935"/></marker>
+          <marker id="d4grn" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#2E7D32"/></marker>
+        </defs>
+        <!-- Nền đất -->
+        <rect x="40" y="90" width="310" height="175" fill="#D7C4A3" opacity="0.3"/>
+        <!-- Mặt đất -->
+        <line x1="40" y1="90" x2="350" y2="90" stroke="#333" stroke-width="2"/>
+        <!-- Hatch đất -->
+        <line x1="40" y1="90" x2="33" y2="100" stroke="#333" stroke-width="1.3"/>
+        <line x1="65" y1="90" x2="58" y2="100" stroke="#333" stroke-width="1.3"/>
+        <line x1="90" y1="90" x2="83" y2="100" stroke="#333" stroke-width="1.3"/>
+        <!-- Móng chữ nhật (nhìn từ trên) -->
+        <rect x="90" y="40" width="170" height="50" fill="#BBDEFB" stroke="#1565C0" stroke-width="2" rx="2"/>
+        <!-- Tải p mũi tên xuống trên móng -->
+        <line x1="110" y1="35" x2="110" y2="55" stroke="#1565C0" stroke-width="2" marker-end="url(#d4arr)"/>
+        <line x1="140" y1="35" x2="140" y2="55" stroke="#1565C0" stroke-width="2" marker-end="url(#d4arr)"/>
+        <line x1="170" y1="35" x2="170" y2="55" stroke="#1565C0" stroke-width="2" marker-end="url(#d4arr)"/>
+        <line x1="200" y1="35" x2="200" y2="55" stroke="#1565C0" stroke-width="2" marker-end="url(#d4arr)"/>
+        <line x1="230" y1="35" x2="230" y2="55" stroke="#1565C0" stroke-width="2" marker-end="url(#d4arr)"/>
+        <text x="170" y="22" font-family="Plus Jakarta Sans,sans-serif" font-size="13" fill="#1565C0" font-weight="700" text-anchor="middle">p (kN/m&#178;)</text>
+        <!-- Nhãn l, b -->
+        <line x1="90" y1="72" x2="260" y2="72" stroke="#1565C0" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="175" y="82" font-family="JetBrains Mono,monospace" font-size="11" fill="#1565C0" text-anchor="middle">l</text>
+        <line x1="265" y1="40" x2="265" y2="90" stroke="#1565C0" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="272" y="68" font-family="JetBrains Mono,monospace" font-size="11" fill="#1565C0">b</text>
+        <!-- Tâm móng -->
+        <circle cx="175" cy="90" r="4" fill="#E65100"/>
+        <text x="180" y="94" font-family="Plus Jakarta Sans,sans-serif" font-size="10" fill="#E65100" font-weight="700">T&#226;m</text>
+        <!-- Góc móng -->
+        <circle cx="90" cy="90" r="4" fill="#2E7D32"/>
+        <text x="60" y="87" font-family="Plus Jakarta Sans,sans-serif" font-size="10" fill="#2E7D32" font-weight="700">G&oacute;c</text>
+        <!-- Điểm M tâm (z sâu) -->
+        <circle cx="175" cy="195" r="5" fill="#E53935"/>
+        <line x1="175" y1="93" x2="175" y2="189" stroke="#E53935" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#d4red)"/>
+        <text x="181" y="198" font-family="Plus Jakarta Sans,sans-serif" font-size="10" fill="#E53935" font-weight="700">M&#8321; (t&#226;m)</text>
+        <text x="181" y="211" font-family="JetBrains Mono,monospace" font-size="10" fill="#E53935">&Delta;&sigma;z = p&middot;k&#8320;</text>
+        <text x="163" y="143" font-family="JetBrains Mono,monospace" font-size="11" fill="#E53935">z</text>
+        <!-- Điểm M góc (z sâu) -->
+        <circle cx="90" cy="195" r="5" fill="#2E7D32"/>
+        <line x1="90" y1="93" x2="90" y2="189" stroke="#2E7D32" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#d4grn)"/>
+        <text x="96" y="198" font-family="Plus Jakarta Sans,sans-serif" font-size="10" fill="#2E7D32" font-weight="700">M&#8322; (g&oacute;c)</text>
+        <text x="96" y="211" font-family="JetBrains Mono,monospace" font-size="10" fill="#2E7D32">&Delta;&sigma;z = p&middot;k<tspan baseline-shift="sub" font-size="8">c</tspan></text>
+        <!-- Box công thức -->
+        <rect x="390" y="30" width="160" height="220" rx="8" fill="#FFF8E1" stroke="#FF8F00" stroke-width="1.5"/>
+        <text x="398" y="50" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#E65100" font-weight="700">T&#7840;I T&#194;M (k&#8320;):</text>
+        <text x="398" y="66" font-family="JetBrains Mono,monospace" font-size="10" fill="#0D47A1">&Delta;&#963;z = p &middot; k&#8320;</text>
+        <text x="398" y="82" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#546E7A">k&#8320; = f(l/b, z/b)</text>
+        <text x="398" y="98" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#546E7A">Tra b&#7843;ng k&#8320;</text>
+        <line x1="393" y1="106" x2="545" y2="106" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="398" y="122" font-family="Plus Jakarta Sans,sans-serif" font-size="9.5" fill="#E65100" font-weight="700">T&#7840;I G&Oacute;C (k<tspan baseline-shift="sub" font-size="7">c</tspan>):</text>
+        <text x="398" y="138" font-family="JetBrains Mono,monospace" font-size="10" fill="#2E7D32">&Delta;&#963;z = p &middot; k<tspan baseline-shift="sub" font-size="8">c</tspan></text>
+        <text x="398" y="154" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#546E7A">k<tspan baseline-shift="sub" font-size="8">c</tspan> = f(l/b, z/b)</text>
+        <text x="398" y="170" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#546E7A">Tra b&#7843;ng k<tspan baseline-shift="sub" font-size="8">c</tspan></text>
+        <line x1="393" y1="178" x2="545" y2="178" stroke="#FF8F00" stroke-width="0.8"/>
+        <text x="398" y="194" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="#E65100" font-weight="700">N&#7896;I SUY TUY&#7870;N T&#205;NH:</text>
+        <text x="398" y="210" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#6A1B9A">k = k&#8321;+(x&#8722;x&#8321;)</text>
+        <text x="398" y="224" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#6A1B9A">&times;(k&#8322;&#8722;k&#8321;)/(x&#8322;&#8722;x&#8321;)</text>
+        <text x="398" y="240" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#546E7A">k<tspan baseline-shift="sub" font-size="7">c</tspan> &#8776; k&#8320;/4</text>
+      </svg>
+    </div>
+
+    <!-- CÔNG THỨC + QUY TRÌNH -->
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="fml-title"><i class="ti ti-math-function" style="font-size:11px"></i> C&#244;ng th&#7913;c tra b&#7843;ng</div>
+        <div><b>T&#7841;i t&#226;m m&#243;ng:</b> &nbsp;<em>&Delta;&sigma;<sub>z</sub> = p &middot; k&#8320;</em></div>
+        <div><b>T&#7841;i g&oacute;c m&#243;ng:</b> &nbsp;<em>&Delta;&sigma;<sub>z</sub> = p &middot; k<sub>c</sub></em></div>
+        <div style="margin-top:6px">k&#8320;, k<sub>c</sub> = f(<em>l/b</em>&thinsp;;&thinsp;<em>z/b</em>) &rarr; tra b&#7843;ng</div>
+        <div>&#272;i&#7875;m b&#7845;t k&#7923; = chia th&#224;nh nhi&#7873;u m&#243;ng g&oacute;c</div>
+      </div>
+      <div class="fml-box">
+        <div class="fml-title"><i class="ti ti-list-numbers" style="font-size:11px"></i> Quy tr&#236;nh tra b&#7843;ng</div>
+        <div>&#9312; T&#237;nh l/b v&#224; z/b (b &#8804; l)</div>
+        <div>&#9313; T&#236;m h&#224;ng z/b, c&#7897;t l/b trong b&#7843;ng</div>
+        <div>&#9314; N&#7897;i suy n&#7871;u kh&#244;ng &#273;&#250;ng gi&#225; tr&#7883; b&#7843;ng</div>
+        <div>&#9315; &Delta;&sigma;<sub>z</sub> = p &times; k (kN/m&#178;)</div>
+      </div>
+    </div>
+
+    <!-- HƯỚNG DẪN NỘI SUY -->
+    <div class="fml-box">
+      <div class="fml-title"><i class="ti ti-calculator" style="font-size:11px"></i> H&#432;&#7899;ng d&#7851;n n&#7897;i suy tuy&#7871;n t&#237;nh</div>
+      <div><b>N&#7897;i suy 1 bi&#7871;n</b> (z/b n&#7857;m gi&#7919;a 2 h&#224;ng x&#8321;, x&#8322;, bi&#7871;t k&#8321;, k&#8322;):</div>
+      <div>&nbsp;&nbsp;k = k&#8321; + (x &minus; x&#8321;) / (x&#8322; &minus; x&#8321;) &times; (k&#8322; &minus; k&#8321;)</div>
+      <div style="margin-top:6px"><b>N&#7897;i suy 2 bi&#7871;n</b> (c&#7843; z/b l&#7851;n l/b &#273;&#7873;u n&#7857;m gi&#7919;a):</div>
+      <div>&nbsp;&nbsp;&#9312; N&#7897;i suy theo l/b t&#7841;i z/b h&#224;ng tr&#234;n &rarr; k&#8321;&#8217;</div>
+      <div>&nbsp;&nbsp;&#9313; N&#7897;i suy theo l/b t&#7841;i z/b h&#224;ng d&#432;&#7899;i &rarr; k&#8322;&#8217;</div>
+      <div>&nbsp;&nbsp;&#9314; N&#7897;i suy k&#8217; theo z/b gi&#7919;a k&#8321;&#8217; v&#224; k&#8322;&#8217;</div>
+    </div>
+
+    <!-- BẢNG TRA k₀ -->
+    <div style="background:#E3F2FD;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12.5px;color:#1a3a6c;margin-bottom:8px">
+      &#128218; <b>B&#7843;ng k&#8320;</b> &mdash; H&#7879; s&#7889; &#7913;ng su&#7845;t t&#7841;i T&#194;M m&#243;ng h&#236;nh ch&#7919; nh&#7853;t &nbsp;(&Delta;&sigma;<sub>z</sub> = p&middot;k&#8320;)
+    </div>
+    <div class="btbl-wrap">
+      <table class="btbl">
+        <thead>
+          <tr>
+            <th rowspan="2" class="zb" style="background:var(--Pdk)">z/b</th>
+            <th colspan="9">l/b</th>
+          </tr>
+          <tr class="sub">
+            <th>1.0</th><th>1.2</th><th>1.4</th><th>1.6</th><th>1.8</th>
+            <th>2.0</th><th>3.0</th><th>5.0</th><th>&infin;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="zb">0.0</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td></tr>
+          <tr><td class="zb">0.2</td><td>0.960</td><td>0.968</td><td>0.972</td><td>0.974</td><td>0.975</td><td>0.976</td><td>0.977</td><td>0.977</td><td>0.977</td></tr>
+          <tr><td class="zb">0.4</td><td>0.800</td><td>0.830</td><td>0.848</td><td>0.859</td><td>0.866</td><td>0.870</td><td>0.878</td><td>0.881</td><td>0.881</td></tr>
+          <tr><td class="zb">0.6</td><td>0.606</td><td>0.651</td><td>0.682</td><td>0.703</td><td>0.717</td><td>0.727</td><td>0.748</td><td>0.755</td><td>0.756</td></tr>
+          <tr><td class="zb">0.8</td><td>0.449</td><td>0.496</td><td>0.532</td><td>0.558</td><td>0.578</td><td>0.593</td><td>0.629</td><td>0.643</td><td>0.644</td></tr>
+          <tr><td class="zb">1.0</td><td>0.336</td><td>0.379</td><td>0.414</td><td>0.441</td><td>0.463</td><td>0.481</td><td>0.525</td><td>0.545</td><td>0.550</td></tr>
+          <tr><td class="zb">1.2</td><td>0.257</td><td>0.294</td><td>0.325</td><td>0.352</td><td>0.374</td><td>0.392</td><td>0.440</td><td>0.464</td><td>0.471</td></tr>
+          <tr><td class="zb">1.4</td><td>0.201</td><td>0.232</td><td>0.260</td><td>0.284</td><td>0.304</td><td>0.322</td><td>0.370</td><td>0.397</td><td>0.407</td></tr>
+          <tr><td class="zb">1.6</td><td>0.160</td><td>0.187</td><td>0.211</td><td>0.233</td><td>0.251</td><td>0.267</td><td>0.313</td><td>0.341</td><td>0.354</td></tr>
+          <tr><td class="zb">1.8</td><td>0.130</td><td>0.153</td><td>0.174</td><td>0.193</td><td>0.209</td><td>0.224</td><td>0.267</td><td>0.295</td><td>0.310</td></tr>
+          <tr><td class="zb">2.0</td><td>0.107</td><td>0.127</td><td>0.145</td><td>0.162</td><td>0.176</td><td>0.189</td><td>0.229</td><td>0.257</td><td>0.273</td></tr>
+          <tr><td class="zb">2.5</td><td>0.070</td><td>0.084</td><td>0.097</td><td>0.109</td><td>0.120</td><td>0.130</td><td>0.163</td><td>0.189</td><td>0.208</td></tr>
+          <tr><td class="zb">3.0</td><td>0.051</td><td>0.060</td><td>0.070</td><td>0.079</td><td>0.088</td><td>0.096</td><td>0.122</td><td>0.146</td><td>0.166</td></tr>
+          <tr><td class="zb">4.0</td><td>0.028</td><td>0.034</td><td>0.040</td><td>0.046</td><td>0.052</td><td>0.057</td><td>0.076</td><td>0.096</td><td>0.117</td></tr>
+          <tr><td class="zb">5.0</td><td>0.018</td><td>0.022</td><td>0.026</td><td>0.031</td><td>0.035</td><td>0.039</td><td>0.053</td><td>0.069</td><td>0.090</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-note">&#128204; B&#7843;ng k&#8320;: &#7912;ng su&#7845;t t&#7841;i <b>t&#226;m</b> m&#243;ng ch&#7919; nh&#7853;t. &#272;&#7877; d&#249;ng b&#7843;ng: &#273;&#7843;m b&#7843;o l &ge; b, t&#237;nh l/b v&#224; z/b, sau &#273;&#243; tra b&#7843;ng &amp; n&#7897;i suy n&#7871;u c&#7847;n.</div>
+
+    <!-- BẢNG TRA kc -->
+    <div style="background:#E8F5E9;border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12.5px;color:#1a4a1a;margin:10px 0 8px">
+      &#128218; <b>B&#7843;ng k<sub>c</sub></b> &mdash; H&#7879; s&#7889; &#7913;ng su&#7845;t t&#7841;i G&Oacute;C m&#243;ng h&#236;nh ch&#7919; nh&#7853;t &nbsp;(&Delta;&sigma;<sub>z</sub> = p&middot;k<sub>c</sub>)
+    </div>
+    <div class="btbl-wrap">
+      <table class="btbl">
+        <thead>
+          <tr>
+            <th rowspan="2" class="zb" style="background:var(--Pdk)">z/b</th>
+            <th colspan="9">l/b</th>
+          </tr>
+          <tr class="sub">
+            <th>1.0</th><th>1.2</th><th>1.4</th><th>1.6</th><th>1.8</th>
+            <th>2.0</th><th>3.0</th><th>5.0</th><th>&infin;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="zb">0.0</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td><td>0.250</td></tr>
+          <tr><td class="zb">0.2</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.249</td><td>0.250</td></tr>
+          <tr><td class="zb">0.4</td><td>0.240</td><td>0.242</td><td>0.244</td><td>0.244</td><td>0.245</td><td>0.245</td><td>0.247</td><td>0.247</td><td>0.250</td></tr>
+          <tr><td class="zb">0.6</td><td>0.223</td><td>0.228</td><td>0.232</td><td>0.234</td><td>0.236</td><td>0.237</td><td>0.240</td><td>0.241</td><td>0.250</td></tr>
+          <tr><td class="zb">0.8</td><td>0.200</td><td>0.208</td><td>0.214</td><td>0.218</td><td>0.221</td><td>0.223</td><td>0.229</td><td>0.232</td><td>0.250</td></tr>
+          <tr><td class="zb">1.0</td><td>0.175</td><td>0.185</td><td>0.193</td><td>0.198</td><td>0.202</td><td>0.205</td><td>0.214</td><td>0.218</td><td>0.250</td></tr>
+          <tr><td class="zb">1.2</td><td>0.152</td><td>0.163</td><td>0.171</td><td>0.178</td><td>0.183</td><td>0.187</td><td>0.198</td><td>0.204</td><td>0.250</td></tr>
+          <tr><td class="zb">1.4</td><td>0.131</td><td>0.142</td><td>0.151</td><td>0.158</td><td>0.164</td><td>0.169</td><td>0.181</td><td>0.189</td><td>0.250</td></tr>
+          <tr><td class="zb">1.6</td><td>0.114</td><td>0.124</td><td>0.133</td><td>0.140</td><td>0.146</td><td>0.151</td><td>0.165</td><td>0.174</td><td>0.250</td></tr>
+          <tr><td class="zb">1.8</td><td>0.099</td><td>0.109</td><td>0.117</td><td>0.124</td><td>0.130</td><td>0.135</td><td>0.150</td><td>0.160</td><td>0.250</td></tr>
+          <tr><td class="zb">2.0</td><td>0.087</td><td>0.096</td><td>0.103</td><td>0.110</td><td>0.116</td><td>0.121</td><td>0.136</td><td>0.147</td><td>0.250</td></tr>
+          <tr><td class="zb">2.5</td><td>0.064</td><td>0.072</td><td>0.078</td><td>0.083</td><td>0.088</td><td>0.093</td><td>0.107</td><td>0.118</td><td>0.250</td></tr>
+          <tr><td class="zb">3.0</td><td>0.049</td><td>0.055</td><td>0.060</td><td>0.065</td><td>0.069</td><td>0.073</td><td>0.085</td><td>0.096</td><td>0.250</td></tr>
+          <tr><td class="zb">4.0</td><td>0.030</td><td>0.034</td><td>0.038</td><td>0.042</td><td>0.045</td><td>0.048</td><td>0.057</td><td>0.067</td><td>0.250</td></tr>
+          <tr><td class="zb">5.0</td><td>0.021</td><td>0.024</td><td>0.027</td><td>0.030</td><td>0.032</td><td>0.034</td><td>0.042</td><td>0.050</td><td>0.250</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-note">&#128204; B&#7843;ng k<sub>c</sub>: &#7912;ng su&#7845;t t&#7841;i <b>g&oacute;c</b> m&#243;ng ch&#7919; nh&#7853;t. L&#432;u &yacute;: khi l/b&rarr;&infin;, k<sub>c</sub>&rarr;0.25 v&#236; m&#7895;i g&oacute;c ch&#7883;u 1/4 t&#7843;i c&#7911;a m&#243;ng b&#259;ng d&#224;i v&#244; h&#7841;n.</div>
+
+    <div class="earth-box">
+      &#128161; <b>Xu h&#432;&#7899;ng:</b> z/b t&#259;ng &rarr; k&#8320; v&#224; k<sub>c</sub> gi&#7843;m &rarr; &#7913;ng su&#7845;t gi&#7843;m d&#7847;n theo chi&#7873;u s&#226;u.
+      T&#7841;i z = 0: k&#8320; = 1 (&#7913;ng su&#7845;t b&#7857;ng &#225;p l&#7921;c t&#7843;i).
+      l/b t&#259;ng &rarr; k&#8320; t&#259;ng (m&#243;ng d&#224;i h&#417;n lan t&#7843;i s&#226;u h&#417;n).
+    </div>
+
+  </div>
+</div>
+
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-player-play" style="font-size:12px"></i>
+  NHÓM A — Bài hướng dẫn đầy đủ · Tự bấm số kiểm tra
+</div>
+
+<!-- A1: tại tâm, tra thẳng (đúng điểm bảng) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A1 &middot; H&#432;&#7899;ng d&#7851;n &mdash; T&#7841;i t&#226;m, tra th&#7859;ng b&#7843;ng (&#273;&#250;ng gi&#225; tr&#7883; b&#7843;ng)
+      <span class="cbadge" style="background:#E65100;font-size:10px">T&#237;nh l/b, z/b &rarr; tra k&#8320;</span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">&#9203;</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh t&#7881; s&#7889; l/b v&#224; z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Thi&#7871;t l&#7853;p t&#7881; s&#7889;</div>
+          <div id="a1-step1">loading...</div></div>
+        <div id="a1-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>Tra b&#7843;ng k&#8320; &mdash; &#273;&#250;ng gi&#225; tr&#7883; b&#7843;ng, kh&#244;ng c&#7847;n n&#7897;i suy</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Tra b&#7843;ng k&#8320;</div>
+          <div id="a1-step2">loading...</div></div>
+        <div id="a1-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9314;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = p &times; k&#8320;</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">K&#7871;t qu&#7843;</div>
+          <div id="a1-step3">loading...</div></div>
+        <div id="a1-q3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A2: tại tâm, nội suy 1 biến (z/b nằm giữa) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A2 &middot; H&#432;&#7899;ng d&#7851;n &mdash; T&#7841;i t&#226;m, n&#7897;i suy 1 bi&#7871;n (z/b n&#7857;m gi&#7919;a 2 h&#224;ng)
+      <span class="cbadge" style="background:#6A1B9A;font-size:10px">N&#7897;i suy z/b</span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">&#9203;</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh l/b v&#224; z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Thi&#7871;t l&#7853;p t&#7881; s&#7889;</div>
+          <div id="a2-step1">loading...</div></div>
+        <div id="a2-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>N&#7897;i suy k&#8320; theo z/b (gi&#7919;a 2 h&#224;ng b&#7843;ng)</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">N&#7897;i suy tuy&#7871;n t&#237;nh</div>
+          <div>k&#8320; = k&#8321; + (z/b &minus; z&#8321;/b) / (z&#8322;/b &minus; z&#8321;/b) &times; (k&#8322; &minus; k&#8321;)</div>
+          <div id="a2-step2">loading...</div></div>
+        <div id="a2-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9314;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = p &times; k&#8320;</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">K&#7871;t qu&#7843;</div>
+          <div id="a2-step3">loading...</div></div>
+        <div id="a2-q3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A3: tại tâm, nội suy 2 biến -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A3 &middot; H&#432;&#7899;ng d&#7851;n &mdash; T&#7841;i t&#226;m, n&#7897;i suy 2 bi&#7871;n (c&#7843; l/b l&#7851;n z/b)
+      <span class="cbadge" style="background:#6A1B9A;font-size:10px">N&#7897;i suy 2D</span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">&#9203;</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh l/b v&#224; z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Thi&#7871;t l&#7853;p t&#7881; s&#7889;</div>
+          <div id="a3-step1">loading...</div></div>
+        <div id="a3-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>N&#7897;i suy theo l/b t&#7841;i 2 h&#224;ng z/b &rarr; k&#8321;&#8217;, k&#8322;&#8217;</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">B&#432;&#7899;c 2a &amp; 2b</div>
+          <div id="a3-step2">loading...</div></div>
+        <div id="a3-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9314;</div>
+      <h3>N&#7897;i suy theo z/b gi&#7919;a k&#8321;&#8217; v&#224; k&#8322;&#8217; &rarr; k&#8320;</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">B&#432;&#7899;c 2c</div>
+          <div id="a3-step3">loading...</div></div>
+        <div id="a3-q3"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9315;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = p &times; k&#8320;</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">K&#7871;t qu&#7843;</div>
+          <div id="a3-step4">loading...</div></div>
+        <div id="a3-q4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A4: tại góc, tra thẳng -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A4 &middot; H&#432;&#7899;ng d&#7851;n &mdash; T&#7841;i g&oacute;c, tra th&#7859;ng b&#7843;ng k<sub>c</sub>
+      <span class="cbadge" style="background:#2E7D32;font-size:10px">Tra k<sub>c</sub> g&oacute;c</span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">&#9203;</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh l/b v&#224; z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">T&#7881; s&#7889;</div>
+          <div id="a4-step1">loading...</div></div>
+        <div id="a4-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>Tra b&#7843;ng k<sub>c</sub></h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">Tra b&#7843;ng k<sub>c</sub> t&#7841;i g&oacute;c</div>
+          <div id="a4-step2">loading...</div></div>
+        <div id="a4-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9314;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = p &times; k<sub>c</sub></h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">K&#7871;t qu&#7843;</div>
+          <div id="a4-step3">loading...</div></div>
+        <div id="a4-q3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A5: tại góc, nội suy 1 biến -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A5 &middot; H&#432;&#7899;ng d&#7851;n &mdash; T&#7841;i g&oacute;c, n&#7897;i suy k<sub>c</sub>
+      <span class="cbadge" style="background:#2E7D32;font-size:10px">N&#7897;i suy k<sub>c</sub></span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">&#9203;</div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9312;</div>
+      <h3>T&#237;nh l/b v&#224; z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">T&#7881; s&#7889;</div>
+          <div id="a5-step1">loading...</div></div>
+        <div id="a5-q1"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--P)">&#9313;</div>
+      <h3>N&#7897;i suy k<sub>c</sub> theo z/b</h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">N&#7897;i suy tuy&#7871;n t&#237;nh</div>
+          <div>k<sub>c</sub> = k<sub>c1</sub> + (z/b &minus; z&#8321;/b) / (z&#8322;/b &minus; z&#8321;/b) &times; (k<sub>c2</sub> &minus; k<sub>c1</sub>)</div>
+          <div id="a5-step2">loading...</div></div>
+        <div id="a5-q2"></div>
+      </div>
+    </div>
+    <div class="step"><div class="step-hd open" onclick="togS(this)">
+      <div class="snb" style="background:var(--G)">&#9314;</div>
+      <h3>T&#237;nh &Delta;&sigma;<sub>z</sub> = p &times; k<sub>c</sub></h3>
+      <i class="ti ti-chevron-down chev"></i></div>
+      <div class="step-body open">
+        <div class="fml-box"><div class="fml-title">K&#7871;t qu&#7843;</div>
+          <div id="a5-step3">loading...</div></div>
+        <div id="a5-q3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A6: so sánh tâm vs góc -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>B&#224;i A6 &middot; H&#432;&#7899;ng d&#7851;n &mdash; So s&#225;nh t&#226;m v&#224; g&oacute;c c&#249;ng m&#243;ng
+      <span class="cbadge" style="background:#6A1B9A;font-size:10px">T&#226;m + G&oacute;c</span></h2></div>
+    <span class="cbadge" style="background:#1565C0">&#128218; A6</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a6-prob">&#9203;</div>
+    <div class="fml-box"><div class="fml-title">Quy tr&#236;nh &mdash; T&#237;nh c&#7843; 2 (cùng l/b, z/b)</div>
+      <div>T&#7841;i t&#226;m: &Delta;&sigma;<sub>z,t</sub> = p &times; k&#8320; &nbsp;(tra b&#7843;ng k&#8320;)</div>
+      <div>T&#7841;i g&oacute;c: &Delta;&sigma;<sub>z,g</sub> = p &times; k<sub>c</sub> &nbsp;(tra b&#7843;ng k<sub>c</sub>)</div>
+      <div id="a6-hint">loading...</div></div>
+    <div id="a6-q"></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q</span>T&#7841;i c&#249;ng &#273;&#7897; s&#226;u z, &#7913;ng su&#7845;t t&#7841;i t&#226;m so v&#7899;i t&#7841;i g&oacute;c:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-a6q-0" onclick="pickMCQ('a6q',0,0,'&#10003; T&#226;m nh&#7853;n t&#7843;i t&#7915; c&#7843; 4 g&oacute;c trong khi m&#7895;i g&oacute;c ch&#7881; nh&#7853;n t&#7915; 1 g&oacute;c. K&#7871;t qu&#7843; k&#8320; &#8776; 4&times;k<sub>c</sub>.')"><span class="mkey">A</span><span>T&#7841;i t&#226;m l&#7899;n h&#417;n (~4 l&#7847;n)</span></div>
+        <div class="mcq-opt" id="mco-a6q-1" onclick="pickMCQ('a6q',1,0,'A &#273;&#250;ng. k&#8320; &#8776; 4k<sub>c</sub>.')"><span class="mkey">B</span><span>B&#7857;ng nhau</span></div>
+        <div class="mcq-opt" id="mco-a6q-2" onclick="pickMCQ('a6q',2,0,'A &#273;&#250;ng.')"><span class="mkey">C</span><span>T&#7841;i g&oacute;c l&#7899;n h&#417;n</span></div>
+        <div class="mcq-opt" id="mco-a6q-3" onclick="pickMCQ('a6q',3,0,'A &#273;&#250;ng.')"><span class="mkey">D</span><span>Ph&#7909; thu&#7897;c v&#224;o p</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-a6q"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NHÓM B -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-pencil" style="font-size:12px"></i>
+  NHÓM B — Có công thức · Tự tra bảng và tính
+</div>
+<div id="b-cards"></div>
+
+<!-- NHÓM C -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-brain" style="font-size:12px"></i>
+  NHÓM C — Chỉ có đầu bài · Tự xác định l/b, z/b, tra bảng và tính
+</div>
+<div id="c-cards"></div>
+
+<!-- NHÓM D -->
+<div class="sec-lbl" style="margin-top:8px">
+  <i class="ti ti-chart-line" style="font-size:12px"></i>
+  NHÓM D — Tổng hợp · Tính &Delta;&sigma;<sub>z</sub> tại nhiều độ sâu, nhận xét xu hướng
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-chart-line"></i>
+    <div>
+      <h2>B&#224;i D &middot; T&#7893;ng h&#7907;p &mdash; T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i 5 &#273;&#7897; s&#226;u t&#7841;i t&#226;m, nh&#7853;n x&#233;t xu h&#432;&#7899;ng</h2>
+      <p>C&#249;ng m&#243;ng, c&#249;ng t&#226;m &mdash; z t&#259;ng d&#7847;n &rarr; k&#8320; gi&#7843;m &rarr; &Delta;&sigma;<sub>z</sub> gi&#7843;m</p>
+    </div>
+    <span class="cbadge" style="background:#1565C0">&#128218; D</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="d-prob">&#9203;</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>&#272;i&#7875;m</th><th>z (m)</th><th>z/b</th><th>k&#8320; (tra b&#7843;ng)</th>
+          <th>&Delta;&sigma;<sub>z</sub> = p&middot;k&#8320; (kN/m&#178;)</th>
+        </tr></thead>
+        <tbody id="d-tbody"></tbody>
+      </table>
+    </div>
+    <div id="d-q"></div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX1</span>Khi z/b t&#259;ng (&#273;i&#7875;m t&#237;nh &#7913;ng su&#7845;t xu&#7889;ng s&#226;u h&#417;n), &Delta;&sigma;<sub>z</sub> do t&#7843;i ngo&#224;i thay &#273;&#7893;i th&#7871; n&#224;o?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-nx1-0" onclick="pickMCQ('nx1',0,1,'B &#273;&#250;ng. k&#8320; gi&#7843;m t&#7915; 1 (t&#7841;i z=0) v&#7873; 0 khi z&#8594;&#8734;. &#7912;ng su&#7845;t do t&#7843;i ngo&#224;i &ldquo;ph&#226;n t&#225;n&rdquo; theo chi&#7873;u s&#226;u.')"><span class="mkey">A</span><span>T&#259;ng d&#7847;n</span></div>
+        <div class="mcq-opt" id="mco-nx1-1" onclick="pickMCQ('nx1',1,1,'&#10003; k&#8320; gi&#7843;m t&#7915; 1 v&#7873; 0. &#7912;ng su&#7845;t ph&#226;n t&#225;n ra ngo&#224;i theo chi&#7873;u s&#226;u, gi&#7843;m nhanh trong vùng z/b &lt; 2.')"><span class="mkey">B</span><span>Gi&#7843;m d&#7847;n (k&#8320; gi&#7843;m t&#7915; 1 v&#7873; 0)</span></div>
+        <div class="mcq-opt" id="mco-nx1-2" onclick="pickMCQ('nx1',2,1,'B &#273;&#250;ng.')"><span class="mkey">C</span><span>Kh&#244;ng &#273;&#7893;i</span></div>
+        <div class="mcq-opt" id="mco-nx1-3" onclick="pickMCQ('nx1',3,1,'B &#273;&#250;ng.')"><span class="mkey">D</span><span>T&#259;ng r&#7891;i gi&#7843;m</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx1"></div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX2</span>M&#243;ng c&#243; l/b l&#7899;n h&#417;n (d&#224;i h&#417;n so v&#7899;i r&#7897;ng), &#7913;ng su&#7845;t c&#249;ng &#273;&#7897; s&#226;u s&#7869; th&#7871; n&#224;o?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-nx2-0" onclick="pickMCQ('nx2',0,0,'&#10003; l/b t&#259;ng &rarr; k&#8320; t&#259;ng (xem b&#7843;ng: c&#7897;t l/b=5 lu&#244;n l&#7899;n h&#417;n c&#7897;t l/b=1). M&#243;ng d&#224;i h&#417;n lan &#7913;ng su&#7845;t xu&#7889;ng s&#226;u h&#417;n (nh&#432; m&#243;ng b&#259;ng).')"><span class="mkey">A</span><span>L&#7899;n h&#417;n &mdash; m&#243;ng d&#224;i h&#417;n lan &#7913;ng su&#7845;t s&#226;u h&#417;n (k&#8320; t&#259;ng khi l/b t&#259;ng)</span></div>
+        <div class="mcq-opt" id="mco-nx2-1" onclick="pickMCQ('nx2',1,0,'A &#273;&#250;ng.')"><span class="mkey">B</span><span>Nh&#7887; h&#417;n</span></div>
+        <div class="mcq-opt" id="mco-nx2-2" onclick="pickMCQ('nx2',2,0,'A &#273;&#250;ng.')"><span class="mkey">C</span><span>B&#7857;ng nhau, kh&#244;ng ph&#7909; thu&#7897;c l/b</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx2"></div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">NX3</span>&#7912;ng su&#7845;t t&#7841;i t&#226;m (p&middot;k&#8320;) v&#224; t&#7843;i g&oacute;c (p&middot;k<sub>c</sub>) li&#234;n h&#7879; v&#7899;i nhau th&#7871; n&#224;o?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-nx3-0" onclick="pickMCQ('nx3',0,0,'&#10003; k&#8320; &#8776; 4&times;k<sub>c</sub> v&#236; t&#226;m nh&#7853;n &#7913;ng su&#7845;t t&#7915; c&#7843; 4 g&oacute;c. &#272;&#226;y l&#224; c&#417; s&#7903; c&#7911;a ph&#432;&#417;ng ph&#225;p chia m&#243;ng th&#224;nh g&oacute;c: &Delta;&sigma;z t&#7841;i b&#7845;t k&#7923; = &Sigma;(p&middot;k<sub>c,i</sub>) v&#7899;i m&#243;ng con i.')"><span class="mkey">A</span><span>&Delta;&sigma;<sub>z,t&#226;m</sub> &#8776; 4 &times; &Delta;&sigma;<sub>z,g&oacute;c</sub> &nbsp;(k&#8320; &#8776; 4k<sub>c</sub>)</span></div>
+        <div class="mcq-opt" id="mco-nx3-1" onclick="pickMCQ('nx3',1,0,'A &#273;&#250;ng.')"><span class="mkey">B</span><span>B&#7857;ng nhau</span></div>
+        <div class="mcq-opt" id="mco-nx3-2" onclick="pickMCQ('nx3',2,0,'A &#273;&#250;ng.')"><span class="mkey">C</span><span>Kh&#244;ng li&#234;n h&#7879;</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-nx3"></div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>C2 &middot; D&#7841;ng 4 &mdash; T&#7843;i h&#236;nh ch&#7919; nh&#7853;t (k&#8320;, k<sub>c</sub>)</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-size:12px">0/0</span>
+    <button class="sticky-btn" onclick="scrollNext()">&#9660; C&#226;u ti&#7871;p</button>
+    <button class="sticky-btn" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 N&#7897;p b&#224;i &nbsp;<span style="font-size:10px;opacity:.8">(&#273;&#227; l&#224;m 0%/c&#7847;n ?%)</span></button>
+    <a href="2.3_DANG_3.html" class="sticky-btn">&larr; D&#7841;ng 3</a>
+    <a href="2.5_DANG_5.html" class="sticky-btn">D&#7841;ng 5 &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   DANG_ID         : 'dang4' — định danh dạng bài, tạo localStorage key
+   ANS             : lưu kết quả từng câu (null = chưa làm, true/false)
+   _submitted      : cờ ngăn nộp bài lần 2
+   TOTAL_QUESTIONS : đếm sau genAll() → dùng trong updateProg
+================================================================ */
+
+var DANG_ID = 'dang4';
+var ANS = {};
+var _submitted = false;
+var TOTAL_QUESTIONS = 0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   toast(msg, dur)  : hiện thông báo nổi (thay cho alert), tự tắt sau dur ms
+   getSV()          : đọc thông tin sinh viên từ sessionStorage
+   seededRng(seed)  : sinh số ngẫu nhiên deterministic theo STT SV
+   r1(v), r2(v)     : làm tròn 1 và 2 chữ số thập phân
+   togS(hd)         : thu gọn/mở rộng accordion section
+   scrollNext()     : cuộn đến câu chưa làm tiếp theo
+   renderSV()       : hiển thị tên, MSSV, STT lên thanh header
+================================================================ */
+function toast(msg,dur){dur=dur||3000;var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show');},dur);}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function r1(v){return Math.round(v*10)/10;}
+function r2(v){return Math.round(v*100)/100;}
+function togS(hd){hd.classList.toggle('open');hd.nextElementSibling.classList.toggle('open');}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp){inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});inp.focus();}}
+function renderSV(){var sv=getSV();if(!sv||!sv.name)return;var box=document.getElementById('sv-box');if(box)box.classList.add('show');var av=document.getElementById('sv-av');if(av)av.textContent=sv.name.charAt(0).toUpperCase();var nm=document.getElementById('sv-name');if(nm)nm.textContent=sv.name;var mt=document.getElementById('sv-meta');if(mt)mt.textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;var hs=document.getElementById('hdr-sv');if(hs)hs.textContent='SV #'+sv.stt;}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & CẬP NHẬT TIẾN ĐỘ
+   chkFill(id,ans,tol)             : chấm ô nhập số, gọi updateProg()
+   pickMCQ(name,idx,correct,exp)   : chấm MCQ, lock sau khi chọn
+   updateProg()                    : cập nhật thanh tiến độ + nút nộp
+                                     localStorage key: 'prog_c2_dang4'
+   makeQ(id,label,ans,tol,unit)    : tạo HTML cho 1 ô nhập số
+   makeLopMCQ(pid,opts,correct,exp): MCQ chọn vị trí lớp đất (TRÊN/DƯỚI MNN)
+================================================================ */
+
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);
+  var chip=document.getElementById('ck-'+id);
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,idx,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(idx===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+idx).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.style.display='block';exp.className='mcq-exp show '+(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){
+    if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}
+  });
+  var donePct =total?Math.round(done/total*100):0;
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var fill=document.getElementById('prog-bar');if(fill)fill.style.width=attemPct+'%';
+  var pt=document.getElementById('prog-txt');
+  if(pt)pt.textContent='Đã làm: '+attempted+'/'+total+' câu ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  var np=document.getElementById('nav-prog');if(np)np.textContent=attempted+'/'+total;
+  localStorage.setItem('prog_c2_dang4',JSON.stringify({done:done,total:total,attempted:attempted}));
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.7)':'rgba(200,200,200,.4)';
+      btn.title=ready?'Đủ điều kiện nộp bài':'Cần làm tối thiểu '+minPct+'% số câu (hiện: '+attemPct+'%)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài &nbsp;<span style="font-size:10px;opacity:.8">(đã làm '+attemPct+'%/cần '+minPct+'%)</span>';
+    }
+  }
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  var html='<div class="ans-row">'
+    +'<span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" '
+    +'oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span>'
+    +'<span class="chip" id="ck-'+id+'"></span></div>';
+  return html;
+}
+function makeLopMCQ(pid, opts, correct, expText) {
+  var html = opts.map(function(o,i){
+    return '<div class="mcq-opt" id="mco-'+pid+'-'+i+'" '
+      +'onclick="pickMCQ(\''+pid+'\','+i+','+correct+',this.dataset.exp)" '
+      +'data-exp="'+expText.replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'"><span class="mkey">'
+      +String.fromCharCode(65+i)+'</span><span>'+o+'</span></div>';
+  }).join('');
+  document.getElementById(pid+'-opts').innerHTML = html;
+  ANS['mcq-'+pid] = null;
+}
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI LÊN CLOUDFLARE WORKER
+   submitResult(): kiểm tra điều kiện → POST kết quả → Worker → Google Sheet
+   chapterId: 'C2-Dang4'
+   ⚠️ localStorage key: 'prog_c2_dang4' — index_C2.html đọc key này
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    var btn=document.getElementById('btn-nop');
+    if(btn){btn.style.transition='transform .08s';[0,1,2,3,4].forEach(function(i){setTimeout(function(){btn.style.transform=i%2?'translateX(5px)':'translateX(-5px)';},i*70);});setTimeout(function(){btn.style.transform='';},380);}
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C2-Dang4',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);}
+  })
+  .catch(function(err){toast('❌ Không kết nối được Worker: '+err.message,5000);});
+}
+
+/* ================================================================
+   KHỐI 5 — TẠO HTML CARD NHÓM B VÀ C
+   renderBCards(bcfg): tạo HTML card cho nhóm B (có công thức, cần tính toán)
+   renderCCards(ccfg): tạo HTML card cho nhóm C (tự nhận biết lớp đất/vị trí)
+   Cả hai hàm được gọi trong genAll() sau khi định nghĩa cấu hình BCFG/CCFG
+================================================================ */
+function renderBCards(bcfg){
+  var h='';
+  bcfg.forEach(function(b){
+    h+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>'+b.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">&#9999;&#65039; '+b.num+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+b.pid+'-prob">&#9203;</div>'
+      +'<div class="fml-box"><div class="fml-title">C&#244;ng th&#7913;c v&#224; ghi ch&#250;</div>'
+      +'<div>'+b.fml+'</div></div>'
+      +'<div id="'+b.pid+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=h;
+}
+function renderCCards(ccfg){
+  var h='';
+  ccfg.forEach(function(c){
+    h+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>'+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">&#129504; '+c.num+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+c.pid+'-prob">&#9203;</div>'
+      +'<div id="'+c.pid+'-q"></div></div></div>';
+  });
+  document.getElementById('c-cards').innerHTML=h;
+}
+
+/* ================================================================
+   KHỐI 6 — BẢNG TRA HỆ SỐ K₀/KC VÀ HÀM NỘI SUY
+   LB_COLS, ZB_ROWS: trục cột (l/b) và trục hàng (z/b) của bảng tra
+   K0_DATA : hệ số k₀ tại tâm, tra theo (l/b, z/b)
+   KC_DATA : hệ số kc tại góc, tra theo (l/b, z/b)
+   interp1D(): nội suy tuyến tính 1 chiều
+   findIdx() : tìm vị trí index trong mảng sorted
+   lookupK() : nội suy 2D từ bảng (bilinear interpolation)
+   isExactRow/isExactCol: kiểm tra có đúng điểm bảng không
+   ⚠️ ĐỂ SỬA BẢNG TRA: chỉnh K0_DATA hoặc KC_DATA, không đổi LB_COLS/ZB_ROWS
+================================================================ */
+var LB_COLS = [1.0,1.2,1.4,1.6,1.8,2.0,3.0,5.0,10.0];
+var ZB_ROWS = [0.0,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.5,3.0,4.0,5.0];
+var K0_DATA = [
+  [1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000],
+  [0.960,0.968,0.972,0.974,0.975,0.976,0.977,0.977,0.977],
+  [0.800,0.830,0.848,0.859,0.866,0.870,0.878,0.881,0.881],
+  [0.606,0.651,0.682,0.703,0.717,0.727,0.748,0.755,0.756],
+  [0.449,0.496,0.532,0.558,0.578,0.593,0.629,0.643,0.644],
+  [0.336,0.379,0.414,0.441,0.463,0.481,0.525,0.545,0.550],
+  [0.257,0.294,0.325,0.352,0.374,0.392,0.440,0.464,0.471],
+  [0.201,0.232,0.260,0.284,0.304,0.322,0.370,0.397,0.407],
+  [0.160,0.187,0.211,0.233,0.251,0.267,0.313,0.341,0.354],
+  [0.130,0.153,0.174,0.193,0.209,0.224,0.267,0.295,0.310],
+  [0.107,0.127,0.145,0.162,0.176,0.189,0.229,0.257,0.273],
+  [0.070,0.084,0.097,0.109,0.120,0.130,0.163,0.189,0.208],
+  [0.051,0.060,0.070,0.079,0.088,0.096,0.122,0.146,0.166],
+  [0.028,0.034,0.040,0.046,0.052,0.057,0.076,0.096,0.117],
+  [0.018,0.022,0.026,0.031,0.035,0.039,0.053,0.069,0.090],
+];
+var KC_DATA = [
+  [0.250,0.250,0.250,0.250,0.250,0.250,0.250,0.250,0.250],
+  [0.249,0.249,0.249,0.249,0.249,0.249,0.249,0.249,0.250],
+  [0.240,0.242,0.244,0.244,0.245,0.245,0.247,0.247,0.250],
+  [0.223,0.228,0.232,0.234,0.236,0.237,0.240,0.241,0.250],
+  [0.200,0.208,0.214,0.218,0.221,0.223,0.229,0.232,0.250],
+  [0.175,0.185,0.193,0.198,0.202,0.205,0.214,0.218,0.250],
+  [0.152,0.163,0.171,0.178,0.183,0.187,0.198,0.204,0.250],
+  [0.131,0.142,0.151,0.158,0.164,0.169,0.181,0.189,0.250],
+  [0.114,0.124,0.133,0.140,0.146,0.151,0.165,0.174,0.250],
+  [0.099,0.109,0.117,0.124,0.130,0.135,0.150,0.160,0.250],
+  [0.087,0.096,0.103,0.110,0.116,0.121,0.136,0.147,0.250],
+  [0.064,0.072,0.078,0.083,0.088,0.093,0.107,0.118,0.250],
+  [0.049,0.055,0.060,0.065,0.069,0.073,0.085,0.096,0.250],
+  [0.030,0.034,0.038,0.042,0.045,0.048,0.057,0.067,0.250],
+  [0.021,0.024,0.027,0.030,0.032,0.034,0.042,0.050,0.250],
+];
+
+/* Hàm nội suy 2D từ bảng */
+function interp1D(arr, x1, x2, k1, k2, x) {
+  if(x2===x1) return k1;
+  return Math.round((k1 + (x-x1)/(x2-x1)*(k2-k1))*10000)/10000;
+}
+function findIdx(arr, val) {
+  for(var i=0;i<arr.length-1;i++){
+    if(val>=arr[i]&&val<=arr[i+1]) return i;
+  }
+  return arr.length-2;
+}
+function lookupK(DATA, lb, zb) {
+  /* nội suy 2 biến: lb và zb */
+  /* Clamp */
+  lb = Math.min(lb, LB_COLS[LB_COLS.length-1]);
+  zb = Math.min(zb, ZB_ROWS[ZB_ROWS.length-1]);
+  var ir = findIdx(ZB_ROWS, zb);
+  var ic = findIdx(LB_COLS, lb);
+  var r0=ZB_ROWS[ir], r1=ZB_ROWS[ir+1];
+  var c0=LB_COLS[ic], c1=LB_COLS[ic+1];
+  var k00=DATA[ir][ic], k01=DATA[ir][ic+1];
+  var k10=DATA[ir+1][ic], k11=DATA[ir+1][ic+1];
+  /* Nội suy theo lb tại hàng trên (r0) và dưới (r1) */
+  var kTop = interp1D([], c0, c1, k00, k01, lb);
+  var kBot = interp1D([], c0, c1, k10, k11, lb);
+  /* Nội suy theo zb */
+  return Math.round(interp1D([], r0, r1, kTop, kBot, zb)*10000)/10000;
+}
+/* Hàm kiểm tra có đúng điểm bảng không */
+function isExactRow(zb){ for(var i=0;i<ZB_ROWS.length;i++) if(Math.abs(zb-ZB_ROWS[i])<0.001) return ZB_ROWS[i]; return -1; }
+function isExactCol(lb){ for(var i=0;i<LB_COLS.length;i++) if(Math.abs(lb-LB_COLS[i])<0.001) return LB_COLS[i]; return -1; }
+
+/* ================================================================
+   KHỐI 7 — SINH BÀI TẬP THEO STT (genAll)
+   genAll(): sinh đề bài ngẫu nhiên deterministic theo STT SV
+   - Nhóm A: bài tập tính k₀ và Δσz tại tâm (tra bảng + nội suy)
+   - Nhóm B: bài tập tính kc và Δσz tại góc
+   - Nhóm C: bài tự nhận biết vị trí điểm tính (tâm/góc)
+   - Nhóm D: bài tổng hợp — tính tại 5 độ sâu, vẽ biểu đồ
+   Mỗi bài là IIFE (function(){...})() độc lập
+================================================================ */
+function genAll() {
+  var sv=getSV(); var stt=(sv&&sv.stt)?parseInt(sv.stt):1;
+
+  /* ── A1: tại tâm, tra thẳng (lb và zb đúng điểm bảng) ── */
+  (function(){
+    var rng=seededRng(stt*43+401);
+    var p=Math.round(30+rng()*80);
+    /* chọn lb, zb đúng điểm bảng */
+    var li_=[0,1,2,3,4,5];  /* index cột: 1.0-2.0 */
+    var zi_=[1,2,3,4,5,6];  /* index hàng: 0.2-1.2 */
+    var ic=li_[Math.floor(rng()*li_.length)];
+    var ir=zi_[Math.floor(rng()*zi_.length)];
+    var lb=LB_COLS[ic], zb=ZB_ROWS[ir];
+    var b=r2(1.5+rng()*2), l=r2(lb*b);
+    if(l<b){var t=l;l=b;b=t;}  /* đảm bảo l>=b */
+    lb=r2(l/b);
+    var z=r2(zb*b);
+    var k0=K0_DATA[ir][ic];
+    var sz=r2(p*k0);
+    document.getElementById('a1-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): T&#7843;i tr&#7885;ng ph&#226;n b&#7889; &#273;&#7873;u '
+      +'<b>p = '+p+' kN/m&#178;</b> tr&#234;n m&#243;ng h&#236;nh ch&#7919; nh&#7853;t '
+      +'l &times; b = <b>'+l+' &times; '+b+' m</b>. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> t&#7841;i t&#226;m m&#243;ng, &#273;&#7897; s&#226;u z = <b>'+z+' m</b>.';
+    document.getElementById('a1-step1').innerHTML=
+      'l/b = '+l+'/'+b+' = ? &nbsp;&nbsp; z/b = '+z+'/'+b+' = ?';
+    document.getElementById('a1-step2').innerHTML=
+      'l/b = '+lb+' &#8805; 1 &#10003; &nbsp;&nbsp; z/b = '+zb+'<br>'
+      +'Tra b&#7843;ng k&#8320; t&#7841;i (l/b='+lb+', z/b='+zb+') &rarr; k&#8320; = ?';
+    document.getElementById('a1-step3').innerHTML=
+      '&Delta;&sigma;<sub>z</sub> = p &times; k&#8320; = '+p+' &times; ? = ?';
+    document.getElementById('a1-q1').innerHTML=
+      makeQ('a1-lb','l/b',lb,0.02,'')+
+      makeQ('a1-zb','z/b',zb,0.02,'');
+    document.getElementById('a1-q2').innerHTML=
+      makeQ('a1-k0','k&#8320; (tra b&#7843;ng th&#7859;ng)',k0,0.003,'');
+    document.getElementById('a1-q3').innerHTML=
+      makeQ('a1-sz','&Delta;&sigma;<sub>z</sub> = p&middot;k&#8320; (kN/m&#178;)',sz,r2(sz*0.03+0.5),'kN/m&#178;');
+  })();
+
+  /* ── A2: tại tâm, nội suy 1 biến theo z/b ── */
+  (function(){
+    var rng=seededRng(stt*47+407);
+    var p=Math.round(30+rng()*80);
+    /* lb đúng điểm bảng, zb nằm giữa */
+    var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+    var ir=[1,2,3,4,5,6,7,8][Math.floor(rng()*8)];
+    var lb=LB_COLS[ic];
+    var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+    var t=0.25+rng()*0.5;  /* nội suy tại t * khoảng */
+    var zb=Math.round((zb1+t*(zb2-zb1))*1000)/1000;
+    var b=r2(1.5+rng()*2), l=r2(lb*b);
+    var z=r2(zb*b);
+    var k1=K0_DATA[ir][ic], k2=K0_DATA[ir+1][ic];
+    var k0=lookupK(K0_DATA, lb, zb);
+    var sz=r2(p*k0);
+    document.getElementById('a2-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng '+l+'&times;'+b+' m. '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i t&#226;m, z = <b>'+z+' m</b>.';
+    document.getElementById('a2-step1').innerHTML=
+      'l/b = '+l+'/'+b+' = ? &nbsp;&nbsp; z/b = '+z+'/'+b+' = ?';
+    document.getElementById('a2-step2').innerHTML=
+      'z/b = '+zb+' n&#7857;m gi&#7919;a '+zb1+' (k&#8320;='+k1+') v&#224; '+zb2+' (k&#8320;='+k2+')<br>'
+      +'k&#8320; = '+k1+' + ('+zb+'&minus;'+zb1+')/('+zb2+'&minus;'+zb1+') &times; ('+k2+'&minus;'+k1+') = ?';
+    document.getElementById('a2-step3').innerHTML=
+      '&Delta;&sigma;<sub>z</sub> = '+p+' &times; k&#8320; = '+p+' &times; ? = ?';
+    document.getElementById('a2-q1').innerHTML=
+      makeQ('a2-lb','l/b',lb,0.02,'')+
+      makeQ('a2-zb','z/b',zb,0.005,'');
+    document.getElementById('a2-q2').innerHTML=
+      makeQ('a2-k0','k&#8320; (n&#7897;i suy 1 bi&#7871;n)',k0,0.005,'');
+    document.getElementById('a2-q3').innerHTML=
+      makeQ('a2-sz','&Delta;&sigma;<sub>z</sub> (kN/m&#178;)',sz,r2(sz*0.04+0.5),'kN/m&#178;');
+  })();
+
+  /* ── A3: tại tâm, nội suy 2 biến ── */
+  (function(){
+    var rng=seededRng(stt*53+413);
+    var p=Math.round(30+rng()*80);
+    /* cả lb và zb đều nằm giữa */
+    var ic=[0,1,2,3,4][Math.floor(rng()*5)];
+    var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+    var lb1=LB_COLS[ic], lb2=LB_COLS[ic+1];
+    var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+    var tl=0.3+rng()*0.4, tz=0.3+rng()*0.4;
+    var lb=Math.round((lb1+tl*(lb2-lb1))*100)/100;
+    var zb=Math.round((zb1+tz*(zb2-zb1))*1000)/1000;
+    var b=r2(1.5+rng()*2), l=r2(lb*b), z=r2(zb*b);
+    /* 4 giá trị góc */
+    var kA=K0_DATA[ir][ic], kB=K0_DATA[ir][ic+1];
+    var kC=K0_DATA[ir+1][ic], kD=K0_DATA[ir+1][ic+1];
+    /* nội suy 2 hàng theo lb */
+    var kTop=Math.round((kA+(lb-lb1)/(lb2-lb1)*(kB-kA))*10000)/10000;
+    var kBot=Math.round((kC+(lb-lb1)/(lb2-lb1)*(kD-kC))*10000)/10000;
+    var k0=Math.round((kTop+(zb-zb1)/(zb2-zb1)*(kBot-kTop))*10000)/10000;
+    var sz=r2(p*k0);
+    document.getElementById('a3-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng '+l+'&times;'+b+' m. '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i t&#226;m, z = <b>'+z+' m</b>. (C&#7847;n n&#7897;i suy c&#7843; l/b l&#7851;n z/b)';
+    document.getElementById('a3-step1').innerHTML=
+      'l/b = '+lb+' (gi&#7919;a '+lb1+' v&#224; '+lb2+')<br>'
+      +'z/b = '+zb+' (gi&#7919;a '+zb1+' v&#224; '+zb2+')';
+    document.getElementById('a3-step2').innerHTML=
+      'T&#7841;i h&#224;ng z/b='+zb1+': n&#7897;i suy theo l/b: k&#8321;&#8217; = '+kA+' + ('+lb+'&minus;'+lb1+')/('+lb2+'&minus;'+lb1+')&times;('+kB+'&minus;'+kA+') = ?<br>'
+      +'T&#7841;i h&#224;ng z/b='+zb2+': n&#7897;i suy theo l/b: k&#8322;&#8217; = '+kC+' + ('+lb+'&minus;'+lb1+')/('+lb2+'&minus;'+lb1+')&times;('+kD+'&minus;'+kC+') = ?';
+    document.getElementById('a3-step3').innerHTML=
+      'k&#8320; = k&#8321;&#8217; + ('+zb+'&minus;'+zb1+')/('+zb2+'&minus;'+zb1+')&times;(k&#8322;&#8217;&minus;k&#8321;&#8217;) = ?';
+    document.getElementById('a3-step4').innerHTML=
+      '&Delta;&sigma;<sub>z</sub> = '+p+' &times; k&#8320; = '+p+' &times; ? = ?';
+    document.getElementById('a3-q1').innerHTML=
+      makeQ('a3-lb','l/b',lb,0.02,'')+makeQ('a3-zb','z/b',zb,0.005,'');
+    document.getElementById('a3-q2').innerHTML=
+      makeQ('a3-ktop','k&#8321;&#8217; (h&#224;ng z/b='+zb1+')',kTop,0.005,'')+
+      makeQ('a3-kbot','k&#8322;&#8217; (h&#224;ng z/b='+zb2+')',kBot,0.005,'');
+    document.getElementById('a3-q3').innerHTML=
+      makeQ('a3-k0','k&#8320; (n&#7897;i suy 2D)',k0,0.006,'');
+    document.getElementById('a3-q4').innerHTML=
+      makeQ('a3-sz','&Delta;&sigma;<sub>z</sub> (kN/m&#178;)',sz,r2(sz*0.04+0.5),'kN/m&#178;');
+  })();
+
+  /* ── A4: tại góc, tra thẳng ── */
+  (function(){
+    var rng=seededRng(stt*59+419);
+    var p=Math.round(30+rng()*80);
+    var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+    var ir=[2,3,4,5,6,7,8][Math.floor(rng()*7)];
+    var lb=LB_COLS[ic], zb=ZB_ROWS[ir];
+    var b=r2(1.5+rng()*2), l=r2(lb*b), z=r2(zb*b);
+    var kc=KC_DATA[ir][ic];
+    var sz=r2(p*kc);
+    document.getElementById('a4-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng '+l+'&times;'+b+' m. '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i <b>g&oacute;c</b> m&#243;ng, z = <b>'+z+' m</b>.';
+    document.getElementById('a4-step1').innerHTML=
+      'l/b = '+lb+' &nbsp;&nbsp; z/b = '+zb;
+    document.getElementById('a4-step2').innerHTML=
+      'Tra b&#7843;ng k<sub>c</sub> t&#7841;i (l/b='+lb+', z/b='+zb+') &rarr; k<sub>c</sub> = ?';
+    document.getElementById('a4-step3').innerHTML=
+      '&Delta;&sigma;<sub>z</sub> = '+p+' &times; k<sub>c</sub> = '+p+' &times; ? = ?';
+    document.getElementById('a4-q1').innerHTML=
+      makeQ('a4-lb','l/b',lb,0.02,'')+makeQ('a4-zb','z/b',zb,0.02,'');
+    document.getElementById('a4-q2').innerHTML=
+      makeQ('a4-kc','k<sub>c</sub> (tra b&#7843;ng th&#7859;ng)',kc,0.003,'');
+    document.getElementById('a4-q3').innerHTML=
+      makeQ('a4-sz','&Delta;&sigma;<sub>z</sub> = p&middot;k<sub>c</sub> (kN/m&#178;)',sz,r2(sz*0.03+0.3),'kN/m&#178;');
+  })();
+
+  /* ── A5: tại góc, nội suy 1 biến ── */
+  (function(){
+    var rng=seededRng(stt*61+421);
+    var p=Math.round(30+rng()*80);
+    var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+    var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+    var lb=LB_COLS[ic];
+    var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+    var t=0.25+rng()*0.5;
+    var zb=Math.round((zb1+t*(zb2-zb1))*1000)/1000;
+    var b=r2(1.5+rng()*2), l=r2(lb*b), z=r2(zb*b);
+    var kc1=KC_DATA[ir][ic], kc2=KC_DATA[ir+1][ic];
+    var kc=Math.round((kc1+(zb-zb1)/(zb2-zb1)*(kc2-kc1))*10000)/10000;
+    var sz=r2(p*kc);
+    document.getElementById('a5-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng '+l+'&times;'+b+' m. '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i <b>g&oacute;c</b> m&#243;ng, z = <b>'+z+' m</b>. (C&#7847;n n&#7897;i suy k<sub>c</sub>)';
+    document.getElementById('a5-step1').innerHTML=
+      'l/b = '+lb+' &nbsp;&nbsp; z/b = '+zb+' (gi&#7919;a '+zb1+' v&#224; '+zb2+')';
+    document.getElementById('a5-step2').innerHTML=
+      'k<sub>c</sub> = '+kc1+' + ('+zb+'&minus;'+zb1+')/('+zb2+'&minus;'+zb1+')&times;('+kc2+'&minus;'+kc1+') = ?';
+    document.getElementById('a5-step3').innerHTML=
+      '&Delta;&sigma;<sub>z</sub> = '+p+' &times; k<sub>c</sub> = '+p+' &times; ? = ?';
+    document.getElementById('a5-q1').innerHTML=
+      makeQ('a5-lb','l/b',lb,0.02,'')+makeQ('a5-zb','z/b',zb,0.005,'');
+    document.getElementById('a5-q2').innerHTML=
+      makeQ('a5-kc','k<sub>c</sub> (n&#7897;i suy)',kc,0.005,'');
+    document.getElementById('a5-q3').innerHTML=
+      makeQ('a5-sz','&Delta;&sigma;<sub>z</sub> = p&middot;k<sub>c</sub> (kN/m&#178;)',sz,r2(sz*0.04+0.3),'kN/m&#178;');
+  })();
+
+  /* ── A6: so sánh tâm và góc ── */
+  (function(){
+    var rng=seededRng(stt*67+427);
+    var p=Math.round(30+rng()*80);
+    var ic=[1,2,3,4][Math.floor(rng()*4)];
+    var ir=[3,4,5,6,7][Math.floor(rng()*5)];
+    var lb=LB_COLS[ic], zb=ZB_ROWS[ir];
+    var b=r2(1.5+rng()*2), l=r2(lb*b), z=r2(zb*b);
+    var k0=K0_DATA[ir][ic], kc=KC_DATA[ir][ic];
+    var sz0=r2(p*k0), szc=r2(p*kc);
+    document.getElementById('a6-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng '+l+'&times;'+b+' m (l/b='+lb+'). '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i <b>t&#226;m</b> v&#224; t&#7841;i <b>g&oacute;c</b> m&#243;ng, z = <b>'+z+' m</b>.';
+    document.getElementById('a6-hint').innerHTML=
+      'l/b='+lb+', z/b='+zb+' &rarr; k&#8320;=? (tra b&#7843;ng k&#8320;), k<sub>c</sub>=? (tra b&#7843;ng k<sub>c</sub>)';
+    document.getElementById('a6-q').innerHTML=
+      makeQ('a6-k0','k&#8320; (t&#226;m)',k0,0.003,'')+
+      makeQ('a6-kc','k<sub>c</sub> (g&oacute;c)',kc,0.003,'')+
+      makeQ('a6-sz0','&Delta;&sigma;<sub>z</sub> t&#7841;i t&#226;m (kN/m&#178;)',sz0,r2(sz0*0.04+0.5),'kN/m&#178;')+
+      makeQ('a6-szc','&Delta;&sigma;<sub>z</sub> t&#7841;i g&oacute;c (kN/m&#178;)',szc,r2(szc*0.03+0.3),'kN/m&#178;');
+    ANS['mcq-a6q']=null;
+  })();
+
+  /* ── NHÓM B ── */
+  var BCFG=[
+    {num:'B1',pid:'b1',title:'B&#224;i B1 &middot; C&#243; CT &mdash; T&#226;m, tra th&#7859;ng k&#8320;',
+     fml:'&Delta;&sigma;<sub>z</sub> = p &middot; k&#8320; &nbsp;(tra b&#7843;ng k&#8320; t&#7841;i l/b, z/b)',
+     seeds:[71,431], mode:'tam', interp:0},
+    {num:'B2',pid:'b2',title:'B&#224;i B2 &middot; C&#243; CT &mdash; T&#226;m, n&#7897;i suy z/b',
+     fml:'k&#8320; = k&#8321; + (z/b&minus;z&#8321;/b)/(z&#8322;/b&minus;z&#8321;/b)&times;(k&#8322;&minus;k&#8321;) &rarr; &Delta;&sigma;<sub>z</sub>=p&middot;k&#8320;',
+     seeds:[73,433], mode:'tam', interp:1},
+    {num:'B3',pid:'b3',title:'B&#224;i B3 &middot; C&#243; CT &mdash; T&#226;m, n&#7897;i suy 2 bi&#7871;n',
+     fml:'N&#7897;i suy l/b t&#7841;i 2 h&#224;ng &rarr; k&#8321;&#8217;,k&#8322;&#8217; &rarr; n&#7897;i suy z/b &rarr; k&#8320;',
+     seeds:[79,437], mode:'tam', interp:2},
+    {num:'B4',pid:'b4',title:'B&#224;i B4 &middot; C&#243; CT &mdash; G&oacute;c, tra th&#7859;ng k<sub>c</sub>',
+     fml:'&Delta;&sigma;<sub>z</sub> = p &middot; k<sub>c</sub> &nbsp;(tra b&#7843;ng k<sub>c</sub> t&#7841;i l/b, z/b)',
+     seeds:[83,439], mode:'goc', interp:0},
+    {num:'B5',pid:'b5',title:'B&#224;i B5 &middot; C&#243; CT &mdash; G&oacute;c, n&#7897;i suy k<sub>c</sub>',
+     fml:'k<sub>c</sub> = k<sub>c1</sub>+(z/b&minus;z&#8321;/b)/(z&#8322;/b&minus;z&#8321;/b)&times;(k<sub>c2</sub>&minus;k<sub>c1</sub>)',
+     seeds:[89,443], mode:'goc', interp:1},
+    {num:'B6',pid:'b6',title:'B&#224;i B6 &middot; C&#243; CT &mdash; So s&#225;nh t&#226;m v&#224; g&oacute;c',
+     fml:'T&#237;nh c&#7843; k&#8320; (t&#226;m) v&#224; k<sub>c</sub> (g&oacute;c), so s&#225;nh',
+     seeds:[97,449], mode:'both', interp:0},
+  ];
+  renderBCards(BCFG);
+  BCFG.forEach(function(b){
+    var rng=seededRng(stt*b.seeds[0]+b.seeds[1]);
+    var p=Math.round(30+rng()*80);
+    var lb, zb, b2, l2, z;
+    var DATA = (b.mode==='goc') ? KC_DATA : K0_DATA;
+    if(b.interp===0){
+      var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+      var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+      lb=LB_COLS[ic]; zb=ZB_ROWS[ir];
+    } else if(b.interp===1){
+      var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+      var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+      lb=LB_COLS[ic];
+      var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+      zb=Math.round((zb1+0.3+rng()*0.4*(zb2-zb1))*1000)/1000;
+    } else {
+      var ic=[0,1,2,3,4][Math.floor(rng()*5)];
+      var ir=[2,3,4,5,6][Math.floor(rng()*5)];
+      var lb1=LB_COLS[ic], lb2=LB_COLS[ic+1];
+      var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+      lb=Math.round((lb1+0.3+rng()*0.4*(lb2-lb1))*100)/100;
+      zb=Math.round((zb1+0.3+rng()*0.4*(zb2-zb1))*1000)/1000;
+    }
+    b2=r2(1.5+rng()*2); l2=r2(lb*b2); z=r2(zb*b2);
+    var k0=lookupK(K0_DATA,lb,zb);
+    var kc=lookupK(KC_DATA,lb,zb);
+    var info='p=<b>'+p+' kN/m&#178;</b>, m&#243;ng <b>'+l2+'&times;'+b2+' m</b>, z=<b>'+z+' m</b>.';
+    document.getElementById(b.pid+'-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: '+info;
+    if(b.mode==='tam'){
+      document.getElementById(b.pid+'-q').innerHTML=
+        makeQ(b.pid+'-lb','l/b',lb,0.02,'')+makeQ(b.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(b.pid+'-k0','k&#8320;',k0,0.006,'')+
+        makeQ(b.pid+'-sz','&Delta;&sigma;<sub>z</sub>=p&middot;k&#8320; (kN/m&#178;)',r2(p*k0),r2(p*k0*0.04+0.5),'kN/m&#178;');
+    } else if(b.mode==='goc'){
+      document.getElementById(b.pid+'-q').innerHTML=
+        makeQ(b.pid+'-lb','l/b',lb,0.02,'')+makeQ(b.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(b.pid+'-kc','k<sub>c</sub>',kc,0.006,'')+
+        makeQ(b.pid+'-sz','&Delta;&sigma;<sub>z</sub>=p&middot;k<sub>c</sub> (kN/m&#178;)',r2(p*kc),r2(p*kc*0.04+0.3),'kN/m&#178;');
+    } else {
+      document.getElementById(b.pid+'-q').innerHTML=
+        makeQ(b.pid+'-lb','l/b',lb,0.02,'')+makeQ(b.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(b.pid+'-k0','k&#8320; (t&#226;m)',k0,0.006,'')+
+        makeQ(b.pid+'-kc','k<sub>c</sub> (g&oacute;c)',kc,0.006,'')+
+        makeQ(b.pid+'-sz0','&Delta;&sigma;<sub>z</sub> t&#226;m (kN/m&#178;)',r2(p*k0),r2(p*k0*0.04+0.5),'kN/m&#178;')+
+        makeQ(b.pid+'-szc','&Delta;&sigma;<sub>z</sub> g&oacute;c (kN/m&#178;)',r2(p*kc),r2(p*kc*0.04+0.3),'kN/m&#178;');
+    }
+  });
+
+  /* ── NHÓM C ── */
+  var CCFG=[
+    {num:'C1',pid:'c1',title:'B&#224;i C1 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; T&#226;m, tra th&#7859;ng',       seeds:[101,453], mode:'tam', interp:0},
+    {num:'C2',pid:'c2',title:'B&#224;i C2 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; T&#226;m, n&#7897;i suy z/b',     seeds:[103,457], mode:'tam', interp:1},
+    {num:'C3',pid:'c3',title:'B&#224;i C3 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; T&#226;m, n&#7897;i suy 2 bi&#7871;n', seeds:[107,461], mode:'tam', interp:2},
+    {num:'C4',pid:'c4',title:'B&#224;i C4 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; G&oacute;c, tra th&#7859;ng',      seeds:[109,463], mode:'goc', interp:0},
+    {num:'C5',pid:'c5',title:'B&#224;i C5 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; G&oacute;c, n&#7897;i suy k<sub>c</sub>', seeds:[113,467], mode:'goc', interp:1},
+    {num:'C6',pid:'c6',title:'B&#224;i C6 &middot; T&#7921; nh&#7853;n bi&#7871;t &mdash; So s&#225;nh t&#226;m v&#224; g&oacute;c', seeds:[127,479], mode:'both', interp:0},
+  ];
+  renderCCards(CCFG);
+  CCFG.forEach(function(c){
+    var rng=seededRng(stt*c.seeds[0]+c.seeds[1]);
+    var p=Math.round(30+rng()*80);
+    var lb, zb, b2, l2, z;
+    if(c.interp===0){
+      var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+      var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+      lb=LB_COLS[ic]; zb=ZB_ROWS[ir];
+    } else if(c.interp===1){
+      var ic=[0,1,2,3,4,5][Math.floor(rng()*6)];
+      var ir=[2,3,4,5,6,7][Math.floor(rng()*6)];
+      lb=LB_COLS[ic];
+      var zb1=ZB_ROWS[ir], zb2=ZB_ROWS[ir+1];
+      zb=Math.round((zb1+0.3+rng()*0.4*(zb2-zb1))*1000)/1000;
+    } else {
+      var ic=[0,1,2,3,4][Math.floor(rng()*5)];
+      var ir=[2,3,4,5,6][Math.floor(rng()*5)];
+      lb=Math.round((LB_COLS[ic]+0.3+rng()*0.4*(LB_COLS[ic+1]-LB_COLS[ic]))*100)/100;
+      zb=Math.round((ZB_ROWS[ir]+0.3+rng()*0.4*(ZB_ROWS[ir+1]-ZB_ROWS[ir]))*1000)/1000;
+    }
+    b2=r2(1.5+rng()*2); l2=r2(lb*b2); z=r2(zb*b2);
+    var k0=lookupK(K0_DATA,lb,zb);
+    var kc=lookupK(KC_DATA,lb,zb);
+    var txt = (c.mode==='tam') ? 't&#7841;i <b>t&#226;m</b>' : (c.mode==='goc' ? 't&#7841;i <b>g&oacute;c</b>' : 't&#7841;i <b>t&#226;m</b> v&#224; <b>g&oacute;c</b>');
+    document.getElementById(c.pid+'-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b>: T&#7843;i tr&#7885;ng p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng h&#236;nh ch&#7919; nh&#7853;t '+l2+'&times;'+b2+' m. '
+      +'T&#237;nh <b>&Delta;&sigma;<sub>z</sub></b> '+txt+', z = <b>'+z+' m</b>.';
+    if(c.mode==='tam'){
+      document.getElementById(c.pid+'-q').innerHTML=
+        makeQ(c.pid+'-lb','l/b',lb,0.02,'')+makeQ(c.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(c.pid+'-k0','k&#8320;',k0,0.006,'')+
+        makeQ(c.pid+'-sz','&Delta;&sigma;<sub>z</sub> (kN/m&#178;)',r2(p*k0),r2(p*k0*0.04+0.5),'kN/m&#178;');
+    } else if(c.mode==='goc'){
+      document.getElementById(c.pid+'-q').innerHTML=
+        makeQ(c.pid+'-lb','l/b',lb,0.02,'')+makeQ(c.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(c.pid+'-kc','k<sub>c</sub>',kc,0.006,'')+
+        makeQ(c.pid+'-sz','&Delta;&sigma;<sub>z</sub> (kN/m&#178;)',r2(p*kc),r2(p*kc*0.04+0.3),'kN/m&#178;');
+    } else {
+      document.getElementById(c.pid+'-q').innerHTML=
+        makeQ(c.pid+'-lb','l/b',lb,0.02,'')+makeQ(c.pid+'-zb','z/b',zb,0.005,'')+
+        makeQ(c.pid+'-k0','k&#8320;',k0,0.006,'')+makeQ(c.pid+'-kc','k<sub>c</sub>',kc,0.006,'')+
+        makeQ(c.pid+'-sz0','&Delta;&sigma;<sub>z</sub> t&#226;m (kN/m&#178;)',r2(p*k0),r2(p*k0*0.04+0.5),'kN/m&#178;')+
+        makeQ(c.pid+'-szc','&Delta;&sigma;<sub>z</sub> g&oacute;c (kN/m&#178;)',r2(p*kc),r2(p*kc*0.04+0.3),'kN/m&#178;');
+    }
+  });
+
+  /* ── NHÓM D: xu hướng ── */
+  (function(){
+    var rng=seededRng(stt*131+487);
+    var p=Math.round(40+rng()*80);
+    var b=r2(2+rng()*2), l=r2(b*(1.5+rng()*2));
+    if(l<b){var t=l;l=b;b=t;}
+    var lb=r2(l/b);
+    var ZS=[r2(b*0.2), r2(b*0.5), r2(b*1.0), r2(b*1.5), r2(b*2.0)];
+    var pts=['M&#8321;','M&#8322;','M&#8323;','M&#8324;','M&#8325;'];
+    document.getElementById('d-prob').innerHTML=
+      '&#127959;&#65039; <b>&#272;&#7873; b&#224;i t&#7893;ng h&#7907;p</b> (STT <b>'+stt+'</b>): '
+      +'T&#7843;i tr&#7885;ng p = <b>'+p+' kN/m&#178;</b>, '
+      +'m&#243;ng h&#236;nh ch&#7919; nh&#7853;t l&times;b = <b>'+l+'&times;'+b+' m</b> (l/b = <b>'+lb+'</b>). '
+      +'T&#237;nh &Delta;&sigma;<sub>z</sub> t&#7841;i t&#226;m m&#243;ng &#7903; 5 &#273;&#7897; s&#226;u kh&#225;c nhau v&#224; nh&#7853;n x&#233;t xu h&#432;&#7899;ng.';
+    var tbody='', dq='';
+    ZS.forEach(function(z,i){
+      var zb=r2(z/b);
+      var k0=lookupK(K0_DATA,lb,zb);
+      tbody+='<tr>'
+        +'<td>'+pts[i]+'</td>'
+        +'<td style="font-family:var(--mono)">'+z+'</td>'
+        +'<td style="font-family:var(--mono)">'+zb+'</td>'
+        +'<td style="font-family:var(--mono);color:var(--P)">?</td>'
+        +'<td style="font-family:var(--mono);color:var(--P)">?</td>'
+        +'</tr>';
+      dq+=makeQ('d-k0-'+i, pts[i]+': k&#8320; t&#7841;i z/b='+zb, k0, 0.007, '');
+      dq+=makeQ('d-sz-'+i, pts[i]+': &Delta;&sigma;<sub>z</sub>=p&middot;k&#8320; (kN/m&#178;)', r2(p*k0), r2(p*k0*0.05+0.5), 'kN/m&#178;');
+    });
+    document.getElementById('d-tbody').innerHTML=tbody;
+    document.getElementById('d-q').innerHTML=dq;
+    ANS['mcq-nx1']=null; ANS['mcq-nx2']=null; ANS['mcq-nx3']=null;
+  })();
+
+  updateProg();
+}
+
+/* ================================================================
+   KHỐI 8 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: renderSV() → genAll() → đếm TOTAL_QUESTIONS → set nhãn nút nộp
+================================================================ */
+
+window.onload = function(){
+  renderSV();
+  genAll();
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  (function(){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn)btn.innerHTML='🔒 Nộp bài &nbsp;<span style="font-size:10px;opacity:.8">(đã làm 0%/cần '+minPct+'%)</span>';
+  })();
+};
+</script>
+</body>
+</html>

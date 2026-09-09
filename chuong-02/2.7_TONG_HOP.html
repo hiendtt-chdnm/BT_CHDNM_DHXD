@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 · 2.7 — Ôn Tập & Tổng Hợp Công Thức Chương 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--A:#FF8F00;--Alt:#FFF8E1;--Adk:#E65100;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:12px}
+.hdr-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:12px;padding:5px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hdr-back:hover{color:#fff;background:rgba(255,255,255,.1)}
+.hdr-t{flex:1}.hdr-t h1{font-size:14px;font-weight:700}.hdr-t p{font-size:11px;color:rgba(255,255,255,.55)}
+.hdr-sv{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:4px 11px;border-radius:20px;flex-shrink:0}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 16px;margin-bottom:18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.prog-track{height:7px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-box{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:11px 18px;margin-bottom:18px;display:none;align-items:center;gap:12px}
+.sv-box.show{display:flex}
+.sv-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-name{font-size:13px;font-weight:700}.sv-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:var(--mono)}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{background:var(--Plt);border-bottom:1px solid var(--brd);padding:11px 18px;display:flex;align-items:center;gap:10px}
+.card-hd i{font-size:18px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--P);color:#fff;letter-spacing:.6px}
+.card-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.fml{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-family:var(--mono);font-size:13px;line-height:2}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.frow{color:var(--Pdk);margin-bottom:1px}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.frow .cond{color:#7B1FA2;font-size:.82em}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--R);line-height:1.6}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--Gdk);font-weight:600}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:160px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;text-align:center}
+.ans-inp:focus{border-color:var(--P)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;box-shadow:0 -2px 12px rgba(0,0,0,.2);font-size:13px}
+.sticky-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:none;color:#fff;font-size:12px;cursor:pointer;font-family:var(--sans)}
+.sticky-btn:hover{background:rgba(255,255,255,.15)}
+#toast{position:fixed;bottom:56px;right:20px;background:var(--Pdk);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 6px 20px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;max-width:280px}
+#toast.show{opacity:1}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+/* Bảng công thức tổng hợp */
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cf-card{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 10px 10px 0;padding:12px 15px}
+.cf-dang{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--P);letter-spacing:.7px;margin-bottom:6px}
+.cf-title{font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:8px}
+.cf-f{font-family:var(--mono);font-size:12px;color:var(--Pdk);line-height:1.9;background:rgba(21,101,192,.04);border-radius:6px;padding:7px 10px}
+.cf-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+@media(max-width:600px){.cf-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr"><div class="hdr-in">
+  <a href="index_C2.html" class="hdr-back"><i class="ti ti-arrow-left"></i> Chương 2</a>
+  <div class="hdr-t"><h1>2.7 — Ôn Tập & Tổng Hợp Chương 2</h1><p>Chương 2 · Cơ Học Đất · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p></div>
+  <div class="hdr-sv" id="hdr-sv">SV #–</div>
+</div></header>
+<div class="sv-box" id="sv-box"><div class="sv-av" id="sv-av">?</div><div><div class="sv-name" id="sv-name">–</div><div class="sv-meta" id="sv-meta">–</div></div></div>
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:3px"></i>Ôn tập tổng hợp — Tiến độ</span><span id="prog-txt">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+</div>
+
+<!-- ══ PHẦN 1: ÔN TẬP MCQ ══ -->
+<div class="sec-lbl"><i class="ti ti-brain" style="font-size:12px"></i> Phần 1 — Câu hỏi ôn tập tổng hợp</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-layers-intersect"></i>
+    <div><h2>Ôn tập: Ứng suất bản thân (Dạng 1 & 2)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Nền đất 3 lớp, không có MNN. Điểm M nằm trong lớp 2. Công thức tính σ<sub>oz</sub>?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,1,'❌ Chỉ đúng khi M ở lớp 1.')"><span class="mkey">A</span><span>σ<sub>oz</sub> = z·γ₁</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,1,'✓ M trong lớp 2: cộng toàn bộ lớp 1 + phần lớp 2 đến M.')"><span class="mkey">B</span><span>σ<sub>oz</sub> = h₁·γ₁ + (z−h₁)·γ₂</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,1,'❌ Thiếu phần lớp 1.')"><span class="mkey">C</span><span>σ<sub>oz</sub> = (z−h₁)·γ₂</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,1,'❌ Đây là σoz khi M ở lớp 3.')"><span class="mkey">D</span><span>σ<sub>oz</sub> = h₁·γ₁ + h₂·γ₂ + (z−h₁−h₂)·γ₃</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>MNN tại độ sâu h<sub>nn</sub>. Điểm M ở dưới MNN (z > h<sub>nn</sub>). Áp lực nước lỗ rỗng u = ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,2,'❌ u = 0 chỉ đúng khi điểm trên MNN.')"><span class="mkey">A</span><span>u = 0</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,2,'❌ Nhầm: h<sub>w</sub> là chiều cao cột nước tính từ MNN đến M, không phải z.')"><span class="mkey">B</span><span>u = 10·z</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,2,'✓ h<sub>w</sub> = z − h<sub>nn</sub> là chiều cao cột nước từ MNN xuống điểm M. u = γ<sub>w</sub>·h<sub>w</sub> = 10·(z−h<sub>nn</sub>).')"><span class="mkey">C</span><span>u = 10·(z − h<sub>nn</sub>)</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,2,'❌ Nhầm chiều.')"><span class="mkey">D</span><span>u = 10·(h<sub>nn</sub> − z)</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q3</span>Không có MNN, điểm M cách mặt đất z = 5m, nền 1 lớp γ = 18 kN/m³. σ'<sub>oz</sub> = ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0,'✓ Không MNN → u = 0 → σ\'<sub>oz</sub> = σ<sub>oz</sub> = 5×18 = 90 kN/m².')"><span class="mkey">A</span><span>90 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0,'❌')"><span class="mkey">B</span><span>80 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0,'❌')"><span class="mkey">C</span><span>50 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0,'❌')"><span class="mkey">D</span><span>0 kN/m²</span></div>
+      </div><div class="mcq-exp" id="exp-q3"></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrow-bar-down"></i>
+    <div><h2>Ôn tập: Tải tập trung Boussinesq (Dạng 3)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q4</span>Tải tập trung P, điểm M(r,z). Bước đầu tiên phải tính gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,0,'✓ R = √(r²+z²) là khoảng cách không gian từ P đến M. R cần thiết để tính Δσz.')"><span class="mkey">A</span><span>R = √(r²+z²)</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,0,'❌ Đây là bước thứ 2.')"><span class="mkey">B</span><span>Δσ<sub>z</sub> = 3Pz³/(2πR⁵)</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,0,'❌ Không liên quan.')"><span class="mkey">C</span><span>σ'<sub>oz</sub> = σ<sub>oz</sub> − u</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,0,'❌ Chưa có R.')"><span class="mkey">D</span><span>Δσ<sub>z</sub> = 3P/(2πz²)</span></div>
+      </div><div class="mcq-exp" id="exp-q4"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q5</span>Điểm M nằm thẳng đứng dưới tải P (r = 0, z = 3m). Khi đó R = ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,1,'❌ R = √(r²+z²), khi r=0 thì R = z.')"><span class="mkey">A</span><span>R = 0</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,1,'✓ r = 0 → R = √(0+z²) = z = 3m. Công thức đơn giản thành Δσz = 3P/(2πz²).')"><span class="mkey">B</span><span>R = z = 3 m</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,1,'❌')"><span class="mkey">C</span><span>R = √3 m</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,1,'❌')"><span class="mkey">D</span><span>R = 2·z</span></div>
+      </div><div class="mcq-exp" id="exp-q5"></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-rectangle"></i>
+    <div><h2>Ôn tập: Tải phân bố & Tải gây lún (Dạng 4, 5, 6)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q6</span>Tải phân bố đều hình chữ nhật, tính Δσ<sub>z</sub> tại TÂM móng. Dùng công thức nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,0,'✓ Tại tâm: Δσz = p·k₀, với k₀ tra bảng theo (l/b, z/b).')"><span class="mkey">A</span><span>Δσ<sub>z</sub> = p·k₀</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,0,'❌ kc dùng cho góc.')"><span class="mkey">B</span><span>Δσ<sub>z</sub> = p·k<sub>c</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,0,'❌ Boussinesq dùng cho tải tập trung.')"><span class="mkey">C</span><span>Δσ<sub>z</sub> = 3Pz³/(2πR⁵)</span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,0,'❌')"><span class="mkey">D</span><span>Δσ<sub>z</sub> = k<sub>z</sub>·p</span></div>
+      </div><div class="mcq-exp" id="exp-q6"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q7</span>Móng chữ nhật, đúng tâm, tải tiếp xúc p<sub>tx</sub> = 120 kN/m², γ' = 18 kN/m³, h<sub>m</sub> = 1.5m. Tải gây lún p<sub>gl</sub> = ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,1,'❌ Công thức đúng: pgl = ptx − γ\'·hm.')"><span class="mkey">A</span><span>120 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,1,'✓ p<sub>gl</sub> = p<sub>tx</sub> − γ\'·h<sub>m</sub> = 120 − 18×1.5 = 120 − 27 = 93 kN/m².')"><span class="mkey">B</span><span>93 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,1,'❌')"><span class="mkey">C</span><span>147 kN/m²</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,1,'❌')"><span class="mkey">D</span><span>27 kN/m²</span></div>
+      </div><div class="mcq-exp" id="exp-q7"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q8</span>Tại góc móng, Δσ<sub>z</sub> so với tại tâm thì:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,1,'❌ Không bằng nhau.')"><span class="mkey">A</span><span>Bằng nhau</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,1,'✓ Tại góc k<sub>c</sub> ≈ k₀/4, vì mỗi góc chỉ chịu 1/4 tải so với tâm.')"><span class="mkey">B</span><span>Nhỏ hơn (~1/4 tâm)</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,1,'❌')"><span class="mkey">C</span><span>Lớn hơn tâm</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,1,'❌')"><span class="mkey">D</span><span>Bằng 0</span></div>
+      </div><div class="mcq-exp" id="exp-q8"></div></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 2: BÀI SỐ ÔN TẬP ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Phần 2 — Bài số kiểm tra tổng hợp</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-calculator"></i>
+    <div><h2>Bài số tổng hợp — Sinh theo STT</h2><p>Kết hợp ứng suất bản thân + tải tập trung Boussinesq</p></div>
+    <span class="cbadge" style="background:#6A1B9A">🧮 TH</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="th-prob">⏳ Đang tải đề bài...</div>
+    <div id="th-q"></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 3: BẢNG CÔNG THỨC TỔNG HỢP ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-file-description" style="font-size:12px"></i> Phần 3 — Bảng công thức chính cả chương</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>Tổng hợp công thức Chương 2</h2><p>Chỉ các công thức cốt lõi cần nhớ</p></div>
+    <span class="cbadge">📋 CF</span>
+  </div>
+  <div class="card-body">
+
+    <div class="warn-box">⚠️ <b>Nguyên lý chung:</b> σ<sub>oz</sub> = σ'<sub>oz</sub> + u &nbsp;·&nbsp; Dưới MNN dùng γ<sub>bh</sub> cho σ<sub>oz</sub>, dùng γ<sub>dn</sub>=γ<sub>bh</sub>−10 cho σ'<sub>oz</sub></div>
+
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 1 & 2 — Ứng suất bản thân</div>
+        <div class="cf-title">Nền n lớp (không MNN)</div>
+        <div class="cf-f">σ<sub>oz</sub> = Σhᵢ·γᵢ<br>u = 0 → σ'<sub>oz</sub> = σ<sub>oz</sub></div>
+        <div class="cf-note">z nằm lớp k: cộng toàn bộ lớp 1→k-1, thêm phần lớp k đến z</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 2 — Có MNN</div>
+        <div class="cf-title">Dưới mực nước ngầm</div>
+        <div class="cf-f">σ<sub>oz</sub> = Σhᵢγᵢ (trên) + Σhⱼγ<sub>bh,j</sub> (dưới)<br>u = γ<sub>w</sub>·(z − h<sub>nn</sub>) &nbsp;&nbsp;[γ<sub>w</sub>=10]<br>σ'<sub>oz</sub> = σ<sub>oz</sub> − u</div>
+        <div class="cf-note">Hoặc dùng γ<sub>dn</sub>=γ<sub>bh</sub>−10 tính thẳng σ'<sub>oz</sub></div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 3 — Boussinesq</div>
+        <div class="cf-title">Tải tập trung P</div>
+        <div class="cf-f">R = √(r² + z²)<br>Δσ<sub>z</sub> = 3P·z³ / (2π·R⁵)<br>r=0: Δσ<sub>z</sub> = 3P/(2πz²)</div>
+        <div class="cf-note">2 tải: nguyên lý chồng chất Δσz = Δσz1 + Δσz2</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 4 — Hình chữ nhật</div>
+        <div class="cf-title">Tra bảng k₀, k<sub>c</sub></div>
+        <div class="cf-f">Tại tâm:  Δσ<sub>z</sub> = p·k₀<br>Tại góc: Δσ<sub>z</sub> = p·k<sub>c</sub><br>k₀, k<sub>c</sub> = f(l/b, z/b)</div>
+        <div class="cf-note">l ≥ b; k<sub>c</sub> ≈ k₀/4 (tại góc chịu 1/4 tải)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 5 — Flamant (hình băng)</div>
+        <div class="cf-title">Tải phân bố dải vô hạn</div>
+        <div class="cf-f">Δσ<sub>z</sub> = k<sub>z</sub>·p<br>Δσ<sub>x</sub> = k<sub>x</sub>·p<br>τ<sub>xz</sub>  = k<sub>t</sub>·p</div>
+        <div class="cf-note">k<sub>z</sub>, k<sub>x</sub>, k<sub>t</sub> tra bảng theo (x/b, z/b)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">Dạng 6 — Tải gây lún</div>
+        <div class="cf-title">Áp lực tiếp xúc & gây lún</div>
+        <div class="cf-f">p<sub>tx</sub> = N/(F) + γ<sub>tb</sub>·h<sub>m</sub><br>p<sub>gl</sub> = p<sub>tx</sub> − γ'·h<sub>m</sub><br>Δσ<sub>z</sub> = p<sub>gl</sub>·k₀ (tại tâm)</div>
+        <div class="cf-note">γ' = trọng lượng riêng đất trên đáy móng; h<sub>m</sub> = chiều sâu đặt móng</div>
+      </div>
+    </div>
+
+    <div class="succ-box" style="margin-top:4px">
+      📌 <b>Quy trình chung:</b> Xác định vị trí điểm M → Chọn công thức phù hợp → Tra bảng/tính hệ số → Nhân với tải trọng → Kiểm tra đơn vị
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>C2 · 2.7 — Ôn tập &amp; Tổng hợp</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-size:12px">0/0</span>
+    <button class="sticky-btn" onclick="scrollNext()">▼ Câu tiếp</button>
+    <a href="2.6_DANG_6.html" class="sticky-btn">← Dạng 6</a>
+    <a href="2.0_LY_THUYET.html" class="sticky-btn">Lý thuyết →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   DANG_ID         : 'tonghop' — định danh trang ôn tập, tạo localStorage key
+   ANS             : lưu kết quả từng câu (null = chưa làm, true/false)
+   TOTAL_QUESTIONS : đếm sau genAll() → dùng trong updateProg
+   Không có _submitted (trang ôn tập không nộp bài chính thức)
+================================================================ */
+
+var DANG_ID = 'tonghop';
+var ANS = {};
+var TOTAL_QUESTIONS = 0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   toast(msg, dur)  : hiện thông báo nổi, tự tắt sau dur ms
+   getSV()          : đọc thông tin sinh viên từ sessionStorage
+   seededRng(seed)  : LCG s = s*16807 % 2147483647, cho số [0,1) xác định theo STT
+   r1(v) / r2(v)    : làm tròn 1 / 2 chữ số thập phân
+   scrollNext()     : cuộn đến ô chưa làm tiếp theo
+   renderSV()       : hiển thị tên, MSSV, STT lên thanh header
+================================================================ */
+function toast(msg,dur){dur=dur||3000;var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show');},dur);}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function r1(v){return Math.round(v*10)/10;}
+function r2(v){return Math.round(v*100)/100;}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp){inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});inp.focus();}}
+function renderSV(){var sv=getSV();if(!sv||!sv.name)return;var box=document.getElementById('sv-box');if(box)box.classList.add('show');var av=document.getElementById('sv-av');if(av)av.textContent=sv.name.charAt(0).toUpperCase();var nm=document.getElementById('sv-name');if(nm)nm.textContent=sv.name;var mt=document.getElementById('sv-meta');if(mt)mt.textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;var hs=document.getElementById('hdr-sv');if(hs)hs.textContent='SV #'+sv.stt;}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & THEO DÕI TIẾN ĐỘ
+   chkFill(id,ans,tol)            : chấm ô số, class ok/no, gọi updateProg
+   pickMCQ(name,idx,correct,expText): chấm MCQ, lock, hiện giải thích
+   makeQ(id,label,ans,tol,unit)   : tạo HTML 1 ô nhập số + chip kết quả
+   updateProg(): cập nhật tiến độ (attempted/done/total), lưu 'prog_c2_tonghop'
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,idx,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(idx===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+idx).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.style.display='block';exp.className='mcq-exp show '+(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" '
+    +'oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span>'
+    +'<span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  var fill=document.getElementById('prog-bar');if(fill)fill.style.width=attemPct+'%';
+  var pt=document.getElementById('prog-txt');
+  if(pt)pt.textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  var np=document.getElementById('nav-prog');if(np)np.textContent=attempted+'/'+total;
+  localStorage.setItem('prog_c2_tonghop',JSON.stringify({done:done,total:total,attempted:attempted}));
+}
+
+/* ================================================================
+   KHỐI 4 — SINH BÀI TẬP TỔNG HỢP (genAll)
+   genAll(): khởi tạo 8 MCQ keys (q1–q8) + 1 bài số tổng hợp theo STT
+   Bài số: σoz (nền 2 lớp không MNN) + Δσz Boussinesq
+   TOTAL_QUESTIONS đếm SAU genAll() trong window.onload
+================================================================ */
+function genAll(){
+  // Khởi tạo MCQ
+  ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(function(k){ANS['mcq-'+k]=null;});
+
+  // Bài số tổng hợp
+  var sv=getSV(); var stt=(sv&&sv.stt)?parseInt(sv.stt):1;
+  var rng=seededRng(stt*97+503);
+
+  // Nền 2 lớp không MNN + tải tập trung P
+  var h1=r1(2+rng()*3), g1=r1(17+rng()*2), g2=r1(17.5+rng()*2);
+  var z=r1(h1+0.5+rng()*3);
+  var s1=r2(h1*g1), s2=r2((z-h1)*g2), soz=r2(s1+s2);
+
+  var P=Math.round(150+rng()*250);
+  var r_=r1(0.5+rng()*3), zp=r1(1+rng()*3);
+  var R=Math.round(Math.sqrt(r_*r_+zp*zp)*1000)/1000;
+  var dsz=r2(3*P*Math.pow(zp,3)/(2*Math.PI*Math.pow(R,5)));
+
+  document.getElementById('th-prob').innerHTML=
+    '🏗️ <b>Đề bài tổng hợp</b> (STT <b>'+stt+'</b>):<br>'
+    +'<b>Phần 1 — σ<sub>oz</sub>:</b> Nền 2 lớp, h₁=<b>'+h1+'m</b>, γ₁=<b>'+g1+'kN/m³</b>; lớp 2 dày ∞, γ₂=<b>'+g2+'kN/m³</b>. Tính σ<sub>oz</sub> tại z=<b>'+z+'m</b>.<br>'
+    +'<b>Phần 2 — Boussinesq:</b> Tải tập trung P=<b>'+P+'kN</b>. Tính Δσ<sub>z</sub> tại M(r=<b>'+r_+'m</b>, z=<b>'+zp+'m</b>).';
+
+  document.getElementById('th-q').innerHTML=
+    '<div style="font-size:12px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Phần 1 — Ứng suất bản thân</div>'
+    +makeQ('th-s1','① h₁·γ₁ (kN/m²)',s1,0.8,'kN/m²')
+    +makeQ('th-soz','② σ<sub>oz</sub> tổng (kN/m²)',soz,r2(soz*0.02+0.5),'kN/m²')
+    +'<div style="font-size:12px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin:12px 0 8px">Phần 2 — Boussinesq</div>'
+    +makeQ('th-R','③ R = √(r²+z²) (m)',R,0.05,'m')
+    +makeQ('th-dsz','④ Δσ<sub>z</sub> (kN/m²)',dsz,r2(dsz*0.05+0.2),'kN/m²');
+
+  updateProg();
+}
+
+/* ================================================================
+   KHỐI 5 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: renderSV() → genAll() → đếm TOTAL_QUESTIONS
+   ⚠️ TOTAL_QUESTIONS phải đếm SAU genAll vì genAll mới tạo ANS keys
+================================================================ */
+window.onload=function(){
+  renderSV();
+  genAll();
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+};
+</script>
+</body>
+</html>
