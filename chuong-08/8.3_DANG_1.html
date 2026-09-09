@@ -1,0 +1,1325 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8.3 — Phương Án Móng Theo Địa Tầng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('no config')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-bh{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+.pw{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.pt{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.pbar{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.pfill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.svi{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+/* ref card */
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden}
+.chd{padding:11px 16px;display:flex;align-items:center;gap:9px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.chd i{font-size:17px;color:var(--P)}
+.chd h2{font-size:13px;font-weight:700;color:var(--Pdk);flex:1}
+.chd p{font-size:11px;color:var(--muted);margin-top:1px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;white-space:nowrap}
+.cbg{background:var(--G)}.cba{background:var(--A)}.cbr{background:var(--R)}
+.cbd{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:6px;margin:2px 0}
+.sl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.thc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rt{width:100%;border-collapse:collapse;font-size:11px}
+.rt th{background:var(--Plt);color:var(--Pdk);font-weight:700;padding:4px 7px;text-align:center;border:1px solid var(--brd)}
+.rt td{padding:4px 7px;border:1px solid #EBF5FB;text-align:center;font-family:var(--mono);font-size:10.5px}
+.rt td:first-child{text-align:left;font-family:var(--sans);font-size:10.5px;font-weight:600;color:var(--Pdk)}
+.rt tr.hi{background:#FFFDE7}
+.yeu{color:#C62828;font-weight:700}.tb{color:#E65100;font-weight:600}.tot{color:#2E7D32;font-weight:700}.rtot{color:#1B5E20;font-weight:700}
+/* exercise */
+.ex{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:12px;overflow:hidden}
+.exhd{padding:11px 15px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:var(--Plt)}
+.exhd:hover{background:#D6EAF8}
+.exhd.open{border-bottom:1.5px solid var(--brd)}
+.ebg{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.ebA{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.ebB{background:#FFF8E1;color:#E65100;border:1px solid #FFE082}
+.ebC{background:#FCE4EC;color:#C62828;border:1px solid #F48FB1}
+.ebe{background:var(--Glt);color:var(--Gdk)}.ebm{background:#FFF3E0;color:#BF360C}.ebh{background:var(--Rlt);color:var(--R)}
+.etl{flex:1;font-size:13px;font-weight:700;color:var(--Pdk)}
+.emt{font-size:11px;color:var(--muted);margin-top:1px}
+.echv{font-size:16px;color:var(--muted);transition:transform .2s}
+.echv.open{transform:rotate(90deg)}
+.exbd{display:none;padding:14px}
+.exbd.open{display:block}
+/* data table */
+.dt{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px}
+.dt th{background:var(--Plt);color:var(--Pdk);font-weight:700;padding:4px 7px;border:1px solid var(--brd);text-align:center;font-size:10.5px}
+.dt td{padding:4px 7px;border:1px solid #EBF5FB;font-family:var(--mono);font-size:10.5px;text-align:center}
+.dt td.ln{text-align:left;font-family:var(--sans);font-size:10.5px}
+.dt td.cat{background:#FFF9C4;font-weight:700;color:#E65100}
+/* boxes */
+.rqb{background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 11px;font-size:12.5px;line-height:1.6;margin-top:6px}
+.thb{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 13px;font-size:13px;line-height:1.7}
+.thb .lb{font-size:10px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.scb{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:10px 13px;font-size:13px;color:var(--Gdk);font-weight:500;line-height:1.6}
+.wab{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12.5px;color:var(--R);line-height:1.6}
+.eab{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12.5px;color:#4E342E;line-height:1.6}
+.fm{font-family:var(--mono);background:#F8FBFF;border:1px solid #BBDEFB;border-radius:5px;padding:2px 8px;font-size:12px;display:inline-block;margin:1px 0}
+/* step blocks */
+.step-blk{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.step-hd{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.snum{background:var(--P);color:#fff;font-size:11px;font-weight:800;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.sname{font-size:12.5px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.4px}
+.stxt{font-size:13px;line-height:1.65;padding-left:32px}
+.stxt b{color:var(--Pdk)}
+/* fill */
+.fr{display:flex;align-items:center;gap:7px;margin:4px 0;flex-wrap:wrap}
+.fl{font-size:12.5px;flex-shrink:0;line-height:1.5}
+.fi{font-family:var(--mono);font-size:13px;width:85px;padding:5px 7px;border:1.5px solid var(--brd);border-radius:6px;background:#F8FBFF;color:var(--text);text-align:center}
+.fi.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.fi.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.fu{font-size:11px;color:var(--muted)}
+.fbt{background:var(--P);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-family:var(--sans);font-weight:600;cursor:pointer}
+.ffb{font-size:12px;margin-left:3px}
+/* MCQ */
+.mw{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-top:8px}
+.mq{padding:10px 13px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mn{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mo-list{display:grid;gap:0}
+.mo-list.g2{grid-template-columns:1fr 1fr}
+.mo{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:12.5px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mo:hover{background:var(--Plt)}
+.mk{font-family:var(--mono);font-size:11px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.mo.ok{background:var(--Glt)!important}.mo.ok .mk{background:var(--G);color:#fff}
+.mo.no{background:var(--Rlt)!important}.mo.no .mk{background:var(--R);color:#fff}
+.mo.rok{background:var(--Glt)!important;opacity:.65}.mo.rok .mk{background:var(--G);color:#fff}
+.me{padding:8px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.me.show{display:block}
+.me.ok-e{background:var(--Glt);color:var(--Gdk)}.me.no-e{background:var(--Rlt);color:#b71c1c}
+/* ── Picker ghép phương án ── */
+.pk-sec{margin:10px 0 6px}
+.pk-lbl{font-size:10px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.pk-opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.pk-btn{padding:5px 13px;border:1.5px solid var(--brd);border-radius:20px;background:#F8FBFF;font-size:12px;cursor:pointer;font-family:var(--sans);transition:all .15s;color:var(--text);line-height:1.4}
+.pk-btn:hover{border-color:var(--P);color:var(--P);background:var(--Plt)}
+.pk-btn.sel{border-color:var(--P);background:var(--P);color:#fff;font-weight:600}
+.pk-btn.ok{border-color:var(--G)!important;background:var(--G)!important;color:#fff!important;font-weight:700}
+.pk-btn.no{border-color:var(--R)!important;background:var(--Rlt)!important;color:var(--R)!important}
+.pk-result{background:linear-gradient(135deg,#E8F5E9,#F8FBFF);border:1.5px solid #A5D6A7;border-radius:10px;padding:12px 15px;margin-top:10px;display:none}
+.pk-result.show{display:block}
+.pk-result-lbl{font-size:10px;font-weight:700;color:var(--Gdk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.pk-result-txt{font-size:13px;line-height:1.8;color:var(--Gdk)}
+.pk-result-txt b{color:var(--Pdk)}
+.pk-chk-btn{background:var(--P);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-family:var(--sans);font-weight:600;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:6px}
+.pk-chk-btn:hover{opacity:.85}
+.pk-fb{margin-top:8px;padding:9px 13px;border-radius:7px;font-size:12.5px;line-height:1.6;display:none}
+.pk-fb.show{display:block}
+.pk-fb.ok-pk{background:var(--Glt);color:var(--Gdk);border-left:3px solid var(--G)}
+.pk-fb.no-pk{background:var(--Rlt);color:var(--R);border-left:3px solid var(--R)}
+/* picker ghép phương án */
+.pk-sec{margin:10px 0 6px;display:flex;flex-direction:column;gap:4px}
+.pk-lbl{font-size:10px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.pk-opts{display:flex;flex-wrap:wrap;gap:6px}
+.pk-btn{padding:5px 12px;border:1.5px solid var(--brd);border-radius:20px;background:#F8FBFF;font-size:12px;cursor:pointer;font-family:var(--sans);transition:all .15s;color:var(--text)}
+.pk-btn:hover{border-color:var(--P);color:var(--P);background:var(--Plt)}
+.pk-btn.sel{border-color:var(--P);background:var(--P);color:#fff;font-weight:600}
+.pk-btn.ok{border-color:var(--G);background:var(--G);color:#fff;font-weight:600}
+.pk-btn.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.pk-result{background:linear-gradient(135deg,#E8F5E9,#F8FBFF);border:1.5px solid #A5D6A7;border-radius:10px;padding:12px 14px;margin-top:10px;display:none}
+.pk-result.show{display:block}
+.pk-result-lbl{font-size:10px;font-weight:700;color:var(--Gdk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.pk-result-txt{font-size:13px;line-height:1.7;color:var(--Gdk)}
+.pk-result-txt b{color:var(--Pdk)}
+.pk-chk-btn{background:var(--P);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-family:var(--sans);font-weight:600;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:5px}
+.pk-fb{margin-top:8px;padding:8px 12px;border-radius:7px;font-size:12px;line-height:1.6;display:none}
+.pk-fb.show{display:block}
+.pk-fb.ok{background:var(--Glt);color:var(--Gdk)}
+.pk-fb.no{background:var(--Rlt);color:var(--R)}
+/* group separator */
+.gs{background:var(--Pdk);color:#fff;padding:8px 16px;font-size:12px;font-weight:700;border-radius:8px;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+/* SVG soil */
+svg text{font-family:'Plus Jakarta Sans',sans-serif}
+/* sticky nav */
+.snav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:7px 15px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;transition:opacity .15s}
+.bg{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+@media(max-width:600px){.tc,.thc,.mo-list.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C8.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 8</a>
+    <div class="hdr-title">
+      <h1>8.3 — Phương Án Móng Theo Địa Tầng</h1>
+      <p>Xác định tên đất · Trạng thái · Trụ địa chất · Đề xuất phương án</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hprog">0 / 0</div>
+      <div class="sv-bh" id="svbh">SV #–</div>
+    </div>
+  </div>
+</header>
+<main>
+<div class="pw"><div class="pt"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 8.3</span><span id="ptxt">0/0 (0%)</span></div><div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div></div>
+<div class="svi">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Phương án móng — <span id="svd">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">A1: bài mẫu đầy đủ 3 bước · A2–A3: công thức có sẵn điền số · B1–B3: tự tìm thông số · C1–C6: chỉ có đề bài</div></div>
+  <div id="svch" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- BẢNG TRA -->
+<div class="card">
+  <div class="chd"><i class="ti ti-table"></i><div><h2>Bảng tra tham chiếu — Tên đất &amp; Trạng thái (TCVN)</h2></div><span class="cbadge">TRA CỨU</span></div>
+  <div class="cbd">
+    <div class="thc">
+      <!-- đất dính -->
+      <div>
+        <div class="sl"><i class="ti ti-droplet"></i>Đất DÍNH — A và B</div>
+        <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:6px;padding:8px 10px;font-size:12px;margin-bottom:6px">
+          <span class="fm">A = w<sub>ch</sub> − w<sub>d</sub></span> (Chỉ số dẻo)<br>
+          <span class="fm">B = (w − w<sub>d</sub>) / A</span> (Chỉ số sệt)
+        </div>
+        <table class="rt"><tr><th>A (%)</th><th>Tên đất</th></tr>
+          <tr><td>1–7</td><td>Cát pha</td></tr><tr><td>7–17</td><td>Sét pha</td></tr><tr><td>&gt;17</td><td>Sét</td></tr></table>
+        <table class="rt" style="margin-top:5px"><tr><th>B</th><th>Trạng thái</th><th>ĐG</th></tr>
+          <tr><td>&lt;0</td><td>Cứng</td><td class="rtot">Rất tốt</td></tr>
+          <tr><td>0–0.25</td><td>Nửa cứng</td><td class="tot">Tốt</td></tr>
+          <tr><td>0.25–0.50</td><td>Dẻo cứng</td><td class="tot">Tốt</td></tr>
+          <tr class="hi"><td>0.50–0.75</td><td>Dẻo mềm</td><td class="tb">TB</td></tr>
+          <tr><td>0.75–1.00</td><td>Dẻo chảy</td><td class="yeu">Yếu</td></tr>
+          <tr><td>&gt;1.00</td><td>Chảy</td><td class="yeu">Rất yếu</td></tr></table>
+      </div>
+      <!-- đất rời -->
+      <div>
+        <div class="sl"><i class="ti ti-grain"></i>Đất RỜI — Cấp phối hạt</div>
+        <table class="rt"><tr><th>Tên đất</th><th>Điều kiện (% hạt &gt; d)</th></tr>
+          <tr><td>Cuội sỏi</td><td>&gt;2mm chiếm &gt;50%</td></tr>
+          <tr><td>Cát sỏi</td><td>&gt;2mm chiếm 25–50%</td></tr>
+          <tr><td>Cát thô</td><td>&gt;0.5mm chiếm &gt;50%</td></tr>
+          <tr><td>Cát trung</td><td>&gt;0.25mm chiếm &gt;50%</td></tr>
+          <tr class="hi"><td>Cát mịn</td><td>&gt;0.1mm chiếm &gt;75%</td></tr>
+          <tr><td>Cát bụi</td><td>&gt;0.05mm chiếm &gt;75%</td></tr></table>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">Cách tra: Lấy loại đất có cỡ hạt nhỏ nhất mà tổng % hạt lớn hơn cỡ đó &gt; ngưỡng quy định.</div>
+        <table class="rt" style="margin-top:6px"><tr><th>N<sub>SPT</sub></th><th>q<sub>c</sub> (MPa)</th><th>D<sub>r</sub></th><th>Trạng thái</th><th>ĐG</th></tr>
+          <tr><td>&lt;4</td><td>&lt;1.0</td><td>&lt;0.20</td><td>Rất rời</td><td class="yeu">Xấu</td></tr>
+          <tr><td>4–10</td><td>1–3</td><td>0.20–0.33</td><td>Rời</td><td class="yeu">Yếu</td></tr>
+          <tr class="hi"><td>10–30</td><td>3–7</td><td>0.33–0.67</td><td>Chặt vừa</td><td class="tb">TB</td></tr>
+          <tr><td>30–50</td><td>7–12</td><td>0.67–0.85</td><td>Chặt</td><td class="tot">Tốt</td></tr>
+          <tr><td>&gt;50</td><td>&gt;12</td><td>&gt;0.85</td><td>Rất chặt</td><td class="rtot">R.tốt</td></tr></table>
+      </div>
+      <!-- nhận xét và SCT -->
+      <div>
+        <div class="sl"><i class="ti ti-traffic-lights"></i>Nhận xét &amp; SCT sơ bộ</div>
+        <table class="rt"><tr><th>Trạng thái</th><th>R (kPa)</th><th>Nhận xét</th></tr>
+          <tr><td>Chảy / Rất rời</td><td class="yeu">&lt;50</td><td class="yeu">Xấu thực sự</td></tr>
+          <tr><td>Dẻo chảy / Rời</td><td class="yeu">50–100</td><td class="yeu">Yếu</td></tr>
+          <tr><td>Dẻo mềm</td><td class="tb">80–130</td><td class="tb">Trung gian</td></tr>
+          <tr><td>Dẻo cứng / Chặt vừa</td><td class="tb">150–220</td><td class="tb">Trung gian</td></tr>
+          <tr><td>Nửa cứng / Chặt</td><td class="tot">220–320</td><td class="tot">Tốt</td></tr>
+          <tr><td>Cứng / Rất chặt</td><td class="rtot">&gt;320</td><td class="rtot">Tốt thực sự</td></tr></table>
+        <div style="background:#FCE4EC;border-left:3px solid var(--R);border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;margin-top:6px;line-height:1.5">
+          <b>Phân loại địa tầng:</b><br>
+          <b style="color:var(--G)">T</b> = Tốt (cứng/rất chặt) &nbsp;·&nbsp; <b style="color:var(--A)">t</b> = Trung gian &nbsp;·&nbsp; <b style="color:var(--R)">X</b> = Xấu (chảy)
+        </div>
+        <div style="background:var(--Plt);border-left:3px solid var(--P);border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;margin-top:5px;line-height:1.5">
+          <b>Tải trọng N<sub>tc</sub>:</b><br>
+          Nhỏ: &lt;500 kN (nhà 1–3 tầng) &nbsp;·&nbsp; TB: 500–2000 kN &nbsp;·&nbsp; Lớn: &gt;2000 kN (≥8 tầng)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ A1 MẪU ═══════════════ -->
+<div class="gs"><i class="ti ti-book-2"></i>NHÓM A — A1: Bài mẫu đầy đủ 3 bước · A2–A3: Công thức có sẵn, điền đáp số</div>
+
+<div class="ex">
+  <div class="exhd open" onclick="tog('a1')">
+    <span class="ebg ebA">A1</span><span class="ebg ebe">Mẫu</span>
+    <div><div class="etl">Nhà phố 3 tầng · N<sub>tc</sub>=450 kN (nhỏ) · Địa tầng T-t-T</div>
+    <div class="emt">Bài mẫu đầy đủ 3 bước · Không chấm điểm</div></div>
+    <i class="ti ti-chevron-right echv open" id="cv-a1"></i>
+  </div>
+  <div class="exbd open" id="bd-a1">
+    <!-- ĐỀ BÀI -->
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px"><i class="ti ti-file-description" style="margin-right:5px"></i>Đề bài — N<sub>tc</sub> = 450 kN &nbsp;·&nbsp; MNN = −5.5 m</div>
+      <table class="dt">
+        <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w (%)</th><th>w<sub>ch</sub> (%)</th><th>w<sub>d</sub> (%)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th><th>E₀ (MPa)</th></tr>
+        <tr><td>1</td><td class="ln">Sét pha nâu vàng</td><td>5.5</td><td>24</td><td>38</td><td>20</td><td>18.5</td><td>22</td><td>20</td><td>15</td></tr>
+        <tr><td>2</td><td class="ln">Sét pha xám xanh</td><td>4.0</td><td>34</td><td>42</td><td>22</td><td>17.5</td><td>14</td><td>12</td><td>8</td></tr>
+        <tr><td>3</td><td class="ln">Cát trung vàng</td><td>∞</td><td>—</td><td>—</td><td>—</td><td>19.0</td><td>2</td><td>30</td><td>25</td></tr>
+      </table>
+      <div style="margin-top:6px">Lớp 3 cấp phối hạt: d&gt;2mm: 5%, d&gt;0.5mm: 22%, d&gt;0.25mm: 68%, d&gt;0.1mm: 92%, d&gt;0.05mm: 98%<br>
+      N<sub>SPT</sub> lớp 3 = 22 búa. <b>Yêu cầu:</b> Xác định tên đất, trạng thái, vẽ trụ địa chất và đề xuất phương án móng.</div>
+    </div>
+
+    <!-- BƯỚC 1 -->
+    <div class="step-blk">
+      <div class="step-hd"><span class="snum">1</span><span class="sname">Xác định tên đất và trạng thái</span></div>
+      <div class="tc">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="thb">
+            <div class="lb"><i class="ti ti-droplet"></i>Lớp 1 — Đất dính</div>
+            Chỉ số dẻo: <span class="fm">A = w<sub>ch</sub> − w<sub>d</sub> = 38 − 20 = 18%</span><br>
+            A = 18 &gt; 17 → <b>Sét</b><br><br>
+            Chỉ số sệt: <span class="fm">B = (w − w<sub>d</sub>) / A = (24 − 20) / 18 = 0.22</span><br>
+            B = 0.22 ∈ [0; 0.25] → <b>Nửa cứng</b> ✅ Tốt
+          </div>
+          <div class="thb">
+            <div class="lb"><i class="ti ti-droplet"></i>Lớp 2 — Đất dính</div>
+            <span class="fm">A = w<sub>ch</sub> − w<sub>d</sub> = 42 − 22 = 20%</span> &gt; 17 → <b>Sét</b><br><br>
+            <span class="fm">B = (34 − 22) / 20 = 0.60</span><br>
+            B = 0.60 ∈ [0.50; 0.75] → <b>Dẻo mềm</b> ⚠ Trung gian
+          </div>
+          <div class="thb">
+            <div class="lb"><i class="ti ti-grain"></i>Lớp 3 — Đất rời (tra cấp phối)</div>
+            Cộng dồn % hạt: &gt;0.25mm = 68% → ngưỡng "Cát trung" là &gt;50% → <b>đạt</b><br>
+            → Tên đất: <b>Cát trung</b><br><br>
+            N<sub>SPT</sub> = 22 búa ∈ [10; 30] → <b>Chặt vừa</b> ✅ Tốt
+          </div>
+        </div>
+        <!-- bảng tóm tắt kết quả -->
+        <div>
+          <table class="rt" style="margin-bottom:8px">
+            <tr><th>Lớp</th><th>Tên đất</th><th>A hoặc D<sub>r</sub></th><th>B hoặc N</th><th>Trạng thái</th><th>Nhận xét</th></tr>
+            <tr><td>1</td><td>Sét</td><td>A=18%</td><td>B=0.22</td><td>Nửa cứng</td><td class="tot">Tốt</td></tr>
+            <tr><td>2</td><td>Sét</td><td>A=20%</td><td>B=0.60</td><td>Dẻo mềm</td><td class="tb">TB</td></tr>
+            <tr><td>3</td><td>Cát trung</td><td>—</td><td>N=22</td><td>Chặt vừa</td><td class="tot">Tốt</td></tr>
+          </table>
+          <div class="eab">
+            <b>Địa tầng:</b> T – t – T<br>
+            Lớp 1 (Tốt, dày 5.5m) → Lớp 2 (Trung gian, dày 4m) → Lớp 3 (Tốt, vô cùng)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 2: TRỤ ĐỊA CHẤT -->
+    <div class="step-blk" style="margin-top:14px">
+      <div class="step-hd"><span class="snum">2</span><span class="sname">Vẽ trụ địa chất</span></div>
+      <div style="display:flex;justify-content:center">
+        <svg viewBox="0 0 320 310" xmlns="http://www.w3.org/2000/svg" width="320">
+          <rect x="0" y="0" width="320" height="310" fill="#F8FBFF" rx="8"/>
+          <!-- mặt đất -->
+          <line x1="20" y1="30" x2="300" y2="30" stroke="#546E7A" stroke-width="2"/>
+          <text x="160" y="20" fill="#546E7A" font-size="9" text-anchor="middle" font-weight="700">Mặt đất tự nhiên ±0.00</text>
+          <!-- L1: Sét nửa cứng, h=5.5m → 99px; hatch -->
+          <rect x="70" y="30" width="120" height="99" fill="#FFFDE7" stroke="#1565C0" stroke-width="1.2"/>
+          <line x1="70" y1="44" x2="86" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="70" y1="62" x2="106" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="70" y1="80" x2="126" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="70" y1="98" x2="146" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="70" y1="116" x2="166" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="84" y1="129" x2="184" y2="30" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="104" y1="129" x2="190" y2="44" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="124" y1="129" x2="190" y2="64" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="144" y1="129" x2="190" y2="84" stroke="#90CAF9" stroke-width="0.8"/>
+          <line x1="164" y1="129" x2="190" y2="104" stroke="#90CAF9" stroke-width="0.8"/>
+          <!-- label L1 -->
+          <text x="130" y="75" fill="#0D47A1" font-size="10" text-anchor="middle" font-weight="700">① Sét</text>
+          <text x="130" y="87" fill="#0D47A1" font-size="9.5" text-anchor="middle">Nửa cứng</text>
+          <text x="130" y="99" fill="#0D47A1" font-size="8.5" text-anchor="middle">B=0.22 · h=5.5m</text>
+          <text x="130" y="111" fill="#2E7D32" font-size="9" text-anchor="middle">✅ Tốt · R≈230 kPa</text>
+          <!-- depth 5.5m -->
+          <line x1="18" y1="129" x2="70" y2="129" stroke="#546E7A" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="15" y="133" fill="#546E7A" font-size="8.5" text-anchor="end">5.5m</text>
+          <!-- MNN -->
+          <line x1="70" y1="129" x2="190" y2="129" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <text x="195" y="132" fill="#1565C0" font-size="8" font-weight="700">MNN</text>
+          <!-- đáy móng h=1.5m=27px từ mặt đất -->
+          <line x1="70" y1="57" x2="190" y2="57" stroke="#E65100" stroke-width="1.2" stroke-dasharray="4,2" opacity="0.9"/>
+          <text x="195" y="60" fill="#E65100" font-size="7.5" font-weight="700">Đáy móng</text>
+          <!-- L2: Sét dẻo mềm h=4m → 72px; dots -->
+          <rect x="70" y="129" width="120" height="72" fill="#BBDEFB" stroke="#546E7A" stroke-width="1.2"/>
+          <circle cx="84" cy="143" r="2" fill="#546E7A" opacity="0.6"/><circle cx="103" cy="143" r="2" fill="#546E7A" opacity="0.6"/><circle cx="122" cy="143" r="2" fill="#546E7A" opacity="0.6"/><circle cx="141" cy="143" r="2" fill="#546E7A" opacity="0.6"/><circle cx="160" cy="143" r="2" fill="#546E7A" opacity="0.6"/>
+          <circle cx="84" cy="157" r="2" fill="#546E7A" opacity="0.6"/><circle cx="103" cy="157" r="2" fill="#546E7A" opacity="0.6"/><circle cx="122" cy="157" r="2" fill="#546E7A" opacity="0.6"/><circle cx="141" cy="157" r="2" fill="#546E7A" opacity="0.6"/><circle cx="160" cy="157" r="2" fill="#546E7A" opacity="0.6"/>
+          <circle cx="84" cy="171" r="2" fill="#546E7A" opacity="0.6"/><circle cx="103" cy="171" r="2" fill="#546E7A" opacity="0.6"/><circle cx="122" cy="171" r="2" fill="#546E7A" opacity="0.6"/><circle cx="141" cy="171" r="2" fill="#546E7A" opacity="0.6"/><circle cx="160" cy="171" r="2" fill="#546E7A" opacity="0.6"/>
+          <circle cx="84" cy="185" r="2" fill="#546E7A" opacity="0.6"/><circle cx="103" cy="185" r="2" fill="#546E7A" opacity="0.6"/><circle cx="122" cy="185" r="2" fill="#546E7A" opacity="0.6"/><circle cx="141" cy="185" r="2" fill="#546E7A" opacity="0.6"/>
+          <text x="130" y="157" fill="#0D47A1" font-size="10" text-anchor="middle" font-weight="700">② Sét</text>
+          <text x="130" y="169" fill="#E65100" font-size="9.5" text-anchor="middle">Dẻo mềm · B=0.60</text>
+          <text x="130" y="181" fill="#E65100" font-size="8.5" text-anchor="middle">⚠ Trung gian · h=4m</text>
+          <line x1="18" y1="201" x2="70" y2="201" stroke="#546E7A" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="15" y="205" fill="#546E7A" font-size="8.5" text-anchor="end">9.5m</text>
+          <!-- L3: Cát trung chặt vừa; dot pattern lớn -->
+          <rect x="70" y="201" width="120" height="80" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+          <circle cx="82" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="98" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="114" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="130" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="146" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="162" cy="215" r="2.5" fill="#2E7D32" opacity="0.7"/>
+          <circle cx="90" cy="231" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="106" cy="231" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="122" cy="231" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="138" cy="231" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="154" cy="231" r="2.5" fill="#2E7D32" opacity="0.7"/>
+          <circle cx="82" cy="247" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="100" cy="247" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="118" cy="247" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="136" cy="247" r="2.5" fill="#2E7D32" opacity="0.7"/><circle cx="154" cy="247" r="2.5" fill="#2E7D32" opacity="0.7"/>
+          <text x="130" y="265" fill="#1B5E20" font-size="10" text-anchor="middle" font-weight="700">③ Cát trung · Chặt vừa</text>
+          <text x="130" y="277" fill="#1B5E20" font-size="9" text-anchor="middle">N=22 · ✅ Tốt · h=∞</text>
+          <line x1="70" y1="281" x2="190" y2="281" stroke="#2E7D32" stroke-width="1.2" stroke-dasharray="4,2"/>
+          <!-- chú thích ký hiệu -->
+          <text x="230" y="55" fill="#546E7A" font-size="8.5" font-weight="700">Ký hiệu:</text>
+          <rect x="226" y="62" width="14" height="10" fill="#FFFDE7" stroke="#90CAF9" stroke-width="1"/>
+          <line x1="226" y1="72" x2="240" y2="62" stroke="#90CAF9" stroke-width="0.8"/>
+          <text x="244" y="71" fill="#546E7A" font-size="8">Đất dính</text>
+          <rect x="226" y="78" width="14" height="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1"/>
+          <circle cx="233" cy="83" r="2" fill="#2E7D32" opacity="0.7"/>
+          <text x="244" y="87" fill="#546E7A" font-size="8">Đất rời</text>
+          <line x1="226" y1="96" x2="240" y2="96" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <text x="244" y="100" fill="#1565C0" font-size="8">MNN</text>
+          <line x1="226" y1="108" x2="240" y2="108" stroke="#E65100" stroke-width="1.2" stroke-dasharray="4,2"/>
+          <text x="244" y="112" fill="#E65100" font-size="8">Đáy móng</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3 -->
+    <div class="step-blk" style="margin-top:14px">
+      <div class="step-hd"><span class="snum">3</span><span class="sname">Phân tích và lựa chọn phương án móng</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="thb">
+          <div class="lb"><i class="ti ti-analyze"></i>Nhận xét địa tầng và tải trọng</div>
+          <b>Địa tầng T–t–T:</b> Lớp 1 Sét nửa cứng dày 5.5m (Tốt) → Lớp 2 Sét dẻo mềm dày 4m (Trung gian) → Lớp 3 Cát trung chặt vừa (Tốt).<br>
+          <b>Tải trọng:</b> N<sub>tc</sub> = 450 kN → <b>Nhỏ</b> (tương đương nhà phố 3 tầng).<br>
+          <b>MNN:</b> −5.5m — không ảnh hưởng thi công tại h<sub>m</sub> = 1.5m.
+        </div>
+        <div class="thb">
+          <div class="lb"><i class="ti ti-checklist"></i>Lựa chọn từng bước</div>
+          <b>Phương án móng:</b> <span style="background:var(--Glt);color:var(--Gdk);padding:2px 8px;border-radius:4px;font-weight:700;font-size:12px">✅ Móng nông trên nền tự nhiên</span>
+          &nbsp;— Lý do: tải nhỏ, lớp 1 tốt và đủ dày (&gt;3.5m), MNN sâu, thi công đơn giản.<br><br>
+          <b>Lớp đặt đáy móng:</b> <span style="background:var(--Plt);color:var(--Pdk);padding:2px 8px;border-radius:4px;font-weight:700;font-size:12px">Lớp 1</span>
+          (Sét nửa cứng, R ≈ 230 kPa)<br><br>
+          <b>Chiều sâu đặt đáy móng:</b> <span style="background:var(--Plt);color:var(--Pdk);padding:2px 8px;border-radius:4px;font-weight:700;font-size:12px">h<sub>m</sub> = 1.5m</span>
+          (tối thiểu 1.2m, thường 1.5m cho nhà dân)<br><br>
+          <b>Kiểm tra sơ bộ SCT:</b> Diện tích cần A = N<sub>tc</sub>/R ≈ 450/200 = 2.25 m² → B ≈ 1.5m<br>
+          <span class="fm">p<sub>tc</sub> = 450/1.5² + 20×1.5 = 200 + 30 = 230 kPa ≈ R ✅</span>
+        </div>
+        <div class="scb">
+          ✅ <b>Tổng kết phương án:</b> Móng nông đơn BTCT · Đặt tại lớp 1 (Sét nửa cứng) · h<sub>m</sub> = 1.5m · B ≈ 1.5–1.8m.<br>
+          Không cần gia cố nền, không cần cọc. Phương án kinh tế nhất cho tải nhỏ trên nền tốt.
+        </div>
+      </div>
+    </div>
+  </div><!-- end bd-a1 -->
+</div><!-- end ex a1 -->
+
+<!-- ═══ A2 ═══ -->
+<div class="ex"><div class="exhd" onclick="tog('a2')">
+  <span class="ebg ebA">A2</span><span class="ebg ebm">Trung bình</span>
+  <div><div class="etl">VP 5 tầng · N<sub>tc</sub>=1200 kN (TB) · Địa tầng X–t–T</div>
+  <div class="emt">Công thức có sẵn · Điền A, B từng lớp · Chọn phương án ghép bước</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-a2"></i>
+</div>
+<div class="exbd" id="bd-a2">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét pha xám đen</td><td>2.0</td><td>42</td><td>40</td><td>22</td><td>2</td><td>16.5</td><td>5</td><td>5</td><td>3</td></tr>
+    <tr><td>2</td><td class="ln">Cát pha nâu vàng</td><td>7.5</td><td>18</td><td>25</td><td>14</td><td>15</td><td>18.2</td><td>10</td><td>22</td><td>18</td></tr>
+    <tr><td>3</td><td class="ln">Sét xám cứng</td><td>∞</td><td>22</td><td>50</td><td>28</td><td>32</td><td>20.0</td><td>45</td><td>22</td><td>30</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=1200 kN, MNN=−1.5m. Công thức bên dưới — thay số và điền kết quả.</div>
+
+  <div class="step-blk">
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Xác định tên đất và trạng thái</span></div>
+    <div class="stxt">
+      <b>Lớp 1</b> (đất dính): Công thức <span class="fm">A = w<sub>ch</sub> − w<sub>d</sub></span> và <span class="fm">B = (w − w<sub>d</sub>) / A</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 32px">
+      <div class="fr"><span class="fl">A lớp 1 = w<sub>ch</sub> − w<sub>d</sub> = 40 − 22 =</span><input class="fi" id="f-a2-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('a2-1',18,0)">✓</button><span class="ffb" id="fb-a2-1"></span></div>
+      <div class="fr"><span class="fl">B lớp 1 = (42 − 22) / A =</span><input class="fi" id="f-a2-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('a2-2',1.11,0.08)">✓</button><span class="ffb" id="fb-a2-2"></span></div>
+      <div class="fr"><span class="fl">A lớp 2 = 25 − 14 =</span><input class="fi" id="f-a2-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('a2-3',11,0)">✓</button><span class="ffb" id="fb-a2-3"></span></div>
+      <div class="fr"><span class="fl">B lớp 2 = (18 − 14) / A =</span><input class="fi" id="f-a2-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('a2-4',0.36,0.05)">✓</button><span class="ffb" id="fb-a2-4"></span></div>
+      <div class="fr"><span class="fl">A lớp 3 = 50 − 28 =</span><input class="fi" id="f-a2-5" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('a2-5',22,0)">✓</button><span class="ffb" id="fb-a2-5"></span></div>
+      <div class="fr"><span class="fl">B lớp 3 = (22 − 28) / A =</span><input class="fi" id="f-a2-6" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('a2-6',-0.27,0.05)">✓</button><span class="ffb" id="fb-a2-6"></span></div>
+    </div>
+    <div class="mw">
+      <div class="mq"><span class="mn">A2-1</span>Lớp 1 (A=18%, B≈1.11) — tên đất và trạng thái là gì?</div>
+      <div class="mo-list g2">
+        <div class="mo" id="mo-qa21-0" onclick="pm('qa21',0,2)"><span class="mk">A</span><span>Sét pha · Dẻo mềm</span></div>
+        <div class="mo" id="mo-qa21-1" onclick="pm('qa21',1,2)"><span class="mk">B</span><span>Cát pha · Dẻo cứng</span></div>
+        <div class="mo" id="mo-qa21-2" onclick="pm('qa21',2,2)"><span class="mk">C</span><span>Sét · Chảy (B&gt;1) → Xấu thực sự</span></div>
+        <div class="mo" id="mo-qa21-3" onclick="pm('qa21',3,2)"><span class="mk">D</span><span>Sét · Dẻo chảy</span></div>
+      </div>
+      <div class="me" id="me-qa21">✓ A=18&gt;17 → Sét. B=1.11&gt;1 → Trạng thái Chảy = Xấu thực sự. SCT rất thấp, tuyệt đối không đặt móng.</div>
+    </div>
+  </div>
+
+  <div class="step-blk">
+    <div class="step-hd"><span class="snum">2</span><span class="sname">Nhận xét địa tầng (điền ô)</span></div>
+    <div class="mw">
+      <div class="mq"><span class="mn">A2-2</span>Địa tầng này thuộc dạng nào — và vì sao?</div>
+      <div class="mo-list">
+        <div class="mo" id="mo-qa22-0" onclick="pm('qa22',0,1)"><span class="mk">A</span><span>T–T–T: cả 3 lớp đều tốt, MNN không ảnh hưởng</span></div>
+        <div class="mo" id="mo-qa22-1" onclick="pm('qa22',1,1)"><span class="mk">B</span><span>X–t–T: Lớp 1 xấu (Chảy), lớp 2 trung gian (Dẻo cứng), lớp 3 tốt (Cứng B&lt;0)</span></div>
+        <div class="mo" id="mo-qa22-2" onclick="pm('qa22',2,1)"><span class="mk">C</span><span>T–X–T: Lớp 2 xấu kẹp giữa 2 lớp tốt</span></div>
+        <div class="mo" id="mo-qa22-3" onclick="pm('qa22',3,1)"><span class="mk">D</span><span>X–X–T: 2 lớp trên đều xấu</span></div>
+      </div>
+      <div class="me" id="me-qa22">✓ Lớp 1 Chảy (X), Lớp 2 Dẻo cứng (trung gian t), Lớp 3 Cứng B&lt;0 (T) → dạng X–t–T.</div>
+    </div>
+  </div>
+
+  <div class="step-blk">
+    <div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng (ghép bước)</span></div>
+    <div class="mw">
+      <div class="mq"><span class="mn">A2-3</span>Phương án móng và vị trí đặt móng phù hợp nhất với N<sub>tc</sub>=1200 kN, địa tầng X–t–T?</div>
+      <div class="mo-list">
+        <div class="mo" id="mo-qa23-0" onclick="pm('qa23',0,1)"><span class="mk">A</span><span>Móng nông h<sub>m</sub>=1.0m vào lớp 1 — rẻ, lớp 1 mỏng nên đỡ đào</span></div>
+        <div class="mo" id="mo-qa23-1" onclick="pm('qa23',1,1)"><span class="mk">B</span><span>Móng nông h<sub>m</sub>=2.5m vào lớp 2 (Cát pha dẻo cứng, R≈180 kPa) — bỏ qua lớp 1 xấu</span></div>
+        <div class="mo" id="mo-qa23-2" onclick="pm('qa23',2,1)"><span class="mk">C</span><span>Cọc ép L≈12m cắm vào lớp 3 (Sét cứng) — đảm bảo nhất nhưng tốn kém hơn</span></div>
+        <div class="mo" id="mo-qa23-3" onclick="pm('qa23',3,1)"><span class="mk">D</span><span>Móng bè toàn diện tích tại mặt đất</span></div>
+      </div>
+      <div class="me" id="me-qa23">✓ Lớp 2 dẻo cứng (R≈180 kPa) dày 7.5m bắt đầu từ −2m. Với N=1200 kN cần B²≈1200/150≈8m² → B≈2.8m. h<sub>m</sub>=2.5m là hợp lý. Phải bơm nước (MNN=−1.5m). Nếu lún kiểm tra không đạt mới dùng cọc vào lớp 3.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ═══ A3 ═══ -->
+<div class="ex"><div class="exhd" onclick="tog('a3')">
+  <span class="ebg ebA">A3</span><span class="ebg ebh">Khó</span>
+  <div><div class="etl">Chung cư 8 tầng · N<sub>tc</sub>=3500 kN (lớn) · Địa tầng T–X–T bẫy bùn 18m</div>
+  <div class="emt">Công thức có sẵn · Phân tích bẫy địa tầng · Ghép phương án cọc</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-a3"></i>
+</div>
+<div class="exbd" id="bd-a3">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét nâu đỏ</td><td>3.0</td><td>20</td><td>38</td><td>20</td><td>24</td><td>19.2</td><td>30</td><td>22</td><td>18</td></tr>
+    <tr><td>2</td><td class="ln">Bùn sét đen xám</td><td>18.0</td><td>65</td><td>58</td><td>32</td><td>1</td><td>15.2</td><td>6</td><td>4</td><td>2.5</td></tr>
+    <tr><td>3</td><td class="ln">Cát trung–thô vàng</td><td>∞</td><td>—</td><td>—</td><td>—</td><td>40</td><td>19.8</td><td>0</td><td>34</td><td>35</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=3500 kN, MNN=−2.5m. Lớp 3 cấp phối: d&gt;2mm: 8%, d&gt;0.5mm: 35%, d&gt;0.25mm: 72%, d&gt;0.1mm: 95%. Tính A, B từng lớp dính. Xác định tên lớp 3. Phân tích bẫy địa tầng.</div>
+  <div class="step-blk">
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Xác định tên đất và trạng thái</span></div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 32px">
+      <div class="fr"><span class="fl">A lớp 1 = 38 − 20 =</span><input class="fi" id="f-a3-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('a3-1',18,0)">✓</button><span class="ffb" id="fb-a3-1"></span></div>
+      <div class="fr"><span class="fl">B lớp 1 = (20 − 20) / 18 =</span><input class="fi" id="f-a3-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('a3-2',0,0.01)">✓</button><span class="ffb" id="fb-a3-2"></span></div>
+      <div class="fr"><span class="fl">A lớp 2 = 58 − 32 =</span><input class="fi" id="f-a3-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('a3-3',26,0)">✓</button><span class="ffb" id="fb-a3-3"></span></div>
+      <div class="fr"><span class="fl">B lớp 2 = (65 − 32) / A =</span><input class="fi" id="f-a3-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('a3-4',1.27,0.08)">✓</button><span class="ffb" id="fb-a3-4"></span></div>
+      <div class="fr" style="margin-top:6px"><span class="fl">Lớp 3: d&gt;0.25mm = 72% &gt; 50% → tên đất là:</span>
+        <select id="f-a3-5" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:13px"><option value="">-- chọn --</option><option value="cat_tho">Cát thô</option><option value="cat_trung">Cát trung</option><option value="cat_min">Cát mịn</option><option value="cat_soi">Cát sỏi</option></select>
+        <button class="fbt" onclick="cfs('a3-5','cat_trung')">✓</button><span class="ffb" id="fb-a3-5"></span>
+      </div>
+    </div>
+    <div class="mw">
+      <div class="mq"><span class="mn">A3-1</span>Lớp 1 (B=0, nửa cứng, dày 3m) nhìn có vẻ tốt — tại sao địa tầng này vẫn nguy hiểm?</div>
+      <div class="mo-list">
+        <div class="mo" id="mo-qa31-0" onclick="pm('qa31',0,2)"><span class="mk">A</span><span>Lớp 1 quá mỏng để đặt móng nông</span></div>
+        <div class="mo" id="mo-qa31-1" onclick="pm('qa31',1,2)"><span class="mk">B</span><span>MNN quá cao làm ngập hố móng</span></div>
+        <div class="mo" id="mo-qa31-2" onclick="pm('qa31',2,2)"><span class="mk">C</span><span>Tải lớn xuyên qua lớp 1 mỏng (3m) → nén bùn 18m (B=1.27, E₀=2.5 MPa) → lún hàng chục năm</span></div>
+        <div class="mo" id="mo-qa31-3" onclick="pm('qa31',3,2)"><span class="mk">D</span><span>Lớp 3 cát quá tốt gây phá hoại mặt trượt</span></div>
+      </div>
+      <div class="me" id="me-qa31">✓ Bẫy "T–X–T": lớp 1 nửa cứng nhưng chỉ 3m. N<sub>tc</sub>=3500 kN rất lớn → ứng suất truyền sâu → nén lớp bùn B=1.27 (Chảy, E₀=2.5 MPa) → lún có thể hàng chục cm, kéo dài hàng chục năm.</div>
+    </div>
+  </div>
+  <div class="step-blk">
+    <div class="step-hd"><span class="snum">3</span><span class="sname">Ghép phương án móng</span></div>
+    <div class="mw">
+      <div class="mq"><span class="mn">A3-2</span>Ghép đúng: Loại móng + Mũi cọc đặt vào lớp nào + Chiều dài cọc?</div>
+      <div class="mo-list">
+        <div class="mo" id="mo-qa32-0" onclick="pm('qa32',0,3)"><span class="mk">A</span><span>Móng nông h<sub>m</sub>=2m vào lớp 1 (nửa cứng)</span></div>
+        <div class="mo" id="mo-qa32-1" onclick="pm('qa32',1,3)"><span class="mk">B</span><span>Gia cố lớp 2 bùn bằng cọc cát rồi đặt móng nông</span></div>
+        <div class="mo" id="mo-qa32-2" onclick="pm('qa32',2,3)"><span class="mk">C</span><span>Móng bè + gia tải trước bùn</span></div>
+        <div class="mo" id="mo-qa32-3" onclick="pm('qa32',3,3)"><span class="mk">D</span><span>Móng cọc khoan nhồi D≥600mm · Mũi cọc vào lớp 3 (Cát trung chặt SPT=40) · L≥24m</span></div>
+      </div>
+      <div class="me" id="me-qa32">✓ Lớp tốt gần nhất bắt đầu từ 3+18=21m. Tải lớn 3500 kN → bắt buộc móng cọc khoan nhồi L≥24m, mũi cắm chắc vào lớp 3. Không có lựa chọn nào khác an toàn.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ═══════════ NHÓM B ═══════════ -->
+<div class="gs"><i class="ti ti-edit"></i>NHÓM B — Tự tìm thông số A, B (hoặc Dr/N<sub>SPT</sub>) · Tra bảng · Điền số · Chọn phương án</div>
+
+<!-- B1 -->
+<div class="ex"><div class="exhd" onclick="tog('b1')">
+  <span class="ebg ebB">B1</span><span class="ebg ebe">Dễ</span>
+  <div><div class="etl">Nhà dân 3 tầng · N<sub>tc</sub>=400 kN (nhỏ) · Địa tầng T–T–T</div>
+  <div class="emt">Tự tính A, B cả 3 lớp · Chọn phương án ghép bước</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-b1"></i>
+</div>
+<div class="exbd" id="bd-b1">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét pha nâu</td><td>5.0</td><td>30</td><td>42</td><td>20</td><td>10</td><td>18.2</td><td>18</td><td>18</td><td>12</td></tr>
+    <tr><td>2</td><td class="ln">Sét pha vàng</td><td>4.0</td><td>24</td><td>40</td><td>20</td><td>20</td><td>19.0</td><td>25</td><td>20</td><td>18</td></tr>
+    <tr><td>3</td><td class="ln">Sét cứng nâu đỏ</td><td>∞</td><td>18</td><td>38</td><td>20</td><td>35</td><td>19.5</td><td>32</td><td>22</td><td>22</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=400 kN, MNN=−5.0m. Tự tính A = w<sub>ch</sub> − w<sub>d</sub> và B = (w − w<sub>d</sub>)/A cho cả 3 lớp. Điền vào ô.</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 32px">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-b1-1" type="number" step="0.1" placeholder="tự tính"><span class="fu">%</span><button class="fbt" onclick="cf('b1-1',22,0)">✓</button><span class="ffb" id="fb-b1-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-b1-2" type="number" step="0.01" placeholder="tự tính"><button class="fbt" onclick="cf('b1-2',0.45,0.05)">✓</button><span class="ffb" id="fb-b1-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 =</span><input class="fi" id="f-b1-3" type="number" step="0.1" placeholder="tự tính"><span class="fu">%</span><button class="fbt" onclick="cf('b1-3',20,0)">✓</button><span class="ffb" id="fb-b1-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 =</span><input class="fi" id="f-b1-4" type="number" step="0.01" placeholder="tự tính"><button class="fbt" onclick="cf('b1-4',0.20,0.05)">✓</button><span class="ffb" id="fb-b1-4"></span></div>
+    <div class="fr"><span class="fl">A lớp 3 =</span><input class="fi" id="f-b1-5" type="number" step="0.1" placeholder="tự tính"><span class="fu">%</span><button class="fbt" onclick="cf('b1-5',18,0)">✓</button><span class="ffb" id="fb-b1-5"></span></div>
+    <div class="fr"><span class="fl">B lớp 3 =</span><input class="fi" id="f-b1-6" type="number" step="0.01" placeholder="tự tính"><button class="fbt" onclick="cf('b1-6',-0.11,0.05)">✓</button><span class="ffb" id="fb-b1-6"></span></div>
+  </div>
+  <div class="mw">
+    <div class="mq"><span class="mn">B1-1</span>Địa tầng thuộc dạng nào?</div>
+    <div class="mo-list g2">
+      <div class="mo" id="mo-qb11-0" onclick="pm('qb11',0,0)"><span class="mk">A</span><span>T–T–T (cả 3 lớp đều tốt hoặc khá tốt)</span></div>
+      <div class="mo" id="mo-qb11-1" onclick="pm('qb11',1,0)"><span class="mk">B</span><span>X–T–T (lớp 1 xấu)</span></div>
+      <div class="mo" id="mo-qb11-2" onclick="pm('qb11',2,0)"><span class="mk">C</span><span>T–X–T (lớp giữa xấu)</span></div>
+      <div class="mo" id="mo-qb11-3" onclick="pm('qb11',3,0)"><span class="mk">D</span><span>X–X–T (2 lớp trên xấu)</span></div>
+    </div>
+    <div class="me" id="me-qb11">✓ Lớp 1 B=0.45 Dẻo cứng (trung gian nhưng OK), Lớp 2 B=0.20 Nửa cứng (Tốt), Lớp 3 B&lt;0 Cứng (Tốt thực sự) → T–T–T.</div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["b1"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_tn"]},{id:"lop",label:"Chọn lớp đất đặt đáy móng",correct:["lop1"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["1_5m"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b1-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('b1','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="b1-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('b1','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="b1-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('b1','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chọn lớp đất đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b1-lop" data-val="lop1" data-label="Lớp 1 (Sét pha dẻo cứng)" onclick="pkPick('b1','lop','lop1')">Lớp 1 (Sét pha dẻo cứng)</button>
+<button class="pk-btn" data-pk="b1-lop" data-val="lop2" data-label="Lớp 2 (Sét pha nửa cứng)" onclick="pkPick('b1','lop','lop2')">Lớp 2 (Sét pha nửa cứng)</button>
+<button class="pk-btn" data-pk="b1-lop" data-val="lop3" data-label="Lớp 3 (Sét cứng)" onclick="pkPick('b1','lop','lop3')">Lớp 3 (Sét cứng)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều sâu đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b1-sau" data-val="1m" data-label="h<sub>m</sub> = 1.0m" onclick="pkPick('b1','sau','1m')">h<sub>m</sub> = 1.0m</button>
+<button class="pk-btn" data-pk="b1-sau" data-val="1_5m" data-label="h<sub>m</sub> = 1.5m" onclick="pkPick('b1','sau','1_5m')">h<sub>m</sub> = 1.5m</button>
+<button class="pk-btn" data-pk="b1-sau" data-val="2m" data-label="h<sub>m</sub> = 2.0m" onclick="pkPick('b1','sau','2m')">h<sub>m</sub> = 2.0m</button>
+<button class="pk-btn" data-pk="b1-sau" data-val="4m" data-label="h<sub>m</sub> = 4.0m (lớp 2)" onclick="pkPick('b1','sau','4m')">h<sub>m</sub> = 4.0m (lớp 2)</button>
+</div></div>
+<div class="pk-result" id="pkr-b1">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-b1"></div>
+<button class="pk-chk-btn" onclick="pkCheck('b1')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-b1"><b>✅ Đúng!</b> Lớp 1 dẻo cứng dày 5m, tải nhỏ 400 kN → Móng nông tự nhiên h<sub>m</sub>=1.5m vào lớp 1. B≈1.7m. Không cần gia cố.</div>
+<div class="pk-fb no-pk" id="pkfb-b1-no">❌ Xem lại: tải nhỏ + lớp 1 đủ tốt + MNN sâu → ưu tiên móng nông tự nhiên vào lớp 1 ở h<sub>m</sub>=1.5m.</div>
+</div>
+</div></div>
+
+<!-- B2 -->
+<div class="ex"><div class="exhd" onclick="tog('b2')">
+  <span class="ebg ebB">B2</span><span class="ebg ebm">Trung bình</span>
+  <div><div class="etl">Nhà xưởng · N<sub>tc</sub>=700 kN (TB) · Đất rời 3 lớp · Tra N<sub>SPT</sub> và cấp phối</div>
+  <div class="emt">Tự xác định tên đất rời theo cấp phối · Tra trạng thái · Chọn phương án</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-b2"></i>
+</div>
+<div class="exbd" id="bd-b2">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>d&gt;2mm (%)</th><th>d&gt;0.5mm (%)</th><th>d&gt;0.25mm (%)</th><th>d&gt;0.1mm (%)</th><th>d&gt;0.05mm (%)</th><th>N<sub>SPT</sub></th><th>γ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Cát (rời)</td><td>4.0</td><td>3</td><td>18</td><td>45</td><td>78</td><td>96</td><td>7</td><td>17.0</td><td>10</td></tr>
+    <tr><td>2</td><td class="ln">Cát (rời)</td><td>5.5</td><td>5</td><td>28</td><td>65</td><td>90</td><td>98</td><td>22</td><td>18.5</td><td>22</td></tr>
+    <tr><td>3</td><td class="ln">Cát (rời)</td><td>∞</td><td>12</td><td>58</td><td>84</td><td>97</td><td>99</td><td>42</td><td>19.5</td><td>38</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=700 kN, MNN=−2.0m. Tự xác định tên đất từng lớp theo cấp phối hạt. Tra trạng thái theo N<sub>SPT</sub>. Điền vào ô.</div>
+  <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:7px;padding:9px 12px;margin:8px 0 8px 0;font-size:12px">
+    📋 <b>Cách tra tên cát:</b> Dùng ngưỡng nhỏ nhất thỏa điều kiện. Ví dụ: nếu d&gt;0.25mm &gt;50% và d&gt;0.5mm &lt;50% → <b>Cát trung</b>. Nếu d&gt;0.1mm &gt;75% (nhưng d&gt;0.25mm &lt;50%) → <b>Cát mịn</b>.
+  </div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 0">
+    <div class="fr"><span class="fl">Lớp 1: d&gt;0.1mm=78%&gt;75%, d&gt;0.25mm=45%&lt;50% → tên đất:</span>
+      <select id="f-b2-1" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="cat_bui">Cát bụi</option><option value="cat_min">Cát mịn</option><option value="cat_trung">Cát trung</option><option value="cat_tho">Cát thô</option></select>
+      <button class="fbt" onclick="cfs('b2-1','cat_min')">✓</button><span class="ffb" id="fb-b2-1"></span>
+    </div>
+    <div class="fr"><span class="fl">Lớp 2: d&gt;0.25mm=65%&gt;50% → tên đất:</span>
+      <select id="f-b2-2" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="cat_bui">Cát bụi</option><option value="cat_min">Cát mịn</option><option value="cat_trung">Cát trung</option><option value="cat_tho">Cát thô</option></select>
+      <button class="fbt" onclick="cfs('b2-2','cat_trung')">✓</button><span class="ffb" id="fb-b2-2"></span>
+    </div>
+    <div class="fr"><span class="fl">Lớp 3: d&gt;0.5mm=58%&gt;50% → tên đất:</span>
+      <select id="f-b2-3" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="cat_bui">Cát bụi</option><option value="cat_min">Cát mịn</option><option value="cat_trung">Cát trung</option><option value="cat_tho">Cát thô</option></select>
+      <button class="fbt" onclick="cfs('b2-3','cat_tho')">✓</button><span class="ffb" id="fb-b2-3"></span>
+    </div>
+    <div class="fr"><span class="fl">Trạng thái lớp 1 (N=7):</span>
+      <select id="f-b2-4" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="roi">Rời</option><option value="chat_va">Chặt vừa</option><option value="chat">Chặt</option><option value="rat_roi">Rất rời</option></select>
+      <button class="fbt" onclick="cfs('b2-4','roi')">✓</button><span class="ffb" id="fb-b2-4"></span>
+    </div>
+    <div class="fr"><span class="fl">Trạng thái lớp 2 (N=22):</span>
+      <select id="f-b2-5" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="roi">Rời</option><option value="chat_va">Chặt vừa</option><option value="chat">Chặt</option><option value="rat_roi">Rất rời</option></select>
+      <button class="fbt" onclick="cfs('b2-5','chat_va')">✓</button><span class="ffb" id="fb-b2-5"></span>
+    </div>
+    <div class="fr"><span class="fl">Trạng thái lớp 3 (N=42):</span>
+      <select id="f-b2-6" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">-- chọn --</option><option value="roi">Rời</option><option value="chat_va">Chặt vừa</option><option value="chat">Chặt</option><option value="rat_roi">Rất rời</option></select>
+      <button class="fbt" onclick="cfs('b2-6','chat')">✓</button><span class="ffb" id="fb-b2-6"></span>
+    </div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["b2"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_tn"]},{id:"lop",label:"Chọn lớp đất đặt đáy móng",correct:["lop2"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["4_5m"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b2-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('b2','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="b2-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('b2','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="b2-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('b2','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chọn lớp đất đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b2-lop" data-val="lop1" data-label="Lớp 1 (Cát mịn rời N=7)" onclick="pkPick('b2','lop','lop1')">Lớp 1 (Cát mịn rời N=7)</button>
+<button class="pk-btn" data-pk="b2-lop" data-val="lop2" data-label="Lớp 2 (Cát trung chặt vừa N=22)" onclick="pkPick('b2','lop','lop2')">Lớp 2 (Cát trung chặt vừa N=22)</button>
+<button class="pk-btn" data-pk="b2-lop" data-val="lop3" data-label="Lớp 3 (Cát thô chặt N=42)" onclick="pkPick('b2','lop','lop3')">Lớp 3 (Cát thô chặt N=42)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều sâu đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b2-sau" data-val="1m" data-label="h<sub>m</sub> = 1.0m" onclick="pkPick('b2','sau','1m')">h<sub>m</sub> = 1.0m</button>
+<button class="pk-btn" data-pk="b2-sau" data-val="2_5m" data-label="h<sub>m</sub> = 2.5m" onclick="pkPick('b2','sau','2_5m')">h<sub>m</sub> = 2.5m</button>
+<button class="pk-btn" data-pk="b2-sau" data-val="4_5m" data-label="h<sub>m</sub> = 4.5m (vào lớp 2)" onclick="pkPick('b2','sau','4_5m')">h<sub>m</sub> = 4.5m (vào lớp 2)</button>
+<button class="pk-btn" data-pk="b2-sau" data-val="10m" data-label="h<sub>m</sub> = 10m (vào lớp 3)" onclick="pkPick('b2','sau','10m')">h<sub>m</sub> = 10m (vào lớp 3)</button>
+</div></div>
+<div class="pk-result" id="pkr-b2">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-b2"></div>
+<button class="pk-chk-btn" onclick="pkCheck('b2')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-b2">
+<b>✅ Đúng!</b> Đúng! Lớp 1 rời yếu → bỏ qua. Lớp 2 chặt vừa (R≈180 kPa) bắt đầu từ −4m → Móng nông h<sub>m</sub>=4.5m vào lớp 2. B≈2.2m.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-b2-no">❌ Chưa đúng. Xem lại: Lớp 1 rời yếu → không đặt móng. Cần vào lớp 2 chặt vừa ở h<sub>m</sub>=4.5m.</div>
+</div>
+</div></div>
+
+<!-- B3 -->
+<div class="ex"><div class="exhd" onclick="tog('b3')">
+  <span class="ebg ebB">B3</span><span class="ebg ebh">Khó</span>
+  <div><div class="etl">Chung cư 5 tầng · N<sub>tc</sub>=1800 kN (lớn) · Hỗn hợp dính + rời · X–X–T</div>
+  <div class="emt">Tự tính A,B lớp dính · Tra cấp phối lớp rời · Phân tích đầy đủ</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-b3"></i>
+</div>
+<div class="exbd" id="bd-b3">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>Thông số đất dính</th><th>Thông số đất rời</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét bùn xám</td><td>3.0</td><td>w=55%, w<sub>ch</sub>=48%, w<sub>d</sub>=26%</td><td>—</td><td>2</td><td>15.5</td><td>6</td><td>4</td><td>2.5</td></tr>
+    <tr><td>2</td><td class="ln">Cát (rời)</td><td>5.0</td><td>—</td><td>d&gt;2mm:4%, d&gt;0.5mm:20%, d&gt;0.25mm:42%, d&gt;0.1mm:80%, d&gt;0.05mm:97%</td><td>8</td><td>17.5</td><td>0</td><td>24</td><td>10</td></tr>
+    <tr><td>3</td><td class="ln">Cát thô sỏi</td><td>∞</td><td>—</td><td>d&gt;2mm:18%, d&gt;0.5mm:62%, d&gt;0.25mm:88%</td><td>45</td><td>19.8</td><td>0</td><td>35</td><td>40</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=1800 kN, MNN=−1.5m. Tự tính A,B lớp 1. Xác định tên đất rời lớp 2, lớp 3 theo cấp phối. Tra trạng thái lớp 2, lớp 3 theo N<sub>SPT</sub>.</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 0">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-b3-1" type="number" step="0.1" placeholder="tự tính"><span class="fu">%</span><button class="fbt" onclick="cf('b3-1',22,0)">✓</button><span class="ffb" id="fb-b3-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-b3-2" type="number" step="0.01" placeholder="tự tính"><button class="fbt" onclick="cf('b3-2',1.32,0.08)">✓</button><span class="ffb" id="fb-b3-2"></span></div>
+    <div class="fr"><span class="fl">Lớp 2: d&gt;0.1mm=80%&gt;75%, d&gt;0.25mm=42%&lt;50% → tên:</span>
+      <select id="f-b3-3" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">--</option><option value="cat_bui">Cát bụi</option><option value="cat_min">Cát mịn</option><option value="cat_trung">Cát trung</option><option value="cat_tho">Cát thô</option></select>
+      <button class="fbt" onclick="cfs('b3-3','cat_min')">✓</button><span class="ffb" id="fb-b3-3"></span>
+    </div>
+    <div class="fr"><span class="fl">Lớp 3: d&gt;0.5mm=62%&gt;50% → tên:</span>
+      <select id="f-b3-4" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">--</option><option value="cat_bui">Cát bụi</option><option value="cat_min">Cát mịn</option><option value="cat_trung">Cát trung</option><option value="cat_tho">Cát thô</option></select>
+      <button class="fbt" onclick="cfs('b3-4','cat_tho')">✓</button><span class="ffb" id="fb-b3-4"></span>
+    </div>
+    <div class="fr"><span class="fl">Trạng thái lớp 2 (N=8):</span>
+      <select id="f-b3-5" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">--</option><option value="rat_roi">Rất rời</option><option value="roi">Rời</option><option value="chat_va">Chặt vừa</option><option value="chat">Chặt</option></select>
+      <button class="fbt" onclick="cfs('b3-5','roi')">✓</button><span class="ffb" id="fb-b3-5"></span>
+    </div>
+    <div class="fr"><span class="fl">Trạng thái lớp 3 (N=45):</span>
+      <select id="f-b3-6" style="padding:5px 8px;border:1.5px solid var(--brd);border-radius:6px;font-size:12px"><option value="">--</option><option value="rat_roi">Rất rời</option><option value="roi">Rời</option><option value="chat_va">Chặt vừa</option><option value="chat">Chặt</option></select>
+      <button class="fbt" onclick="cfs('b3-6','chat')">✓</button><span class="ffb" id="fb-b3-6"></span>
+    </div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["b3"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_sau"]},{id:"lop_mui",label:"Mũi cọc đặt vào lớp",correct:["lop3"]},{id:"kc",label:"Loại cọc & kích thước",correct:["coc_ep_300","coc_ep_400"]},{id:"chieu_dai",label:"Chiều dài cọc sơ bộ",correct:["L10","L12"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b3-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('b3','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="b3-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('b3','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="b3-loai" data-val="mong_nong_coc_cat" data-label="Móng nông trên nền gia cố cọc cát" onclick="pkPick('b3','loai','mong_nong_coc_cat')">Móng nông trên nền gia cố cọc cát</button>
+<button class="pk-btn" data-pk="b3-loai" data-val="mong_nong_cxmd" data-label="Móng nông trên nền gia cố cọc XM đất" onclick="pkPick('b3','loai','mong_nong_cxmd')">Móng nông trên nền gia cố cọc XM đất</button>
+<button class="pk-btn" data-pk="b3-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('b3','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Mũi cọc đặt vào lớp</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b3-lop_mui" data-val="lop1" data-label="Lớp 1 (Sét bùn chảy)" onclick="pkPick('b3','lop_mui','lop1')">Lớp 1 (Sét bùn chảy)</button>
+<button class="pk-btn" data-pk="b3-lop_mui" data-val="lop2" data-label="Lớp 2 (Cát mịn rời)" onclick="pkPick('b3','lop_mui','lop2')">Lớp 2 (Cát mịn rời)</button>
+<button class="pk-btn" data-pk="b3-lop_mui" data-val="lop3" data-label="Lớp 3 (Cát thô chặt N=45)" onclick="pkPick('b3','lop_mui','lop3')">Lớp 3 (Cát thô chặt N=45)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Loại cọc & kích thước</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b3-kc" data-val="coc_ep_250" data-label="Cọc ép 250×250mm" onclick="pkPick('b3','kc','coc_ep_250')">Cọc ép 250×250mm</button>
+<button class="pk-btn" data-pk="b3-kc" data-val="coc_ep_300" data-label="Cọc ép 300×300mm" onclick="pkPick('b3','kc','coc_ep_300')">Cọc ép 300×300mm</button>
+<button class="pk-btn" data-pk="b3-kc" data-val="coc_ep_400" data-label="Cọc ép 400×400mm" onclick="pkPick('b3','kc','coc_ep_400')">Cọc ép 400×400mm</button>
+<button class="pk-btn" data-pk="b3-kc" data-val="coc_nhoi_600" data-label="Cọc khoan nhồi D600mm" onclick="pkPick('b3','kc','coc_nhoi_600')">Cọc khoan nhồi D600mm</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều dài cọc sơ bộ</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="b3-chieu_dai" data-val="L5" data-label="L ≈ 5m" onclick="pkPick('b3','chieu_dai','L5')">L ≈ 5m</button>
+<button class="pk-btn" data-pk="b3-chieu_dai" data-val="L10" data-label="L ≈ 10m" onclick="pkPick('b3','chieu_dai','L10')">L ≈ 10m</button>
+<button class="pk-btn" data-pk="b3-chieu_dai" data-val="L12" data-label="L ≈ 12m (đến lớp 3)" onclick="pkPick('b3','chieu_dai','L12')">L ≈ 12m (đến lớp 3)</button>
+<button class="pk-btn" data-pk="b3-chieu_dai" data-val="L20" data-label="L ≈ 20m" onclick="pkPick('b3','chieu_dai','L20')">L ≈ 20m</button>
+</div></div>
+<div class="pk-result" id="pkr-b3">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-b3"></div>
+<button class="pk-chk-btn" onclick="pkCheck('b3')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-b3">
+<b>✅ Đúng!</b> Đúng! Địa tầng X–X–T, tải lớn 1800 kN → Bắt buộc móng cọc ép 300–400mm, L≈10–12m, mũi cắm chắc vào lớp 3 chặt (N=45).
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-b3-no">❌ Chưa đúng. Xem lại: Cả 2 lớp trên đều xấu thực sự + tải lớn → không có gia cố nào đủ → bắt buộc móng cọc vào lớp 3.</div>
+</div>
+</div></div>
+
+<!-- ═══════════ NHÓM C ═══════════ -->
+<div class="gs"><i class="ti ti-pencil"></i>NHÓM C — Chỉ có đề bài · Tự làm đầy đủ 3 bước · Chọn phương án ghép</div>
+
+<!-- C1: T-T-T tải lớn -->
+<div class="ex"><div class="exhd" onclick="tog('c1')">
+  <span class="ebg ebC">C1</span><span class="ebg ebh">Khó</span>
+  <div><div class="etl">Chung cư 12 tầng · N<sub>tc</sub>=6000 kN (lớn) · Địa tầng T–T–T</div>
+  <div class="emt">Tự tính A, B · Vẽ trụ · Chọn phương án — tải lớn trên đất tốt</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c1"></i>
+</div>
+<div class="exbd" id="bd-c1">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét nửa cứng nâu</td><td>4.0</td><td>21</td><td>40</td><td>18</td><td>26</td><td>19.5</td><td>30</td><td>22</td><td>20</td></tr>
+    <tr><td>2</td><td class="ln">Cát pha cứng vàng</td><td>6.0</td><td>14</td><td>22</td><td>12</td><td>30</td><td>19.0</td><td>15</td><td>24</td><td>22</td></tr>
+    <tr><td>3</td><td class="ln">Cát trung chặt</td><td>∞</td><td>—</td><td>—</td><td>—</td><td>42</td><td>19.8</td><td>0</td><td>33</td><td>36</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=6000 kN, MNN=−3.5m. Lớp 3: d&gt;0.25mm=72%, N=42. Tự tính đầy đủ 3 bước. Tại sao tải lớn dù đất tốt vẫn cần cọc?</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 8px 0">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-c1-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c1-1',22,0)">✓</button><span class="ffb" id="fb-c1-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-c1-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c1-2',0.14,0.05)">✓</button><span class="ffb" id="fb-c1-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 =</span><input class="fi" id="f-c1-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c1-3',10,0)">✓</button><span class="ffb" id="fb-c1-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 =</span><input class="fi" id="f-c1-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c1-4',0.20,0.05)">✓</button><span class="ffb" id="fb-c1-4"></span></div>
+  </div>
+  <div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c1"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_sau"]},{id:"lop_mui",label:"Mũi cọc đặt vào lớp",correct:["lop3"]},{id:"kc",label:"Loại cọc & kích thước",correct:["coc_ep_300","coc_ep_400","coc_nhoi_600"]},{id:"chieu_dai",label:"Chiều dài cọc sơ bộ",correct:["L10","L12"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c1-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c1','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c1-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c1','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Mũi cọc đặt vào lớp</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c1-lop_mui" data-val="lop1" data-label="Lớp 1 (Sét nửa cứng)" onclick="pkPick('c1','lop_mui','lop1')">Lớp 1 (Sét nửa cứng)</button>
+<button class="pk-btn" data-pk="c1-lop_mui" data-val="lop2" data-label="Lớp 2 (Cát pha cứng)" onclick="pkPick('c1','lop_mui','lop2')">Lớp 2 (Cát pha cứng)</button>
+<button class="pk-btn" data-pk="c1-lop_mui" data-val="lop3" data-label="Lớp 3 (Cát trung chặt N=42)" onclick="pkPick('c1','lop_mui','lop3')">Lớp 3 (Cát trung chặt N=42)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Loại cọc & kích thước</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c1-kc" data-val="coc_ep_300" data-label="Cọc ép 300×300mm" onclick="pkPick('c1','kc','coc_ep_300')">Cọc ép 300×300mm</button>
+<button class="pk-btn" data-pk="c1-kc" data-val="coc_ep_400" data-label="Cọc ép 400×400mm" onclick="pkPick('c1','kc','coc_ep_400')">Cọc ép 400×400mm</button>
+<button class="pk-btn" data-pk="c1-kc" data-val="coc_nhoi_600" data-label="Cọc khoan nhồi D600mm" onclick="pkPick('c1','kc','coc_nhoi_600')">Cọc khoan nhồi D600mm</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều dài cọc sơ bộ</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c1-chieu_dai" data-val="L6" data-label="L ≈ 6m" onclick="pkPick('c1','chieu_dai','L6')">L ≈ 6m</button>
+<button class="pk-btn" data-pk="c1-chieu_dai" data-val="L10" data-label="L ≈ 10m" onclick="pkPick('c1','chieu_dai','L10')">L ≈ 10m</button>
+<button class="pk-btn" data-pk="c1-chieu_dai" data-val="L12" data-label="L ≈ 12m" onclick="pkPick('c1','chieu_dai','L12')">L ≈ 12m</button>
+<button class="pk-btn" data-pk="c1-chieu_dai" data-val="L20" data-label="L ≈ 20m" onclick="pkPick('c1','chieu_dai','L20')">L ≈ 20m</button>
+</div></div>
+<div class="pk-result" id="pkr-c1">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c1"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c1')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c1"><b>✅ Đúng!</b> Tải rất lớn 6000 kN → B cần ≈5.5m — không thực tế cho móng đơn → bắt buộc cọc. Mũi vào lớp 3 (Cát chặt N=42), L≈10–12m.</div>
+<div class="pk-fb no-pk" id="pkfb-c1-no">❌ Tải lớn → móng đơn B quá lớn → bắt buộc cọc vào lớp 3.</div>
+</div>
+</div></div>
+
+<!-- C2: T-X-T tải TB -->
+<div class="ex"><div class="exhd" onclick="tog('c2')">
+  <span class="ebg ebC">C2</span><span class="ebg ebm">Trung bình</span>
+  <div><div class="etl">Nhà VP 6 tầng · N<sub>tc</sub>=1500 kN (TB) · Địa tầng T–X–T</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c2"></i>
+</div>
+<div class="exbd" id="bd-c2">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét nâu đỏ</td><td>2.5</td><td>22</td><td>44</td><td>22</td><td>22</td><td>19.0</td><td>28</td><td>22</td><td>18</td></tr>
+    <tr><td>2</td><td class="ln">Bùn sét đen</td><td>14.0</td><td>68</td><td>62</td><td>34</td><td>1</td><td>15.0</td><td>5</td><td>3</td><td>2</td></tr>
+    <tr><td>3</td><td class="ln">Cát pha nâu vàng</td><td>∞</td><td>18</td><td>26</td><td>14</td><td>20</td><td>18.5</td><td>15</td><td>22</td><td>20</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=1500 kN, MNN=−2.0m. Tự tính A, B cả 3 lớp dính. Phân tích rủi ro lớp 1 nửa cứng mỏng che bùn 14m. Ghép phương án.</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-c2-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c2-1',22,0)">✓</button><span class="ffb" id="fb-c2-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-c2-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c2-2',0,0.01)">✓</button><span class="ffb" id="fb-c2-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 =</span><input class="fi" id="f-c2-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c2-3',28,0)">✓</button><span class="ffb" id="fb-c2-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 =</span><input class="fi" id="f-c2-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c2-4',1.21,0.08)">✓</button><span class="ffb" id="fb-c2-4"></span></div>
+    <div class="fr"><span class="fl">A lớp 3 =</span><input class="fi" id="f-c2-5" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c2-5',12,0)">✓</button><span class="ffb" id="fb-c2-5"></span></div>
+    <div class="fr"><span class="fl">B lớp 3 =</span><input class="fi" id="f-c2-6" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c2-6',0.33,0.05)">✓</button><span class="ffb" id="fb-c2-6"></span></div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c2"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_sau"]},{id:"lop_mui",label:"Mũi cọc đặt vào lớp",correct:["lop3"]},{id:"kc",label:"Loại cọc & kích thước",correct:["coc_ep_400","coc_nhoi_600"]},{id:"chieu_dai",label:"Chiều dài cọc sơ bộ",correct:["L18","L20"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c2-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c2','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c2-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('c2','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="c2-loai" data-val="mong_nong_bac_tham" data-label="Móng nông sau bấc thấm+gia tải" onclick="pkPick('c2','loai','mong_nong_bac_tham')">Móng nông sau bấc thấm+gia tải</button>
+<button class="pk-btn" data-pk="c2-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c2','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Mũi cọc đặt vào lớp</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c2-lop_mui" data-val="lop1" data-label="Lớp 1 (Sét nửa cứng, mỏng 2.5m)" onclick="pkPick('c2','lop_mui','lop1')">Lớp 1 (Sét nửa cứng, mỏng 2.5m)</button>
+<button class="pk-btn" data-pk="c2-lop_mui" data-val="lop2" data-label="Lớp 2 (Bùn chảy B=1.21)" onclick="pkPick('c2','lop_mui','lop2')">Lớp 2 (Bùn chảy B=1.21)</button>
+<button class="pk-btn" data-pk="c2-lop_mui" data-val="lop3" data-label="Lớp 3 (Cát pha dẻo cứng B=0.33)" onclick="pkPick('c2','lop_mui','lop3')">Lớp 3 (Cát pha dẻo cứng B=0.33)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Loại cọc & kích thước</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c2-kc" data-val="coc_ep_300" data-label="Cọc ép 300×300mm" onclick="pkPick('c2','kc','coc_ep_300')">Cọc ép 300×300mm</button>
+<button class="pk-btn" data-pk="c2-kc" data-val="coc_ep_400" data-label="Cọc ép 400×400mm" onclick="pkPick('c2','kc','coc_ep_400')">Cọc ép 400×400mm</button>
+<button class="pk-btn" data-pk="c2-kc" data-val="coc_nhoi_600" data-label="Cọc khoan nhồi D600mm" onclick="pkPick('c2','kc','coc_nhoi_600')">Cọc khoan nhồi D600mm</button>
+<button class="pk-btn" data-pk="c2-kc" data-val="coc_nhoi_800" data-label="Cọc khoan nhồi D800mm" onclick="pkPick('c2','kc','coc_nhoi_800')">Cọc khoan nhồi D800mm</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều dài cọc sơ bộ</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c2-chieu_dai" data-val="L10" data-label="L ≈ 10m" onclick="pkPick('c2','chieu_dai','L10')">L ≈ 10m</button>
+<button class="pk-btn" data-pk="c2-chieu_dai" data-val="L18" data-label="L ≈ 18m (xuyên bùn 14m+đầu vào lớp 3)" onclick="pkPick('c2','chieu_dai','L18')">L ≈ 18m (xuyên bùn 14m+đầu vào lớp 3)</button>
+<button class="pk-btn" data-pk="c2-chieu_dai" data-val="L20" data-label="L ≈ 20m" onclick="pkPick('c2','chieu_dai','L20')">L ≈ 20m</button>
+<button class="pk-btn" data-pk="c2-chieu_dai" data-val="L30" data-label="L ≈ 30m" onclick="pkPick('c2','chieu_dai','L30')">L ≈ 30m</button>
+</div></div>
+<div class="pk-result" id="pkr-c2">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c2"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c2')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c2">
+<b>✅ Đúng!</b> Đúng! Bùn 14m quá dày, tải 1500 kN → bắt buộc cọc L≈18–20m xuyên qua bùn, mũi cắm vào lớp 3 dẻo cứng.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c2-no">❌ Chưa đúng. Xem lại: Bùn 14m (B=1.21) ngay dưới lớp 1 mỏng 2.5m → mọi phương án nông đều gây lún lớn. Phải dùng cọc sâu.</div>
+</div>
+</div></div>
+
+<!-- C3: X-X-T tải bé -->
+<div class="ex"><div class="exhd" onclick="tog('c3')">
+  <span class="ebg ebC">C3</span><span class="ebg ebe">Dễ</span>
+  <div><div class="etl">Nhà 2 tầng · N<sub>tc</sub>=250 kN (nhỏ) · Địa tầng X–X–T</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c3"></i>
+</div>
+<div class="exbd" id="bd-c3">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Đất lấp / hữu cơ</td><td>1.5</td><td>55</td><td>42</td><td>22</td><td>1</td><td>14.0</td><td>3</td><td>3</td><td>1.5</td></tr>
+    <tr><td>2</td><td class="ln">Sét pha dẻo chảy</td><td>4.5</td><td>40</td><td>38</td><td>18</td><td>5</td><td>17.0</td><td>8</td><td>8</td><td>5</td></tr>
+    <tr><td>3</td><td class="ln">Sét nửa cứng vàng</td><td>∞</td><td>20</td><td>40</td><td>18</td><td>25</td><td>19.0</td><td>28</td><td>20</td><td>18</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=250 kN, MNN=−1.0m. Tự tính A, B cả 3 lớp. Nhận xét: dù tải rất nhỏ, tại sao lại không dùng được móng nông thông thường?</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-c3-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c3-1',20,0)">✓</button><span class="ffb" id="fb-c3-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-c3-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c3-2',1.65,0.1)">✓</button><span class="ffb" id="fb-c3-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 =</span><input class="fi" id="f-c3-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c3-3',20,0)">✓</button><span class="ffb" id="fb-c3-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 =</span><input class="fi" id="f-c3-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c3-4',1.1,0.08)">✓</button><span class="ffb" id="fb-c3-4"></span></div>
+    <div class="fr"><span class="fl">A lớp 3 =</span><input class="fi" id="f-c3-5" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c3-5',22,0)">✓</button><span class="ffb" id="fb-c3-5"></span></div>
+    <div class="fr"><span class="fl">B lớp 3 =</span><input class="fi" id="f-c3-6" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c3-6',0.09,0.05)">✓</button><span class="ffb" id="fb-c3-6"></span></div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c3"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_dem_cat","mong_sau"]},{id:"lop",label:"Lớp đặt móng / mũi cọc",correct:["lop1_2","lop3"]},{id:"chieu_sau_xu_ly",label:"Chiều sâu/dày xử lý",correct:["dem_6m","coc_7m"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c3-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" data-multi="1" onclick="pkPick('c3','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c3-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" data-multi="1" onclick="pkPick('c3','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="c3-loai" data-val="mong_nong_coc_cat" data-label="Móng nông trên nền gia cố cọc cát" data-multi="1" onclick="pkPick('c3','loai','mong_nong_coc_cat')">Móng nông trên nền gia cố cọc cát</button>
+<button class="pk-btn" data-pk="c3-loai" data-val="mong_sau" data-label="Móng sâu — cọc ngắn" data-multi="1" onclick="pkPick('c3','loai','mong_sau')">Móng sâu — cọc ngắn</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Lớp đặt móng / mũi cọc</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c3-lop" data-val="lop1_2" data-label="Lớp 1+2 thay bằng đệm cát (nếu gia cố)" onclick="pkPick('c3','lop','lop1_2')">Lớp 1+2 thay bằng đệm cát (nếu gia cố)</button>
+<button class="pk-btn" data-pk="c3-lop" data-val="lop3" data-label="Lớp 3 (Sét nửa cứng B=0.09)" onclick="pkPick('c3','lop','lop3')">Lớp 3 (Sét nửa cứng B=0.09)</button>
+<button class="pk-btn" data-pk="c3-lop" data-val="lop2" data-label="Lớp 2 (Sét pha chảy)" onclick="pkPick('c3','lop','lop2')">Lớp 2 (Sét pha chảy)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều sâu/dày xử lý</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c3-chieu_sau_xu_ly" data-val="dem_6m" data-label="Đệm cát dày ≈ 6m thay lớp 1+2" onclick="pkPick('c3','chieu_sau_xu_ly','dem_6m')">Đệm cát dày ≈ 6m thay lớp 1+2</button>
+<button class="pk-btn" data-pk="c3-chieu_sau_xu_ly" data-val="coc_7m" data-label="Cọc ngắn L ≈ 7m mũi vào lớp 3" onclick="pkPick('c3','chieu_sau_xu_ly','coc_7m')">Cọc ngắn L ≈ 7m mũi vào lớp 3</button>
+<button class="pk-btn" data-pk="c3-chieu_sau_xu_ly" data-val="1_5m" data-label="h<sub>m</sub>=1.5m móng nông thông thường" onclick="pkPick('c3','chieu_sau_xu_ly','1_5m')">h<sub>m</sub>=1.5m móng nông thông thường</button>
+</div></div>
+<div class="pk-result" id="pkr-c3">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c3"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c3')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c3">
+<b>✅ Đúng!</b> Đúng! Tải nhỏ 250 kN nhưng 2 lớp trên đều chảy → hai giải pháp: (1) Đệm cát dày 6m thay lớp 1+2 rồi đặt móng nông, hoặc (2) Cọc ngắn L≈7m mũi vào lớp 3 nửa cứng.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c3-no">❌ Chưa đúng. Xem lại: Không thể dùng móng nông thông thường vì lớp 1+2 đều chảy dù tải nhỏ.</div>
+</div>
+</div></div>
+
+<!-- C4: T-t-T tải bé -->
+<div class="ex"><div class="exhd" onclick="tog('c4')">
+  <span class="ebg ebC">C4</span><span class="ebg ebe">Dễ</span>
+  <div><div class="etl">Nhà phố 2 tầng · N<sub>tc</sub>=350 kN (nhỏ) · Địa tầng T–t–T lớp 1 mỏng</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c4"></i>
+</div>
+<div class="exbd" id="bd-c4">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét cứng nâu đỏ</td><td>1.8</td><td>19</td><td>40</td><td>19</td><td>28</td><td>19.5</td><td>32</td><td>22</td><td>20</td></tr>
+    <tr><td>2</td><td class="ln">Sét pha dẻo mềm</td><td>5.0</td><td>30</td><td>38</td><td>18</td><td>10</td><td>18.0</td><td>14</td><td>16</td><td>10</td></tr>
+    <tr><td>3</td><td class="ln">Cát thô chặt vàng</td><td>∞</td><td>—</td><td>—</td><td>—</td><td>35</td><td>19.8</td><td>0</td><td>33</td><td>32</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=350 kN, MNN=−4.0m. Lớp 1 tốt nhưng chỉ dày 1.8m. Lớp 2 trung gian. Tính A, B lớp 1 và lớp 2. Có dùng móng nông vào lớp 1 được không?</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0">
+    <div class="fr"><span class="fl">B lớp 1 = (19−19)/(40−19) =</span><input class="fi" id="f-c4-1" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c4-1',0,0.01)">✓</button><span class="ffb" id="fb-c4-1"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 = 38−18 =</span><input class="fi" id="f-c4-2" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c4-2',20,0)">✓</button><span class="ffb" id="fb-c4-2"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 = (30−18)/20 =</span><input class="fi" id="f-c4-3" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c4-3',0.60,0.05)">✓</button><span class="ffb" id="fb-c4-3"></span></div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c4"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_tn"]},{id:"lop",label:"Lớp đặt đáy móng",correct:["lop1"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["1_2m"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c4-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c4','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c4-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('c4','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="c4-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c4','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Lớp đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c4-lop" data-val="lop1" data-label="Lớp 1 (Sét cứng B=0, dày 1.8m)" onclick="pkPick('c4','lop','lop1')">Lớp 1 (Sét cứng B=0, dày 1.8m)</button>
+<button class="pk-btn" data-pk="c4-lop" data-val="lop2" data-label="Lớp 2 (Sét pha dẻo mềm B=0.60)" onclick="pkPick('c4','lop','lop2')">Lớp 2 (Sét pha dẻo mềm B=0.60)</button>
+<button class="pk-btn" data-pk="c4-lop" data-val="lop3" data-label="Lớp 3 (Cát thô chặt N=35)" onclick="pkPick('c4','lop','lop3')">Lớp 3 (Cát thô chặt N=35)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều sâu đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c4-sau" data-val="0_8m" data-label="h<sub>m</sub> = 0.8m" onclick="pkPick('c4','sau','0_8m')">h<sub>m</sub> = 0.8m</button>
+<button class="pk-btn" data-pk="c4-sau" data-val="1_2m" data-label="h<sub>m</sub> = 1.2m (vào lớp 1 cứng)" onclick="pkPick('c4','sau','1_2m')">h<sub>m</sub> = 1.2m (vào lớp 1 cứng)</button>
+<button class="pk-btn" data-pk="c4-sau" data-val="2_5m" data-label="h<sub>m</sub> = 2.5m (vào lớp 2)" onclick="pkPick('c4','sau','2_5m')">h<sub>m</sub> = 2.5m (vào lớp 2)</button>
+<button class="pk-btn" data-pk="c4-sau" data-val="9m" data-label="h<sub>m</sub> = 9.0m (vào lớp 3)" onclick="pkPick('c4','sau','9m')">h<sub>m</sub> = 9.0m (vào lớp 3)</button>
+</div></div>
+<div class="pk-result" id="pkr-c4">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c4"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c4')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c4">
+<b>✅ Đúng!</b> Đúng! Lớp 1 cứng B=0, tải nhỏ 350 kN → B≈1.3m. h<sub>m</sub>=1.2m vào lớp 1 là đủ và kinh tế nhất. Kiểm tra lún vì lớp 2 dẻo mềm bên dưới.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c4-no">❌ Chưa đúng. Xem lại: Tải nhỏ + lớp 1 cứng (dù mỏng 1.8m) → ưu tiên móng nông h<sub>m</sub>=1.2m vào lớp 1.</div>
+</div>
+</div></div>
+
+<!-- C5: T-X-T tải lớn -->
+<div class="ex"><div class="exhd" onclick="tog('c5')">
+  <span class="ebg ebC">C5</span><span class="ebg ebh">Khó</span>
+  <div><div class="etl">Nhà máy công nghiệp · N<sub>tc</sub>=2500 kN (lớn) · Địa tầng T–X–T</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c5"></i>
+</div>
+<div class="exbd" id="bd-c5">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Sét nâu đỏ cứng</td><td>3.5</td><td>20</td><td>42</td><td>20</td><td>26</td><td>19.5</td><td>32</td><td>22</td><td>20</td></tr>
+    <tr><td>2</td><td class="ln">Bùn cát xám xanh</td><td>10.0</td><td>—</td><td>—</td><td>—</td><td>3</td><td>16.0</td><td>2</td><td>10</td><td>4</td></tr>
+    <tr><td>3</td><td class="ln">Cát pha nửa cứng</td><td>∞</td><td>18</td><td>28</td><td>14</td><td>22</td><td>18.5</td><td>15</td><td>22</td><td>20</td></tr>
+  </table>
+  <div class="rqb">N<sub>tc</sub>=2500 kN, MNN=−2.0m. Lớp 2 là bùn cát (đất rời yếu). Tính B lớp 1, B lớp 3. Tra trạng thái lớp 2 theo N<sub>SPT</sub>=3. Ghép phương án.</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0">
+    <div class="fr"><span class="fl">A lớp 1 = 42−20 =</span><input class="fi" id="f-c5-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c5-1',22,0)">✓</button><span class="ffb" id="fb-c5-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 = (20−20)/22 =</span><input class="fi" id="f-c5-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c5-2',0,0.01)">✓</button><span class="ffb" id="fb-c5-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 3 = 28−14 =</span><input class="fi" id="f-c5-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c5-3',14,0)">✓</button><span class="ffb" id="fb-c5-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 3 = (18−14)/14 =</span><input class="fi" id="f-c5-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c5-4',0.29,0.05)">✓</button><span class="ffb" id="fb-c5-4"></span></div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c5"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_sau"]},{id:"lop_mui",label:"Mũi cọc đặt vào lớp",correct:["lop3"]},{id:"kc",label:"Loại cọc & kích thước",correct:["coc_ep_300","coc_ep_400"]},{id:"chieu_dai",label:"Chiều dài cọc sơ bộ",correct:["L15","L18"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c5-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c5','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c5-loai" data-val="mong_nong_cxmd" data-label="Móng nông sau gia cố cọc XM đất" onclick="pkPick('c5','loai','mong_nong_cxmd')">Móng nông sau gia cố cọc XM đất</button>
+<button class="pk-btn" data-pk="c5-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c5','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Mũi cọc đặt vào lớp</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c5-lop_mui" data-val="lop1" data-label="Lớp 1 (Sét cứng)" onclick="pkPick('c5','lop_mui','lop1')">Lớp 1 (Sét cứng)</button>
+<button class="pk-btn" data-pk="c5-lop_mui" data-val="lop2" data-label="Lớp 2 (Bùn cát N=3)" onclick="pkPick('c5','lop_mui','lop2')">Lớp 2 (Bùn cát N=3)</button>
+<button class="pk-btn" data-pk="c5-lop_mui" data-val="lop3" data-label="Lớp 3 (Cát pha nửa cứng B=0.29)" onclick="pkPick('c5','lop_mui','lop3')">Lớp 3 (Cát pha nửa cứng B=0.29)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Loại cọc & kích thước</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c5-kc" data-val="coc_ep_250" data-label="Cọc ép 250×250mm" onclick="pkPick('c5','kc','coc_ep_250')">Cọc ép 250×250mm</button>
+<button class="pk-btn" data-pk="c5-kc" data-val="coc_ep_300" data-label="Cọc ép 300×300mm" onclick="pkPick('c5','kc','coc_ep_300')">Cọc ép 300×300mm</button>
+<button class="pk-btn" data-pk="c5-kc" data-val="coc_ep_400" data-label="Cọc ép 400×400mm" onclick="pkPick('c5','kc','coc_ep_400')">Cọc ép 400×400mm</button>
+<button class="pk-btn" data-pk="c5-kc" data-val="coc_nhoi_600" data-label="Cọc khoan nhồi D600mm" onclick="pkPick('c5','kc','coc_nhoi_600')">Cọc khoan nhồi D600mm</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều dài cọc sơ bộ</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c5-chieu_dai" data-val="L8" data-label="L ≈ 8m" onclick="pkPick('c5','chieu_dai','L8')">L ≈ 8m</button>
+<button class="pk-btn" data-pk="c5-chieu_dai" data-val="L15" data-label="L ≈ 15m (xuyên bùn cát 10m+vào lớp 3)" onclick="pkPick('c5','chieu_dai','L15')">L ≈ 15m (xuyên bùn cát 10m+vào lớp 3)</button>
+<button class="pk-btn" data-pk="c5-chieu_dai" data-val="L18" data-label="L ≈ 18m" onclick="pkPick('c5','chieu_dai','L18')">L ≈ 18m</button>
+<button class="pk-btn" data-pk="c5-chieu_dai" data-val="L25" data-label="L ≈ 25m" onclick="pkPick('c5','chieu_dai','L25')">L ≈ 25m</button>
+</div></div>
+<div class="pk-result" id="pkr-c5">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c5"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c5')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c5">
+<b>✅ Đúng!</b> Đúng! Tải lớn 2500 kN + bùn cát 10m yếu (N=3) → bắt buộc cọc ép 300–400mm, L≈15–18m, mũi vào lớp 3 nửa cứng.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c5-no">❌ Chưa đúng. Xem lại: Bùn cát 10m rất rời (N=3) + tải lớn → tải xuyên sâu vào bùn → lún lớn → bắt buộc cọc.</div>
+</div>
+</div></div>
+
+<!-- C6: X-T-T tải bé/lớn -->
+<div class="ex"><div class="exhd" onclick="tog('c6')">
+  <span class="ebg ebC">C6</span><span class="ebg ebm">Trung bình</span>
+  <div><div class="etl">Hai phương án tải · N<sub>tc</sub>=300 kN và 2000 kN · Địa tầng X–T–T</div>
+  <div class="emt">So sánh phương án tải nhỏ vs tải lớn trên cùng địa tầng</div></div>
+  <i class="ti ti-chevron-right echv" id="cv-c6"></i>
+</div>
+<div class="exbd" id="bd-c6">
+  <table class="dt">
+    <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>w%</th><th>w<sub>ch</sub>%</th><th>w<sub>d</sub>%</th><th>N<sub>SPT</sub></th><th>γ</th><th>c</th><th>φ</th><th>E₀</th></tr>
+    <tr><td>1</td><td class="ln">Đất lấp / yếu</td><td>2.0</td><td>48</td><td>40</td><td>22</td><td>2</td><td>14.5</td><td>4</td><td>4</td><td>2</td></tr>
+    <tr><td>2</td><td class="ln">Sét pha dẻo cứng</td><td>6.0</td><td>26</td><td>40</td><td>20</td><td>18</td><td>18.5</td><td>20</td><td>20</td><td>16</td></tr>
+    <tr><td>3</td><td class="ln">Cát pha cứng</td><td>∞</td><td>16</td><td>28</td><td>14</td><td>30</td><td>19.0</td><td>18</td><td>22</td><td>22</td></tr>
+  </table>
+  <div class="rqb">MNN=−1.5m. Tính A, B lớp 1, 2, 3. Đề xuất phương án cho <b>(a)</b> N<sub>tc</sub>=300 kN (nhỏ) và <b>(b)</b> N<sub>tc</sub>=2000 kN (lớn). Giải thích tại sao cùng địa tầng nhưng hai phương án khác nhau.</div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin:8px 0">
+    <div class="fr"><span class="fl">A lớp 1 =</span><input class="fi" id="f-c6-1" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c6-1',18,0)">✓</button><span class="ffb" id="fb-c6-1"></span></div>
+    <div class="fr"><span class="fl">B lớp 1 =</span><input class="fi" id="f-c6-2" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c6-2',1.44,0.1)">✓</button><span class="ffb" id="fb-c6-2"></span></div>
+    <div class="fr"><span class="fl">A lớp 2 =</span><input class="fi" id="f-c6-3" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c6-3',20,0)">✓</button><span class="ffb" id="fb-c6-3"></span></div>
+    <div class="fr"><span class="fl">B lớp 2 =</span><input class="fi" id="f-c6-4" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c6-4',0.30,0.05)">✓</button><span class="ffb" id="fb-c6-4"></span></div>
+    <div class="fr"><span class="fl">A lớp 3 =</span><input class="fi" id="f-c6-5" type="number" step="0.1" placeholder="?"><span class="fu">%</span><button class="fbt" onclick="cf('c6-5',14,0)">✓</button><span class="ffb" id="fb-c6-5"></span></div>
+    <div class="fr"><span class="fl">B lớp 3 =</span><input class="fi" id="f-c6-6" type="number" step="0.01" placeholder="?"><button class="fbt" onclick="cf('c6-6',0.14,0.05)">✓</button><span class="ffb" id="fb-c6-6"></span></div>
+  </div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c6a"]={groups:[{id:"loai",label:"Phương án móng — N=300 kN (nhỏ)",correct:["mong_nong_tn"]},{id:"lop",label:"Lớp đặt đáy móng",correct:["lop2"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["2_5m"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng — N=300 kN (nhỏ)</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6a-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c6a','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c6a-loai" data-val="mong_nong_dem_cat" data-label="Móng nông trên nền gia cố đệm cát" onclick="pkPick('c6a','loai','mong_nong_dem_cat')">Móng nông trên nền gia cố đệm cát</button>
+<button class="pk-btn" data-pk="c6a-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c6a','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Lớp đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6a-lop" data-val="lop1" data-label="Lớp 1 (Đất lấp chảy)" onclick="pkPick('c6a','lop','lop1')">Lớp 1 (Đất lấp chảy)</button>
+<button class="pk-btn" data-pk="c6a-lop" data-val="lop2" data-label="Lớp 2 (Sét pha dẻo cứng B=0.30)" onclick="pkPick('c6a','lop','lop2')">Lớp 2 (Sét pha dẻo cứng B=0.30)</button>
+<button class="pk-btn" data-pk="c6a-lop" data-val="lop3" data-label="Lớp 3 (Cát pha cứng B=0.14)" onclick="pkPick('c6a','lop','lop3')">Lớp 3 (Cát pha cứng B=0.14)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều sâu đặt đáy móng</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6a-sau" data-val="1m" data-label="h<sub>m</sub> = 1.0m" onclick="pkPick('c6a','sau','1m')">h<sub>m</sub> = 1.0m</button>
+<button class="pk-btn" data-pk="c6a-sau" data-val="2_5m" data-label="h<sub>m</sub> = 2.5m (vào lớp 2)" onclick="pkPick('c6a','sau','2_5m')">h<sub>m</sub> = 2.5m (vào lớp 2)</button>
+<button class="pk-btn" data-pk="c6a-sau" data-val="3m" data-label="h<sub>m</sub> = 3.0m" onclick="pkPick('c6a','sau','3m')">h<sub>m</sub> = 3.0m</button>
+<button class="pk-btn" data-pk="c6a-sau" data-val="9m" data-label="h<sub>m</sub> = 9.0m (vào lớp 3)" onclick="pkPick('c6a','sau','9m')">h<sub>m</sub> = 9.0m (vào lớp 3)</button>
+</div></div>
+<div class="pk-result" id="pkr-c6a">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c6a"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c6a')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c6a">
+<b>✅ Đúng!</b> Đúng! Tải nhỏ 300 kN → B≈1.5m. Lớp 2 dẻo cứng dày 6m từ −2m → Móng nông h<sub>m</sub>=2.5m vào lớp 2. Kinh tế, không cần cọc.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c6a-no">❌ Chưa đúng. Xem lại: Bỏ qua lớp 1 xấu → đặt móng vào lớp 2 dẻo cứng ở h<sub>m</sub>=2.5m.</div>
+</div>
+<div class="step-blk" style="margin-top:10px">
+<div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
+<script>window.PKC["c6b"]={groups:[{id:"loai",label:"Phương án móng — N=2000 kN (lớn)",correct:["mong_sau"]},{id:"lop_mui",label:"Mũi cọc đặt vào lớp",correct:["lop3"]},{id:"kc",label:"Loại cọc & kích thước",correct:["coc_ep_300","coc_ep_400"]},{id:"chieu_dai",label:"Chiều dài cọc sơ bộ",correct:["L10"]}]};</script>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng — N=2000 kN (lớn)</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6b-loai" data-val="mong_nong_tn" data-label="Móng nông trên nền tự nhiên" onclick="pkPick('c6b','loai','mong_nong_tn')">Móng nông trên nền tự nhiên</button>
+<button class="pk-btn" data-pk="c6b-loai" data-val="mong_sau" data-label="Móng sâu (móng cọc)" onclick="pkPick('c6b','loai','mong_sau')">Móng sâu (móng cọc)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Mũi cọc đặt vào lớp</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6b-lop_mui" data-val="lop2" data-label="Lớp 2 (Sét pha dẻo cứng)" onclick="pkPick('c6b','lop_mui','lop2')">Lớp 2 (Sét pha dẻo cứng)</button>
+<button class="pk-btn" data-pk="c6b-lop_mui" data-val="lop3" data-label="Lớp 3 (Cát pha cứng B=0.14)" onclick="pkPick('c6b','lop_mui','lop3')">Lớp 3 (Cát pha cứng B=0.14)</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Loại cọc & kích thước</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6b-kc" data-val="coc_ep_300" data-label="Cọc ép 300×300mm" onclick="pkPick('c6b','kc','coc_ep_300')">Cọc ép 300×300mm</button>
+<button class="pk-btn" data-pk="c6b-kc" data-val="coc_ep_400" data-label="Cọc ép 400×400mm" onclick="pkPick('c6b','kc','coc_ep_400')">Cọc ép 400×400mm</button>
+<button class="pk-btn" data-pk="c6b-kc" data-val="coc_nhoi_600" data-label="Cọc khoan nhồi D600mm" onclick="pkPick('c6b','kc','coc_nhoi_600')">Cọc khoan nhồi D600mm</button>
+</div></div>
+<div class="pk-sec">
+<div class="pk-lbl"><i class="ti ti-point-filled"></i>Chiều dài cọc sơ bộ</div>
+<div class="pk-opts">
+<button class="pk-btn" data-pk="c6b-chieu_dai" data-val="L5" data-label="L ≈ 5m" onclick="pkPick('c6b','chieu_dai','L5')">L ≈ 5m</button>
+<button class="pk-btn" data-pk="c6b-chieu_dai" data-val="L10" data-label="L ≈ 10m (xuyên lớp 1+2 vào lớp 3)" onclick="pkPick('c6b','chieu_dai','L10')">L ≈ 10m (xuyên lớp 1+2 vào lớp 3)</button>
+<button class="pk-btn" data-pk="c6b-chieu_dai" data-val="L20" data-label="L ≈ 20m" onclick="pkPick('c6b','chieu_dai','L20')">L ≈ 20m</button>
+</div></div>
+<div class="pk-result" id="pkr-c6b">
+<div class="pk-result-lbl"><i class="ti ti-check-circle"></i>Phương án bạn đã chọn</div>
+<div class="pk-result-txt" id="pkrt-c6b"></div>
+<button class="pk-chk-btn" onclick="pkCheck('c6b')"><i class="ti ti-send"></i>Xác nhận &amp; Chấm điểm</button>
+</div>
+<div class="pk-fb" id="pkfb-c6b">
+<b>✅ Đúng!</b> Đúng! Tải lớn 2000 kN → cần B²≈14m² → B≈3.7m cho móng nông, không thực tế + lún khó kiểm soát → cọc ép 300–400mm L≈10m mũi vào lớp 3 cứng.
+</div>
+<div class="pk-fb no-pk" style="display:none" id="pkfb-c6b-no">❌ Chưa đúng. Xem lại: Tải lớn → móng nông B quá lớn → xu hướng cọc. Mũi vào lớp 3 cứng thực sự.</div>
+</div>
+</div></div>
+
+</main>
+<div style="height:64px"></div>
+<div class="snav">
+  <span>8.3 · Phương án móng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="np">0/0</span>
+    <button class="btn bg" id="btn-nop" onclick="sub()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài</button>
+    <a href="8.4_DANG_2.html" class="btn bg">Bài 8.4 ›</a>
+  </div>
+</div>
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC & ĐĂNG KÝ CÂU HỎI
+   ANS  : dict kết quả; null=chưa làm, true=đúng, false=sai
+   _sub : cờ đã nộp bài (ngăn nộp lần 2)
+   TQ   : tổng số câu = Object.keys(ANS).length sau khi đăng ký xong
+
+   Đăng ký 3 nhóm câu hỏi (key → null):
+   • MCQ lý thuyết: 6 câu (qa21..qb11) → key 'mcq-qa21'...
+   • Ghép phương án (Picker): 10 bài (b1..c6b) → key 'pk-b1'...
+   • Ô điền số: ~58 ô (nhóm a2..c6, mỗi ô 1 bước tính) → key 'f-a2-1'...
+================================================================ */
+var ANS={},_sub=false,TQ=0;
+// Đăng ký 6 câu MCQ lý thuyết (qa21..qb11) → key dạng 'mcq-qa21'
+['qa21','qa22','qa23','qa31','qa32','qb11'].forEach(function(k){ANS['mcq-'+k]=null;});
+// Đăng ký 10 bài ghép phương án móng (b1,b2,b3,c1..c6b) → key dạng 'pk-b1'
+['pk-b1','pk-b2','pk-b3','pk-c1','pk-c2','pk-c3','pk-c4','pk-c5','pk-c6a','pk-c6b'].forEach(function(k){ANS[k]=null;});
+// Đăng ký ~58 ô điền số (các nhóm a2..c6, mỗi ô là 1 bước tính) → key dạng 'f-a2-1'
+['a2-1','a2-2','a2-3','a2-4','a2-5','a2-6','a3-1','a3-2','a3-3','a3-4','a3-5','b1-1','b1-2','b1-3','b1-4','b1-5','b1-6','b3-1','b3-2','b3-3','b3-4','b3-5','b3-6','b2-1','b2-2','b2-3','b2-4','b2-5','b2-6','c1-1','c1-2','c1-3','c1-4','c2-1','c2-2','c2-3','c2-4','c2-5','c2-6','c3-1','c3-2','c3-3','c3-4','c3-5','c3-6','c4-1','c4-2','c4-3','c5-1','c5-2','c5-3','c5-4','c6-1','c6-2','c6-3','c6-4','c6-5','c6-6'].forEach(function(k){ANS['f-'+k]=null;});
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH CHẤM BÀI
+   gSV()       : đọc thông tin SV từ sessionStorage 'ncm_sv'
+   tog(id)     : mở/đóng accordion bài tập (body + header + chevron)
+   cf(key, correct, tol) : kiểm tra ô điền số; dung sai tol
+                 → đánh dấu ok/no, ghi ANS['f-key'], gọi up()
+   cfs(key, correct)     : kiểm tra ô select/dropdown; so sánh
+                 giá trị chọn với đáp án đúng → ANS['f-key']
+   pm(id, picked, correct): chấm câu MCQ lý thuyết; tô màu
+                 ok (xanh)/no (đỏ)/rok (reveal đáp án đúng)
+                 → lưu ANS['mcq-id'], gọi up()
+================================================================ */
+function gSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function tog(id){var b=document.getElementById('bd-'+id),h=b.previousElementSibling,c=document.getElementById('cv-'+id);var op=b.classList.contains('open');b.classList.toggle('open',!op);h.classList.toggle('open',!op);c.classList.toggle('open',!op);}
+function cf(key,correct,tol){if(_sub)return;var inp=document.getElementById('f-'+key),fb=document.getElementById('fb-'+key);if(!inp)return;var v=parseFloat(inp.value);if(isNaN(v)){fb.textContent='Nhập số!';fb.style.color='var(--R)';return;}var ok=Math.abs(v-correct)<=tol;inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);fb.textContent=ok?'✓ Đúng!':'✗ Sai (≈'+correct+')';fb.style.color=ok?'var(--G)':'var(--R)';ANS['f-'+key]=ok;up();}
+function cfs(key,correct){if(_sub)return;var sel=document.getElementById('f-'+key),fb=document.getElementById('fb-'+key);if(!sel)return;var ok=(sel.value===correct);fb.textContent=ok?'✓ Đúng!':'✗ Sai';fb.style.color=ok?'var(--G)':'var(--R)';ANS['f-'+key]=ok;up();}
+function pm(id,picked,correct){if(ANS['mcq-'+id]!==null&&ANS['mcq-'+id]!==undefined)return;document.querySelectorAll('[id^="mo-'+id+'-"]').forEach(function(el,i){el.onclick=null;if(i===picked&&picked===correct)el.classList.add('ok');else if(i===picked)el.classList.add('no');else if(i===correct)el.classList.add('rok');});var e=document.getElementById('me-'+id);if(e){e.classList.add('show');e.classList.add(picked===correct?'ok-e':'no-e');}ANS['mcq-'+id]=(picked===correct);up();}
+/* ================================================================
+   KHỐI 3 — CẬP NHẬT TIẾN ĐỘ
+   up(): đếm attempted/done từ ANS, cập nhật thanh #pfill/#ptxt,
+         lưu localStorage 'prog_c8_83' = {done, total, attempted},
+         cập nhật nút Nộp bài (xanh nếu ≥ MIN_ATTEMPT_PCT %)
+================================================================ */
+function up(){var at=0,dn=0,tot=TQ||Object.keys(ANS).length;Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){at++;if(ANS[k]===true)dn++;}});var ap=tot?Math.round(at/tot*100):0,dp=tot?Math.round(dn/tot*100):0;document.getElementById('pfill').style.width=ap+'%';document.getElementById('ptxt').textContent='Đã làm: '+at+'/'+tot+' ('+ap+'%) · Đúng: '+dn+' ('+dp+'%)';document.getElementById('np').textContent=at+'/'+tot;document.getElementById('hprog').textContent=at+' / '+tot;try{localStorage.setItem('prog_c8_83',JSON.stringify({done:dn,total:tot,attempted:at}));}catch(e){}if(!_sub){var mp=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;var btn=document.getElementById('btn-nop');if(btn){var rdy=(ap>=mp&&at>0);btn.style.background=rdy?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';btn.style.borderColor=rdy?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';btn.innerHTML=(rdy?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+ap+'%/'+mp+'%)</span>';}}}
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI LÊN SERVER
+   sub(): POST kết quả lên Cloudflare Worker
+   chapterId : 'C8-83-PhuongAnMong'
+   Kiểm tra: đã đăng nhập, chưa nộp, đã làm tối thiểu MIN_ATTEMPT_PCT%
+================================================================ */
+// sub (submitResult): gửi điểm lên Worker; chapterId='C8-83-PhuongAnMong'
+function sub(){var sv=gSV();if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập!');return;}if(_sub)return;var tot=TQ||Object.keys(ANS).length,at=0,dn=0;Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){at++;if(ANS[k]===true)dn++;}});var ap=tot?Math.round(at/tot*100):0,sc=tot?Math.round(dn/tot*100):0;if(at===0){alert('⚠️ Chưa làm câu nào!');return;}var mp=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;if(ap<mp){alert('⚠️ Cần làm tối thiểu '+mp+'%!');return;}var wu=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';fetch(wu,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,chapterId:'C8-83-PhuongAnMong',score:sc,correct:dn,total:tot,duration:0})}).then(function(r){return r.json();}).then(function(d){if(d.ok){_sub=true;var btn=document.getElementById('btn-nop');if(btn){btn.innerHTML='✓ Đã nộp ('+sc+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}alert('✅ Nộp thành công! '+dn+'/'+tot);}else alert('❌ '+(d.error||'Lỗi'));}).catch(function(err){alert('❌ '+err.message);});}
+
+/* ================================================================
+   KHỐI 5 — PICKER GHÉP PHƯƠNG ÁN MÓNG
+   window.PKC : dict định nghĩa đáp án cho từng bài ghép phương án
+                Key = bid (b1, b2...); Value = {groups:[{id, label, correct[]}]}
+   pkPick(bid, grp, val) : toggle chọn option val trong nhóm grp của bài bid
+                data-multi='0' → single-select (bỏ chọn option cũ)
+                data-multi='1' → multi-select (chọn nhiều)
+                Sau khi chọn → gọi pkBuild để hiển thị tóm tắt
+   pkBuild(bid)  : tổng hợp lựa chọn đang có (class .sel); hiện #pkr-bid
+                   khi tất cả nhóm đã có ít nhất 1 lựa chọn
+   pkCheck(bid)  : so sánh lựa chọn với đáp án trong PKC[bid];
+                   tô ok/no, lưu ANS['pk-bid'], gọi up()
+================================================================ */
+window.PKC = {};
+function pkPick(bid, grp, val) {
+  if (_sub) return;
+  var btn = document.querySelector('[data-pk="' + bid + '-' + grp + '"][data-val="' + val + '"]');
+  if (!btn) return;
+  var isMulti = btn.getAttribute('data-multi') === '1';
+  if (!isMulti) {
+    document.querySelectorAll('[data-pk="' + bid + '-' + grp + '"]').forEach(function(b) { b.classList.remove('sel'); });
+  }
+  btn.classList.toggle('sel');
+  pkBuild(bid);
+}
+function pkBuild(bid) {
+  var cfg = window.PKC[bid]; if (!cfg) return;
+  var res = {};
+  cfg.groups.forEach(function(g) {
+    var sels = [];
+    document.querySelectorAll('[data-pk="' + bid + '-' + g.id + '"].sel').forEach(function(b) { sels.push(b.getAttribute('data-label')); });
+    res[g.id] = sels;
+  });
+  var allFilled = cfg.groups.every(function(g) { return res[g.id] && res[g.id].length > 0; });
+  var rd = document.getElementById('pkr-' + bid);
+  var rt = document.getElementById('pkrt-' + bid);
+  if (!rd || !rt) return;
+  if (allFilled) {
+    var lines = [];
+    cfg.groups.forEach(function(g) { lines.push('<b>' + g.label + ':</b> ' + res[g.id].join(' + ')); });
+    rt.innerHTML = lines.join('<br>');
+    rd.classList.add('show');
+  } else {
+    rd.classList.remove('show');
+  }
+}
+function pkCheck(bid) {
+  if (_sub) return;
+  var cfg = window.PKC[bid]; if (!cfg) return;
+  var allOk = true;
+  cfg.groups.forEach(function(g) {
+    var sels = [];
+    document.querySelectorAll('[data-pk="' + bid + '-' + g.id + '"].sel').forEach(function(b) { sels.push(b.getAttribute('data-val')); });
+    var correct = g.correct;
+    var hit = correct.every(function(c) { return sels.indexOf(c) >= 0; }) && sels.every(function(s) { return correct.indexOf(s) >= 0; });
+    if (!hit) allOk = false;
+    document.querySelectorAll('[data-pk="' + bid + '-' + g.id + '"]').forEach(function(b) {
+      b.classList.remove('ok', 'no');
+      var v = b.getAttribute('data-val');
+      var isCorrect = correct.indexOf(v) >= 0;
+      var isSel = sels.indexOf(v) >= 0;
+      if (isCorrect) b.classList.add('ok');
+      else if (isSel) b.classList.add('no');
+    });
+  });
+  var fb = document.getElementById('pkfb-' + bid);
+  if (fb) { fb.classList.add('show'); fb.classList.toggle('ok-pk', allOk); fb.classList.toggle('no-pk', !allOk); }
+  ANS['pk-' + bid] = allOk;
+  up();
+}
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+   1. Hiển thị tên SV/STT từ sessionStorage lên header/badge
+   2. TQ = Object.keys(ANS).length (số câu đã đăng ký ở KHỐI 1)
+   3. Gọi up() lần đầu để khởi tạo thanh tiến độ
+================================================================ */
+window.onload=function(){var sv=gSV();if(sv&&sv.name){document.getElementById('svd').textContent=sv.name+' — STT: '+sv.stt;document.getElementById('svch').textContent='#'+sv.stt;document.getElementById('svbh').textContent='SV #'+sv.stt;}else{document.getElementById('svd').textContent='Chưa đăng nhập';}TQ=Object.keys(ANS).length;up();};
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8.2 — Lý Thuyết Tính Toán Móng Nông</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge-hdr{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.cbadge-r{background:var(--R)}
+.cbadge-g{background:var(--G)}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7}
+.theory-lbl{font-weight:700;color:var(--P);font-size:11px;margin-bottom:5px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.5px}
+.earth-box{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:500}
+.info-box{background:#F3E5F5;border-left:4px solid #6A1B9A;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4A148C}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:2.0}
+.fml-lbl{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fml-var{color:var(--Pdk)}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.diag-box{background:#F8FBFF;border:1px solid var(--brd);border-radius:var(--r);padding:14px;overflow:hidden}
+.diag-title{font-size:11px;font-weight:700;color:var(--P);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+svg text{font-family:'Plus Jakarta Sans',sans-serif}
+/* Terzaghi table */
+.tz-table{width:100%;border-collapse:collapse;font-size:12px}
+.tz-table th{background:var(--Plt);color:var(--Pdk);font-weight:700;padding:6px 10px;text-align:center;border-bottom:1.5px solid var(--brd);border-right:1px solid var(--brd)}
+.tz-table td{padding:6px 10px;text-align:center;border-bottom:1px solid #EBF5FB;border-right:1px solid #EBF5FB;font-family:var(--mono);font-size:12px}
+.tz-table tr:last-child td{border-bottom:none}
+.tz-table td:first-child{font-weight:700;color:var(--P);background:var(--Plt)}
+/* omega table */
+.omega-table{width:100%;border-collapse:collapse;font-size:12px}
+.omega-table th{background:#E8F5E9;color:var(--Gdk);font-weight:700;padding:6px 10px;text-align:center;border-bottom:1.5px solid #A5D6A7}
+.omega-table td{padding:6px 10px;text-align:center;border-bottom:1px solid #F1F8E9;font-family:var(--mono)}
+.omega-table td:first-child{font-weight:700;color:var(--Gdk)}
+/* alpha table */
+.alpha-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:0}
+.alpha-table th{background:#FFF3E0;color:#E65100;font-weight:700;padding:6px 10px;border-bottom:1.5px solid #FFE082;border-right:1px solid #FFE082}
+.alpha-table td{padding:6px 10px;border-bottom:1px solid #FFF8E1;border-right:1px solid #FFF8E1;font-family:var(--mono);font-size:12px;text-align:center}
+.alpha-table td:first-child{font-weight:700;color:#E65100;font-family:var(--sans);text-align:left}
+/* cond box */
+.cond-box{border:2px solid var(--P);border-radius:10px;padding:12px 16px;background:#F8FBFF}
+.cond-title{font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cond-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--Plt);font-size:13px}
+.cond-row:last-child{border-bottom:none}
+.cond-check{width:22px;height:22px;border-radius:50%;background:var(--G);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+@media(max-width:620px){.two-col,.three-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C8.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 8</a>
+    <div class="hdr-title">
+      <h1>8.2 — Lý Thuyết Tính Toán Móng Nông</h1>
+      <p>Áp lực đáy móng · Kiểm tra SCT · Kiểm tra lún · Terzaghi</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">Lý thuyết</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Tính toán thiết kế móng nông — <span id="sv-display">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Trang tổng hợp lý thuyết và bảng tra — không thi MCQ, dùng cho bài tập 8.3, 8.4, 8.5</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══════ 1. VAI TRÒ B×L ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrows-maximize"></i>
+    <div><h2>1. Vai trò kích thước đáy móng B × L</h2></div>
+    <span class="cbadge">NGUYÊN LÝ</span>
+  </div>
+  <div class="card-body">
+
+    <div class="two-col">
+      <!-- SVG: áp lực đáy móng phân bố -->
+      <div class="diag-box">
+        <div class="diag-title"><i class="ti ti-layout-bottombar"></i> Hình 1 — Phân bố áp lực đáy móng</div>
+        <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <rect x="0" y="0" width="300" height="220" fill="#F8FBFF"/>
+          <!-- Ground -->
+          <line x1="0" y1="50" x2="300" y2="50" stroke="#90CAF9" stroke-width="1" stroke-dasharray="5,3"/>
+          <text x="4" y="44" fill="#1565C0" font-size="8" font-weight="700">Mặt đất</text>
+          <!-- Soil left right -->
+          <rect x="0" y="50" width="65" height="130" fill="#E8F5E9" opacity="0.6"/>
+          <rect x="235" y="50" width="65" height="130" fill="#E8F5E9" opacity="0.6"/>
+          <!-- Column -->
+          <rect x="125" y="14" width="50" height="40" fill="#1565C0" rx="2"/>
+          <text x="150" y="38" fill="#fff" font-size="9" text-anchor="middle" font-weight="700">N_tc</text>
+          <!-- arrow down from col -->
+          <line x1="150" y1="54" x2="150" y2="74" stroke="#1565C0" stroke-width="2" marker-end="url(#aN)"/>
+          <!-- Footing -->
+          <polygon points="65,125 235,125 220,80 80,80" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+          <rect x="65" y="125" width="170" height="20" fill="#1565C0" opacity="0.8" rx="1"/>
+          <!-- BT lot -->
+          <rect x="65" y="145" width="170" height="8" fill="#FFF8E1" stroke="#FF8F00" stroke-width="0.8"/>
+
+          <!-- Pressure distribution (trapezoidal uniform for centric) -->
+          <rect x="65" y="158" width="170" height="35" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1"/>
+          <!-- pressure arrows -->
+          <line x1="80" y1="193" x2="80" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <line x1="110" y1="193" x2="110" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <line x1="140" y1="193" x2="140" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <line x1="170" y1="193" x2="170" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <line x1="200" y1="193" x2="200" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <line x1="220" y1="193" x2="220" y2="158" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN)"/>
+          <text x="150" y="213" fill="#1565C0" font-size="8.5" text-anchor="middle" font-weight="700">p_tc = N_tc/(B·L) + γ_tb·hm</text>
+          <!-- B dim -->
+          <line x1="65" y1="202" x2="235" y2="202" stroke="#E65100" stroke-width="1" marker-end="url(#aA)" marker-start="url(#aAr)"/>
+          <!-- hm -->
+          <line x1="30" y1="50" x2="30" y2="135" stroke="#2E7D32" stroke-width="1" marker-end="url(#aG)" marker-start="url(#aGr)"/>
+          <text x="18" y="96" fill="#2E7D32" font-size="8.5" text-anchor="middle" font-weight="700">hm</text>
+          <defs>
+            <marker id="aN" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1565C0"/></marker>
+            <marker id="aA" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E65100"/></marker>
+            <marker id="aAr" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#E65100"/></marker>
+            <marker id="aG" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2E7D32"/></marker>
+            <marker id="aGr" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#2E7D32"/></marker>
+          </defs>
+        </svg>
+      </div>
+      <!-- SVG: lệch tâm áp lực hình thang -->
+      <div class="diag-box">
+        <div class="diag-title"><i class="ti ti-arrows-transfer-down"></i> Hình 2 — Móng lệch tâm (có mô men M)</div>
+        <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <rect x="0" y="0" width="300" height="220" fill="#F8FBFF"/>
+          <line x1="0" y1="50" x2="300" y2="50" stroke="#90CAF9" stroke-width="1" stroke-dasharray="5,3"/>
+          <rect x="0" y="50" width="65" height="130" fill="#E8F5E9" opacity="0.6"/>
+          <rect x="235" y="50" width="65" height="130" fill="#E8F5E9" opacity="0.6"/>
+          <!-- Column with N and M -->
+          <rect x="125" y="14" width="50" height="40" fill="#1565C0" rx="2"/>
+          <text x="140" y="32" fill="#fff" font-size="8.5" text-anchor="middle" font-weight="700">N_tc</text>
+          <text x="165" y="32" fill="#FF8F00" font-size="8.5" text-anchor="middle" font-weight="700">M</text>
+          <line x1="150" y1="54" x2="150" y2="74" stroke="#1565C0" stroke-width="2" marker-end="url(#aN2)"/>
+          <!-- curved M arrow -->
+          <path d="M170,40 Q195,35 190,55" stroke="#FF8F00" stroke-width="1.8" fill="none" marker-end="url(#aM)"/>
+          <!-- Footing -->
+          <polygon points="65,125 235,125 220,80 80,80" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+          <rect x="65" y="125" width="170" height="20" fill="#1565C0" opacity="0.8" rx="1"/>
+          <rect x="65" y="145" width="170" height="8" fill="#FFF8E1" stroke="#FF8F00" stroke-width="0.8"/>
+          <!-- Trapezoidal pressure (eccentric) -->
+          <polygon points="65,193 235,158 235,193" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1"/>
+          <!-- pressure arrows varying -->
+          <line x1="80" y1="193" x2="80" y2="190" stroke="#1565C0" stroke-width="1" marker-end="url(#aN2)"/>
+          <line x1="110" y1="193" x2="110" y2="183" stroke="#1565C0" stroke-width="1.2" marker-end="url(#aN2)"/>
+          <line x1="140" y1="193" x2="140" y2="177" stroke="#1565C0" stroke-width="1.4" marker-end="url(#aN2)"/>
+          <line x1="170" y1="193" x2="170" y2="170" stroke="#1565C0" stroke-width="1.5" marker-end="url(#aN2)"/>
+          <line x1="200" y1="193" x2="200" y2="163" stroke="#1565C0" stroke-width="1.8" marker-end="url(#aN2)"/>
+          <line x1="225" y1="193" x2="225" y2="158" stroke="#1565C0" stroke-width="2" marker-end="url(#aN2)"/>
+          <!-- Labels -->
+          <text x="72" y="210" fill="#2E7D32" font-size="8.5" text-anchor="middle" font-weight="700">p_min≥0</text>
+          <text x="228" y="154" fill="#C62828" font-size="8.5" text-anchor="middle" font-weight="700">p_max</text>
+          <text x="228" y="145" fill="#C62828" font-size="8" text-anchor="middle">≤1.2R</text>
+          <defs>
+            <marker id="aN2" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1565C0"/></marker>
+            <marker id="aM" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF8F00"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="theory">
+      <div class="theory-lbl"><i class="ti ti-bulb"></i> Tại sao B×L quyết định tất cả?</div>
+      Áp lực đáy móng p = N/(B·L). Khi B·L tăng → p giảm → dễ thỏa SCT và lún. <b>Bài toán thiết kế móng chính là tìm B·L tối thiểu</b> thỏa cả hai điều kiện: SCT (p ≤ R_n) và biến dạng (S ≤ [S]).
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 2. TẢI TRỌNG ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-weight"></i>
+    <div><h2>2. Tải trọng tính toán và áp lực đáy móng</h2></div>
+    <span class="cbadge">TẢI TRỌNG</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div>
+        <div class="fml-box">
+          <div class="fml-lbl"><i class="ti ti-math-function"></i> Tải trọng tính toán (dùng kiểm tra SCT)</div>
+          <div class="fml-var">N_tt = n · N_tc</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">n = 1.15 (tĩnh tải) đến 1.2 (hoạt tải)</div>
+        </div>
+        <div class="fml-box" style="margin-top:10px">
+          <div class="fml-lbl"><i class="ti ti-math-function"></i> Áp lực tiêu chuẩn đáy móng</div>
+          <div class="fml-var">p_tc = N_tc / (B·L) + γ_tb · h<sub>m</sub></div>
+          <div class="fml-var" style="margin-top:4px">p_max = p_tc + 6·M_tc / (B·L²)</div>
+          <div class="fml-var">p_min = p_tc − 6·M_tc / (B·L²)</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">γ_tb ≈ 20 kN/m³ (trọng lượng riêng trung bình của móng + đất)</div>
+        </div>
+      </div>
+      <div>
+        <div class="earth-box">
+          <b>Phân biệt hai loại tải trọng:</b><br>
+          <b>N_tt</b> (tính toán, có n): dùng để kiểm tra cường độ kết cấu BTCT (chọc thủng, uốn).<br><br>
+          <b>N_tc</b> (tiêu chuẩn, n=1): dùng để kiểm tra SCT nền và tính lún. Đất không có hệ số vật liệu vượt tải như bê tông.
+        </div>
+        <div class="warn-box" style="margin-top:10px">
+          <i class="ti ti-alert-triangle"></i> <b>Lỗi hay gặp:</b> Dùng N_tt thay cho N_tc khi tính áp lực đáy móng → áp lực cao hơn thực tế → kết quả sai. Kiểm tra nền luôn dùng N_tc.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 3. KIỂM TRA SCT ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-shield-check"></i>
+    <div><h2>3. Kiểm tra Sức Chịu Tải (SCT) nền đất</h2></div>
+    <span class="cbadge">ĐIỀU KIỆN SCT</span>
+  </div>
+  <div class="card-body">
+
+    <div class="sec-lbl"><i class="ti ti-check-circle"></i> Điều kiện kiểm tra</div>
+    <div class="two-col">
+      <div class="cond-box">
+        <div class="cond-title"><i class="ti ti-circle-dot"></i> Móng đúng tâm (M = 0)</div>
+        <div class="cond-row"><span class="cond-check">✓</span><span><b>p_tc ≤ R_n</b> — áp lực trung bình nhỏ hơn SCT tính toán</span></div>
+      </div>
+      <div class="cond-box">
+        <div class="cond-title"><i class="ti ti-arrows-left-right"></i> Móng lệch tâm (M ≠ 0)</div>
+        <div class="cond-row"><span class="cond-check">1</span><span><b>p_tc ≤ R_n</b> (áp lực trung bình)</span></div>
+        <div class="cond-row"><span class="cond-check">2</span><span><b>p_max ≤ 1.2·R_n</b> (áp lực lớn nhất)</span></div>
+        <div class="cond-row"><span class="cond-check">3</span><span><b>p_min ≥ 0</b> (không nhấc móng)</span></div>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-table"></i> Công thức Terzaghi và bảng tra hệ số</div>
+    <div class="fml-box">
+      <div class="fml-lbl"><i class="ti ti-sigma"></i> SCT tính toán theo Terzaghi</div>
+      <div class="fml-var">R_n = (1/Fs) · [ α₁·Nγ·B·γ + α₂·Nq·q + α₃·Nc·c ]</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">q = γ · h<sub>m</sub> (tải đất tự nhiên tại đáy móng) · Fs = 2.5 đến 3.0</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="sec-lbl" style="margin-bottom:8px"><i class="ti ti-table"></i> Hệ số hình dạng α</div>
+        <table class="alpha-table">
+          <tr><th>Loại móng</th><th>α₁</th><th>α₂</th><th>α₃</th></tr>
+          <tr><td>Băng (L/B > 10)</td><td>0.5</td><td>1.0</td><td>1.0</td></tr>
+          <tr><td>Vuông (L = B)</td><td>0.4</td><td>1.0</td><td>1.3</td></tr>
+          <tr><td>Tròn (D)</td><td>0.3</td><td>1.0</td><td>1.3</td></tr>
+          <tr><td>Chữ nhật</td><td>1−0.2b/l</td><td>1.0</td><td>1+0.2b/l</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="sec-lbl" style="margin-bottom:8px"><i class="ti ti-table"></i> Hệ số Nc, Nq, Nγ theo φ (Terzaghi)</div>
+        <table class="tz-table">
+          <tr><th>φ (°)</th><th>Nc</th><th>Nq</th><th>Nγ</th></tr>
+          <tr><td>0</td><td>5.7</td><td>1.0</td><td>0.0</td></tr>
+          <tr><td>5</td><td>7.3</td><td>1.6</td><td>0.5</td></tr>
+          <tr><td>10</td><td>9.6</td><td>2.7</td><td>1.2</td></tr>
+          <tr><td>15</td><td>12.9</td><td>4.4</td><td>2.5</td></tr>
+          <tr><td>18</td><td>15.5</td><td>6.0</td><td>4.0</td></tr>
+          <tr><td>20</td><td>17.7</td><td>7.4</td><td>5.0</td></tr>
+          <tr><td>22</td><td>20.3</td><td>9.2</td><td>6.8</td></tr>
+          <tr><td>24</td><td>23.4</td><td>11.4</td><td>9.2</td></tr>
+          <tr><td>25</td><td>25.1</td><td>12.7</td><td>10.9</td></tr>
+          <tr><td>28</td><td>31.6</td><td>17.8</td><td>17.0</td></tr>
+          <tr><td>30</td><td>37.2</td><td>22.5</td><td>19.7</td></tr>
+          <tr><td>35</td><td>57.8</td><td>41.4</td><td>42.9</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="earth-box">
+      <b>Ví dụ tra bảng:</b> φ = 20°, móng đơn vuông → Nc=17.7, Nq=7.4, Nγ=5.0; α₁=0.4, α₂=1.0, α₃=1.3. Nếu c=20kPa, B=1.5m, γ=18kN/m³, hm=1.5m, Fs=2.5 → R_n = (1/2.5)·[0.4×5.0×1.5×18 + 1.0×7.4×(18×1.5) + 1.3×17.7×20] = <b>282 kPa</b>.
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 4. KIỂM TRA LÚN ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-trending-down"></i>
+    <div><h2>4. Kiểm tra Biến Dạng (Lún) nền đất</h2></div>
+    <span class="cbadge cbadge-g">ĐIỀU KIỆN LÚN</span>
+  </div>
+  <div class="card-body">
+
+    <div class="sec-lbl"><i class="ti ti-check-circle"></i> Điều kiện kiểm tra</div>
+    <div class="two-col">
+      <div class="cond-box">
+        <div class="cond-title"><i class="ti ti-arrow-down"></i> Độ lún tuyệt đối</div>
+        <div class="cond-row"><span class="cond-check">✓</span><span><b>S_tính toán ≤ [S]</b></span></div>
+      </div>
+      <div class="cond-box">
+        <div class="cond-title"><i class="ti ti-arrows-diff"></i> Lún lệch giữa 2 cột</div>
+        <div class="cond-row"><span class="cond-check">✓</span><span><b>ΔS/L ≤ [ΔS/L]_cp</b> ≈ 0.002</span></div>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-math-function"></i> Công thức tính lún đàn hồi</div>
+    <div class="fml-box">
+      <div class="fml-lbl"><i class="ti ti-sigma"></i> Phương pháp mô đun biến dạng E₀</div>
+      <div class="fml-var">S = β · (p_gl / E₀) · B · ω</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+        p_gl = p_tc − γ · h<sub>m</sub> &nbsp;·&nbsp; β = 0.8 (khi ν = 0.3) &nbsp;·&nbsp; ω: hệ số hình dạng móng
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="sec-lbl" style="margin-bottom:8px"><i class="ti ti-table"></i> Bảng tra ω theo tỷ lệ L/B</div>
+        <table class="omega-table">
+          <tr><th>L/B</th><th>ω (tại tâm)</th><th>ω (trung bình)</th></tr>
+          <tr><td>Tròn</td><td>0.79</td><td>0.64</td></tr>
+          <tr><td>1.0 (vuông)</td><td>0.88</td><td>0.82</td></tr>
+          <tr><td>1.5</td><td>1.06</td><td>0.96</td></tr>
+          <tr><td>2.0</td><td>1.20</td><td>1.12</td></tr>
+          <tr><td>3.0</td><td>1.42</td><td>1.32</td></tr>
+          <tr><td>5.0</td><td>1.70</td><td>1.60</td></tr>
+          <tr><td>10</td><td>2.10</td><td>1.83</td></tr>
+          <tr><td>∞ (băng)</td><td>2.25</td><td>—</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="sec-lbl" style="margin-bottom:8px"><i class="ti ti-table"></i> Độ lún cho phép [S] theo TCVN</div>
+        <table class="tz-table">
+          <tr><th>Loại công trình</th><th>[S] (cm)</th></tr>
+          <tr><td>Nhà dân dụng khung BTCT</td><td>8</td></tr>
+          <tr><td>Nhà công nghiệp khung thép</td><td>12</td></tr>
+          <tr><td>Nhà gạch chịu lực</td><td>10</td></tr>
+          <tr><td>Công trình đặc biệt</td><td>2–5</td></tr>
+          <tr><td>Lún lệch tương đối Δs/L</td><td>≤ 0.002</td></tr>
+        </table>
+        <div class="earth-box" style="margin-top:10px;font-size:12px">
+          <b>E₀:</b> Mô đun biến dạng xác định từ TN hiện trường (bàn nén, SPT) hoặc phòng thí nghiệm. Đây là thông số quan trọng nhất để tính lún.
+        </div>
+      </div>
+    </div>
+
+    <div class="diag-box">
+      <div class="diag-title"><i class="ti ti-layers"></i> Hình 3 — Sơ đồ tính lún và phân bố ứng suất gây lún</div>
+      <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <rect x="0" y="0" width="680" height="200" fill="#F8FBFF"/>
+        <!-- Foundation -->
+        <rect x="180" y="10" width="120" height="24" fill="#1565C0" rx="2"/>
+        <text x="240" y="26" fill="#fff" font-size="9" text-anchor="middle" font-weight="700">Móng B × L</text>
+        <!-- Ground -->
+        <line x1="0" y1="34" x2="680" y2="34" stroke="#90CAF9" stroke-width="1" stroke-dasharray="5,3"/>
+        <!-- p_gl distribution below footing -->
+        <rect x="180" y="34" width="120" height="12" fill="#0D47A1" opacity="0.7" rx="1"/>
+        <text x="370" y="44" fill="#0D47A1" font-size="9" font-weight="700">p_gl = p_tc − γhm</text>
+
+        <!-- stress bulb -->
+        <path d="M 180,46 Q 120,80 150,130 Q 180,165 240,170 Q 300,165 330,130 Q 360,80 300,46 Z" fill="rgba(21,101,192,0.08)" stroke="#1565C0" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- iso lines -->
+        <path d="M 188,60 Q 160,90 180,118 Q 200,140 240,143 Q 280,140 300,118 Q 320,90 292,60" fill="none" stroke="#1565C0" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.6"/>
+        <path d="M 198,80 Q 178,100 190,118 Q 206,136 240,138 Q 274,136 290,118 Q 302,100 282,80" fill="none" stroke="#1565C0" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.4"/>
+
+        <!-- layers with settlements -->
+        <line x1="140" y1="46" x2="140" y2="170" stroke="#2E7D32" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="140" y1="80" x2="340" y2="80" stroke="#E65100" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="140" y1="110" x2="340" y2="110" stroke="#E65100" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="140" y1="140" x2="340" y2="140" stroke="#E65100" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <text x="100" y="65" fill="#E65100" font-size="8" text-anchor="middle">Lớp 1</text>
+        <text x="100" y="97" fill="#E65100" font-size="8" text-anchor="middle">Lớp 2</text>
+        <text x="100" y="127" fill="#E65100" font-size="8" text-anchor="middle">Lớp 3</text>
+        <text x="90" y="160" fill="#2E7D32" font-size="8" text-anchor="middle">Ranh giới</text>
+        <text x="90" y="170" fill="#2E7D32" font-size="8" text-anchor="middle">nén lún</text>
+
+        <!-- Total S arrow -->
+        <line x1="360" y1="34" x2="360" y2="170" stroke="#C62828" stroke-width="1.5" marker-end="url(#aS)" marker-start="url(#aSr)"/>
+        <text x="390" y="105" fill="#C62828" font-size="10" font-weight="700">S = Σ ΔS_i</text>
+        <text x="390" y="118" fill="#C62828" font-size="8">≤ [S] = 8cm</text>
+
+        <!-- Formula annotation -->
+        <text x="460" y="60" fill="#1565C0" font-size="9" font-weight="700">S = β·(p_gl/E₀)·B·ω</text>
+        <text x="460" y="76" fill="#546E7A" font-size="8">β = 0.8 (ν=0.3)</text>
+        <text x="460" y="90" fill="#546E7A" font-size="8">ω: tra bảng L/B</text>
+        <text x="460" y="104" fill="#546E7A" font-size="8">E₀: TN hiện trường</text>
+
+        <defs>
+          <marker id="aS" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C62828"/></marker>
+          <marker id="aSr" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#C62828"/></marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 5. KIỂM TRA BTCT (KHÔNG THI) ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-info-circle"></i>
+    <div><h2>5. Kiểm tra kết cấu BTCT móng — Chỉ giới thiệu, không thi</h2></div>
+    <span class="cbadge cbadge-r">KHÔNG THI</span>
+  </div>
+  <div class="card-body">
+    <div class="info-box">
+      <i class="ti ti-info-circle"></i> <b>Lưu ý quan trọng:</b> Phần kiểm tra kết cấu BTCT của móng (chọc thủng, uốn, bố trí thép) thuộc môn <b>Kết cấu bê tông cốt thép</b>. Trong môn Cơ học đất — Nền móng, phần này chỉ được giới thiệu để sinh viên biết có tồn tại, <b>không ra bài tập và không thi</b>.
+    </div>
+    <div class="three-col">
+      <div class="theory">
+        <div class="theory-lbl"><i class="ti ti-triangle"></i> Kiểm tra chọc thủng</div>
+        Cột "đâm thủng" qua bản đáy móng theo hình tháp. Dùng để xác định chiều cao h<sub>f</sub>. Kiểm tra: P_ct ≤ 0.75·R<sub>bt</sub>·u·h₀.
+      </div>
+      <div class="theory">
+        <div class="theory-lbl"><i class="ti ti-bend"></i> Kiểm tra uốn cục bộ</div>
+        Phần vươn của móng (khoảng cách a) bị uốn do áp lực đất phản lực từ dưới lên. Tính mô men M tại tiết diện ngàm (mép cột).
+      </div>
+      <div class="theory">
+        <div class="theory-lbl"><i class="ti ti-git-fork"></i> Bố trí cốt thép</div>
+        Từ mô men tính được diện tích thép A<sub>s</sub> = M/(0.9·h₀·R<sub>s</sub>). Đặt lưới thép vuông góc dưới đáy móng.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TÓM TẮT QUY TRÌNH ══════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-list-numbers"></i>
+    <div><h2>Quy trình thiết kế móng nông (tóm tắt)</h2></div>
+    <span class="cbadge cbadge-g">QUY TRÌNH</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="background:var(--P);color:#fff;font-size:12px;font-weight:800;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)">1</span>
+        <div style="font-size:13px"><strong style="color:var(--P)">Đọc hồ sơ địa chất</strong> → Xác định lớp đất tốt để đặt móng, xác định h<sub>m</sub>, tra thông số c, φ, E₀.</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="background:var(--P);color:#fff;font-size:12px;font-weight:800;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)">2</span>
+        <div style="font-size:13px"><strong style="color:var(--P)">Tính SCT nền R_n</strong> → Tra hệ số Terzaghi theo φ, tính R_n = (1/Fs)·[...]. Thường Fs = 2.5–3.</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="background:var(--P);color:#fff;font-size:12px;font-weight:800;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)">3</span>
+        <div style="font-size:13px"><strong style="color:var(--P)">Xác định sơ bộ B từ điều kiện SCT</strong> → p_tc = R_n → N_tc/(B²) + γ_tb·h<sub>m</sub> = R_n → Giải tìm B.</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="background:var(--P);color:#fff;font-size:12px;font-weight:800;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)">4</span>
+        <div style="font-size:13px"><strong style="color:var(--P)">Kiểm tra lún S ≤ [S]</strong> → Tính p_gl, tra ω theo L/B, tính S = β·(p_gl/E₀)·B·ω. Nếu S &gt; [S]: tăng B.</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="background:var(--P);color:#fff;font-size:12px;font-weight:800;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)">5</span>
+        <div style="font-size:13px"><strong style="color:var(--P)">Kết luận chọn B</strong> → Lấy B lớn hơn trong hai điều kiện SCT và lún. Làm tròn lên 0.1m.</div>
+      </div>
+    </div>
+    <div class="succ-box" style="margin-top:8px">✅ <b>Ghi nhớ:</b> SCT dùng N_tc và R_n (Terzaghi). Lún dùng N_tc và E₀ (mô đun biến dạng). Hai điều kiện độc lập, phải thỏa cả hai.</div>
+  </div>
+</div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>8.2 · Lý Thuyết Tính Toán</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="8.1_LY_THUYET.html" class="btn btn-sm btn-ghost">‹ Bài trước</a>
+    <a href="8.3_DANG_1.html" class="btn btn-sm btn-ghost">Bài tập 8.3 ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — KHỞI TẠO TRANG LÝ THUYẾT TÍNH TOÁN (tĩnh)
+   - Hiển thị tên SV / STT từ sessionStorage 'ncm_sv'
+   - Ghi localStorage 'prog_c8_82' = {done:1,total:1,attempted:1}
+     để đánh dấu SV đã xem trang lý thuyết tính toán này
+================================================================ */
+window.onload=function(){
+  var sv=null;try{sv=JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){}
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  // Mark as viewed
+  try{localStorage.setItem('prog_c8_82',JSON.stringify({done:1,total:1,attempted:1}));}catch(e){}
+};
+</script>
+</body>
+</html>

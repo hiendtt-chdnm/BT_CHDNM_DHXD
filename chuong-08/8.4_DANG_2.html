@@ -1,0 +1,2046 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8.4 — Kiểm Tra Sức Chịu Tải Nền</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('no config')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{
+  --P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;
+  --G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;
+  --R:#C62828;--Rlt:#FFEBEE;
+  --A:#FF8F00;--Alt:#FFF8E1;
+  --B:#1565C0;--Blt:#E3F2FD;
+  --bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;
+  --sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 2px 16px rgba(21,101,192,.10)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:1000px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-bh{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 80px}
+.pw{margin-bottom:16px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.pt{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.pbar{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.pfill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.svi{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden}
+.chd{padding:11px 16px;display:flex;align-items:center;gap:9px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.chd i{font-size:18px;color:var(--P)}.chd h2{font-size:13px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;white-space:nowrap}
+.cbd{padding:13px 16px;display:flex;flex-direction:column;gap:10px}
+/* EXERCISE ACCORDION */
+.ex{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:12px;overflow:hidden}
+.exhd{padding:11px 15px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:var(--Plt)}
+.exhd:hover{background:#D6EAF8}.exhd.open{border-bottom:1.5px solid var(--brd)}
+.ebg{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.ebA{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.ebB{background:#FFF8E1;color:#E65100;border:1px solid #FFE082}
+.ebC{background:#FCE4EC;color:#C62828;border:1px solid #F48FB1}
+.ebe{background:var(--Glt);color:var(--Gdk)}.ebm{background:#FFF3E0;color:#BF360C}.ebh{background:var(--Rlt);color:var(--R)}
+.etl{flex:1;font-size:13px;font-weight:700;color:var(--Pdk)}
+.emt{font-size:11px;color:var(--muted);margin-top:1px}
+.echv{font-size:16px;color:var(--muted);transition:transform .2s}.echv.open{transform:rotate(90deg)}
+.exbd{display:none;padding:16px}.exbd.open{display:block}
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:8px}
+.dt th{background:var(--Plt);color:var(--Pdk);font-weight:700;padding:5px 8px;border:1px solid var(--brd);text-align:center;font-size:11px}
+.dt td{padding:5px 8px;border:1px solid #EBF5FB;font-family:var(--mono);font-size:11px;text-align:center}
+.dt td.ln{text-align:left;font-family:var(--sans);font-size:11px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.cmp-tbl th{background:var(--Pdk);color:#fff;font-weight:700;padding:6px 10px;border:1px solid var(--P);text-align:center;font-size:11.5px}
+.cmp-tbl td{padding:6px 10px;border:1px solid var(--brd);text-align:center;font-size:12px}
+.cmp-tbl td.lbl{text-align:left;font-family:var(--sans);font-weight:600;color:var(--Pdk);font-size:11.5px}
+.cmp-tbl tr:nth-child(even){background:#F8FBFF}
+/* FORMULA BOX */
+.fml-box{font-family:var(--mono);background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:2.0;margin:6px 0}
+.fml-box .ftitle{font-family:var(--sans);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.fml-box .frow{margin:2px 0}
+.fml-box em{color:var(--B);font-style:normal;font-weight:700}
+.fml-box.hint{border-left-color:var(--A);background:var(--Alt)}
+/* INFO BOXES */
+.theory{background:var(--Blt);border-left:4px solid var(--B);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7;margin:6px 0}
+.theory .theory-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--B);margin-bottom:5px}
+.earth-box{background:#E8F5E9;border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:var(--Gdk);line-height:1.6;margin:6px 0}
+.warn-box{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:9px 14px;font-size:12.5px;color:#4E342E;line-height:1.6;margin:6px 0}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:var(--Gdk);font-weight:500;line-height:1.6;margin:6px 0}
+.err-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:var(--R);font-weight:500;line-height:1.6;margin:6px 0}
+/* STEP */
+.step-hd{display:flex;align-items:center;gap:8px;margin:12px 0 5px}
+.snum{background:var(--P);color:#fff;font-size:11px;font-weight:800;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.sname{font-size:12.5px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.4px}
+.stxt{font-size:13px;line-height:1.65;padding-left:32px;margin-bottom:8px}
+/* SEC LABEL */
+.sec-lbl{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--Pmd);margin:14px 0 7px;padding-bottom:4px;border-bottom:2px solid var(--Plt)}
+/* ANS ROW */
+.ans-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--Plt);flex-wrap:wrap}
+.ans-row:last-child{border-bottom:none}
+.ans-label{font-size:13px;flex:1;min-width:180px;line-height:1.5}
+.ans-inp{width:100px;padding:6px 9px;border:2px solid var(--brd);border-radius:8px;font-family:var(--mono);font-size:14px;text-align:center;transition:border-color .15s,background .15s;background:var(--sur)}
+.ans-inp:focus{outline:none;border-color:var(--P)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt)}
+.ans-unit{font-size:12px;color:var(--muted);white-space:nowrap;font-family:var(--mono)}
+.chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.chip.ok{background:var(--Glt);color:var(--Gdk)}
+.chip.no{background:var(--Rlt);color:var(--R)}
+/* MCQ */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin:10px 0}
+.mcq-q{padding:10px 13px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-mn{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}
+.mcq-opts.g2c{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:12.5px;border-top:1px solid var(--Plt);line-height:1.4;transition:background .1s}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.rok{background:var(--Glt)!important;opacity:.65}.mcq-opt.rok .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:8px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* GROUP SECTION */
+.gs{background:var(--Pdk);color:#fff;padding:8px 16px;font-size:12px;font-weight:700;border-radius:8px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+/* STICKY NAV */
+.snav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:7px 15px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600;transition:opacity .15s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.bg{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+/* GRID */
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tc3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* INLINE FORMULA */
+.fm{font-family:var(--mono);background:#F8FBFF;border:1px solid #BBDEFB;border-radius:5px;padding:2px 8px;font-size:12px;display:inline-block;margin:1px 0}
+/* NB note */
+.nb{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
+svg text{font-family:'Plus Jakarta Sans',sans-serif}
+@media(max-width:640px){.tc,.tc3,.mcq-opts.g2c{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <marker id="aR" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#C62828"/></marker>
+    <marker id="aA" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#E65100"/></marker>
+    <marker id="aG" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#2E7D32"/></marker>
+    <marker id="aGr" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0L6,3L0,6Z" fill="#2E7D32"/></marker>
+    <marker id="aP" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#1565C0"/></marker>
+    <marker id="aS" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#546E7A"/></marker>
+    <marker id="aSr" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0L6,3L0,6Z" fill="#546E7A"/></marker>
+  </defs>
+</svg>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C8.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 8</a>
+    <div class="hdr-title">
+      <h1>8.4 — Kiểm Tra Sức Chịu Tải Nền</h1>
+      <p>Móng đơn · Móng băng · 1 lớp · 2 lớp · Điều kiện kỹ thuật &amp; kinh tế</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hprog">0 / 0</div>
+      <div class="sv-bh" id="svbh">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="pw"><div class="pt"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 8.4</span><span id="ptxt">0/0 (0%)</span></div><div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div></div>
+<div class="svi">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Kiểm tra SCT nền — <span id="svd">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">A: mẫu đầy đủ + điền số · B: công thức có sẵn, tự tìm số liệu · C: chỉ đề bài, tự hoàn toàn</div></div>
+  <div id="svch" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══════════════ NHÓM A ══════════════ -->
+<div class="gs"><i class="ti ti-book-2"></i>NHÓM A — Bài mẫu: Gợi ý đầy đủ công thức + số liệu → Sinh viên tính và điền đáp số (A1–A4)</div>
+
+<!-- ═══ A1: Móng đơn, 1 lớp, tải lệch tâm ═══ -->
+<div class="ex">
+  <div class="exhd open" onclick="tog('a1')">
+    <span class="ebg ebA">A1</span><span class="ebg ebe">Mẫu</span>
+    <div><div class="etl">Móng đơn · 1 lớp đất · Tải lệch tâm · So sánh 2 kích thước</div>
+    <div class="emt">Dạng 1 · PA1 không đảm bảo · PA2 đảm bảo nhưng kém kinh tế</div></div>
+    <i class="ti ti-chevron-right echv open" id="cv-a1"></i>
+  </div>
+  <div class="exbd open" id="bd-a1">
+
+    <!-- ĐỀ BÀI -->
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài A1 — Móng đơn · Nền 1 lớp · Tải lệch tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Tại chân cột có: <b>N₀ = 600 kN</b>, <b>M₀ = 120 kNm</b> (theo phương cạnh dài L). Nền đất đồng nhất 1 lớp: <b>γ = 18 kN/m³</b>, <b>c = 15 kPa</b>, <b>φ = 20°</b>. Chiều sâu chôn móng <b>h<sub>m</sub> = 1.2m</b>, γ<sub>tb</sub> = 20 kN/m³, F<sub>s</sub> = 2.5.</p>
+      <div class="tc">
+        <div style="background:#E3F2FD;border-radius:7px;padding:10px 12px;font-size:13px"><b>Phương án 1:</b> B × L = 1.4m × 1.8m</div>
+        <div style="background:#FCE4EC;border-radius:7px;padding:10px 12px;font-size:13px"><b>Phương án 2:</b> B × L = 2.0m × 2.5m</div>
+      </div>
+      <div style="background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12.5px;margin-top:8px">
+        <b>(a)</b> Kiểm tra điều kiện SCT cho từng phương án &nbsp;·&nbsp; <b>(b)</b> Nhận xét khi B×L tăng &nbsp;·&nbsp; <b>(c)</b> Chọn PA và đề xuất tối ưu
+      </div>
+    </div>
+
+    <!-- SVG SƠ ĐỒ -->
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+    <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" width="500">
+      <rect x="0" y="0" width="520" height="200" fill="#F8FBFF" rx="8"/>
+      <!-- PA1 -->
+      <text x="105" y="14" fill="#0D47A1" font-size="10" text-anchor="middle" font-weight="700">PA1: B=1.4m, L=1.8m</text>
+      <line x1="15" y1="26" x2="200" y2="26" stroke="#546E7A" stroke-width="1.5"/>
+      <text x="8" y="24" fill="#546E7A" font-size="8">±0.00</text>
+      <rect x="85" y="26" width="40" height="18" fill="#B0BEC5" stroke="#546E7A" stroke-width="1"/>
+      <line x1="105" y1="14" x2="105" y2="26" stroke="#C62828" stroke-width="2" marker-end="url(#aR)"/>
+      <path d="M90,18 Q80,26 90,34" fill="none" stroke="#E65100" stroke-width="1.5" marker-end="url(#aA)"/>
+      <text x="70" y="28" fill="#E65100" font-size="8.5" font-weight="700">M₀</text>
+      <line x1="19" y1="26" x2="19" y2="70" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#aG)" marker-start="url(#aGr)"/>
+      <text x="10" y="50" fill="#2E7D32" font-size="8" text-anchor="middle" font-weight="700">1.2m</text>
+      <rect x="47" y="44" width="115" height="26" fill="#90CAF9" stroke="#1565C0" stroke-width="1.5" rx="2"/>
+      <text x="104" y="60" fill="#0D47A1" font-size="8.5" text-anchor="middle" font-weight="700">Móng 1.4×1.8m</text>
+      <line x1="38" y1="70" x2="172" y2="70" stroke="#0D47A1" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- áp lực hình thang (lệch tâm) -->
+      <polygon points="47,70 47,102 162,88 162,70" fill="#BBDEFB" opacity="0.6"/>
+      <line x1="60" y1="70" x2="60" y2="100" stroke="#1565C0" stroke-width="1" marker-end="url(#aP)"/>
+      <line x1="85" y1="70" x2="85" y2="96" stroke="#1565C0" stroke-width="1" marker-end="url(#aP)"/>
+      <line x1="104" y1="70" x2="104" y2="94" stroke="#1565C0" stroke-width="1" marker-end="url(#aP)"/>
+      <line x1="123" y1="70" x2="123" y2="91" stroke="#1565C0" stroke-width="1" marker-end="url(#aP)"/>
+      <line x1="148" y1="70" x2="148" y2="88" stroke="#1565C0" stroke-width="1" marker-end="url(#aP)"/>
+      <text x="104" y="116" fill="#C62828" font-size="8.5" text-anchor="middle" font-weight="700">❌ p<tspan baseline-shift="sub" font-size="6">max</tspan> &gt; 1.2[P]</text>
+      <!-- B arrow -->
+      <line x1="47" y1="130" x2="162" y2="130" stroke="#546E7A" stroke-width="1.5" marker-end="url(#aS)" marker-start="url(#aSr)"/>
+      <text x="104" y="142" fill="#546E7A" font-size="9" text-anchor="middle" font-weight="700">B = 1.4m</text>
+      <rect x="38" y="105" width="138" height="18" fill="#E8F5E9" stroke="#2E7D32" stroke-width="0.8" opacity="0.7"/>
+      <text x="104" y="118" fill="#1B5E20" font-size="8" text-anchor="middle">φ=20°, c=15kPa, γ=18kN/m³</text>
+
+      <!-- PA2 -->
+      <text x="385" y="14" fill="#E65100" font-size="10" text-anchor="middle" font-weight="700">PA2: B=2.0m, L=2.5m</text>
+      <line x1="270" y1="26" x2="490" y2="26" stroke="#546E7A" stroke-width="1.5"/>
+      <rect x="360" y="26" width="50" height="18" fill="#B0BEC5" stroke="#546E7A" stroke-width="1"/>
+      <line x1="385" y1="14" x2="385" y2="26" stroke="#C62828" stroke-width="2" marker-end="url(#aR)"/>
+      <path d="M370,18 Q360,26 370,34" fill="none" stroke="#E65100" stroke-width="1.5" marker-end="url(#aA)"/>
+      <text x="350" y="28" fill="#E65100" font-size="8.5" font-weight="700">M₀</text>
+      <line x1="274" y1="26" x2="274" y2="70" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#aG)" marker-start="url(#aGr)"/>
+      <text x="264" y="50" fill="#2E7D32" font-size="8" text-anchor="middle" font-weight="700">1.2m</text>
+      <rect x="285" y="44" width="200" height="26" fill="#FFCDD2" stroke="#C62828" stroke-width="1.5" rx="2"/>
+      <text x="385" y="60" fill="#C62828" font-size="8.5" text-anchor="middle" font-weight="700">Móng 2.0×2.5m</text>
+      <line x1="276" y1="70" x2="494" y2="70" stroke="#C62828" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- áp lực nhỏ hơn, lệch tâm nhẹ hơn -->
+      <polygon points="285,70 285,86 485,82 485,70" fill="#FFCDD2" opacity="0.45"/>
+      <line x1="305" y1="70" x2="305" y2="85" stroke="#C62828" stroke-width="1" marker-end="url(#aR)"/>
+      <line x1="345" y1="70" x2="345" y2="84" stroke="#C62828" stroke-width="1" marker-end="url(#aR)"/>
+      <line x1="385" y1="70" x2="385" y2="83" stroke="#C62828" stroke-width="1" marker-end="url(#aR)"/>
+      <line x1="425" y1="70" x2="425" y2="82" stroke="#C62828" stroke-width="1" marker-end="url(#aR)"/>
+      <line x1="465" y1="70" x2="465" y2="81" stroke="#C62828" stroke-width="1" marker-end="url(#aR)"/>
+      <text x="385" y="102" fill="#E65100" font-size="8.5" text-anchor="middle" font-weight="700">⚠ p≪[P] — kém kinh tế</text>
+      <line x1="285" y1="130" x2="485" y2="130" stroke="#546E7A" stroke-width="1.5" marker-end="url(#aS)" marker-start="url(#aSr)"/>
+      <text x="385" y="142" fill="#546E7A" font-size="9" text-anchor="middle" font-weight="700">B = 2.0m</text>
+      <rect x="276" y="105" width="218" height="18" fill="#E8F5E9" stroke="#2E7D32" stroke-width="0.8" opacity="0.7"/>
+      <text x="385" y="118" fill="#1B5E20" font-size="8" text-anchor="middle">φ=20°, c=15kPa, γ=18kN/m³</text>
+      <!-- mũi tên so sánh -->
+      <text x="240" y="80" fill="#546E7A" font-size="9" text-anchor="middle">B↑</text>
+      <line x1="225" y1="85" x2="260" y2="85" stroke="#546E7A" stroke-width="1.5" marker-end="url(#aS)"/>
+      <text x="240" y="98" fill="#1565C0" font-size="8">p↓ · [P]↑</text>
+    </svg>
+    </div>
+
+    <!-- BƯỚC 1: GHI ĐIỀU KIỆN -->
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Ghi điều kiện sức chịu tải của nền</span></div>
+    <div class="stxt">
+      Điều kiện kiểm tra theo TTGH1 (điều kiện sức chịu tải):
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> Điều kiện bắt buộc</div>
+        <div class="frow"><em>p<sub>txtb</sub></em> ≤ [P]</div>
+        <div class="frow"><em>p<sub>max</sub></em> ≤ 1,2·[P]</div>
+        <div class="frow"><em>p<sub>min</sub></em> ≥ 0 (tránh mất tiếp xúc đáy móng)</div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 2: ÁP LỰC ĐÁY MÓNG -->
+    <div class="step-hd"><span class="snum">2</span><span class="sname">Xác định áp lực tiếp xúc đáy móng (p<sub>txtb</sub>, p<sub>max</sub>, p<sub>min</sub>)</span></div>
+    <div class="stxt">
+      Móng đơn chữ nhật B×L chịu tải lệch tâm (N₀, M₀ theo phương cạnh L):
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> Công thức tổng quát — Móng đơn</div>
+        <div class="frow"><em>p<sub>txtb</sub></em> = N₀/(B×L) + γ<sub>tb</sub>×h<sub>m</sub></div>
+        <div class="frow"><em>p<sub>max</sub></em> = p<sub>txtb</sub> + 6×M₀/(B×L²)</div>
+        <div class="frow"><em>p<sub>min</sub></em> = p<sub>txtb</sub> − 6×M₀/(B×L²)</div>
+      </div>
+      <b>Thay số — Phương án 1 (B=1.4m, L=1.8m):</b>
+      <div class="fml-box hint">
+        <div class="ftitle"><i class="ti ti-calculator"></i> Thay số PA1</div>
+        <div class="frow">p<sub>txtb</sub> = 600/(1.4×1.8) + 20×1.2 = 600/2.52 + 24 = 238.1 + 24 = <em>262.1 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 262.1 + 6×120/(1.4×1.8²) = 262.1 + 720/4.536 = 262.1 + 158.7 = <em>420.8 kPa</em></div>
+        <div class="frow">p<sub>min</sub> = 262.1 − 158.7 = <em>103.4 kPa</em> ≥ 0 ✓</div>
+      </div>
+      Sinh viên tính và điền đáp số phương án 1:
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA1) = N₀/(B×L) + γ<sub>tb</sub>×h<sub>m</sub></span>
+          <input class="ans-inp" id="a1-ptb1" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-ptb1',262.1,3)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-ptb1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA1) = p<sub>txtb</sub> + 6M₀/(B×L²)</span>
+          <input class="ans-inp" id="a1-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-pmax1',420.8,4)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-pmax1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>min</sub> (PA1) = p<sub>txtb</sub> − 6M₀/(B×L²)</span>
+          <input class="ans-inp" id="a1-pmin1" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-pmin1',103.4,3)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-pmin1"></span>
+        </div>
+      </div>
+      <b>Thay số — Phương án 2 (B=2.0m, L=2.5m):</b>
+      <div class="fml-box hint">
+        <div class="ftitle"><i class="ti ti-calculator"></i> Thay số PA2</div>
+        <div class="frow">p<sub>txtb</sub> = 600/(2.0×2.5) + 20×1.2 = 600/5.0 + 24 = 120 + 24 = <em>144.0 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 144.0 + 6×120/(2.0×2.5²) = 144.0 + 720/12.5 = 144.0 + 57.6 = <em>201.6 kPa</em></div>
+        <div class="frow">p<sub>min</sub> = 144.0 − 57.6 = <em>86.4 kPa</em> ≥ 0 ✓</div>
+      </div>
+      Sinh viên tính và điền đáp số phương án 2:
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA2) = N₀/(B×L) + γ<sub>tb</sub>×h<sub>m</sub></span>
+          <input class="ans-inp" id="a1-ptb2" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-ptb2',144.0,2)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-ptb2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA2) = p<sub>txtb</sub> + 6M₀/(B×L²)</span>
+          <input class="ans-inp" id="a1-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-pmax2',201.6,3)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-pmax2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>min</sub> (PA2) = p<sub>txtb</sub> − 6M₀/(B×L²)</span>
+          <input class="ans-inp" id="a1-pmin2" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-pmin2',86.4,2)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-pmin2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: SCT NỀN -->
+    <div class="step-hd"><span class="snum">3</span><span class="sname">Xác định sức chịu tải của nền [P] = P<sub>gh</sub>/F<sub>s</sub></span></div>
+    <div class="stxt">
+      Công thức Terzaghi cho móng đơn (1 lớp đất):
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> SCT nền — Móng đơn (φ=20° → tra bảng)</div>
+        <div class="frow"><em>P<sub>gh</sub></em> = ½·α₁·N<sub>γ</sub>·B·γ + α₂·N<sub>q</sub>·q + α₃·N<sub>c</sub>·c</div>
+        <div class="frow">Tra bảng φ=20°: <em>N<sub>γ</sub> = 5.39</em>, <em>N<sub>q</sub> = 6.40</em>, <em>N<sub>c</sub> = 14.83</em></div>
+        <div class="frow">Móng chữ nhật: α₁ = 1−0.2B/L&nbsp;&nbsp;·&nbsp;&nbsp;α₂ = 1.0&nbsp;&nbsp;·&nbsp;&nbsp;α₃ = 1+0.2B/L</div>
+        <div class="frow">q = γ×h<sub>m</sub> = 18×1.2 = <em>21.6 kPa</em></div>
+        <div class="frow"><em>[P]</em> = P<sub>gh</sub> / F<sub>s</sub> = P<sub>gh</sub> / 2.5</div>
+      </div>
+      <b>Thay số — PA1 (B=1.4m, L=1.8m):</b>
+      <div class="fml-box hint">
+        <div class="ftitle"><i class="ti ti-calculator"></i> Tính [P] — PA1</div>
+        <div class="frow">α₁ = 1 − 0.2×1.4/1.8 = 1 − 0.156 = 0.844&nbsp;&nbsp;·&nbsp;&nbsp;α₃ = 1 + 0.156 = 1.156</div>
+        <div class="frow">P<sub>gh</sub> = ½×0.844×5.39×1.4×18 + 1.0×6.40×21.6 + 1.156×14.83×15</div>
+        <div class="frow">= 36.1 + 138.2 + 257.2 = <em>431.5 kPa</em></div>
+        <div class="frow">[P] = 431.5 / 2.5 = <em>172.6 kPa</em></div>
+      </div>
+      Sinh viên điền kết quả PA1:
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 α₁ (PA1, B=1.4m, L=1.8m)</span>
+          <input class="ans-inp" id="a1-a11" type="number" step="0.001" placeholder="?" oninput="chkFill('a1-a11',0.844,0.01)">
+          <span class="ans-unit">—</span>
+          <span class="chip" id="ck-a1-a11"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA1)</span>
+          <input class="ans-inp" id="a1-Pgh1" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-Pgh1',431.5,5)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-Pgh1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] = P<sub>gh</sub>/F<sub>s</sub> (PA1)</span>
+          <input class="ans-inp" id="a1-P1" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-P1',172.6,2)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-P1"></span>
+        </div>
+      </div>
+      <b>Thay số — PA2 (B=2.0m, L=2.5m):</b>
+      <div class="fml-box hint">
+        <div class="ftitle"><i class="ti ti-calculator"></i> Tính [P] — PA2</div>
+        <div class="frow">α₁ = 1 − 0.2×2.0/2.5 = 1 − 0.16 = 0.84&nbsp;&nbsp;·&nbsp;&nbsp;α₃ = 1 + 0.16 = 1.16</div>
+        <div class="frow">P<sub>gh</sub> = ½×0.84×5.39×2.0×18 + 1.0×6.40×21.6 + 1.16×14.83×15</div>
+        <div class="frow">= 81.5 + 138.2 + 258.1 = <em>477.8 kPa</em></div>
+        <div class="frow">[P] = 477.8 / 2.5 = <em>191.1 kPa</em></div>
+      </div>
+      Sinh viên điền kết quả PA2:
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 α₁ (PA2, B=2.0m, L=2.5m)</span>
+          <input class="ans-inp" id="a1-a12" type="number" step="0.001" placeholder="?" oninput="chkFill('a1-a12',0.84,0.01)">
+          <span class="ans-unit">—</span>
+          <span class="chip" id="ck-a1-a12"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA2)</span>
+          <input class="ans-inp" id="a1-Pgh2" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-Pgh2',477.8,5)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-Pgh2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] = P<sub>gh</sub>/F<sub>s</sub> (PA2)</span>
+          <input class="ans-inp" id="a1-P2" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-P2',191.1,2)">
+          <span class="ans-unit">kPa</span>
+          <span class="chip" id="ck-a1-P2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 4: SO SÁNH VÀ KẾT LUẬN -->
+    <div class="step-hd"><span class="snum">4</span><span class="sname">So sánh và kết luận (a)</span></div>
+    <div class="stxt">
+      Bảng tổng hợp kiểm tra điều kiện:
+      <table class="cmp-tbl">
+        <tr><th>PA</th><th>B×L (m)</th><th>p<sub>txtb</sub> (kPa)</th><th>p<sub>max</sub> (kPa)</th><th>[P] (kPa)</th><th>1.2·[P] (kPa)</th><th>① p<sub>tb</sub>≤[P]</th><th>② p<sub>max</sub>≤1.2[P]</th><th>Kết luận</th></tr>
+        <tr>
+          <td class="lbl">PA1 (1.4×1.8m)</td><td>2.52 m²</td>
+          <td style="font-family:var(--mono);color:var(--R);font-weight:700">262.1</td>
+          <td style="font-family:var(--mono);color:var(--R);font-weight:700">420.8</td>
+          <td style="font-family:var(--mono)">172.6</td>
+          <td style="font-family:var(--mono)">207.1</td>
+          <td><span style="color:var(--R);font-weight:700">❌ 262&gt;173</span></td>
+          <td><span style="color:var(--R);font-weight:700">❌ 421&gt;207</span></td>
+          <td><b style="color:var(--R)">Không đạt KT</b></td>
+        </tr>
+        <tr>
+          <td class="lbl">PA2 (2.0×2.5m)</td><td>5.0 m²</td>
+          <td style="font-family:var(--mono);color:var(--G);font-weight:700">144.0</td>
+          <td style="font-family:var(--mono);color:var(--G);font-weight:700">201.6</td>
+          <td style="font-family:var(--mono)">191.1</td>
+          <td style="font-family:var(--mono)">229.3</td>
+          <td><span style="color:var(--G);font-weight:700">✅ 144&lt;191</span></td>
+          <td><span style="color:var(--G);font-weight:700">✅ 202&lt;229</span></td>
+          <td><b style="color:var(--A)">Đạt KT, xem KT</b></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- CÂU b — NHẬN XÉT PHÂN TÍCH (MCQ) -->
+    <div class="step-hd"><span class="snum">5</span><span class="sname">Nhận xét kết quả — Câu (b)</span></div>
+    <div class="stxt">
+      Sau khi tính toán xong, hãy phân tích sự thay đổi khi tăng kích thước đáy móng từ PA1 → PA2. Chọn các nhận xét <b>đúng</b> dưới đây:
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Khi diện tích đáy móng (B×L) tăng, áp lực tiếp xúc p<sub>txtb</sub> thay đổi thế nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1b1-0" onclick="pickMCQ('a1b1',0,0,'❌ Sai. p_txtb = N₀/(B×L) + γ·h_m. Khi B×L tăng, N₀/(B×L) giảm → p_txtb giảm, không tăng.')"><span class="mkey">A</span><span>p<sub>txtb</sub> tăng vì diện tích móng lớn hơn chịu tải tốt hơn</span></div>
+        <div class="mcq-opt" id="mco-a1b1-1" onclick="pickMCQ('a1b1',1,1,'✓ Đúng! p_txtb = N₀/(B×L) + γ·h_m. Tải N₀ cố định, B×L tăng → N₀/(B×L) giảm → p_txtb giảm.')"><span class="mkey">B</span><span>p<sub>txtb</sub> giảm vì tải N₀ cố định được phân bố ra diện tích lớn hơn</span></div>
+        <div class="mcq-opt" id="mco-a1b1-2" onclick="pickMCQ('a1b1',2,0,'❌ Sai. p_txtb thay đổi rõ ràng: từ 262.1 kPa (PA1) giảm xuống 144.0 kPa (PA2) — giảm 45%.')"><span class="mkey">C</span><span>p<sub>txtb</sub> không đổi vì tải trọng N₀ và M₀ không thay đổi</span></div>
+        <div class="mcq-opt" id="mco-a1b1-3" onclick="pickMCQ('a1b1',3,0,'❌ Sai. p_txtb giảm theo đúng hướng giúp đảm bảo điều kiện SCT. Cơ chế là giảm phân bố tải.')"><span class="mkey">D</span><span>p<sub>txtb</sub> giảm vì SCT của nền tăng lên</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.2</span>Khi B×L tăng, sức chịu tải của nền P<sub>gh</sub> thay đổi thế nào và tại sao?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1b2-0" onclick="pickMCQ('a1b2',0,0,'❌ Sai. P_gh = ½·α₁·Nγ·B·γ + ... — thành phần Nγ·B phụ thuộc B, nên P_gh tăng khi B tăng.')"><span class="mkey">A</span><span>P<sub>gh</sub> không thay đổi vì thông số đất (φ, c, γ) không đổi</span></div>
+        <div class="mcq-opt" id="mco-a1b2-1" onclick="pickMCQ('a1b2',1,0,'❌ Sai. P_gh tăng nhẹ khi B tăng (do thành phần ½·Nγ·B·γ tăng), nhưng mức tăng nhỏ hơn mức giảm p.')"><span class="mkey">B</span><span>P<sub>gh</sub> giảm vì móng lớn hơn tạo ra vùng phá hoại rộng hơn, khó huy động SCT</span></div>
+        <div class="mcq-opt" id="mco-a1b2-2" onclick="pickMCQ('a1b2',2,1,'✓ Đúng! P_gh = ½·α₁·Nγ·B·γ + Nq·q + Nc·c. Khi B tăng, thành phần đầu (Nγ·B) tăng → P_gh tăng nhẹ (từ 432 → 478 kPa ≈ tăng 11%).')"><span class="mkey">C</span><span>P<sub>gh</sub> tăng nhẹ khi B tăng, do thành phần ½·N<sub>γ</sub>·B·γ phụ thuộc trực tiếp vào B</span></div>
+        <div class="mcq-opt" id="mco-a1b2-3" onclick="pickMCQ('a1b2',3,0,'❌ Sai. Chỉ có thành phần Nγ·B phụ thuộc B; các thành phần Nq·q và Nc·c không phụ thuộc B.')"><span class="mkey">D</span><span>P<sub>gh</sub> tăng mạnh khi B tăng vì cả 3 thành phần trong công thức đều phụ thuộc B</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1b2"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.3</span>Tại sao khi B×L tăng, hiệu ứng lệch tâm (±6M₀/BL²) giảm đi?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1b3-0" onclick="pickMCQ('a1b3',0,0,'❌ Sai. M₀ = 120 kNm không thay đổi. Sự thay đổi là do mẫu số BL² tăng.')"><span class="mkey">A</span><span>Vì M₀ giảm do móng to hơn phân bố lại moment</span></div>
+        <div class="mcq-opt" id="mco-a1b3-1" onclick="pickMCQ('a1b3',1,0,'❌ Sai. B và L đều tăng cùng lúc, cả hai đều ảnh hưởng đến mẫu số BL².')"><span class="mkey">B</span><span>Vì chỉ L tăng, mẫu số L² tăng nhanh, làm 6M₀/BL² giảm</span></div>
+        <div class="mcq-opt" id="mco-a1b3-2" onclick="pickMCQ('a1b3',2,1,'✓ Đúng! Hệ số lệch tâm = 6M₀/(BL²). M₀ cố định, khi B và L đều tăng thì BL² tăng → hiệu ứng lệch tâm (chênh lệch pmax−pmin) giảm. PA1: ±158.7 kPa → PA2: ±57.6 kPa.')"><span class="mkey">C</span><span>Vì M₀ cố định, mẫu số BL² tăng khi cả B và L tăng → hệ số lệch tâm 6M₀/BL² giảm</span></div>
+        <div class="mcq-opt" id="mco-a1b3-3" onclick="pickMCQ('a1b3',3,0,'❌ Sai. Hiệu ứng lệch tâm không liên quan đến γ_tb hay chiều sâu móng.')"><span class="mkey">D</span><span>Vì khi B tăng, γ<sub>tb</sub> đóng góp nhiều hơn vào p<sub>txtb</sub>, làm phần lệch tâm tương đối nhỏ hơn</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1b3"></div>
+    </div>
+
+    <!-- CÂU c — KẾT LUẬN VÀ ĐỀ XUẤT (MCQ) -->
+    <div class="step-hd"><span class="snum">6</span><span class="sname">Kết luận và đề xuất — Câu (c)</span></div>
+    <div class="stxt">Dựa vào kết quả phân tích, trả lời các câu hỏi kết luận sau:</div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Phương án nào thỏa mãn điều kiện kỹ thuật?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1c1-0" onclick="pickMCQ('a1c1',0,0,'❌ Sai. PA1: p_txtb=262 kPa > [P]=173 kPa và p_max=421 > 1.2×173=207 → vi phạm cả 2 điều kiện.')"><span class="mkey">A</span><span>Cả hai phương án đều thỏa mãn kỹ thuật</span></div>
+        <div class="mcq-opt" id="mco-a1c1-1" onclick="pickMCQ('a1c1',1,0,'❌ Sai. PA1 vi phạm điều kiện SCT nghiêm trọng (p_max vượt 1.2[P] tới 203%).')"><span class="mkey">B</span><span>PA1 thỏa mãn, PA2 không thỏa mãn</span></div>
+        <div class="mcq-opt" id="mco-a1c1-2" onclick="pickMCQ('a1c1',2,1,'✓ Đúng! PA1: không đạt (p_txtb và p_max đều vượt giới hạn). PA2: đạt cả 2 điều kiện (144<191 và 202<229).')"><span class="mkey">C</span><span>PA1 không thỏa mãn, PA2 thỏa mãn kỹ thuật</span></div>
+        <div class="mcq-opt" id="mco-a1c1-3" onclick="pickMCQ('a1c1',3,0,'❌ Sai. PA2 thỏa mãn đầy đủ cả 2 điều kiện SCT.')"><span class="mkey">D</span><span>Cả hai phương án đều không thỏa mãn kỹ thuật</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1c1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.2</span>PA2 (2.0×2.5m) có p<sub>txtb</sub>/[P] = 144/191 ≈ 0.75. Nhận định nào về tính kinh tế là đúng nhất?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1c2-0" onclick="pickMCQ('a1c2',0,0,'❌ Sai. p/[P] = 0.75 nghĩa là còn 25% dư thừa SCT — chứng tỏ móng có thể nhỏ hơn một chút.')"><span class="mkey">A</span><span>PA2 tối ưu về kinh tế vì p<sub>txtb</sub>/[P] ≈ 0.75 gần với giới hạn</span></div>
+        <div class="mcq-opt" id="mco-a1c2-1" onclick="pickMCQ('a1c2',1,1,'✓ Đúng! p/[P] = 0.75 cho thấy còn khoảng 25% dự trữ SCT chưa khai thác. Có thể thử giảm nhẹ B hoặc L (ví dụ B=1.7m, L=2.2m) để tối ưu kinh tế trong khi vẫn đảm bảo kỹ thuật.')"><span class="mkey">B</span><span>PA2 hơi lãng phí (≈25% dư thừa SCT); có thể thử kích thước nhỏ hơn để tối ưu</span></div>
+        <div class="mcq-opt" id="mco-a1c2-2" onclick="pickMCQ('a1c2',2,0,'❌ Sai. Nên kiểm tra lại với B×L nhỏ hơn trước khi tăng chiều sâu hm.')"><span class="mkey">C</span><span>PA2 lãng phí nghiêm trọng, cần tăng chiều sâu h<sub>m</sub> để tối ưu</span></div>
+        <div class="mcq-opt" id="mco-a1c2-3" onclick="pickMCQ('a1c2',3,0,'❌ Sai. Kinh tế là giảm kích thước khi SCT còn dư, không phải tăng thêm.')"><span class="mkey">D</span><span>PA2 là lựa chọn duy nhất có thể, không thể tối ưu thêm</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1c2"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.3</span>Giải pháp kỹ thuật nào hợp lý nhất để tối ưu PA2?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a1c3-0" onclick="pickMCQ('a1c3',0,0,'❌ Sai. Tăng F_s sẽ làm giảm [P] = Pgh/Fs → yêu cầu móng còn phải to hơn, ngược với mục tiêu tối ưu.')"><span class="mkey">A</span><span>Tăng hệ số an toàn F<sub>s</sub> lên 3.0 để có thêm dự trữ</span></div>
+        <div class="mcq-opt" id="mco-a1c3-1" onclick="pickMCQ('a1c3',1,1,'✓ Đúng! Thử kích thước trung gian (ví dụ B=1.7m, L=2.1m) sẽ cho p/[P] gần 0.85–0.95 — vừa đảm bảo kỹ thuật vừa tiết kiệm vật liệu móng.')"><span class="mkey">B</span><span>Thử kích thước trung gian (ví dụ B≈1.7m, L≈2.1m) để p<sub>txtb</sub>/[P] tiệm cận 0.85–0.95</span></div>
+        <div class="mcq-opt" id="mco-a1c3-2" onclick="pickMCQ('a1c3',2,0,'❌ Sai. Giảm h_m làm giảm SCT (q = γ·h_m giảm), móng sẽ kém an toàn hơn.')"><span class="mkey">C</span><span>Giảm chiều sâu chôn móng h<sub>m</sub> xuống 0.8m để giảm tải trọng phần đất phủ</span></div>
+        <div class="mcq-opt" id="mco-a1c3-3" onclick="pickMCQ('a1c3',3,0,'❌ Sai. Chuyển sang cọc khi nền đất yếu hoặc tải quá lớn. Trường hợp này nền đủ tốt, chỉ cần điều chỉnh kích thước móng.')"><span class="mkey">D</span><span>Chuyển sang giải pháp móng cọc thay vì móng nông</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a1c3"></div>
+    </div>
+
+  </div>
+</div>
+<!-- ═══ A2: Móng băng, 1 lớp, lệch tâm ═══ -->
+<div class="ex">
+  <div class="exhd" onclick="tog('a2')">
+    <span class="ebg ebA">A2</span><span class="ebg ebe">Mẫu</span>
+    <div><div class="etl">Móng băng · 1 lớp đất · Tải lệch tâm · Cả 2 không đảm bảo kỹ thuật</div>
+    <div class="emt">Dạng 2 · Kiểm tra p<sub>max</sub> ≤ 1.2[P] · Cần tăng B hoặc tăng h<sub>m</sub></div></div>
+    <i class="ti ti-chevron-right echv" id="cv-a2"></i>
+  </div>
+  <div class="exbd" id="bd-a2">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài A2 — Móng băng · Nền 1 lớp · Tải lệch tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Trên 1m dài tường: <b>N₀ = 250 kN/m</b>, <b>M₀ = 30 kNm/m</b>. Nền đất đồng nhất: <b>γ = 19 kN/m³</b>, <b>c = 25 kPa</b>, <b>φ = 22°</b>. Chiều sâu chôn móng <b>h<sub>m</sub> = 1.0m</b>, γ<sub>tb</sub> = 20 kN/m³, F<sub>s</sub> = 2.5.</p>
+      <div class="tc">
+        <div style="background:#E3F2FD;border-radius:7px;padding:10px;font-size:13px"><b>PA1:</b> B = 1.2m</div>
+        <div style="background:#FCE4EC;border-radius:7px;padding:10px;font-size:13px"><b>PA2:</b> B = 2.0m</div>
+      </div>
+      <div style="background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12.5px;margin-top:8px">
+        <b>(a)</b> Kiểm tra SCT từng PA &nbsp;·&nbsp; <b>(b)</b> Nhận xét SCT móng băng khi B tăng &nbsp;·&nbsp; <b>(c)</b> Đề xuất giải pháp thiết kế tối ưu
+      </div>
+    </div>
+
+    <!-- Bước 1 -->
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Điều kiện sức chịu tải</span></div>
+    <div class="stxt">
+      <div class="fml-box"><div class="frow"><em>p<sub>txtb</sub></em> ≤ [P]&nbsp;&nbsp;·&nbsp;&nbsp;<em>p<sub>max</sub></em> ≤ 1.2·[P]&nbsp;&nbsp;·&nbsp;&nbsp;<em>p<sub>min</sub></em> ≥ 0</div></div>
+    </div>
+
+    <!-- Bước 2 -->
+    <div class="step-hd"><span class="snum">2</span><span class="sname">Áp lực tiếp xúc đáy móng băng (tính trên 1m dài)</span></div>
+    <div class="stxt">
+      Móng băng, tải lệch tâm — Chú ý: móng băng coi chiều dài L → ∞, tính trên đơn vị 1m dài:
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> Công thức — Móng băng (1m dài)</div>
+        <div class="frow"><em>p<sub>txtb</sub></em> = N₀/B + γ<sub>tb</sub>×h<sub>m</sub></div>
+        <div class="frow"><em>p<sub>max</sub></em> = p<sub>txtb</sub> + 6×M₀/B²</div>
+        <div class="frow"><em>p<sub>min</sub></em> = p<sub>txtb</sub> − 6×M₀/B²</div>
+      </div>
+      <b>Thay số PA1 (B=1.2m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 250/1.2 + 20×1.0 = 208.3 + 20 = <em>228.3 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 228.3 + 6×30/1.2² = 228.3 + 125.0 = <em>353.3 kPa</em></div>
+        <div class="frow">p<sub>min</sub> = 228.3 − 125.0 = <em>103.3 kPa</em> ≥ 0 ✓</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=1.2m)</span>
+          <input class="ans-inp" id="a2-ptb1" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-ptb1',228.3,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-ptb1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA1)</span>
+          <input class="ans-inp" id="a2-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-pmax1',353.3,4)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-pmax1"></span>
+        </div>
+      </div>
+      <b>Thay số PA2 (B=2.0m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 250/2.0 + 20×1.0 = 125.0 + 20 = <em>145.0 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 145.0 + 6×30/2.0² = 145.0 + 45.0 = <em>190.0 kPa</em></div>
+        <div class="frow">p<sub>min</sub> = 145.0 − 45.0 = <em>100.0 kPa</em> ≥ 0 ✓</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=2.0m)</span>
+          <input class="ans-inp" id="a2-ptb2" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-ptb2',145.0,2)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-ptb2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA2)</span>
+          <input class="ans-inp" id="a2-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-pmax2',190.0,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-pmax2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bước 3 -->
+    <div class="step-hd"><span class="snum">3</span><span class="sname">SCT nền — Móng băng (α₁ = α₂ = α₃ = 1.0)</span></div>
+    <div class="stxt">
+      Móng băng có α₁ = α₂ = α₃ = 1.0 (do L → ∞, B/L → 0):
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> SCT — Móng băng (φ=22° → tra bảng)</div>
+        <div class="frow"><em>P<sub>gh</sub></em> = ½×1.0×N<sub>γ</sub>×B×γ + 1.0×N<sub>q</sub>×q + 1.0×N<sub>c</sub>×c</div>
+        <div class="frow">Tra bảng φ=22°: <em>N<sub>γ</sub> = 7.13</em>, <em>N<sub>q</sub> = 7.82</em>, <em>N<sub>c</sub> = 16.88</em></div>
+        <div class="frow">q = γ×h<sub>m</sub> = 19×1.0 = <em>19.0 kPa</em></div>
+      </div>
+      <b>Thay số PA1 (B=1.2m):</b>
+      <div class="fml-box hint">
+        <div class="frow">P<sub>gh</sub> = ½×7.13×1.2×19 + 7.82×19.0 + 16.88×25</div>
+        <div class="frow">= 81.3 + 148.6 + 422.0 = <em>651.9 kPa</em></div>
+        <div class="frow">[P] = 651.9 / 2.5 = <em>260.8 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA1, B=1.2m)</span>
+          <input class="ans-inp" id="a2-Pgh1" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-Pgh1',651.9,7)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-Pgh1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] (PA1)</span>
+          <input class="ans-inp" id="a2-P1" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-P1',260.8,2)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-P1"></span>
+        </div>
+      </div>
+      <b>Thay số PA2 (B=2.0m):</b>
+      <div class="fml-box hint">
+        <div class="frow">P<sub>gh</sub> = ½×7.13×2.0×19 + 7.82×19.0 + 16.88×25</div>
+        <div class="frow">= 135.5 + 148.6 + 422.0 = <em>706.1 kPa</em></div>
+        <div class="frow">[P] = 706.1 / 2.5 = <em>282.4 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA2, B=2.0m)</span>
+          <input class="ans-inp" id="a2-Pgh2" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-Pgh2',706.1,8)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-Pgh2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] (PA2)</span>
+          <input class="ans-inp" id="a2-P2" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-P2',282.4,2)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a2-P2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bước 4 -->
+    <div class="step-hd"><span class="snum">4</span><span class="sname">So sánh — Câu (a)</span></div>
+    <div class="stxt">
+      <table class="cmp-tbl">
+        <tr><th>PA</th><th>B (m)</th><th>p<sub>txtb</sub></th><th>p<sub>max</sub></th><th>[P]</th><th>1.2[P]</th><th>① p<sub>tb</sub>≤[P]</th><th>② p<sub>max</sub>≤1.2[P]</th><th>Kết luận</th></tr>
+        <tr>
+          <td class="lbl">PA1 B=1.2m</td><td>1.2</td>
+          <td style="font-family:var(--mono);color:var(--G)">228.3</td>
+          <td style="font-family:var(--mono);color:var(--R);font-weight:700">353.3</td>
+          <td style="font-family:var(--mono)">260.8</td>
+          <td style="font-family:var(--mono)">313.0</td>
+          <td><span style="color:var(--G);font-weight:700">✅ 228&lt;261</span></td>
+          <td><span style="color:var(--R);font-weight:700">❌ 353&gt;313</span></td>
+          <td><b style="color:var(--R)">Không đạt KT</b></td>
+        </tr>
+        <tr>
+          <td class="lbl">PA2 B=2.0m</td><td>2.0</td>
+          <td style="font-family:var(--mono);color:var(--G)">145.0</td>
+          <td style="font-family:var(--mono);color:var(--G);font-weight:700">190.0</td>
+          <td style="font-family:var(--mono)">282.4</td>
+          <td style="font-family:var(--mono)">338.9</td>
+          <td><span style="color:var(--G);font-weight:700">✅ 145&lt;282</span></td>
+          <td><span style="color:var(--G);font-weight:700">✅ 190&lt;339</span></td>
+          <td><b style="color:var(--A)">Đạt KT · Xem KT</b></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Câu b -->
+    <div class="step-hd"><span class="snum">5</span><span class="sname">Nhận xét — Câu (b)</span></div>
+    <div class="stxt">Phân tích sự thay đổi khi tăng B từ 1.2m → 2.0m trong bài toán móng băng:</div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Tại sao SCT của móng băng ít phụ thuộc vào B hơn móng đơn?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a2b1-0" onclick="pickMCQ('a2b1',0,0,'❌ Sai. Móng băng có các hệ số α₁=α₂=α₃=1.0 (không phụ thuộc B/L vì L→∞). Nhưng thành phần ½·Nγ·B vẫn phụ thuộc B.')"><span class="mkey">A</span><span>Móng băng không phụ thuộc B gì cả vì các hệ số α đều bằng 1.0</span></div>
+        <div class="mcq-opt" id="mco-a2b1-1" onclick="pickMCQ('a2b1',1,1,'✓ Đúng! Trong công thức P_gh = ½·Nγ·B·γ + Nq·q + Nc·c, chỉ có thành phần đầu (½·Nγ·B) phụ thuộc B. Hai thành phần sau (Nq·q và Nc·c) không đổi khi B thay đổi. Với φ=22°, Nγ=7.13 nhỏ nên đóng góp ½·Nγ·B·γ không lớn.')"><span class="mkey">B</span><span>Chỉ thành phần ½·N<sub>γ</sub>·B·γ phụ thuộc B; hai thành phần N<sub>q</sub>·q và N<sub>c</sub>·c không đổi theo B</span></div>
+        <div class="mcq-opt" id="mco-a2b1-2" onclick="pickMCQ('a2b1',2,0,'❌ Sai. N_γ, N_q, N_c phụ thuộc φ không phụ thuộc B. Chỉ có hệ số α₁ phụ thuộc B/L (với móng đơn).')"><span class="mkey">C</span><span>Hệ số N<sub>γ</sub>, N<sub>q</sub>, N<sub>c</sub> đều phụ thuộc B nên khi B tăng cả 3 đều tăng</span></div>
+        <div class="mcq-opt" id="mco-a2b1-3" onclick="pickMCQ('a2b1',3,0,'❌ Sai. Móng băng (α=1) và móng đơn vuông (α₁≈0.4) đều có SCT phụ thuộc B qua thành phần Nγ·B, nhưng mức độ khác nhau.')"><span class="mkey">D</span><span>SCT móng băng không phụ thuộc B gì vì có c và φ lớn, phần Nγ·B nhỏ không đáng kể</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a2b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.2</span>PA1 chỉ vi phạm điều kiện ② (p_max > 1.2[P]) chứ không vi phạm điều kiện ① (p_txtb ≤ [P]). Điều này cho thấy nguyên nhân chính của sự không đảm bảo là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a2b2-0" onclick="pickMCQ('a2b2',0,0,'❌ Sai. Tải N₀=250 kN/m không lớn bất thường — ngay cả PA1 B=1.2m cũng có p_txtb=228 < [P]=261.')"><span class="mkey">A</span><span>Tải trọng N₀ quá lớn so với khả năng chịu tải của nền</span></div>
+        <div class="mcq-opt" id="mco-a2b2-1" onclick="pickMCQ('a2b2',1,0,'❌ Sai. Nền đất φ=22°, c=25 kPa là khá tốt, [P]=261–282 kPa là hợp lý.')"><span class="mkey">B</span><span>Nền đất quá yếu nên không đủ SCT cho cả 2 điều kiện</span></div>
+        <div class="mcq-opt" id="mco-a2b2-2" onclick="pickMCQ('a2b2',2,1,'✓ Đúng! PA1: p_txtb=228 < [P]=261 (đạt ①), nhưng p_max=353 > 1.2×261=313 (vi phạm ②). Nguyên nhân chính là moment lệch tâm M₀=30 kNm/m tạo ra chênh lệch ±6M₀/B²=±125 kPa quá lớn khi B=1.2m nhỏ. Cần tăng B để giảm tập trung ứng suất do lệch tâm.')"><span class="mkey">C</span><span>Moment lệch tâm M₀ gây chênh lệch ứng suất quá lớn (±125 kPa) khi B nhỏ; cần tăng B</span></div>
+        <div class="mcq-opt" id="mco-a2b2-3" onclick="pickMCQ('a2b2',3,0,'❌ Sai. Điều kiện ① (p_txtb ≤ [P]) thỏa mãn. Vấn đề là điều kiện ② bị vi phạm do ứng suất cục bộ tập trung tại mép móng phía lệch tâm.')"><span class="mkey">D</span><span>Cả hai điều kiện đều vi phạm nên không xác định được nguyên nhân chính</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a2b2"></div>
+    </div>
+
+    <!-- Câu c -->
+    <div class="step-hd"><span class="snum">6</span><span class="sname">Kết luận và đề xuất — Câu (c)</span></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>PA2 (B=2.0m) đạt kỹ thuật với p_txtb/[P] = 145/282 ≈ 0.51. Đề xuất nào tối ưu nhất?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a2c1-0" onclick="pickMCQ('a2c1',0,0,'❌ Sai. Giữ nguyên PA2 lãng phí đến 49% SCT — không tối ưu kinh tế.')"><span class="mkey">A</span><span>Giữ nguyên PA2 B=2.0m vì đã đảm bảo kỹ thuật</span></div>
+        <div class="mcq-opt" id="mco-a2c1-1" onclick="pickMCQ('a2c1',1,1,'✓ Đúng! Thử B khoảng 1.5–1.6m: p_txtb ≈ 250/1.5+20=187 kPa < [P]≈275 kPa; p_max ≈ 187+6×30/2.25=187+80=267 < 1.2×275=330. Đạt cả 2 điều kiện với p/[P]≈0.68 — cân bằng tốt hơn.')"><span class="mkey">B</span><span>Thử B ≈ 1.5m — giảm kích thước, giảm chi phí nhưng vẫn đảm bảo cả 2 điều kiện</span></div>
+        <div class="mcq-opt" id="mco-a2c1-2" onclick="pickMCQ('a2c1',2,0,'❌ Sai. Tăng B sẽ làm lãng phí hơn nữa. PA2 đã đạt kỹ thuật — cần giảm B, không phải tăng.')"><span class="mkey">C</span><span>Tăng B lên 2.5m để có thêm dự trữ an toàn</span></div>
+        <div class="mcq-opt" id="mco-a2c1-3" onclick="pickMCQ('a2c1',3,0,'❌ Sai. Giảm h_m sẽ giảm q → giảm [P] → cần B lớn hơn. Ngược chiều cần thiết.')"><span class="mkey">D</span><span>Giảm chiều sâu h<sub>m</sub> để giảm tải trọng bản thân móng</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a2c1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.2</span>Ngoài việc điều chỉnh B, còn giải pháp nào khác có thể cải thiện điều kiện lệch tâm?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a2c2-0" onclick="pickMCQ('a2c2',0,0,'❌ Sai. Thay đổi thông số đất không thực hiện được trong thiết kế thông thường (trừ khi gia cố nền).')"><span class="mkey">A</span><span>Thay đổi thông số đất (tăng c, φ) bằng cách chọn lại địa điểm xây dựng</span></div>
+        <div class="mcq-opt" id="mco-a2c2-1" onclick="pickMCQ('a2c2',1,1,'✓ Đúng! Tăng chiều sâu h_m làm tăng q → tăng [P]. Đồng thời, nếu tải M₀ gây ra do điều kiện kết cấu bên trên, có thể cải tiến kết cấu để giảm M₀ xuống, từ đó giảm tác động lệch tâm.')"><span class="mkey">B</span><span>Tăng chiều sâu chôn móng h<sub>m</sub> để tăng [P]; hoặc giảm moment M₀ bằng cải tiến kết cấu bên trên</span></div>
+        <div class="mcq-opt" id="mco-a2c2-2" onclick="pickMCQ('a2c2',2,0,'❌ Sai. Tăng F_s chỉ làm [P] giảm hơn, yêu cầu B còn phải to hơn.')"><span class="mkey">C</span><span>Tăng hệ số an toàn F<sub>s</sub> lên 3.5 để đảm bảo điều kiện lệch tâm</span></div>
+        <div class="mcq-opt" id="mco-a2c2-3" onclick="pickMCQ('a2c2',3,0,'❌ Sai. Giảm N₀ đòi hỏi thay đổi thiết kế kết cấu bên trên — không phải giải pháp nền móng.')"><span class="mkey">D</span><span>Giảm tải trọng N₀ bằng cách dùng vật liệu nhẹ hơn cho tường</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a2c2"></div>
+    </div>
+  </div>
+</div>
+<!-- ═══ A3: Móng đơn, 2 lớp đất ═══ -->
+<div class="ex">
+  <div class="exhd" onclick="tog('a3')">
+    <span class="ebg ebA">A3</span><span class="ebg ebe">Mẫu</span>
+    <div><div class="etl">Móng đơn · 2 lớp đất · Đặt móng vào lớp 2 · Tải lệch tâm</div>
+    <div class="emt">Dạng 3 · Chú ý: dùng γ<sub>tb</sub> cho p, thông số lớp 2 cho [P]</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-a3"></i>
+  </div>
+  <div class="exbd" id="bd-a3">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài A3 — Móng đơn · Nền 2 lớp · Tải lệch tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Tại chân cột: <b>N₀ = 800 kN</b>, <b>M₀ = 150 kNm</b>. Nền đất gồm 2 lớp, đặt móng vào lớp 2 tại <b>h<sub>m</sub> = 1.2m</b>, F<sub>s</sub> = 2.5.</p>
+      <table class="dt">
+        <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Đất đắp, yếu — không đặt móng</td><td>0.8</td><td>17</td><td>—</td><td>—</td></tr>
+        <tr><td>2</td><td class="ln">Đất tốt — đặt móng vào đây</td><td>∞</td><td>19</td><td>20</td><td>25</td></tr>
+      </table>
+      <div class="tc" style="margin-top:8px">
+        <div style="background:#E3F2FD;border-radius:7px;padding:10px;font-size:13px"><b>PA1:</b> B×L = 1.6m × 2.0m</div>
+        <div style="background:#FCE4EC;border-radius:7px;padding:10px;font-size:13px"><b>PA2:</b> B×L = 2.2m × 2.6m</div>
+      </div>
+      <div style="background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12.5px;margin-top:8px">
+        <b>(a)</b> Kiểm tra SCT lớp 2 cho từng PA &nbsp;·&nbsp; <b>(b)</b> Nhận xét về tác động của lớp 1 &nbsp;·&nbsp; <b>(c)</b> Chọn PA và đề xuất
+      </div>
+    </div>
+
+    <!-- Bước 1 -->
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Điều kiện và xác định γ<sub>tb</sub></span></div>
+    <div class="stxt">
+      <div class="warn-box">⚠️ Nền 2 lớp: dùng <b>γ<sub>tb</sub></b> (trung bình các lớp đất trên đáy móng) để tính p<sub>txtb</sub>; dùng thông số lớp đất <b>dưới đáy móng (lớp 2)</b> để tính P<sub>gh</sub>.</div>
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> Tính γ<sub>tb</sub></div>
+        <div class="frow"><em>γ<sub>tb</sub></em> = (γ₁×h₁ + γ₂×(h<sub>m</sub>−h₁)) / h<sub>m</sub></div>
+        <div class="frow">= (17×0.8 + 19×0.4) / 1.2 = (13.6 + 7.6) / 1.2 = <em>17.67 kN/m³</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 γ<sub>tb</sub> = (γ₁×h₁ + γ₂×Δh) / h<sub>m</sub></span>
+          <input class="ans-inp" id="a3-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('a3-gtb',17.67,0.1)">
+          <span class="ans-unit">kN/m³</span><span class="chip" id="ck-a3-gtb"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bước 2 -->
+    <div class="step-hd"><span class="snum">2</span><span class="sname">Áp lực tiếp xúc đáy móng</span></div>
+    <div class="stxt">
+      <div class="fml-box">
+        <div class="frow"><em>p<sub>txtb</sub></em> = N₀/(B×L) + γ<sub>tb</sub>×h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;<em>p<sub>max,min</sub></em> = p<sub>txtb</sub> ± 6M₀/(B×L²)</div>
+      </div>
+      <b>PA1 (B=1.6m, L=2.0m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 800/(1.6×2.0) + 17.67×1.2 = 250 + 21.2 = <em>271.2 kPa</em></div>
+        <div class="frow">±6M₀/(BL²) = ±6×150/(1.6×4.0) = ±900/6.4 = ±<em>140.6 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = <em>411.8 kPa</em>&nbsp;&nbsp;·&nbsp;&nbsp;p<sub>min</sub> = <em>130.6 kPa</em> ≥ 0 ✓</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA1)</span>
+          <input class="ans-inp" id="a3-ptb1" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-ptb1',271.2,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-ptb1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA1)</span>
+          <input class="ans-inp" id="a3-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-pmax1',411.8,4)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-pmax1"></span>
+        </div>
+      </div>
+      <b>PA2 (B=2.2m, L=2.6m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 800/(2.2×2.6) + 21.2 = 800/5.72 + 21.2 = 139.9 + 21.2 = <em>161.1 kPa</em></div>
+        <div class="frow">±6M₀/(BL²) = ±6×150/(2.2×6.76) = ±900/14.87 = ±<em>60.5 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = <em>221.6 kPa</em>&nbsp;&nbsp;·&nbsp;&nbsp;p<sub>min</sub> = <em>100.6 kPa</em> ≥ 0 ✓</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA2)</span>
+          <input class="ans-inp" id="a3-ptb2" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-ptb2',161.1,2)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-ptb2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA2)</span>
+          <input class="ans-inp" id="a3-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-pmax2',221.6,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-pmax2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bước 3 -->
+    <div class="step-hd"><span class="snum">3</span><span class="sname">SCT nền — Dùng thông số lớp 2 (φ₂=25°)</span></div>
+    <div class="stxt">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-math-function"></i> Tra bảng φ₂=25°</div>
+        <div class="frow"><em>N<sub>γ</sub> = 10.88</em>&nbsp;&nbsp;·&nbsp;&nbsp;<em>N<sub>q</sub> = 10.66</em>&nbsp;&nbsp;·&nbsp;&nbsp;<em>N<sub>c</sub> = 20.72</em></div>
+        <div class="frow">q = γ₁×h₁ + γ₂×(h<sub>m</sub>−h₁) = 17×0.8 + 19×0.4 = 13.6 + 7.6 = <em>21.2 kPa</em></div>
+      </div>
+      <b>PA1 (B=1.6m, L=2.0m): α₁=1−0.2×0.8=0.84, α₃=1+0.16=1.16</b>
+      <div class="fml-box hint">
+        <div class="frow">P<sub>gh</sub> = ½×0.84×10.88×1.6×19 + 1.0×10.66×21.2 + 1.16×20.72×20</div>
+        <div class="frow">= 139.0 + 226.0 + 480.7 = <em>845.7 kPa</em>&nbsp;&nbsp;→&nbsp;&nbsp;[P] = <em>338.3 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA1)</span>
+          <input class="ans-inp" id="a3-Pgh1" type="number" step="1" placeholder="?" oninput="chkFill('a3-Pgh1',845.7,10)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-Pgh1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] = P<sub>gh</sub>/2.5 (PA1)</span>
+          <input class="ans-inp" id="a3-P1" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-P1',338.3,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-P1"></span>
+        </div>
+      </div>
+      <b>PA2 (B=2.2m, L=2.6m): α₁=1−0.2×0.846=0.831, α₃=1.169</b>
+      <div class="fml-box hint">
+        <div class="frow">P<sub>gh</sub> = ½×0.831×10.88×2.2×19 + 226.0 + 1.169×20.72×20</div>
+        <div class="frow">= 190.5 + 226.0 + 484.4 = <em>900.9 kPa</em>&nbsp;&nbsp;→&nbsp;&nbsp;[P] = <em>360.4 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 P<sub>gh</sub> (PA2)</span>
+          <input class="ans-inp" id="a3-Pgh2" type="number" step="1" placeholder="?" oninput="chkFill('a3-Pgh2',900.9,12)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-Pgh2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] = P<sub>gh</sub>/2.5 (PA2)</span>
+          <input class="ans-inp" id="a3-P2" type="number" step="0.1" placeholder="?" oninput="chkFill('a3-P2',360.4,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a3-P2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bước 4 -->
+    <div class="step-hd"><span class="snum">4</span><span class="sname">Kiểm tra — Câu (a)</span></div>
+    <div class="stxt">
+      <table class="cmp-tbl">
+        <tr><th>PA</th><th>B×L</th><th>p<sub>txtb</sub></th><th>p<sub>max</sub></th><th>[P]</th><th>1.2[P]</th><th>① p<sub>tb</sub>≤[P]</th><th>② p<sub>max</sub>≤1.2[P]</th><th>KL</th></tr>
+        <tr>
+          <td class="lbl">PA1 1.6×2.0m</td><td>3.2m²</td>
+          <td style="font-family:var(--mono);color:var(--R)">271.2</td>
+          <td style="font-family:var(--mono);color:var(--R);font-weight:700">411.8</td>
+          <td style="font-family:var(--mono)">338.3</td><td style="font-family:var(--mono)">406</td>
+          <td><span style="color:var(--G);font-weight:700">✅</span></td>
+          <td><span style="color:var(--R);font-weight:700">❌ 412&gt;406</span></td>
+          <td><b style="color:var(--R)">Không đạt</b></td>
+        </tr>
+        <tr>
+          <td class="lbl">PA2 2.2×2.6m</td><td>5.72m²</td>
+          <td style="font-family:var(--mono);color:var(--G)">161.1</td>
+          <td style="font-family:var(--mono);color:var(--G);font-weight:700">221.6</td>
+          <td style="font-family:var(--mono)">360.4</td><td style="font-family:var(--mono)">432</td>
+          <td><span style="color:var(--G);font-weight:700">✅</span></td>
+          <td><span style="color:var(--G);font-weight:700">✅ 222&lt;432</span></td>
+          <td><b style="color:var(--A)">Đạt KT</b></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Câu b và c MCQ -->
+    <div class="step-hd"><span class="snum">5</span><span class="sname">Nhận xét — Câu (b)</span></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Trong bài nền 2 lớp này, lớp 1 (đất đắp) đóng vai trò gì trong tính toán?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a3b1-0" onclick="pickMCQ('a3b1',0,0,'❌ Sai. Lớp 1 yếu không đóng vai trò chịu tải. Toàn bộ thông số c₁, φ₁ của lớp 1 bị bỏ qua trong công thức P_gh.')"><span class="mkey">A</span><span>Lớp 1 đóng góp c₁, φ₁ vào công thức tính P<sub>gh</sub></span></div>
+        <div class="mcq-opt" id="mco-a3b1-1" onclick="pickMCQ('a3b1',1,1,'✓ Đúng! Lớp 1 (đất đắp yếu) chỉ đóng vai trò tạo tải trọng tầng phủ q và đóng góp γ₁×h₁ vào γ_tb. Toàn bộ khả năng chịu lực của nền do lớp 2 quyết định (c₂, φ₂, γ₂).')"><span class="mkey">B</span><span>Lớp 1 chỉ đóng góp vào γ<sub>tb</sub> và áp lực tầng phủ q; SCT hoàn toàn do lớp 2 quyết định</span></div>
+        <div class="mcq-opt" id="mco-a3b1-2" onclick="pickMCQ('a3b1',2,0,'❌ Sai. Lớp 1 ảnh hưởng đến γ_tb và q, nhưng không kiểm soát SCT. Lớp 1 yếu nên không đặt móng vào đây.')"><span class="mkey">C</span><span>Lớp 1 kiểm soát SCT vì móng đặt qua lớp này trước khi vào lớp 2</span></div>
+        <div class="mcq-opt" id="mco-a3b1-3" onclick="pickMCQ('a3b1',3,0,'❌ Sai. Lớp 1 có ảnh hưởng đến γ_tb và do đó ảnh hưởng đến p_txtb và q trong công thức P_gh.')"><span class="mkey">D</span><span>Lớp 1 hoàn toàn không ảnh hưởng đến tính toán vì bị bỏ qua</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a3b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.2</span>PA1 chỉ vi phạm điều kiện ② (p_max > 1.2[P]) với chênh lệch rất nhỏ (412 > 406). Đây là tình huống thường gặp trong thực tế — cần xử lý thế nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a3b2-0" onclick="pickMCQ('a3b2',0,0,'❌ Sai. Vi phạm điều kiện SCT dù nhỏ cũng không được chấp nhận — nguy cơ phá hoại nền cục bộ tại vùng ứng suất cao.')"><span class="mkey">A</span><span>Chấp nhận PA1 vì vi phạm nhỏ (1.5%), trong giới hạn sai số tính toán</span></div>
+        <div class="mcq-opt" id="mco-a3b2-1" onclick="pickMCQ('a3b2',1,1,'✓ Đúng! Khi PA1 vi phạm rất nhỏ và PA2 quá thừa, giải pháp tối ưu là thử kích thước trung gian: ví dụ B=1.8m, L=2.2m — có thể vừa đảm bảo kỹ thuật (p_max < 1.2[P]) vừa tiết kiệm hơn PA2.')"><span class="mkey">B</span><span>Thử kích thước trung gian (B≈1.8m, L≈2.2m) để vừa đạt kỹ thuật vừa không lãng phí như PA2</span></div>
+        <div class="mcq-opt" id="mco-a3b2-2" onclick="pickMCQ('a3b2',2,0,'❌ Sai. Tăng h_m sẽ tăng q và do đó tăng [P], nhưng cũng tăng p_txtb theo γ_tb·h_m — cần tính toán lại cẩn thận.')"><span class="mkey">C</span><span>Tăng chiều sâu h<sub>m</sub> thêm 0.5m để tăng [P] vượt ngưỡng vi phạm</span></div>
+        <div class="mcq-opt" id="mco-a3b2-3" onclick="pickMCQ('a3b2',3,0,'❌ Sai. Giảm F_s xuống dưới 2.5 là không được phép theo tiêu chuẩn thiết kế.')"><span class="mkey">D</span><span>Giảm hệ số an toàn F<sub>s</sub> từ 2.5 xuống 2.3 để [P] tăng lên đủ</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a3b2"></div>
+    </div>
+    <div class="step-hd"><span class="snum">6</span><span class="sname">Kết luận — Câu (c)</span></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>PA2 (2.2×2.6m) đạt kỹ thuật với p_txtb/[P] = 161/360 ≈ 0.45. Phương án nào là tối ưu nhất?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a3c1-0" onclick="pickMCQ('a3c1',0,0,'❌ Sai. PA1 vi phạm điều kiện ② — không được phép sử dụng.')"><span class="mkey">A</span><span>Chọn PA1 (1.6×2.0m) vì nhỏ hơn, tiết kiệm vật liệu</span></div>
+        <div class="mcq-opt" id="mco-a3c1-1" onclick="pickMCQ('a3c1',1,0,'❌ Sai. PA2 đạt kỹ thuật nhưng hệ số khai thác SCT chỉ 0.45 — còn 55% dư thừa, quá lãng phí.')"><span class="mkey">B</span><span>Chọn PA2 (2.2×2.6m) vì đảm bảo kỹ thuật</span></div>
+        <div class="mcq-opt" id="mco-a3c1-2" onclick="pickMCQ('a3c1',2,1,'✓ Đúng! Cả PA1 (vi phạm nhỏ) và PA2 (lãng phí 55%) đều chưa tối ưu. Kích thước lý tưởng nằm trong khoảng B≈1.8–2.0m, L≈2.2–2.4m — cần kiểm tra lại để tìm kích thước kinh tế nhất đảm bảo kỹ thuật.')"><span class="mkey">C</span><span>Cả hai chưa tối ưu; cần thử kích thước trung gian B≈1.8–2.0m để đạt cân bằng kỹ thuật–kinh tế</span></div>
+        <div class="mcq-opt" id="mco-a3c1-3" onclick="pickMCQ('a3c1',3,0,'❌ Sai. Móng cọc chỉ dùng khi nền quá yếu hoặc tải quá lớn. Với nền lớp 2 φ=25°, c=20 kPa là đủ tốt cho móng nông.')"><span class="mkey">D</span><span>Chuyển sang móng cọc vì không tìm được kích thước phù hợp</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a3c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ A4: Móng băng, 2 lớp đất ═══ -->
+<div class="ex">
+  <div class="exhd" onclick="tog('a4')">
+    <span class="ebg ebA">A4</span><span class="ebg ebe">Mẫu</span>
+    <div><div class="etl">Móng băng · 2 lớp đất · Tải lệch tâm · Lớp 3 rất yếu</div>
+    <div class="emt">Dạng 4 · Cả 2 PA không đảm bảo do lớp 3 bùn sét yếu</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-a4"></i>
+  </div>
+  <div class="exbd" id="bd-a4">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài A4 — Móng băng · Nền 3 lớp (lớp 3 rất yếu)</div>
+      <p style="font-size:13px;margin-bottom:8px">Trên 1m dài tường: <b>N₀ = 600 kN/m</b>, <b>M₀ = 100 kNm/m</b>. h<sub>m</sub> = 1.2m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt">
+        <tr><th>Lớp</th><th>Mô tả</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Đất lấp</td><td>1.0</td><td>18</td><td>—</td><td>—</td></tr>
+        <tr><td>2</td><td class="ln">Đất tốt — móng đặt vào đây</td><td>1.2</td><td>20</td><td>10</td><td>22</td></tr>
+        <tr><td>3</td><td class="ln">Bùn sét rất yếu</td><td>∞</td><td>15</td><td>3</td><td>2</td></tr>
+      </table>
+      <div class="tc" style="margin-top:8px">
+        <div style="background:#E3F2FD;border-radius:7px;padding:10px;font-size:13px"><b>PA1:</b> B = 2.0m</div>
+        <div style="background:#FCE4EC;border-radius:7px;padding:10px;font-size:13px"><b>PA2:</b> B = 3.5m</div>
+      </div>
+      <div style="background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12.5px;margin-top:8px">
+        Kiểm tra SCT lớp 2 (dưới đáy móng) — <i>Bài này cả 2 PA đều không đảm bảo</i>
+      </div>
+    </div>
+
+    <div class="step-hd"><span class="snum">1</span><span class="sname">Tính γ<sub>tb</sub> (lớp trên đáy móng)</span></div>
+    <div class="stxt">
+      <div class="fml-box hint">
+        <div class="frow">γ<sub>tb</sub> = (18×1.0 + 20×0.2) / 1.2 = (18.0 + 4.0) / 1.2 = <em>18.33 kN/m³</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 γ<sub>tb</sub></span>
+          <input class="ans-inp" id="a4-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('a4-gtb',18.33,0.1)">
+          <span class="ans-unit">kN/m³</span><span class="chip" id="ck-a4-gtb"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-hd"><span class="snum">2</span><span class="sname">Áp lực tiếp xúc — Móng băng</span></div>
+    <div class="stxt">
+      <b>PA1 (B=2.0m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 600/2.0 + 18.33×1.2 = 300 + 22.0 = <em>322.0 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 322.0 + 6×100/2.0² = 322.0 + 150 = <em>472.0 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA1)</span>
+          <input class="ans-inp" id="a4-ptb1" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-ptb1',322.0,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-ptb1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA1)</span>
+          <input class="ans-inp" id="a4-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-pmax1',472.0,4)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-pmax1"></span>
+        </div>
+      </div>
+      <b>PA2 (B=3.5m):</b>
+      <div class="fml-box hint">
+        <div class="frow">p<sub>txtb</sub> = 600/3.5 + 22.0 = 171.4 + 22.0 = <em>193.4 kPa</em></div>
+        <div class="frow">p<sub>max</sub> = 193.4 + 6×100/3.5² = 193.4 + 49.0 = <em>242.4 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>txtb</sub> (PA2)</span>
+          <input class="ans-inp" id="a4-ptb2" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-ptb2',193.4,2)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-ptb2"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 p<sub>max</sub> (PA2)</span>
+          <input class="ans-inp" id="a4-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-pmax2',242.4,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-pmax2"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-hd"><span class="snum">3</span><span class="sname">SCT nền — Dùng thông số lớp 2 (φ₂=22°)</span></div>
+    <div class="stxt">
+      <div class="fml-box hint">
+        <div class="frow">Tra bảng φ₂=22°: N<sub>γ</sub>=7.13, N<sub>q</sub>=7.82, N<sub>c</sub>=16.88. Băng: α=1.0</div>
+        <div class="frow">q = γ₁×h₁ + γ₂×(h<sub>m</sub>−h₁) = 18×1.0 + 20×0.2 = <em>22.0 kPa</em></div>
+        <div class="frow">PA1 (B=2.0m): P<sub>gh</sub> = ½×7.13×2.0×20 + 7.82×22.0 + 16.88×10 = 142.6 + 172.0 + 168.8 = <em>483.4 kPa</em></div>
+        <div class="frow">[P]₁ = 483.4/2.5 = <em>193.4 kPa</em></div>
+        <div class="frow">PA2 (B=3.5m): P<sub>gh</sub> = ½×7.13×3.5×20 + 172.0 + 168.8 = 249.6 + 340.8 = <em>590.4 kPa</em></div>
+        <div class="frow">[P]₂ = 590.4/2.5 = <em>236.2 kPa</em></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 12px 32px">
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] (PA1, B=2.0m)</span>
+          <input class="ans-inp" id="a4-P1" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-P1',193.4,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-P1"></span>
+        </div>
+        <div class="ans-row">
+          <span class="ans-label">📌 [P] (PA2, B=3.5m)</span>
+          <input class="ans-inp" id="a4-P2" type="number" step="0.1" placeholder="?" oninput="chkFill('a4-P2',236.2,3)">
+          <span class="ans-unit">kPa</span><span class="chip" id="ck-a4-P2"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-hd"><span class="snum">4</span><span class="sname">Kiểm tra — Câu (a)</span></div>
+    <div class="stxt">
+      <table class="cmp-tbl">
+        <tr><th>PA</th><th>B (m)</th><th>p<sub>txtb</sub></th><th>p<sub>max</sub></th><th>[P]</th><th>1.2[P]</th><th>① p<sub>tb</sub>≤[P]</th><th>② p<sub>max</sub>≤1.2[P]</th><th>KL</th></tr>
+        <tr>
+          <td class="lbl">PA1 B=2.0m</td><td>2.0</td>
+          <td style="color:var(--R);font-weight:700">322.0</td>
+          <td style="color:var(--R);font-weight:700">472.0</td>
+          <td>193.4</td><td>232.1</td>
+          <td><span style="color:var(--R);font-weight:700">❌</span></td>
+          <td><span style="color:var(--R);font-weight:700">❌</span></td>
+          <td><b style="color:var(--R)">Không đạt</b></td>
+        </tr>
+        <tr>
+          <td class="lbl">PA2 B=3.5m</td><td>3.5</td>
+          <td style="color:var(--R);font-weight:700">193.4</td>
+          <td style="color:var(--R);font-weight:700">242.4</td>
+          <td>236.2</td><td>283.4</td>
+          <td><span style="color:var(--G);font-weight:700">✅ 193≤236</span></td>
+          <td><span style="color:var(--R);font-weight:700">❌ 242&gt;283? <i style="font-size:10px">Sát giới hạn</i></span></td>
+          <td><b style="color:var(--A)">Sát ngưỡng</b></td>
+        </tr>
+      </table>
+      <div class="err-box">✗ PA2 B=3.5m: p_max = 242.4 kPa ≤ 1.2×[P] = 283.4 kPa → <b>đạt điều kiện ②</b> nhưng p_txtb/[P] = 0.82 — tương đối hợp lý kinh tế. Tuy nhiên, lớp 3 bùn sét rất yếu bên dưới (φ=2°, c=3 kPa) là mối nguy hiểm tiềm ẩn cần kiểm tra thêm.</div>
+    </div>
+
+    <!-- Câu b và c -->
+    <div class="step-hd"><span class="snum">5</span><span class="sname">Nhận xét — Câu (b)</span></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Tại sao khi tăng B từ 2.0m → 3.5m, SCT lớp 2 tăng nhưng vẫn không giải quyết được toàn bộ vấn đề?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a4b1-0" onclick="pickMCQ('a4b1',0,0,'❌ Sai. SCT lớp 2 phụ thuộc B qua thành phần ½·Nγ·B·γ₂ — tăng đáng kể khi B tăng từ 2→3.5m.')"><span class="mkey">A</span><span>SCT lớp 2 không thay đổi khi B tăng nên không có ích gì</span></div>
+        <div class="mcq-opt" id="mco-a4b1-1" onclick="pickMCQ('a4b1',1,1,'✓ Đúng! Tăng B giúp: (1) giảm p_txtb và p_max (phân bố tải rộng hơn), (2) tăng [P]₂ (lớp 2). Nhưng bên dưới lớp 2 có lớp 3 bùn sét φ=2°, c=3 kPa cực yếu — đây là nguy cơ lún dài hạn và SCT lớp 3 rất nhỏ. Cần kiểm tra cả lớp 3.')"><span class="mkey">B</span><span>Tăng B cải thiện được lớp 2, nhưng lớp 3 bùn sét φ=2°, c=3 kPa bên dưới vẫn là mối nguy; cần kiểm tra thêm</span></div>
+        <div class="mcq-opt" id="mco-a4b1-2" onclick="pickMCQ('a4b1',2,0,'❌ Sai. Tải trọng N₀ và M₀ không thay đổi khi tăng B. Chính B tăng làm p giảm và [P] tăng.')"><span class="mkey">C</span><span>Tăng B làm tăng tải trọng bản thân móng nên p_txtb không giảm như kỳ vọng</span></div>
+        <div class="mcq-opt" id="mco-a4b1-3" onclick="pickMCQ('a4b1',3,0,'❌ Sai. Tăng B thực sự cải thiện cả p và [P]₂ — vấn đề chính là lớp 3 yếu bên dưới.')"><span class="mkey">D</span><span>Công thức Terzaghi không phù hợp cho nền nhiều lớp nên kết quả không có nghĩa</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a4b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.2</span>Có "mâu thuẫn" nào khi tăng B trong bài toán có lớp 3 yếu bên dưới?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a4b2-0" onclick="pickMCQ('a4b2',0,1,'✓ Đúng! Mâu thuẫn điển hình: (1) Muốn giảm p_txtb lên lớp 2 → cần tăng B. (2) Nhưng tăng B → ứng suất phân bố ra vùng rộng hơn → tác động đến lớp 3 yếu nhiều hơn. Thực tế với lớp bùn yếu, nguy cơ lún cố kết dài hạn là vấn đề lớn hơn SCT tức thời.')"><span class="mkey">A</span><span>Tăng B giảm p_txtb lên lớp 2 (tốt), nhưng lại tác động lên vùng rộng hơn của lớp 3 yếu — mâu thuẫn giữa giảm ứng suất cục bộ và tăng vùng ảnh hưởng</span></div>
+        <div class="mcq-opt" id="mco-a4b2-1" onclick="pickMCQ('a4b2',1,0,'❌ Sai. Tăng B không làm móng nặng hơn đáng kể so với tải trọng công trình N₀=600 kN/m.')"><span class="mkey">B</span><span>Tăng B làm móng nặng hơn, tăng p_txtb — mâu thuẫn với mục tiêu giảm áp lực</span></div>
+        <div class="mcq-opt" id="mco-a4b2-2" onclick="pickMCQ('a4b2',2,0,'❌ Sai. Lệch tâm M₀ không phải vấn đề chính ở bài này (p_min > 0 trong cả 2 PA).')"><span class="mkey">C</span><span>Tăng B làm lệch tâm tăng vì M₀ cố định và B lớn hơn</span></div>
+        <div class="mcq-opt" id="mco-a4b2-3" onclick="pickMCQ('a4b2',3,0,'❌ Sai. Thực sự có mâu thuẫn về cơ học khi có lớp yếu bên dưới — không phải vấn đề công thức.')"><span class="mkey">D</span><span>Không có mâu thuẫn; tăng B luôn cải thiện cả 2 điều kiện SCT</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a4b2"></div>
+    </div>
+    <div class="step-hd"><span class="snum">6</span><span class="sname">Kết luận và đề xuất — Câu (c)</span></div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Với lớp 3 bùn sét yếu (φ=2°, c=3 kPa) ngay dưới lớp 2 dày 1.2m, giải pháp nền móng nào là khả thi nhất?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a4c1-0" onclick="pickMCQ('a4c1',0,0,'❌ Sai. Tiếp tục tăng B sẽ tăng ảnh hưởng đến lớp 3 và chi phí móng tăng theo — không hiệu quả và lãng phí.')"><span class="mkey">A</span><span>Tiếp tục tăng B lên 5m để giảm p xuống dưới [P] lớp 2</span></div>
+        <div class="mcq-opt" id="mco-a4c1-1" onclick="pickMCQ('a4c1',1,0,'❌ Sai. Gia cố vữa xi măng (grouting) không hiệu quả với bùn sét yếu dày — chi phí cao, kết quả không đảm bảo.')"><span class="mkey">B</span><span>Gia cố nền bằng vữa xi măng phun áp lực vào lớp 3</span></div>
+        <div class="mcq-opt" id="mco-a4c1-2" onclick="pickMCQ('a4c1',2,1,'✓ Đúng! Móng cọc xuyên qua lớp 1, 2 và lớp 3 bùn để ngàm vào tầng đất tốt bên dưới. Đây là giải pháp tiêu chuẩn khi nền có lớp yếu. Tải trọng truyền trực tiếp qua ma sát thân cọc và sức chịu tải mũi cọc vào tầng đất cứng.')"><span class="mkey">C</span><span>Móng cọc xuyên qua lớp 3 bùn yếu, ngàm vào tầng đất tốt bên dưới</span></div>
+        <div class="mcq-opt" id="mco-a4c1-3" onclick="pickMCQ('a4c1',3,0,'❌ Sai. Đào toàn bộ lớp 3 là không thực tế về mặt kinh tế và kỹ thuật (lớp 3 vô hạn chiều sâu).')"><span class="mkey">D</span><span>Đào bỏ toàn bộ lớp 3 bùn yếu và thay bằng đất đắp</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a4c1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.2</span>Tăng B có thể không phải lúc nào cũng là giải pháp tốt. Khi nào thì tăng B không hiệu quả?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-a4c2-0" onclick="pickMCQ('a4c2',0,0,'❌ Sai. Đất rời (cát, sỏi) không phải lý do tăng B không hiệu quả. Tăng B vẫn có tác dụng với đất rời.')"><span class="mkey">A</span><span>Khi đất là cát (đất rời) vì N<sub>c</sub>=0</span></div>
+        <div class="mcq-opt" id="mco-a4c2-1" onclick="pickMCQ('a4c2',1,0,'❌ Sai. Dù móng đơn hay băng, nguyên tắc tăng B vẫn cải thiện được cả p lẫn [P] nếu nền đồng nhất.')"><span class="mkey">B</span><span>Khi dùng móng băng thay vì móng đơn vì α₁=α₂=α₃=1.0 cố định</span></div>
+        <div class="mcq-opt" id="mco-a4c2-2" onclick="pickMCQ('a4c2',2,1,'✓ Đúng! Khi có lớp đất yếu (bùn, sét yếu) ngay dưới lớp chịu tải, tăng B không hiệu quả vì: (1) [P] của lớp yếu gần như cố định (c≈0, φ≈2° → Nγ, Nq, Nc rất nhỏ); (2) Tải truyền xuống lớp yếu không giảm được bằng cách mở rộng móng trên. Phải dùng cọc.')"><span class="mkey">C</span><span>Khi có lớp yếu ngay dưới lớp chịu tải — [P] lớp yếu cực nhỏ và cố định, không cải thiện được bằng cách tăng B</span></div>
+        <div class="mcq-opt" id="mco-a4c2-3" onclick="pickMCQ('a4c2',3,0,'❌ Sai. Moment lệch tâm có thể giảm bằng cách tăng B (hệ số 6M₀/B² giảm). Đây không phải lý do tăng B không hiệu quả.')"><span class="mkey">D</span><span>Khi có moment lệch tâm lớn, tăng B sẽ làm mất cân bằng phân bố ứng suất</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-a4c2"></div>
+    </div>
+  </div>
+</div>
+<!-- ══════════════ NHÓM B ══════════════ -->
+<div class="gs"><i class="ti ti-edit"></i>NHÓM B — Công thức gợi ý sẵn · Sinh viên tự tìm số liệu từ đề bài và điền đáp số (B1–B4)</div>
+
+<!-- B1 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('b1')">
+    <span class="ebg ebB">B1</span><span class="ebg ebe">Dễ</span>
+    <div><div class="etl">Móng đơn · 1 lớp đất · Tải đúng tâm · PA1 không đạt, PA2 đạt nhưng lãng phí</div>
+    <div class="emt">Dạng 1 · Công thức sẵn · Tự tra bảng và điền từng bước</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-b1"></i>
+  </div>
+  <div class="exbd" id="bd-b1">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài B1</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng đơn (vuông), <b>N₀ = 900 kN</b>, M₀ = 0. h<sub>m</sub> = 1.5m, F<sub>s</sub> = 2.5, γ<sub>tb</sub> tính theo đất thực tế.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Sét pha dẻo cứng nâu vàng</td><td>∞</td><td>18.5</td><td>18</td><td>20</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Kiểm tra với: <b>PA1: B = 1.8m</b> và <b>PA2: B = 2.5m</b> (móng vuông B=L)</p>
+      <div style="background:var(--Alt);border-left:3px solid var(--A);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12.5px;margin-top:8px">
+        Công thức đã gợi ý bên dưới · Sinh viên tự tra bảng hệ số theo φ, tính số liệu và điền đáp số
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-math-function" style="font-size:13px"></i>Công thức sử dụng</div>
+    <div class="fml-box">
+      <div class="frow"><em>p<sub>txtb</sub></em> = N₀/B² + γ<sub>tb</sub>·h<sub>m</sub>&nbsp;&nbsp;(đúng tâm, móng vuông)</div>
+      <div class="frow"><em>P<sub>gh</sub></em> = ½·α₁·N<sub>γ</sub>·B·γ + α₂·N<sub>q</sub>·q + α₃·N<sub>c</sub>·c&nbsp;&nbsp;(móng đơn vuông: α₁=0.4, α₂=1, α₃=1.3)</div>
+      <div class="frow">q = γ·h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;<em>[P]</em> = P<sub>gh</sub>/F<sub>s</sub></div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-table" style="font-size:13px"></i>Bước 1 — Tra bảng và tính các hệ số</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 Tra bảng φ=20°: N<sub>γ</sub> =</span>
+        <input class="ans-inp" id="f-b1-Ng" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b1-Ng',5.39,0.3)">
+        <span class="chip" id="ck-f-b1-Ng"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>q</sub> =</span>
+        <input class="ans-inp" id="f-b1-Nq" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b1-Nq',6.40,0.3)">
+        <span class="chip" id="ck-f-b1-Nq"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>c</sub> =</span>
+        <input class="ans-inp" id="f-b1-Nc" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b1-Nc',14.83,0.3)">
+        <span class="chip" id="ck-f-b1-Nc"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 q = γ·h<sub>m</sub> = 18.5 × 1.5 =</span>
+        <input class="ans-inp" id="f-b1-q" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b1-q',27.75,0.5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-q"></span>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-calculator" style="font-size:13px"></i>Bước 2 — Tính [P] cho từng phương án</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 P<sub>gh</sub> (PA1, B=1.8m) — Tính α₁=1−0.2×1=0.8, α₃=1.2</span>
+        <input class="ans-inp" id="f-b1-Pgh1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-Pgh1',595.6,10)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-Pgh1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] = P<sub>gh</sub>/2.5 (PA1)</span>
+        <input class="ans-inp" id="f-b1-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-Rn1',238.2,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 P<sub>gh</sub> (PA2, B=2.5m) — α₁=1−0.2=0.8, α₃=1.2</span>
+        <input class="ans-inp" id="f-b1-Pgh2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-Pgh2',623.6,10)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-Pgh2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] = P<sub>gh</sub>/2.5 (PA2)</span>
+        <input class="ans-inp" id="f-b1-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-Rn2',249.4,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-Rn2"></span>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-arrows-right-left" style="font-size:13px"></i>Bước 3 — Tính áp lực và so sánh</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=1.8m) = N₀/B² + γ·h<sub>m</sub></span>
+        <input class="ans-inp" id="f-b1-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-ptc1',305.5,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=2.5m)</span>
+        <input class="ans-inp" id="f-b1-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b1-ptc2',171.75,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b1-ptc2"></span>
+      </div>
+    </div>
+
+    <table class="cmp-tbl">
+      <tr><th>PA</th><th>B (m)</th><th>p<sub>txtb</sub></th><th>[P]</th><th>p<sub>txtb</sub>≤[P]?</th><th>p/[P]</th><th>Kết luận</th></tr>
+      <tr>
+        <td class="lbl">PA1 B=1.8m</td><td>1.8</td>
+        <td style="color:var(--R);font-weight:700">305.5</td><td>238.2</td>
+        <td><span style="color:var(--R);font-weight:700">❌ 306&gt;238</span></td>
+        <td style="color:var(--R)">1.28 &gt; 1</td>
+        <td><b style="color:var(--R)">Không đạt KT</b></td>
+      </tr>
+      <tr>
+        <td class="lbl">PA2 B=2.5m</td><td>2.5</td>
+        <td style="color:var(--G);font-weight:700">171.8</td><td>249.4</td>
+        <td><span style="color:var(--G);font-weight:700">✅ 172&lt;249</span></td>
+        <td style="color:var(--A)">0.69 — xem xét</td>
+        <td><b style="color:var(--A)">Đạt KT · Xem KT</b></td>
+      </tr>
+    </table>
+
+    <!-- Câu b -->
+    <div class="sec-lbl"><i class="ti ti-message-question" style="font-size:13px"></i>Câu (b) — Nhận xét và phân tích</div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Theo lý thuyết, khi diện tích đáy móng B² tăng (tải đúng tâm M₀=0), điều gì xảy ra với p và [P]?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b1b1-0" onclick="pickMCQ('b1b1',0,0,'❌ Sai. p = N₀/B² + const → khi B² tăng, N₀/B² giảm → p giảm.')"><span class="mkey">A</span><span>p tăng vì móng lớn hơn → nền phải chịu nhiều tải hơn</span></div>
+        <div class="mcq-opt" id="mco-b1b1-1" onclick="pickMCQ('b1b1',1,1,'✓ Đúng! p = N₀/B² + γ·h_m. B tăng → N₀/B² giảm → p giảm. [P] = P_gh/Fs, trong đó P_gh có thành phần ½·Nγ·B·γ tăng → [P] tăng nhẹ. Kết quả: p giảm mạnh, [P] tăng nhẹ → điều kiện p ≤ [P] dễ thỏa mãn hơn.')"><span class="mkey">B</span><span>p giảm (N₀ phân bố trên diện tích lớn hơn) và [P] tăng nhẹ (do thành phần Nγ·B tăng)</span></div>
+        <div class="mcq-opt" id="mco-b1b1-2" onclick="pickMCQ('b1b1',2,0,'❌ Sai. [P] thay đổi theo B qua thành phần Nγ·B trong công thức Terzaghi.')"><span class="mkey">C</span><span>p giảm nhưng [P] không đổi vì thông số đất (φ, c, γ) không thay đổi</span></div>
+        <div class="mcq-opt" id="mco-b1b1-3" onclick="pickMCQ('b1b1',3,0,'❌ Sai. Khi B tăng từ 1.8 → 2.5m: p giảm từ 306 → 172 kPa (giảm 44%); [P] tăng từ 238 → 249 kPa (tăng 5%). Cả hai đều thay đổi.')"><span class="mkey">D</span><span>Cả p và [P] đều không thay đổi đáng kể</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b1b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.2</span>PA2 (B=2.5m) có p/[P] ≈ 0.69. Điều này có nghĩa gì về mặt kinh tế?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b1b2-0" onclick="pickMCQ('b1b2',0,0,'❌ Sai. p/[P]=0.69 cho thấy còn 31% SCT chưa được khai thác — có thể dùng móng nhỏ hơn.')"><span class="mkey">A</span><span>Hoàn toàn tối ưu — hệ số khai thác SCT 69% là mức lý tưởng</span></div>
+        <div class="mcq-opt" id="mco-b1b2-1" onclick="pickMCQ('b1b2',1,1,'✓ Đúng! p/[P]=0.69 nghĩa là chỉ khai thác 69% SCT của nền, còn 31% dự trữ chưa dùng đến. Về kinh tế, nên thử B nhỏ hơn (khoảng 2.0–2.2m) để p/[P] tiệm cận 0.85–0.95 — vừa đảm bảo kỹ thuật vừa tiết kiệm.')"><span class="mkey">B</span><span>Hơi lãng phí (còn 31% SCT dự trữ chưa dùng); nên thử B ≈ 2.0–2.2m để tối ưu hơn</span></div>
+        <div class="mcq-opt" id="mco-b1b2-2" onclick="pickMCQ('b1b2',2,0,'❌ Sai. Hệ số khai thác 0.69 không phải nguy hiểm — vẫn đạt kỹ thuật. Chỉ là chưa tối ưu kinh tế.')"><span class="mkey">C</span><span>Nguy hiểm — p/[P] gần 1.0 nghĩa là sắp đạt giới hạn phá hoại</span></div>
+        <div class="mcq-opt" id="mco-b1b2-3" onclick="pickMCQ('b1b2',3,0,'❌ Sai. Tiêu chí kinh tế quan trọng là p/[P] không quá nhỏ (lãng phí) và không quá lớn (không đạt KT).')"><span class="mkey">D</span><span>Hoàn toàn không có ý nghĩa — chỉ cần đạt điều kiện kỹ thuật là đủ</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b1b2"></div>
+    </div>
+
+    <!-- Câu c -->
+    <div class="sec-lbl"><i class="ti ti-bulb" style="font-size:13px"></i>Câu (c) — Kết luận và đề xuất</div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Kết luận nào đúng nhất về PA1 và PA2?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b1c1-0" onclick="pickMCQ('b1c1',0,0,'❌ Sai. PA1 không đạt (p>Rn). PA2 đạt nhưng hơi lãng phí.')"><span class="mkey">A</span><span>Cả hai đều đạt kỹ thuật; chọn PA1 nhỏ hơn để tiết kiệm</span></div>
+        <div class="mcq-opt" id="mco-b1c1-1" onclick="pickMCQ('b1c1',1,1,'✓ Đúng! PA1 B=1.8m: p=306 > [P]=238 → không đạt. PA2 B=2.5m: p=172 < [P]=249 → đạt nhưng p/[P]=0.69 chưa tối ưu. Kích thước B≈2.0–2.1m sẽ cho p/[P] ≈ 0.85 — cân bằng tốt hơn.')"><span class="mkey">B</span><span>PA1 không đạt KT; PA2 đạt nhưng lãng phí 31% SCT; kích thước B≈2.0–2.1m là tối ưu</span></div>
+        <div class="mcq-opt" id="mco-b1c1-2" onclick="pickMCQ('b1c1',2,0,'❌ Sai. Cả hai có kết quả rất khác nhau: PA1 không đạt, PA2 đạt.')"><span class="mkey">C</span><span>Cả hai đều không đạt kỹ thuật; cần tăng B lên 3.0m</span></div>
+        <div class="mcq-opt" id="mco-b1c1-3" onclick="pickMCQ('b1c1',3,0,'❌ Sai. PA2 hoàn toàn đạt kỹ thuật, chỉ là chưa tối ưu kinh tế.')"><span class="mkey">D</span><span>PA2 không đạt vì p/[P]=0.69 quá nhỏ, phải đạt ít nhất 0.9</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b1c1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.2</span>Khi tải hoàn toàn đúng tâm (M₀=0), yếu tố nào quan trọng nhất quyết định kích thước móng cần thiết?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b1c2-0" onclick="pickMCQ('b1c2',0,0,'❌ Sai. Chiều sâu h_m ảnh hưởng đến [P] qua q=γ·h_m và ảnh hưởng đến p qua γ_tb·h_m — quan trọng nhưng không quyết định duy nhất.')"><span class="mkey">A</span><span>Chiều sâu chôn móng h<sub>m</sub> — quyết định SCT của nền</span></div>
+        <div class="mcq-opt" id="mco-b1c2-1" onclick="pickMCQ('b1c2',1,1,'✓ Đúng! Khi M₀=0, điều kiện duy nhất là p_txtb = N₀/B² + const ≤ [P]. Tải trọng dọc N₀ là yếu tố chính quyết định B cần thiết: B_min ≈ √(N₀/([P]−γ·h_m)). Nền tốt hơn (φ lớn, c lớn) cho [P] lớn hơn → B có thể nhỏ hơn.')"><span class="mkey">B</span><span>Tải trọng N₀ và SCT của nền [P] — cùng nhau quyết định B tối thiểu cần thiết</span></div>
+        <div class="mcq-opt" id="mco-b1c2-2" onclick="pickMCQ('b1c2',2,0,'❌ Sai. Hệ số an toàn Fs ảnh hưởng đến [P]=Pgh/Fs nhưng không phải yếu tố chính khi M₀=0.')"><span class="mkey">C</span><span>Hệ số an toàn F<sub>s</sub> — quyết định mức độ dự trữ an toàn</span></div>
+        <div class="mcq-opt" id="mco-b1c2-3" onclick="pickMCQ('b1c2',3,0,'❌ Sai. γ_tb ảnh hưởng nhỏ đến p_txtb qua thành phần γ·h_m — không phải yếu tố quyết định.')"><span class="mkey">D</span><span>Trọng lượng riêng trung bình γ<sub>tb</sub> — vì quyết định tải trọng bản thân móng</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b1c2"></div>
+    </div>
+  </div>
+</div>
+<!-- B2 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('b2')">
+    <span class="ebg ebB">B2</span><span class="ebg ebm">Trung bình</span>
+    <div><div class="etl">Móng băng · 1 lớp đất · Tải lệch tâm · PA1 vi phạm p_max</div>
+    <div class="emt">Dạng 2 · Công thức sẵn · Tự tính từng bước</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-b2"></i>
+  </div>
+  <div class="exbd" id="bd-b2">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài B2 — Móng băng · 1 lớp · Tải lệch tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng băng: <b>N₀ = 150 kN/m</b>, <b>M₀ = 25 kNm/m</b>. h<sub>m</sub> = 1.5m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Cát pha nửa cứng vàng</td><td>∞</td><td>18.0</td><td>12</td><td>18</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Kiểm tra: <b>PA1: B = 1.0m</b> và <b>PA2: B = 1.8m</b></p>
+    </div>
+
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-math-function"></i> Công thức — Móng băng, lệch tâm (α₁=α₂=α₃=1.0)</div>
+      <div class="frow"><em>p<sub>txtb</sub></em> = N₀/B + γ<sub>tb</sub>·h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;<em>p<sub>max,min</sub></em> = p<sub>txtb</sub> ± 6M₀/B²</div>
+      <div class="frow"><em>P<sub>gh</sub></em> = ½·N<sub>γ</sub>·B·γ + N<sub>q</sub>·q + N<sub>c</sub>·c&nbsp;&nbsp;·&nbsp;&nbsp;q = γ·h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;<em>[P]</em> = P<sub>gh</sub>/2.5</div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-table" style="font-size:13px"></i>Bước 1 — Tra bảng hệ số φ=18°</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>γ</sub> (φ=18°)</span>
+        <input class="ans-inp" id="f-b2-Ng" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b2-Ng',3.07,0.3)">
+        <span class="chip" id="ck-f-b2-Ng"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>q</sub></span>
+        <input class="ans-inp" id="f-b2-Nq" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b2-Nq',5.26,0.3)">
+        <span class="chip" id="ck-f-b2-Nq"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>c</sub></span>
+        <input class="ans-inp" id="f-b2-Nc" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b2-Nc',13.10,0.3)">
+        <span class="chip" id="ck-f-b2-Nc"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 q = γ·h<sub>m</sub> = 18.0 × 1.5</span>
+        <input class="ans-inp" id="f-b2-q" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-q',27.0,0.5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-q"></span>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-calculator" style="font-size:13px"></i>Bước 2 — Tính p và [P]</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=1.0m)</span>
+        <input class="ans-inp" id="f-b2-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-ptc1',177.0,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA1) = p<sub>txtb</sub> + 6×25/1.0²</span>
+        <input class="ans-inp" id="f-b2-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-pmax1',327.0,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-pmax1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.0m)</span>
+        <input class="ans-inp" id="f-b2-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-Rn1',149.6,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=1.8m)</span>
+        <input class="ans-inp" id="f-b2-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-ptc2',110.3,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-ptc2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA2) = p<sub>txtb</sub> + 6×25/1.8²</span>
+        <input class="ans-inp" id="f-b2-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-pmax2',156.6,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-pmax2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=1.8m)</span>
+        <input class="ans-inp" id="f-b2-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b2-Rn2',173.3,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b2-Rn2"></span>
+      </div>
+    </div>
+
+    <table class="cmp-tbl">
+      <tr><th>PA</th><th>B (m)</th><th>p<sub>txtb</sub></th><th>p<sub>max</sub></th><th>[P]</th><th>1.2[P]</th><th>① p<sub>tb</sub>≤[P]</th><th>② p<sub>max</sub>≤1.2[P]</th><th>KL</th></tr>
+      <tr>
+        <td class="lbl">PA1 B=1.0m</td><td>1.0</td>
+        <td style="color:var(--G)">177.0</td><td style="color:var(--R);font-weight:700">327.0</td>
+        <td>149.6</td><td>179.5</td>
+        <td><span style="color:var(--R);font-weight:700">❌ 177&gt;150</span></td>
+        <td><span style="color:var(--R);font-weight:700">❌ 327&gt;180</span></td>
+        <td><b style="color:var(--R)">Không đạt</b></td>
+      </tr>
+      <tr>
+        <td class="lbl">PA2 B=1.8m</td><td>1.8</td>
+        <td style="color:var(--G)">110.3</td><td style="color:var(--G);font-weight:700">156.6</td>
+        <td>173.3</td><td>208.0</td>
+        <td><span style="color:var(--G);font-weight:700">✅</span></td>
+        <td><span style="color:var(--G);font-weight:700">✅ 157&lt;208</span></td>
+        <td><b style="color:var(--A)">Đạt · Xem KT</b></td>
+      </tr>
+    </table>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>PA1 vi phạm cả 2 điều kiện (①và②). Nguyên nhân chính của sự không đảm bảo là gì?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b2b1-0" onclick="pickMCQ('b2b1',0,0,'❌ Sai. c=12, φ=18° là đất ở mức trung bình — [P]=150 kPa hơi thấp nhưng không phải cực yếu. Nguyên nhân chính là B quá nhỏ.')"><span class="mkey">A</span><span>Nền đất quá yếu (c=12, φ=18°) nên [P] rất thấp</span></div>
+        <div class="mcq-opt" id="mco-b2b1-1" onclick="pickMCQ('b2b1',1,1,'✓ Đúng! Với B=1.0m quá nhỏ: (1) p_txtb = 150+27 = 177 kPa vượt [P]=150 kPa (điều kiện ①). (2) Lệch tâm ±6×25/1.0² = ±150 kPa cực lớn → p_max = 177+150 = 327 kPa >> 1.2×150 = 180 kPa (điều kiện ②). Khi B nhỏ, cả hai vấn đề trở nên nghiêm trọng.')"><span class="mkey">B</span><span>B=1.0m quá nhỏ: vừa làm p_txtb lớn (①), vừa làm hiệu ứng lệch tâm ±6M/B² cực lớn (②)</span></div>
+        <div class="mcq-opt" id="mco-b2b1-2" onclick="pickMCQ('b2b1',2,0,'❌ Sai. M₀=25 kNm/m không lớn bất thường — khi B=1.8m (PA2) thì ±6×25/1.8² = ±46 kPa, hoàn toàn kiểm soát được.')"><span class="mkey">C</span><span>Moment M₀=25 kNm/m quá lớn gây ra lệch tâm vượt giới hạn</span></div>
+        <div class="mcq-opt" id="mco-b2b1-3" onclick="pickMCQ('b2b1',3,0,'❌ Sai. h_m=1.5m là hợp lý, không phải nguyên nhân vi phạm.')"><span class="mkey">D</span><span>Chiều sâu chôn móng h<sub>m</sub>=1.5m không đủ để tạo [P] lớn</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b2b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>PA2 (B=1.8m) đạt kỹ thuật với p_txtb/[P] = 110/173 ≈ 0.64. Nhận xét và đề xuất:</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b2c1-0" onclick="pickMCQ('b2c1',0,1,'✓ Đúng! PA2 đạt kỹ thuật nhưng p/[P]=0.64 là hơi lãng phí. Thử B≈1.4m: p_txtb=150/1.4+27=134 kPa < [P]≈162 kPa ✓; p_max=134+6×25/1.96=134+76.5=210 kPa < 1.2×162=194 kPa — cần kiểm tra thêm. Khoảng B=1.5–1.6m là hợp lý nhất.')"><span class="mkey">A</span><span>PA2 đạt nhưng lãng phí 36% SCT; thử B≈1.4–1.5m để tối ưu</span></div>
+        <div class="mcq-opt" id="mco-b2c1-1" onclick="pickMCQ('b2c1',1,0,'❌ Sai. Chọn PA2 là đúng về kỹ thuật, nhưng có thể tối ưu hơn với kích thước nhỏ hơn một chút.')"><span class="mkey">B</span><span>Giữ nguyên PA2 B=1.8m vì đã đạt kỹ thuật, không cần điều chỉnh</span></div>
+        <div class="mcq-opt" id="mco-b2c1-2" onclick="pickMCQ('b2c1',2,0,'❌ Sai. Tăng chiều sâu h_m giúp tăng [P] nhưng cũng tăng p_txtb — hiệu quả không rõ ràng và không giải quyết vấn đề lệch tâm.')"><span class="mkey">C</span><span>Tăng h<sub>m</sub> lên 2.0m để tăng [P] thêm</span></div>
+        <div class="mcq-opt" id="mco-b2c1-3" onclick="pickMCQ('b2c1',3,0,'❌ Sai. Dùng móng bè khi tải rất lớn hoặc nền rất yếu — trường hợp này chưa cần thiết.')"><span class="mkey">D</span><span>Chuyển sang móng bè do lệch tâm gây khó khăn cho thiết kế</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b2c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- B3 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('b3')">
+    <span class="ebg ebB">B3</span><span class="ebg ebm">Trung bình</span>
+    <div><div class="etl">Móng đơn · 2 lớp đất · Tải đúng tâm · Cả 2 PA đều đạt, PA1 tối ưu</div>
+    <div class="emt">Dạng 3 · Tính γ<sub>tb</sub> · Dùng thông số lớp 2 cho [P]</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-b3"></i>
+  </div>
+  <div class="exbd" id="bd-b3">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài B3 — Móng đơn · 2 lớp · Tải đúng tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng đơn (vuông), <b>N₀ = 1100 kN</b>, M₀ = 0. h<sub>m</sub> = 2.5m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Sét pha dẻo mềm xám</td><td>2.0</td><td>17.5</td><td>10</td><td>10</td></tr>
+        <tr><td>2</td><td class="ln">Sét pha dẻo cứng nâu</td><td>∞</td><td>19.0</td><td>22</td><td>22</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Đặt móng vào lớp 2 (h<sub>m</sub>=2.5m). Kiểm tra: <b>PA1: B = 2.0m</b> và <b>PA2: B = 2.8m</b></p>
+    </div>
+
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-math-function"></i> Công thức — Nền 2 lớp, đúng tâm</div>
+      <div class="frow"><em>γ<sub>tb</sub></em> = (γ₁·h₁ + γ₂·Δh) / h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;Δh = h<sub>m</sub> − h₁</div>
+      <div class="frow"><em>p<sub>txtb</sub></em> = N₀/B² + γ<sub>tb</sub>·h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;q = γ₁·h₁ + γ₂·Δh</div>
+      <div class="frow"><em>P<sub>gh</sub></em> dùng thông số lớp 2 (c₂, φ₂, γ₂)&nbsp;&nbsp;·&nbsp;&nbsp;Móng vuông: α₁=1−0.2, α₂=1, α₃=1.2</div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-calculator" style="font-size:13px"></i>Điền từng bước</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 γ<sub>tb</sub> = (17.5×2.0 + 19.0×0.5) / 2.5</span>
+        <input class="ans-inp" id="f-b3-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b3-gtb',17.8,0.1)">
+        <span class="ans-unit">kN/m³</span><span class="chip" id="ck-f-b3-gtb"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>γ</sub> (φ₂=22°)</span>
+        <input class="ans-inp" id="f-b3-Ng" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b3-Ng',7.13,0.3)">
+        <span class="chip" id="ck-f-b3-Ng"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>q</sub></span>
+        <input class="ans-inp" id="f-b3-Nq" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b3-Nq',7.82,0.3)">
+        <span class="chip" id="ck-f-b3-Nq"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>c</sub></span>
+        <input class="ans-inp" id="f-b3-Nc" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b3-Nc',16.88,0.3)">
+        <span class="chip" id="ck-f-b3-Nc"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 q = γ₁·h₁ + γ₂·Δh = 17.5×2.0 + 19.0×0.5</span>
+        <input class="ans-inp" id="f-b3-q" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b3-q',44.5,0.5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b3-q"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=2.0m) — α₁=0.8, α₃=1.2</span>
+        <input class="ans-inp" id="f-b3-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b3-Rn1',375.3,5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b3-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=2.0m)</span>
+        <input class="ans-inp" id="f-b3-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b3-ptc1',319.5,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b3-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=2.8m) — α₁=1−0.2×2.8/2.8=0.8, α₃=1.2</span>
+        <input class="ans-inp" id="f-b3-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b3-Rn2',392.6,5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b3-Rn2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=2.8m)</span>
+        <input class="ans-inp" id="f-b3-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b3-ptc2',184.8,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b3-ptc2"></span>
+      </div>
+    </div>
+
+    <table class="cmp-tbl">
+      <tr><th>PA</th><th>B</th><th>p<sub>txtb</sub></th><th>[P]</th><th>p/[P]</th><th>① p≤[P]?</th><th>KL</th></tr>
+      <tr><td class="lbl">PA1 B=2.0m</td><td>2.0</td><td style="color:var(--G)">319.5</td><td>375.3</td><td style="color:var(--A)">0.85 ✓</td><td><span style="color:var(--G);font-weight:700">✅ Đạt</span></td><td><b style="color:var(--G)">Tối ưu KT</b></td></tr>
+      <tr><td class="lbl">PA2 B=2.8m</td><td>2.8</td><td style="color:var(--G)">184.8</td><td>392.6</td><td style="color:var(--A)">0.47 ⚠</td><td><span style="color:var(--G);font-weight:700">✅ Đạt</span></td><td><b style="color:var(--A)">Đạt · Lãng phí</b></td></tr>
+    </table>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Cả 2 PA đều đạt KT nhưng PA1 tối ưu hơn. Tại sao p/[P] của PA2 lại thấp đến 0.47?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b3b1-0" onclick="pickMCQ('b3b1',0,0,'❌ Sai. Đất lớp 2 không tốt hơn ở PA2 — thông số c₂, φ₂ như nhau ở cả 2 PA.')"><span class="mkey">A</span><span>Vì lớp 2 ở PA2 tốt hơn (tính ra [P] lớn hơn nhiều)</span></div>
+        <div class="mcq-opt" id="mco-b3b1-1" onclick="pickMCQ('b3b1',1,1,'✓ Đúng! Khi B tăng từ 2.0 → 2.8m: p = N₀/B² giảm mạnh (1100/4=275 → 1100/7.84=140); [P] tăng nhẹ (375 → 393). Kết quả p/[P] giảm từ 0.85 → 0.47. Móng quá rộng so với tải trọng gây lãng phí vật liệu.')"><span class="mkey">B</span><span>B tăng mạnh (2.0→2.8m) làm p giảm nhanh theo N₀/B², trong khi [P] tăng chậm → p/[P] giảm mạnh</span></div>
+        <div class="mcq-opt" id="mco-b3b1-2" onclick="pickMCQ('b3b1',2,0,'❌ Sai. Cả 2 PA có h_m=2.5m như nhau → γ_tb và q hoàn toàn giống nhau.')"><span class="mkey">C</span><span>Vì PA2 có γ<sub>tb</sub> lớn hơn làm tăng [P]</span></div>
+        <div class="mcq-opt" id="mco-b3b1-3" onclick="pickMCQ('b3b1',3,0,'❌ Sai. N₀=1100 kN là cố định không thay đổi theo PA.')"><span class="mkey">D</span><span>Vì N₀ của PA2 nhỏ hơn do phân bổ ra diện tích lớn hơn</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b3b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Kết luận: Phương án nào được chọn và lý do?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b3c1-0" onclick="pickMCQ('b3c1',0,1,'✓ Đúng! PA1 B=2.0m: p/[P]=0.85 — hệ số khai thác tốt, cân bằng giữa an toàn (85% SCT đã dùng) và kinh tế. PA2 B=2.8m: p/[P]=0.47 — lãng phí 53% SCT, tốn thêm vật liệu bê tông và cốt thép móng không cần thiết.')"><span class="mkey">A</span><span>Chọn PA1 (B=2.0m) vì p/[P]=0.85 — khai thác SCT tốt hơn, tiết kiệm vật liệu hơn PA2</span></div>
+        <div class="mcq-opt" id="mco-b3c1-1" onclick="pickMCQ('b3c1',1,0,'❌ Sai. PA2 đạt kỹ thuật nhưng lãng phí nghiêm trọng (53% SCT chưa khai thác).')"><span class="mkey">B</span><span>Chọn PA2 (B=2.8m) vì an toàn hơn (p/[P] nhỏ hơn)</span></div>
+        <div class="mcq-opt" id="mco-b3c1-2" onclick="pickMCQ('b3c1',2,0,'❌ Sai. Cả hai PA đều đạt kỹ thuật; chỉ là PA1 tối ưu hơn về kinh tế.')"><span class="mkey">C</span><span>Cả hai không đạt, cần dùng cọc</span></div>
+        <div class="mcq-opt" id="mco-b3c1-3" onclick="pickMCQ('b3c1',3,0,'❌ Sai. Lớp 1 yếu (h₁=2.0m) nên không đặt móng ở đó. Đặt vào lớp 2 (h_m=2.5m) là đúng.')"><span class="mkey">D</span><span>Thay đổi h<sub>m</sub> để đặt móng vào lớp 1 và giảm kích thước</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b3c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- B4 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('b4')">
+    <span class="ebg ebB">B4</span><span class="ebg ebh">Khó</span>
+    <div><div class="etl">Móng băng · 2 lớp · Tải lệch tâm · Cả 2 PA đều đạt, PA1 tối ưu</div>
+    <div class="emt">Dạng 4 · γ<sub>tb</sub> + p<sub>max</sub> + 2 lớp đất</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-b4"></i>
+  </div>
+  <div class="exbd" id="bd-b4">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài B4 — Móng băng · 2 lớp · Tải lệch tâm</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng băng: <b>N₀ = 200 kN/m</b>, <b>M₀ = 30 kNm/m</b>. h<sub>m</sub> = 2.0m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Cát pha xám yếu</td><td>1.5</td><td>17.0</td><td>8</td><td>12</td></tr>
+        <tr><td>2</td><td class="ln">Sét nửa cứng nâu đỏ</td><td>∞</td><td>19.5</td><td>28</td><td>22</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Đặt móng vào lớp 2 (h<sub>m</sub>=2.0m). Kiểm tra: <b>PA1: B=1.0m</b> và <b>PA2: B=1.6m</b></p>
+    </div>
+
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-math-function"></i> Công thức — Băng + 2 lớp + lệch tâm</div>
+      <div class="frow"><em>γ<sub>tb</sub></em> = (γ₁·h₁ + γ₂·Δh) / h<sub>m</sub>&nbsp;&nbsp;·&nbsp;&nbsp;<em>p<sub>txtb</sub></em> = N₀/B + γ<sub>tb</sub>·h<sub>m</sub></div>
+      <div class="frow"><em>p<sub>max</sub></em> = p<sub>txtb</sub> + 6·M₀/B²&nbsp;&nbsp;·&nbsp;&nbsp;<em>P<sub>gh</sub></em> theo thông số lớp 2, băng α=1.0</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 γ<sub>tb</sub> = (17.0×1.5 + 19.5×0.5) / 2.0</span>
+        <input class="ans-inp" id="f-b4-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b4-gtb',17.63,0.1)">
+        <span class="ans-unit">kN/m³</span><span class="chip" id="ck-f-b4-gtb"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>γ</sub> (φ₂=22°)</span>
+        <input class="ans-inp" id="f-b4-Ng" type="number" step="0.01" placeholder="?" oninput="chkFill('f-b4-Ng',7.13,0.3)">
+        <span class="chip" id="ck-f-b4-Ng"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 N<sub>q</sub>, N<sub>c</sub> tra bảng φ=22°</span>
+        <input class="ans-inp" id="f-b4-Nq" type="number" step="0.01" placeholder="N_q?" oninput="chkFill('f-b4-Nq',7.82,0.3)">
+        <input class="ans-inp" id="f-b4-Nc" type="number" step="0.01" placeholder="N_c?" oninput="chkFill('f-b4-Nc',16.88,0.3)">
+        <span class="chip" id="ck-f-b4-Nq"></span><span class="chip" id="ck-f-b4-Nc"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 q = γ₁·h₁ + γ₂·Δh = 17.0×1.5 + 19.5×0.5</span>
+        <input class="ans-inp" id="f-b4-q" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b4-q',35.25,0.5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b4-q"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.0m) — băng α=1.0</span>
+        <input class="ans-inp" id="f-b4-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b4-Rn1',354.6,5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b4-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1) · p<sub>max</sub> (PA1)</span>
+        <input class="ans-inp" id="f-b4-ptc1" type="number" step="0.1" placeholder="p_tb?" oninput="chkFill('f-b4-ptc1',235.3,2)">
+        <input class="ans-inp" id="f-b4-pmax1" type="number" step="0.1" placeholder="p_max?" oninput="chkFill('f-b4-pmax1',415.3,3)">
+        <span class="chip" id="ck-f-b4-ptc1"></span><span class="chip" id="ck-f-b4-pmax1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=1.6m) — băng α=1.0</span>
+        <input class="ans-inp" id="f-b4-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-b4-Rn2',387.8,5)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-b4-Rn2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2) · p<sub>max</sub> (PA2)</span>
+        <input class="ans-inp" id="f-b4-ptc2" type="number" step="0.1" placeholder="p_tb?" oninput="chkFill('f-b4-ptc2',160.3,2)">
+        <input class="ans-inp" id="f-b4-pmax2" type="number" step="0.1" placeholder="p_max?" oninput="chkFill('f-b4-pmax2',230.6,3)">
+        <span class="chip" id="ck-f-b4-ptc2"></span><span class="chip" id="ck-f-b4-pmax2"></span>
+      </div>
+    </div>
+
+    <table class="cmp-tbl">
+      <tr><th>PA</th><th>B</th><th>p<sub>txtb</sub></th><th>p<sub>max</sub></th><th>[P]</th><th>1.2[P]</th><th>①</th><th>②</th><th>KL</th></tr>
+      <tr><td class="lbl">PA1 B=1.0m</td><td>1.0</td><td>235.3</td><td style="color:var(--G);font-weight:700">415.3</td><td>354.6</td><td>425.5</td>
+        <td><span style="color:var(--G);font-weight:700">✅</span></td><td><span style="color:var(--G);font-weight:700">✅ 415&lt;426</span></td><td><b style="color:var(--G)">Đạt · Tối ưu</b></td></tr>
+      <tr><td class="lbl">PA2 B=1.6m</td><td>1.6</td><td>160.3</td><td style="color:var(--G);font-weight:700">230.6</td><td>387.8</td><td>465.4</td>
+        <td><span style="color:var(--G);font-weight:700">✅</span></td><td><span style="color:var(--G);font-weight:700">✅</span></td><td><b style="color:var(--A)">Đạt · Lãng phí</b></td></tr>
+    </table>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>PA1 (B=1.0m) đạt cả 2 điều kiện với p_txtb/[P]=0.66 và p_max/1.2[P]=0.98 (sát ngưỡng). Điều này cho thấy điều kiện nào là "giới hạn tới hạn" ở bài này?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b4b1-0" onclick="pickMCQ('b4b1',0,0,'❌ Sai. Điều kiện ① (p_txtb≤[P]) = 235/355 = 0.66 — còn dư 34%, không phải tới hạn.')"><span class="mkey">A</span><span>Điều kiện ① (p<sub>txtb</sub> ≤ [P]) là tới hạn vì gần đạt giới hạn</span></div>
+        <div class="mcq-opt" id="mco-b4b1-1" onclick="pickMCQ('b4b1',1,1,'✓ Đúng! Điều kiện ② (p_max ≤ 1.2[P]) = 415/425.5 = 0.975 — chỉ còn 2.5% dự trữ. Đây là điều kiện "quyết định" (governing condition) trong bài toán lệch tâm. Nếu B giảm nhỏ hơn một chút, p_max sẽ vượt ngưỡng.')"><span class="mkey">B</span><span>Điều kiện ② (p<sub>max</sub> ≤ 1.2[P]) là tới hạn — p_max/1.2[P]=0.975, chỉ còn 2.5% dự trữ</span></div>
+        <div class="mcq-opt" id="mco-b4b1-2" onclick="pickMCQ('b4b1',2,0,'❌ Sai. Cả 2 điều kiện đều được kiểm tra; điều kiện ② mới là tới hạn ở bài này.')"><span class="mkey">C</span><span>Cả 2 điều kiện đều tới hạn như nhau</span></div>
+        <div class="mcq-opt" id="mco-b4b1-3" onclick="pickMCQ('b4b1',3,0,'❌ Sai. Trong tính toán SCT móng nông, không có điều kiện nào về moment đứng độc lập.')"><span class="mkey">D</span><span>Điều kiện về moment (M₀ ≤ [M]) mới là tới hạn</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b4b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Kết luận và đề xuất PA tối ưu?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-b4c1-0" onclick="pickMCQ('b4c1',0,1,'✓ Đúng! PA1 B=1.0m: p_max/1.2[P]=0.975 — gần ngưỡng (an toàn nhưng cần chú ý thi công chính xác B). p_txtb/[P]=0.66. Về kinh tế: PA1 nhỏ hơn PA2 → ít vật liệu hơn. PA2 B=1.6m: p_max/1.2[P]=0.50 — quá thừa. Kết luận: chọn PA1, lưu ý kiểm soát chất lượng thi công.')"><span class="mkey">A</span><span>Chọn PA1 (B=1.0m) — kinh tế hơn, đạt KT với p_max sát ngưỡng (cần kiểm soát thi công tốt)</span></div>
+        <div class="mcq-opt" id="mco-b4c1-1" onclick="pickMCQ('b4c1',1,0,'❌ Sai. PA2 đạt kỹ thuật nhưng lãng phí quá nhiều (p_max/1.2[P]=0.50 → còn 50% dự trữ chưa dùng).')"><span class="mkey">B</span><span>Chọn PA2 (B=1.6m) — an toàn hơn với nhiều dự trữ</span></div>
+        <div class="mcq-opt" id="mco-b4c1-2" onclick="pickMCQ('b4c1',2,0,'❌ Sai. Cả 2 đều đạt kỹ thuật — không cần cọc.')"><span class="mkey">C</span><span>Không PA nào tối ưu; chuyển sang cọc</span></div>
+        <div class="mcq-opt" id="mco-b4c1-3" onclick="pickMCQ('b4c1',3,0,'❌ Sai. PA1 B=1.0m đạt cả 2 điều kiện. Không cần tăng lên 1.2m.')"><span class="mkey">D</span><span>Thử B=1.2m làm PA trung gian</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-b4c1"></div>
+    </div>
+  </div>
+</div>
+<!-- ══════════════ NHÓM C ══════════════ -->
+<div class="gs"><i class="ti ti-pencil"></i>NHÓM C — Chỉ có đề bài · Sinh viên tự tính hoàn toàn và điền đáp số (C1–C4)</div>
+
+<!-- C1 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('c1')">
+    <span class="ebg ebC">C1</span><span class="ebg ebe">Dễ</span>
+    <div><div class="etl">Móng đơn · 1 lớp · Tải đúng tâm · Cả 2 đều không đạt KT</div>
+    <div class="emt">Dạng 1 · Tự chọn công thức · Điền kết quả cuối</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-c1"></i>
+  </div>
+  <div class="exbd" id="bd-c1">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài C1</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng đơn (vuông), <b>N₀ = 600 kN</b>, M₀ = 0. h<sub>m</sub> = 1.2m, F<sub>s</sub> = 2.5, γ<sub>tb</sub> tính theo đất.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Cát pha dẻo cứng</td><td>∞</td><td>17.8</td><td>10</td><td>18</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Kiểm tra: <b>PA1: B = 1.2m</b> và <b>PA2: B = 1.5m</b></p>
+      <div class="warn-box" style="margin-top:8px">⚠️ Dạng C: Sinh viên tự xác định công thức, tra bảng và tính số liệu. Chỉ điền đáp số cuối vào ô.</div>
+    </div>
+
+    <div class="sec-lbl">Điền đáp số — Áp lực tiếp xúc</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=1.2m)</span>
+        <input class="ans-inp" id="f-c1-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c1-ptc1',438.0,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c1-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=1.5m)</span>
+        <input class="ans-inp" id="f-c1-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c1-ptc2',288.0,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c1-ptc2"></span>
+      </div>
+    </div>
+    <div class="sec-lbl">Điền đáp số — SCT nền</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.2m)</span>
+        <input class="ans-inp" id="f-c1-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c1-Rn1',127.4,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c1-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=1.5m)</span>
+        <input class="ans-inp" id="f-c1-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c1-Rn2',130.9,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c1-Rn2"></span>
+      </div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Tại sao cả PA1 và PA2 đều không đạt kỹ thuật dù B đã tăng lên?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c1b1-0" onclick="pickMCQ('c1b1',0,0,'❌ Sai. Nền cát pha φ=18°, c=10 kPa là trung bình — [P]≈128–131 kPa là thấp nhưng nguyên nhân chính là N₀/B² quá lớn.')"><span class="mkey">A</span><span>Nền đất cát pha quá yếu nên [P] rất thấp</span></div>
+        <div class="mcq-opt" id="mco-c1b1-1" onclick="pickMCQ('c1b1',1,1,'✓ Đúng! Với N₀=600 kN và h_m=1.2m nhỏ: p_txtb = 600/B² + 17.8×1.2 = 600/B² + 21.4. Khi B=1.2m: 600/1.44 = 417 kPa >> [P]=127. Khi B=1.5m: 600/2.25 = 267 >> 131. Cần B ≥ 2.2–2.5m mới đạt. Lý do: N₀ lớn + h_m nhỏ (q nhỏ → [P] nhỏ).')"><span class="mkey">B</span><span>N₀=600 kN lớn + h_m=1.2m nhỏ làm [P] thấp (q nhỏ) và p rất lớn (N₀/B²); cả 2 kích thước đều quá nhỏ</span></div>
+        <div class="mcq-opt" id="mco-c1b1-2" onclick="pickMCQ('c1b1',2,0,'❌ Sai. Đây là tải đúng tâm M₀=0, không có ảnh hưởng lệch tâm.')"><span class="mkey">C</span><span>Vì có lệch tâm M₀ làm p_max vượt giới hạn</span></div>
+        <div class="mcq-opt" id="mco-c1b1-3" onclick="pickMCQ('c1b1',3,0,'❌ Sai. Tăng B từ 1.2 → 1.5m giúp giảm p nhưng [P] thay đổi rất ít → vẫn không đủ.')"><span class="mkey">D</span><span>Vì [P] giảm khi B tăng, tình trạng ngày càng tệ hơn</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c1b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Cả 2 PA không đạt. Giải pháp nào hợp lý nhất?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c1c1-0" onclick="pickMCQ('c1c1',0,1,'✓ Đúng! Cần tăng B đến ≈2.0–2.2m. Ước tính: B=2.0m → p = 600/4+21.4 = 171.4 kPa; [P] = (1/2.5)×[0.8×3.07×2.0×17.8 + 5.26×21.4 + 1.2×13.10×10] = (1/2.5)×[87.6+112.6+157.2] = 142.6 kPa. Còn chưa đủ. B=2.5m: p=117 kPa, [P]≈150 kPa → đạt!')"><span class="mkey">A</span><span>Tăng B đến khoảng 2.0–2.5m để p giảm xuống dưới [P]</span></div>
+        <div class="mcq-opt" id="mco-c1c1-1" onclick="pickMCQ('c1c1',1,0,'❌ Sai. Giảm N₀ đòi hỏi thay đổi thiết kế kết cấu bên trên — không thực tế trong bài toán cho trước.')"><span class="mkey">B</span><span>Giảm tải N₀ bằng cách thay đổi vật liệu kết cấu</span></div>
+        <div class="mcq-opt" id="mco-c1c1-2" onclick="pickMCQ('c1c1',2,0,'❌ Sai. Tăng h_m từ 1.2 → 1.5m làm tăng q → tăng [P], đồng thời tăng γ_tb·h_m → tăng p. Hiệu quả chưa chắc đã đủ.')"><span class="mkey">C</span><span>Tăng chiều sâu h<sub>m</sub> để tăng [P]</span></div>
+        <div class="mcq-opt" id="mco-c1c1-3" onclick="pickMCQ('c1c1',3,0,'❌ Sai. Nền cát pha φ=18° không phải quá yếu — chỉ cần B đủ lớn là đạt. Không nhất thiết phải dùng cọc.')"><span class="mkey">D</span><span>Dùng cọc vì nền cát pha không đủ SCT</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c1c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('c2')">
+    <span class="ebg ebC">C2</span><span class="ebg ebe">Dễ</span>
+    <div><div class="etl">Móng băng · 1 lớp · Cả 2 đều đạt · Chọn phương án kinh tế hơn</div>
+    <div class="emt">Dạng 2 · So sánh kinh tế · Tự tính hoàn toàn</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-c2"></i>
+  </div>
+  <div class="exbd" id="bd-c2">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài C2</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng băng, <b>N₀ = 100 kN/m</b>, M₀ = 0. h<sub>m</sub> = 1.5m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Sét nửa cứng nâu đỏ</td><td>∞</td><td>19.0</td><td>25</td><td>22</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Kiểm tra: <b>PA1: B = 1.0m</b> và <b>PA2: B = 1.6m</b></p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1, B=1.0m)</span>
+        <input class="ans-inp" id="f-c2-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c2-ptc1',128.5,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c2-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.0m)</span>
+        <input class="ans-inp" id="f-c2-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c2-Rn1',311.9,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c2-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2, B=1.6m)</span>
+        <input class="ans-inp" id="f-c2-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c2-ptc2',91.0,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c2-ptc2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=1.6m)</span>
+        <input class="ans-inp" id="f-c2-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c2-Rn2',344.3,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c2-Rn2"></span>
+      </div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Cả 2 PA đều đạt kỹ thuật với hệ số khai thác thấp. Tại sao [P] của nền này lại rất cao?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c2b1-0" onclick="pickMCQ('c2b1',0,0,'❌ Sai. h_m=1.5m là bình thường. Nguyên nhân [P] cao là do thông số đất tốt (φ=22°, c=25 kPa).')"><span class="mkey">A</span><span>Vì h<sub>m</sub>=1.5m lớn nên q lớn → [P] lớn</span></div>
+        <div class="mcq-opt" id="mco-c2b1-1" onclick="pickMCQ('c2b1',1,1,'✓ Đúng! Sét nửa cứng φ=22°, c=25 kPa là nền tốt. N_c=16.88, N_q=7.82, N_γ=7.13. Thành phần N_c·c = 16.88×25 = 422 kPa chiếm phần lớn trong P_gh → [P] ≈ 312–344 kPa rất cao. Tải N₀=100 kN/m nhỏ → p chỉ 91–128 kPa → cả 2 PA đều đạt dễ dàng.')"><span class="mkey">B</span><span>Nền sét nửa cứng (c=25 kPa, φ=22°) tốt → P_gh lớn, nhất là thành phần N_c·c chiếm ưu thế</span></div>
+        <div class="mcq-opt" id="mco-c2b1-2" onclick="pickMCQ('c2b1',2,0,'❌ Sai. γ=19 kN/m³ là bình thường. Nguyên nhân chính là c=25 kPa và φ=22° tốt.')"><span class="mkey">C</span><span>Vì γ=19 kN/m³ lớn hơn các loại đất khác nên trọng lượng riêng đóng góp nhiều vào [P]</span></div>
+        <div class="mcq-opt" id="mco-c2b1-3" onclick="pickMCQ('c2b1',3,0,'❌ Sai. Nền tốt thì [P] lớn, nhưng cần kiểm tra cụ thể từng trường hợp.')"><span class="mkey">D</span><span>Vì F_s=2.5 nhỏ nên [P]=P_gh/2.5 lớn hơn khi dùng F_s=3.0</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c2b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Cả 2 PA đều đạt, nhưng phương án nào kinh tế hơn?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c2c1-0" onclick="pickMCQ('c2c1',0,0,'❌ Sai. PA2 B=1.6m cho p/[P]=91/344=0.26 — lãng phí 74% SCT. Tốn thêm vật liệu, diện tích đào đất mà không cần thiết.')"><span class="mkey">A</span><span>PA2 (B=1.6m) kinh tế hơn vì móng to hơn giảm lún về sau</span></div>
+        <div class="mcq-opt" id="mco-c2c1-1" onclick="pickMCQ('c2c1',1,1,'✓ Đúng! PA1 B=1.0m: p/[P]=128/312=0.41. PA2 B=1.6m: p/[P]=91/344=0.26. Cả 2 đều lãng phí nhưng PA1 nhỏ hơn → ít vật liệu hơn → kinh tế hơn. Thực ra với tải N₀=100 kN/m và nền tốt này, B thậm chí có thể nhỏ hơn 1.0m (chỉ cần ≥ yêu cầu cấu tạo tối thiểu).')"><span class="mkey">B</span><span>PA1 (B=1.0m) kinh tế hơn — ít vật liệu hơn, p/[P]=0.41 cao hơn PA2 (0.26 — quá lãng phí)</span></div>
+        <div class="mcq-opt" id="mco-c2c1-2" onclick="pickMCQ('c2c1',2,0,'❌ Sai. Trong bài toán SCT, khi cả 2 đạt kỹ thuật thì PA nhỏ hơn luôn kinh tế hơn về vật liệu móng.')"><span class="mkey">C</span><span>Hai PA có kinh tế tương đương nhau</span></div>
+        <div class="mcq-opt" id="mco-c2c1-3" onclick="pickMCQ('c2c1',3,0,'❌ Sai. Không cần móng bè ở đây — tải nhỏ và nền tốt, chỉ cần B nhỏ là đủ.')"><span class="mkey">D</span><span>Nên dùng móng bè để tối ưu hơn cả 2 PA</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c2c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('c3')">
+    <span class="ebg ebC">C3</span><span class="ebg ebh">Khó</span>
+    <div><div class="etl">Móng đơn · 2 lớp · Tải lệch tâm · PA1 không đạt, PA2 đạt</div>
+    <div class="emt">Dạng 3 · Tổng hợp: γ<sub>tb</sub> + lệch tâm + 2 lớp</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-c3"></i>
+  </div>
+  <div class="exbd" id="bd-c3">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài C3</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng đơn (vuông), <b>N₀ = 800 kN</b>, <b>M₀ = 60 kNm</b>. h<sub>m</sub> = 2.0m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Sét pha dẻo mềm</td><td>1.5</td><td>17.5</td><td>12</td><td>12</td></tr>
+        <tr><td>2</td><td class="ln">Sét pha dẻo cứng</td><td>∞</td><td>19.0</td><td>20</td><td>20</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Kiểm tra: <b>PA1: B = 1.8m</b> và <b>PA2: B = 2.4m</b></p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 γ<sub>tb</sub></span>
+        <input class="ans-inp" id="f-c3-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('f-c3-gtb',17.88,0.1)">
+        <span class="ans-unit">kN/m³</span><span class="chip" id="ck-f-c3-gtb"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.8m)</span>
+        <input class="ans-inp" id="f-c3-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-Rn1',275.0,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1)</span>
+        <input class="ans-inp" id="f-c3-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-ptc1',282.7,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA1)</span>
+        <input class="ans-inp" id="f-c3-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-pmax1',344.4,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-pmax1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=2.4m)</span>
+        <input class="ans-inp" id="f-c3-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-Rn2',284.9,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-Rn2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2)</span>
+        <input class="ans-inp" id="f-c3-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-ptc2',174.6,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-ptc2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA2)</span>
+        <input class="ans-inp" id="f-c3-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c3-pmax2',200.7,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c3-pmax2"></span>
+      </div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>PA1 vi phạm cả 2 điều kiện (p_txtb=283 > [P]=275 và p_max=344 > 1.2×275=330). Phân tích nguyên nhân?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c3b1-0" onclick="pickMCQ('c3b1',0,0,'❌ Sai. Lớp 2 (c=20 kPa, φ=20°) là đất tốt trung bình — không phải quá yếu.')"><span class="mkey">A</span><span>Lớp 2 đất quá yếu không đủ SCT</span></div>
+        <div class="mcq-opt" id="mco-c3b1-1" onclick="pickMCQ('c3b1',1,1,'✓ Đúng! PA1 vi phạm kép vì B=1.8m quá nhỏ cho tải N₀=800 kN + M₀=60 kNm: (1) p_txtb=800/3.24+35.8=283 > [P]=275 (vi phạm ① dù sát biên); (2) Lệch tâm ±6×60/1.8³=±61.7 → p_max=345 > 1.2×275=330 (vi phạm ②). Tăng B lên 2.4m giải quyết được cả 2.')"><span class="mkey">B</span><span>B=1.8m quá nhỏ: cả p_txtb lẫn hiệu ứng lệch tâm đều vượt giới hạn; tăng B→2.4m giải quyết được</span></div>
+        <div class="mcq-opt" id="mco-c3b1-2" onclick="pickMCQ('c3b1',2,0,'❌ Sai. γ_tb ảnh hưởng cả p và [P] — không phải nguyên nhân vi phạm ở đây.')"><span class="mkey">C</span><span>γ<sub>tb</sub> tính sai do 2 lớp đất gây ra sai số trong p<sub>txtb</sub></span></div>
+        <div class="mcq-opt" id="mco-c3b1-3" onclick="pickMCQ('c3b1',3,0,'❌ Sai. M₀=60 kNm là vừa phải — khi B=2.4m đã giải quyết được. Không phải M₀ quá lớn.')"><span class="mkey">D</span><span>M₀=60 kNm quá lớn so với khả năng chịu của nền</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c3b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>Kết luận đúng nhất về PA2 (B=2.4m)?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c3c1-0" onclick="pickMCQ('c3c1',0,1,'✓ Đúng! PA2 B=2.4m: p_txtb=174.6 < [P]=284.9 (✅ ①); p_max=200.7 < 1.2×284.9=341.9 (✅ ②). Hệ số khai thác p/[P]=0.61 — còn hơi lãng phí nhưng chấp nhận được. Có thể thử B=2.1–2.2m để tối ưu hơn.')"><span class="mkey">A</span><span>PA2 đạt cả 2 điều kiện kỹ thuật với p/[P]≈0.61 — đạt nhưng còn có thể tối ưu thêm</span></div>
+        <div class="mcq-opt" id="mco-c3c1-1" onclick="pickMCQ('c3c1',1,0,'❌ Sai. PA2 hoàn toàn đạt kỹ thuật: p_txtb=175<285 và p_max=201<342.')"><span class="mkey">B</span><span>PA2 không đạt vì p/[P]<0.7 chưa khai thác đủ SCT</span></div>
+        <div class="mcq-opt" id="mco-c3c1-2" onclick="pickMCQ('c3c1',2,0,'❌ Sai. PA2 đạt kỹ thuật. Không cần tăng B nữa — thậm chí có thể giảm đôi chút.')"><span class="mkey">C</span><span>PA2 cần tăng thêm B lên 2.8m để an toàn hơn</span></div>
+        <div class="mcq-opt" id="mco-c3c1-3" onclick="pickMCQ('c3c1',3,0,'❌ Sai. Lớp 2 (φ=20°, c=20 kPa) là đất đủ tốt cho móng nông, không nhất thiết phải dùng cọc.')"><span class="mkey">D</span><span>Cả 2 không đạt; nên dùng móng cọc vì nền có 2 lớp</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c3c1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 -->
+<div class="ex">
+  <div class="exhd" onclick="tog('c4')">
+    <span class="ebg ebC">C4</span><span class="ebg ebh">Khó</span>
+    <div><div class="etl">Móng băng · 2 lớp · Tải lệch tâm · Cả 2 đạt, PA1 tối ưu</div>
+    <div class="emt">Dạng 4 · Tổng hợp mức khó nhất</div></div>
+    <i class="ti ti-chevron-right echv" id="cv-c4"></i>
+  </div>
+  <div class="exbd" id="bd-c4">
+    <div style="background:#F8FBFF;border:1px solid var(--brd);border-radius:8px;padding:13px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;margin-bottom:9px"><i class="ti ti-file-description" style="margin-right:4px"></i>Đề bài C4</div>
+      <p style="font-size:13px;margin-bottom:8px">Móng băng: <b>N₀ = 160 kN/m</b>, <b>M₀ = 20 kNm/m</b>. h<sub>m</sub> = 2.0m, F<sub>s</sub> = 2.5.</p>
+      <table class="dt"><tr><th>Lớp</th><th>Tên đất</th><th>h (m)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (°)</th></tr>
+        <tr><td>1</td><td class="ln">Cát pha yếu xám</td><td>1.5</td><td>17.0</td><td>8</td><td>12</td></tr>
+        <tr><td>2</td><td class="ln">Cát pha dẻo cứng</td><td>∞</td><td>18.5</td><td>15</td><td>20</td></tr>
+      </table>
+      <p style="font-size:13px;margin-top:7px">Đặt móng vào lớp 2. Kiểm tra: <b>PA1: B = 1.2m</b> và <b>PA2: B = 2.0m</b></p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0">
+      <div class="ans-row">
+        <span class="ans-label">📌 γ<sub>tb</sub></span>
+        <input class="ans-inp" id="f-c4-gtb" type="number" step="0.01" placeholder="?" oninput="chkFill('f-c4-gtb',17.38,0.1)">
+        <span class="ans-unit">kN/m³</span><span class="chip" id="ck-f-c4-gtb"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA1, B=1.2m)</span>
+        <input class="ans-inp" id="f-c4-Rn1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-Rn1',225.7,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-Rn1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA1)</span>
+        <input class="ans-inp" id="f-c4-ptc1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-ptc1',168.1,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-ptc1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA1)</span>
+        <input class="ans-inp" id="f-c4-pmax1" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-pmax1',251.4,3)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-pmax1"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 [P] (PA2, B=2.0m)</span>
+        <input class="ans-inp" id="f-c4-Rn2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-Rn2',257.7,4)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-Rn2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>txtb</sub> (PA2)</span>
+        <input class="ans-inp" id="f-c4-ptc2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-ptc2',114.8,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-ptc2"></span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">📌 p<sub>max</sub> (PA2)</span>
+        <input class="ans-inp" id="f-c4-pmax2" type="number" step="0.1" placeholder="?" oninput="chkFill('f-c4-pmax2',144.8,2)">
+        <span class="ans-unit">kPa</span><span class="chip" id="ck-f-c4-pmax2"></span>
+      </div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">b.1</span>Cả 2 PA đều đạt. Phân tích: khi B tăng từ 1.2m→2.0m trong bài lệch tâm 2 lớp, điều gì xảy ra với p_max/1.2[P]?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c4b1-0" onclick="pickMCQ('c4b1',0,0,'❌ Sai. PA1: p_max/1.2[P] = 251.4/(1.2×225.7) = 251.4/270.8 = 0.93. PA2: 144.8/(1.2×257.7)=144.8/309.2=0.47. Tỷ lệ này giảm mạnh.')"><span class="mkey">A</span><span>p_max/1.2[P] tăng khi B tăng vì [P] lớp 2 không tăng theo B</span></div>
+        <div class="mcq-opt" id="mco-c4b1-1" onclick="pickMCQ('c4b1',1,1,'✓ Đúng! Khi B tăng: p_max giảm mạnh (do cả p_txtb giảm và hệ số lệch tâm 6M₀/B² giảm), trong khi 1.2[P] tăng nhẹ (do [P] tăng nhờ Nγ·B). Kết quả: PA1 p_max/1.2[P]=0.93 (gần ngưỡng); PA2: 0.47 (quá dư). Thấy rõ PA1 tối ưu hơn nhiều.')"><span class="mkey">B</span><span>p_max/1.2[P] giảm mạnh khi B tăng (vì cả p_max giảm lẫn 1.2[P] tăng) → PA1 tối ưu hơn PA2</span></div>
+        <div class="mcq-opt" id="mco-c4b1-2" onclick="pickMCQ('c4b1',2,0,'❌ Sai. Tỷ lệ này giảm đáng kể từ 0.93 → 0.47 khi B tăng.')"><span class="mkey">C</span><span>p_max/1.2[P] gần như không đổi vì cả tử và mẫu cùng tăng/giảm theo B</span></div>
+        <div class="mcq-opt" id="mco-c4b1-3" onclick="pickMCQ('c4b1',3,0,'❌ Sai. Cả 2 PA đều đạt kỹ thuật — không có PA nào vi phạm.')"><span class="mkey">D</span><span>p_max/1.2[P] > 1.0 ở PA1 → vi phạm điều kiện ②</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c4b1"></div>
+    </div>
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-mn">c.1</span>PA nào tối ưu nhất và vì sao?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-c4c1-0" onclick="pickMCQ('c4c1',0,1,'✓ Đúng! PA1 B=1.2m: p_max/1.2[P]=251/271=0.93 — sát ngưỡng nhưng an toàn; p_txtb/[P]=168/226=0.74. PA2 B=2.0m: p_max/1.2[P]=0.47 — lãng phí 53% khả năng chịu lệch tâm. Về vật liệu: B=1.2m ít bê tông hơn B=2.0m nhiều. PA1 là phương án tối ưu về kinh tế–kỹ thuật.')"><span class="mkey">A</span><span>PA1 (B=1.2m) tối ưu: nhỏ hơn, ít vật liệu, p_max/1.2[P]=0.93 gần ngưỡng — khai thác SCT hiệu quả</span></div>
+        <div class="mcq-opt" id="mco-c4c1-1" onclick="pickMCQ('c4c1',1,0,'❌ Sai. PA2 lãng phí nghiêm trọng (hệ số khai thác chỉ 0.47 cho điều kiện lệch tâm).')"><span class="mkey">B</span><span>PA2 (B=2.0m) tối ưu vì có nhiều dự trữ an toàn hơn</span></div>
+        <div class="mcq-opt" id="mco-c4c1-2" onclick="pickMCQ('c4c1',2,0,'❌ Sai. Cả 2 đều đạt kỹ thuật.')"><span class="mkey">C</span><span>Cả 2 không tối ưu; cần B=1.5m là trung gian hơn</span></div>
+        <div class="mcq-opt" id="mco-c4c1-3" onclick="pickMCQ('c4c1',3,0,'❌ Sai. Nền lớp 2 φ=20°, c=15 kPa là đủ cho móng băng nông, không cần cọc.')"><span class="mkey">D</span><span>Không PA nào tối ưu; nên dùng cọc cho bài 2 lớp</span></div>
+      </div>
+      <div class="mcq-exp" id="mce-c4c1"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+<div style="height:64px"></div>
+<div class="snav">
+  <span>8.4 · Kiểm tra SCT</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="np">0/0</span>
+    <button class="btn bg" id="btn-nop" onclick="sub()" style="background:rgba(150,150,150,.35)">🔒 Nộp bài</button>
+    <a href="8.5_DANG_3.html" class="btn bg">Bài 8.5 ›</a>
+  </div>
+</div>
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC & ĐĂNG KÝ CÂU HỎI
+   ANS  : dict kết quả; null=chưa làm, true=đúng, false=sai
+   _sub : cờ đã nộp bài (ngăn nộp lần 2)
+   TQ   : tổng số câu = Object.keys(ANS).length sau khi đăng ký xong
+
+   Đăng ký 2 nhóm câu hỏi (key → null):
+   • Ô điền số (fill-in): key 'inp-a1-ptb1'...
+     Nhóm a1..a4 (đúng tâm & lệch tâm đầy đủ), b1..b4 (cho công thức),
+     c1..c4 (tự xác định — chỉ ghi kết quả cuối)
+   • MCQ xác nhận: key 'mcq-a1b1'...
+     Mỗi bài có 2-3 câu MCQ: nhóm b (kiểm tra SCT), nhóm c (tự đánh giá)
+================================================================ */
+var ANS={},_sub=false,TQ=0;
+
+// Đăng ký tất cả các id ANS
+['a1-ptb1','a1-pmax1','a1-pmin1','a1-ptb2','a1-pmax2','a1-pmin2',
+ 'a1-a11','a1-Pgh1','a1-P1','a1-a12','a1-Pgh2','a1-P2',
+ 'a2-ptb1','a2-pmax1','a2-ptb2','a2-pmax2',
+ 'a2-Pgh1','a2-P1','a2-Pgh2','a2-P2',
+ 'a3-gtb','a3-ptb1','a3-pmax1','a3-ptb2','a3-pmax2',
+ 'a3-Pgh1','a3-P1','a3-Pgh2','a3-P2',
+ 'a4-gtb','a4-ptb1','a4-pmax1','a4-ptb2','a4-pmax2','a4-P1','a4-P2',
+ 'f-b1-Ng','f-b1-Nq','f-b1-Nc','f-b1-q','f-b1-Pgh1','f-b1-Rn1','f-b1-Pgh2','f-b1-Rn2','f-b1-ptc1','f-b1-ptc2',
+ 'f-b2-Ng','f-b2-Nq','f-b2-Nc','f-b2-q','f-b2-ptc1','f-b2-pmax1','f-b2-Rn1','f-b2-ptc2','f-b2-pmax2','f-b2-Rn2',
+ 'f-b3-gtb','f-b3-Ng','f-b3-Nq','f-b3-Nc','f-b3-q','f-b3-Rn1','f-b3-ptc1','f-b3-Rn2','f-b3-ptc2',
+ 'f-b4-gtb','f-b4-Ng','f-b4-Nq','f-b4-Nc','f-b4-q','f-b4-Rn1','f-b4-ptc1','f-b4-pmax1','f-b4-Rn2','f-b4-ptc2','f-b4-pmax2',
+ 'f-c1-ptc1','f-c1-ptc2','f-c1-Rn1','f-c1-Rn2',
+ 'f-c2-ptc1','f-c2-Rn1','f-c2-ptc2','f-c2-Rn2',
+ 'f-c3-gtb','f-c3-Rn1','f-c3-ptc1','f-c3-pmax1','f-c3-Rn2','f-c3-ptc2','f-c3-pmax2',
+ 'f-c4-gtb','f-c4-Rn1','f-c4-ptc1','f-c4-pmax1','f-c4-Rn2','f-c4-ptc2','f-c4-pmax2'
+].forEach(function(k){ANS['inp-'+k]=null;});
+
+// Đăng ký MCQ: nhóm b=đã có công thức (SV thay số), c=tự xác định → key 'mcq-a1b1'
+['a1b1','a1b2','a1b3','a1c1','a1c2','a1c3',
+ 'a2b1','a2b2','a2c1','a2c2',
+ 'a3b1','a3b2','a3c1',
+ 'a4b1','a4b2','a4c1','a4c2',
+ 'b1b1','b1b2','b1c1','b1c2',
+ 'b2b1','b2c1',
+ 'b3b1','b3c1',
+ 'b4b1','b4c1',
+ 'c1b1','c1c1',
+ 'c2b1','c2c1',
+ 'c3b1','c3c1',
+ 'c4b1','c4c1'
+].forEach(function(k){ANS['mcq-'+k]=null;});
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH CƠ BẢN
+   gSV()   : đọc thông tin SV từ sessionStorage 'ncm_sv'
+   tog(id) : mở/đóng accordion bài tập (body + header + chevron)
+================================================================ */
+function gSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+function tog(id){
+  var b=document.getElementById('bd-'+id),h=b.previousElementSibling,c=document.getElementById('cv-'+id);
+  var op=b.classList.contains('open');
+  b.classList.toggle('open',!op);h.classList.toggle('open',!op);c.classList.toggle('open',!op);
+}
+
+/* ================================================================
+   KHỐI 3 — HÀM CHẤM BÀI
+   chkFill(id, correct, tol) : kiểm tra ô điền số (kPa, m, kN/m³...)
+                dung sai tol (thường 0.01–1.0 tuỳ đại lượng);
+                hiển thị chip ✓/✗ cạnh ô nhập; lưu ANS['inp-id']
+   pickMCQ(id, picked, correct, expText) : chấm MCQ xác nhận;
+                tô ok/no/rok, hiển thị expText làm giải thích;
+                lưu ANS['mcq-id'], gọi up()
+================================================================ */
+function chkFill(id,correct,tol){
+  if(_sub)return;
+  var inp=document.getElementById(id);
+  if(!inp)return;
+  var v=parseFloat(inp.value);
+  var chip=document.getElementById('ck-'+id);
+  if(isNaN(v)){
+    inp.classList.remove('ok','no');
+    if(chip){chip.className='chip';chip.textContent='';}
+    ANS['inp-'+id]=null;up();return;
+  }
+  var ok=Math.abs(v-correct)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  if(chip){chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';}
+  ANS['inp-'+id]=ok;up();
+}
+
+function pickMCQ(id,picked,correct,expText){
+  if(ANS['mcq-'+id]!==null&&ANS['mcq-'+id]!==undefined)return;
+  document.querySelectorAll('[id^="mco-'+id+'-"]').forEach(function(el,i){
+    el.onclick=null;
+    if(i===picked&&picked===correct)el.classList.add('ok');
+    else if(i===picked)el.classList.add('no');
+    else if(i===correct)el.classList.add('rok');
+  });
+  var e=document.getElementById('mce-'+id);
+  if(e&&expText){
+    e.textContent=expText;
+    e.classList.add('show');
+    e.classList.add(picked===correct?'ok-e':'no-e');
+  }
+  ANS['mcq-'+id]=(picked===correct);up();
+}
+
+/* ================================================================
+   KHỐI 4 — CẬP NHẬT TIẾN ĐỘ
+   up(): đếm attempted/done từ ANS, cập nhật #pfill/#ptxt/#np/#hprog,
+         lưu localStorage 'prog_c8_84' = {done, total, attempted},
+         cập nhật nút Nộp bài (xanh nếu ≥ MIN_ATTEMPT_PCT %)
+================================================================ */
+function up(){
+  var at=0,dn=0,tot=TQ||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){
+    if(ANS[k]!==null&&ANS[k]!==undefined){at++;if(ANS[k]===true)dn++;}
+  });
+  var ap=tot?Math.round(at/tot*100):0;
+  document.getElementById('pfill').style.width=ap+'%';
+  document.getElementById('ptxt').textContent='Đã làm: '+at+'/'+tot+' ('+ap+'%) · Đúng: '+dn;
+  document.getElementById('np').textContent=at+'/'+tot;
+  document.getElementById('hprog').textContent=at+' / '+tot;
+  try{localStorage.setItem('prog_c8_84',JSON.stringify({done:dn,total:tot,attempted:at}));}catch(e){}
+  if(!_sub){
+    var mp=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){var rdy=(ap>=mp&&at>0);btn.style.background=rdy?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';btn.innerHTML=(rdy?'✅':'🔒')+' Nộp bài';}
+  }
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN SERVER
+   sub(): POST kết quả lên Cloudflare Worker
+   chapterId : 'C8-84-KiemTraSCT'
+   Kiểm tra: đã đăng nhập, chưa nộp, đã làm tối thiểu MIN_ATTEMPT_PCT%
+================================================================ */
+function sub(){
+  var sv=gSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập!');return;}
+  if(_sub)return;
+  var tot=TQ||Object.keys(ANS).length,at=0,dn=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){at++;if(ANS[k]===true)dn++;}});
+  var ap=tot?Math.round(at/tot*100):0,sc=tot?Math.round(dn/tot*100):0;
+  if(at===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var mp=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(ap<mp){alert('⚠️ Cần làm tối thiểu '+mp+'%!');return;}
+  var wu=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(wu,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+    chapterId:'C8-84-KiemTraSCT',score:sc,correct:dn,total:tot,duration:0
+  })}).then(function(r){return r.json();}).then(function(d){
+    if(d.ok){_sub=true;var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+sc+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! '+dn+'/'+tot);
+    }else alert('❌ '+(d.error||'Lỗi'));
+  }).catch(function(err){alert('❌ '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+   1. Hiển thị tên SV/STT từ sessionStorage lên header/badge
+   2. TQ = Object.keys(ANS).length (số câu đã đăng ký ở KHỐI 1)
+   3. Gọi up() lần đầu để khởi tạo thanh tiến độ
+================================================================ */
+window.onload=function(){
+  var sv=gSV();
+  if(sv&&sv.name){
+    document.getElementById('svd').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('svch').textContent='#'+sv.stt;
+    document.getElementById('svbh').textContent='SV #'+sv.stt;
+  }else{document.getElementById('svd').textContent='Chưa đăng nhập';}
+  TQ=Object.keys(ANS).length;up();
+};
+</script>
+</body>
+</html>
