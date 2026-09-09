@@ -1,0 +1,1007 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cơ Học Đất · Nền Móng — Bài Tập Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --P:    #1565C0;
+  --Pdk:  #0D47A1;
+  --Plt:  #E3F2FD;
+  --Pmd:  #1976D2;
+  --A:    #FF8F00;
+  --Alt:  #FFF8E1;
+  --Adk:  #E65100;
+  --G:    #2E7D32;
+  --Glt:  #E8F5E9;
+  --Gdk:  #1B5E20;
+  --R:    #C62828;
+  --Rlt:  #FFEBEE;
+  --B:    #1565C0;
+  --Blt:  #E3F2FD;
+  --bg:   #EEF4FB;
+  --sur:  #ffffff;
+  --brd:  #BBDEFB;
+  --muted:#546E7A;
+  --text: #0A1929;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r:    12px;
+  --sh:   0 2px 16px rgba(13,71,161,.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; font-size:14px; line-height:1.6; }
+.hidden { display:none!important; }
+
+/* ── LOADING / TOAST ── */
+#loading-overlay{display:none;position:fixed;inset:0;background:rgba(238,244,251,.88);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#loading-overlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid var(--brd);border-top-color:var(--P);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--Pdk);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(13,71,161,.28);opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;max-width:300px;line-height:1.45;}
+#toast.show{opacity:1;}
+
+/* ── HEADER ── */
+.hdr { background: var(--Pdk); color: #fff; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
+.hdr-in { max-width:1080px; margin:0 auto; padding:0 20px; height:64px; display:flex; align-items:center; gap:16px; }
+.hdr-logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; letter-spacing:-.3px; flex:1; }
+.hdr-logo .dot { width:32px;height:32px; background:rgba(255,255,255,.15); border-radius:8px; display:flex;align-items:center;justify-content:center; font-size:18px; }
+.hdr-sub { font-size:12px; color:rgba(255,255,255,.6); font-weight:400; }
+.hdr-right { display:flex; align-items:center; gap:10px; }
+.hdr-meta { font-size:12px; color:rgba(255,255,255,.65); text-align:right; line-height:1.5; }
+#timer-badge{font-family:var(--mono);font-size:13px;font-weight:600;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 13px;border-radius:20px;display:none;}
+.btn-admin{font-size:12px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.85);padding:6px 13px;border-radius:7px;cursor:pointer;font-family:var(--sans);transition:background .18s;display:flex;align-items:center;gap:5px;}
+.btn-admin:hover{background:rgba(255,255,255,.22);color:#fff;}
+
+/* ── HERO ── */
+.hero { background: linear-gradient(135deg, var(--Pdk) 0%, var(--P) 60%, #1E88E5 100%); color:#fff; padding:56px 20px 48px; text-align:center; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.hero-in { position:relative; max-width:640px; margin:0 auto; }
+.hero-eyebrow { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); border-radius:20px; padding:4px 14px; font-size:12px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; margin-bottom:18px; }
+.hero h1 { font-size:clamp(26px,5vw,40px); font-weight:700; line-height:1.2; margin-bottom:12px; letter-spacing:-.5px; }
+.hero h1 span { color:#90CAF9; }
+.hero p { font-size:15px; color:rgba(255,255,255,.75); line-height:1.7; margin-bottom:28px; }
+.hero-stats { display:flex; justify-content:center; gap:32px; flex-wrap:wrap; }
+.hero-stat { text-align:center; }
+.hero-stat .n { font-family:var(--mono); font-size:28px; font-weight:600; display:block; }
+.hero-stat .l { font-size:11px; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.6px; }
+
+/* ── SV INFOBAR ── */
+#sv-infobar{display:none;max-width:1080px;margin:20px auto 0;padding:0 20px;}
+#sv-infobar.show{display:block;}
+.sv-bar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--sh);}
+.sv-av{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sv-info{flex:1;}
+.sv-name{font-size:14px;font-weight:700;}
+.sv-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:var(--mono);margin-top:2px;}
+.sv-clock{font-family:var(--mono);font-size:13px;font-weight:700;background:rgba(255,255,255,.15);padding:5px 13px;border-radius:20px;}
+.btn-exit{background:rgba(198,40,40,.2);border:1.5px solid rgba(198,40,40,.4);color:#ffcdd2;font-size:12px;font-weight:700;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:var(--sans);transition:all .18s;}
+.btn-exit:hover{background:rgba(198,40,40,.38);color:#fff;}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap { max-width:1080px; margin:24px auto 0; padding:0 20px; }
+.prog-card { background:var(--sur); border-radius:var(--r); border:1px solid var(--brd); padding:14px 20px; display:flex; align-items:center; gap:16px; box-shadow:var(--sh); }
+.prog-label { font-size:13px; color:var(--P); font-weight:600; white-space:nowrap; display:flex;align-items:center;gap:5px; }
+.prog-track { flex:1; height:8px; background:var(--Plt); border-radius:4px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--P); border-radius:4px; transition:width .4s; }
+.prog-pct { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--P); white-space:nowrap; }
+
+/* ── LOGIN CARD ── */
+.login-wrap{max-width:1080px;margin:20px auto 0;padding:0 20px;}
+.login-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.login-hd{background:var(--P);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:10px;}
+.login-hd .lbadge{background:rgba(255,255,255,.2);font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;letter-spacing:1px;font-family:var(--mono);}
+.login-hd h2{font-size:14px;font-weight:700;}
+.login-body{padding:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-grid .span2{grid-column:1/-1;}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
+.field input,.field select{width:100%;padding:9px 12px;border:1.5px solid var(--brd);border-radius:8px;font-family:var(--sans);font-size:13px;background:#FAFCFF;color:var(--text);outline:none;transition:border-color .18s,box-shadow .18s;appearance:none;}
+.field input:focus,.field select:focus{border-color:var(--P);box-shadow:0 0 0 3px rgba(21,101,192,.1);}
+.warn-box{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 7px 7px 0;padding:9px 13px;font-size:12px;color:#5a3e00;margin-bottom:14px;line-height:1.6;}
+.err-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 7px 7px 0;padding:9px 13px;font-size:12px;color:#7a1010;margin-bottom:10px;}
+.info-box{background:var(--Blt);border-left:4px solid var(--B);border-radius:0 7px 7px 0;padding:9px 13px;font-size:12px;color:#1a3a6c;margin-bottom:10px;line-height:1.6;}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 7px 7px 0;padding:9px 13px;font-size:12px;color:#1a4a1a;margin-bottom:10px;}
+.btn{border:none;cursor:pointer;font-family:var(--sans);font-weight:700;border-radius:8px;transition:all .18s;display:inline-flex;align-items:center;gap:6px;}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none;}
+.btn-primary{background:var(--P);color:#fff;padding:10px 22px;font-size:13px;}
+.btn-danger{background:var(--R);color:#fff;padding:6px 13px;font-size:12px;}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--brd);padding:6px 13px;font-size:12px;}
+.btn-sm{padding:5px 12px!important;font-size:11px!important;}
+
+/* ── SECTION TITLE ── */
+.sec-head { max-width:1080px; margin:36px auto 0; padding:0 20px; }
+.sec-head h2 { font-size:19px; font-weight:700; color:var(--Pdk); display:flex; align-items:center; gap:8px; }
+.sec-head p { font-size:13px; color:#546E7A; margin-top:4px; }
+
+/* ── DIVIDER ── */
+.divider { max-width:1080px; margin:8px auto 0; padding:0 20px; display:flex; align-items:center; gap:12px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:#90A4AE; }
+.divider::after { content:''; flex:1; height:1px; background:var(--brd); }
+.divider i { font-size:14px; }
+
+/* ── INFO ROW ── */
+.info-row { max-width:1080px; margin:0 auto; padding:20px 20px 0; display:flex; gap:12px; flex-wrap:wrap; }
+.info-chip { display:flex; align-items:center; gap:7px; background:var(--sur); border:1px solid var(--brd); border-radius:8px; padding:8px 14px; font-size:13px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+.info-chip i { color:var(--P); font-size:16px; }
+.info-chip span { color:#546E7A; }
+.info-chip b { color:var(--text); font-weight:600; }
+
+/* ── CHAPTER GRID ── */
+.grid { max-width:1080px; margin:16px auto 0; padding:0 20px 40px; display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+
+/* ── CHAPTER CARD ── */
+.ccard { background:var(--sur); border-radius:var(--r); border:1.5px solid var(--brd); box-shadow:var(--sh); overflow:hidden; transition:transform .15s,box-shadow .15s,border-color .15s; cursor:pointer; text-decoration:none; color:inherit; display:flex; flex-direction:column; }
+.ccard:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(13,71,161,.14); border-color:var(--P); }
+.ccard.locked { opacity:.6; cursor:not-allowed; }
+.ccard.locked:hover { transform:none; box-shadow:var(--sh); border-color:var(--brd); }
+.ccard-hd { padding:16px 18px 14px; display:flex; align-items:flex-start; gap:14px; }
+.cnum { min-width:40px;height:40px; background:var(--Pdk); border-radius:10px; display:flex;align-items:center;justify-content:center; font-family:var(--mono); font-size:12px; font-weight:600; color:#fff; flex-shrink:0; }
+.ccard-hd-txt { flex:1; min-width:0; }
+.ccard-hd-txt h3 { font-size:14px; font-weight:700; color:var(--Pdk); line-height:1.35; margin-bottom:4px; }
+.ctopics { font-size:12px; color:#546E7A; line-height:1.5; }
+.ccard-body { padding:0 18px 14px; flex:1; }
+.ctag-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.ctag { font-size:11px; padding:3px 9px; border-radius:20px; font-weight:500; }
+.ctag.ly { background:var(--Blt); color:var(--B); }
+.ctag.tt { background:var(--Glt); color:var(--Gdk); }
+.ctag.ktr { background:var(--Alt); color:var(--Adk); }
+.ccard-footer { border-top:1px solid var(--brd); padding:10px 18px; display:flex; align-items:center; justify-content:space-between; background:#FAFCFF; }
+.cbai { font-size:12px; color:#546E7A; }
+.cbai b { color:var(--Pdk); font-weight:700; }
+.badge-open   { font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7; }
+.badge-locked { font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2; }
+.badge-soon   { font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--Alt);color:var(--Adk);border:1px solid #FFCC80; }
+.badge-done   { font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--Blt);color:var(--P);border:1px solid #90CAF9; }
+.cprog-mini { display:flex;align-items:center;gap:6px; }
+.cprog-track { width:64px;height:5px;background:var(--Plt);border-radius:3px;overflow:hidden; }
+.cprog-fill-m { height:100%;background:var(--P);border-radius:3px; }
+.cprog-pct { font-size:11px;font-family:var(--mono);font-weight:700;color:var(--P); }
+
+/* ── ADMIN OVERLAY ── */
+#admin-overlay{display:none;position:fixed;inset:0;z-index:600;background:rgba(10,20,40,.6);backdrop-filter:blur(5px);align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto;}
+#admin-overlay.show{display:flex;}
+#admin-panel{background:var(--sur);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:780px;overflow:hidden;}
+.admin-hd{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;padding:15px 22px;display:flex;align-items:center;gap:12px;}
+.admin-hd h2{font-size:15px;font-weight:700;flex:1;}
+.admin-hd .btn-close{background:rgba(255,255,255,.18);border:none;color:#fff;font-size:14px;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s;}
+.admin-hd .btn-close:hover{background:rgba(255,255,255,.32);}
+.admin-body{padding:20px;}
+#admin-login .al-icon{font-size:2.4rem;text-align:center;margin-bottom:10px;}
+#admin-login h3{text-align:center;font-size:14px;color:var(--P);margin-bottom:16px;font-weight:700;}
+.admin-tabs{display:flex;gap:3px;margin-bottom:18px;border-bottom:2px solid var(--brd);}
+.admin-tab{padding:8px 16px;border:none;background:transparent;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .18s;border-radius:6px 6px 0 0;}
+.admin-tab:hover{color:var(--P);background:var(--Plt);}
+.admin-tab.active{color:var(--P);border-bottom-color:var(--P);}
+.admin-pane{display:none;}
+.admin-pane.active{display:block;}
+.sch-table{width:100%;border-collapse:collapse;font-size:12px;}
+.sch-table th{background:var(--Plt);color:var(--P);font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:7px 9px;text-align:left;font-weight:700;border-bottom:2px solid var(--brd);}
+.sch-table td{padding:8px 9px;border-bottom:1px solid var(--brd);vertical-align:middle;}
+.sch-table tr:last-child td{border-bottom:none;}
+.sch-table input[type="datetime-local"]{font-family:var(--mono);font-size:11px;padding:4px 7px;border:1.5px solid var(--brd);border-radius:5px;background:#FAFCFF;outline:none;width:175px;}
+.sch-table input[type="datetime-local"]:focus{border-color:var(--P);}
+.toggle-sw{position:relative;display:inline-block;width:42px;height:23px;}
+.toggle-sw input{opacity:0;width:0;height:0;}
+.toggle-sl{position:absolute;inset:0;background:#ccc;border-radius:23px;cursor:pointer;transition:.3s;}
+.toggle-sl::before{position:absolute;content:"";height:17px;width:17px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle-sw input:checked + .toggle-sl{background:var(--G);}
+.toggle-sw input:checked + .toggle-sl::before{transform:translateX(19px);}
+.pct-inp{font-family:var(--mono);font-size:12px;width:55px;padding:4px 6px;border:1.5px solid var(--brd);border-radius:5px;text-align:center;outline:none;}
+.pct-inp:focus{border-color:var(--P);}
+.cls-list{list-style:none;}
+.cls-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--brd);}
+.cls-item:last-child{border-bottom:none;}
+.cls-item input{flex:1;padding:6px 10px;border:1.5px solid var(--brd);border-radius:6px;font-family:var(--sans);font-size:12px;outline:none;}
+.cls-item input:focus{border-color:var(--P);}
+.cls-badge{font-family:var(--mono);font-size:10px;background:var(--Plt);color:var(--P);padding:2px 7px;border-radius:4px;white-space:nowrap;}
+.opt-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--brd);}
+.opt-row:last-of-type{border-bottom:none;}
+.opt-lbl{font-size:13px;font-weight:700;}
+.opt-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── FOOTER ── */
+footer { background:var(--Pdk); color:rgba(255,255,255,.6); text-align:center; padding:20px; font-size:12px; }
+footer b { color:rgba(255,255,255,.9); }
+
+@media(max-width:620px){
+  .form-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:20px;}
+  .grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay"><div class="spinner"></div><p style="font-size:13px;color:var(--muted)">Đang xử lý...</p></div>
+<div id="toast"></div>
+
+<!-- ════════ ADMIN OVERLAY ════════ -->
+<div id="admin-overlay">
+  <div id="admin-panel">
+    <div class="admin-hd">
+      <i class="ti ti-settings" style="font-size:18px"></i>
+      <h2>Admin — Cơ Học Đất · Nền Móng</h2>
+      <button class="btn-close" onclick="ADMIN.close()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="admin-body">
+      <div id="admin-login">
+        <div class="al-icon">🔐</div>
+        <h3>Đăng nhập quản trị</h3>
+        <div class="field" style="max-width:280px;margin:0 auto 12px;">
+          <label>Mật khẩu admin</label>
+          <input type="password" id="admin-pw" placeholder="Nhập mật khẩu..."
+            onkeydown="if(event.key==='Enter') ADMIN.login()" />
+        </div>
+        <div id="admin-pw-err" class="err-box hidden" style="max-width:280px;margin:0 auto 12px;"></div>
+        <div style="text-align:center">
+          <button class="btn btn-primary" onclick="ADMIN.login()"><i class="ti ti-lock-open"></i> Đăng nhập</button>
+        </div>
+      </div>
+      <div id="admin-dash" class="hidden">
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="ADMIN.switchTab('schedule',this)">📅 Lịch bài tập</button>
+          <button class="admin-tab" onclick="ADMIN.switchTab('classes',this)">🏫 Danh sách lớp</button>
+          <button class="admin-tab" onclick="ADMIN.switchTab('settings',this)">🔧 Cài đặt</button>
+        </div>
+        <!-- TAB LỊCH -->
+        <div class="admin-pane active" id="pane-schedule">
+          <div class="info-box" style="margin-bottom:12px">Bật/tắt từng chương. Đặt giờ mở/đóng và % tối thiểu để nộp bài. Sau khi lưu → <b>commit config.js lên GitHub</b> để tất cả SV thấy.</div>
+          <div style="overflow-x:auto">
+            <table class="sch-table">
+              <thead><tr><th>Chương</th><th>Mở lúc</th><th>Đóng lúc</th><th>% tối thiểu</th><th>Bật</th></tr></thead>
+              <tbody id="sch-tbody"></tbody>
+            </table>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="ADMIN.saveSchedule()"><i class="ti ti-device-floppy"></i> Lưu lịch</button>
+            <button class="btn btn-ghost" onclick="ADMIN.resetSchedule()"><i class="ti ti-refresh"></i> Reset</button>
+          </div>
+          <div id="sch-msg" style="margin-top:8px"></div>
+        </div>
+        <!-- TAB LỚP -->
+        <div class="admin-pane" id="pane-classes">
+          <div class="info-box" style="margin-bottom:12px">Danh sách lớp hiện trong dropdown đăng ký của sinh viên.</div>
+          <ul class="cls-list" id="cls-list"></ul>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="ADMIN.addClass()"><i class="ti ti-plus"></i> Thêm lớp</button>
+            <button class="btn btn-primary" onclick="ADMIN.saveClasses()"><i class="ti ti-device-floppy"></i> Lưu</button>
+          </div>
+          <div id="cls-msg" style="margin-top:8px"></div>
+        </div>
+        <!-- TAB SETTINGS -->
+        <div class="admin-pane" id="pane-settings">
+          <div class="opt-row">
+            <div><div class="opt-lbl">Hiện đúng/sai real-time</div><div class="opt-desc">SV thấy ✓/✗ ngay khi điền. Tắt = chỉ biết sau nộp bài.</div></div>
+            <label class="toggle-sw"><input type="checkbox" id="opt-feedback"><span class="toggle-sl"></span></label>
+          </div>
+          <div class="opt-row">
+            <div><div class="opt-lbl">Hiện điểm sau khi nộp</div><div class="opt-desc">SV thấy điểm % sau khi nhấn Nộp bài.</div></div>
+            <label class="toggle-sw"><input type="checkbox" id="opt-score" checked><span class="toggle-sl"></span></label>
+          </div>
+          <div style="margin-top:16px">
+            <div class="field" style="margin-bottom:12px">
+              <label>Cloudflare Worker URL (nhận kết quả → Google Sheet)</label>
+              <input type="text" id="cfg-worker" placeholder="https://your-worker.workers.dev" />
+            </div>
+            <div class="field" style="margin-bottom:12px">
+              <label>% câu phải làm tối thiểu để nộp bài <span style="color:var(--muted);font-size:11px">(áp dụng cho tất cả dạng bài)</span></label>
+              <input type="number" id="cfg-attempt-pct" min="0" max="100" placeholder="5" style="width:100px" />
+              <span style="margin-left:6px;font-size:13px;color:var(--muted)">% &nbsp;·&nbsp; Test: 5% · Chính thức: 70-80%</span>
+            </div>
+            <div class="field" style="margin-bottom:12px">
+              <label>Tên hiển thị trên header</label>
+              <input type="text" id="cfg-teacher" placeholder="Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội" />
+            </div>
+            <div class="field" style="margin-bottom:14px">
+              <label>Đổi mật khẩu Admin</label>
+              <input type="password" id="cfg-pw" placeholder="Để trống = không đổi" />
+            </div>
+            <button class="btn btn-primary" onclick="ADMIN.saveSettings()"><i class="ti ti-device-floppy"></i> Lưu cài đặt</button>
+            <div id="cfg-msg" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ HEADER ════════ -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">
+      <div class="dot"><i class="ti ti-layers-subtract"></i></div>
+      <div>
+        Cơ Học Đất · Nền Móng
+        <div class="hdr-sub" id="hdr-sub">Bài Tập Online · ĐHXD Hà Nội</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div id="timer-badge">00:00</div>
+      <div class="hdr-meta">Bộ môn CHDNM<br><span style="color:rgba(255,255,255,.4)">Bộ môn Cơ học đất - Nền móng</span></div>
+      <button class="btn-admin" onclick="ADMIN.open()"><i class="ti ti-settings"></i> Admin</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-in">
+    <div class="hero-eyebrow">Đề cương 2024 · 54 giờ · 3 tín chỉ</div>
+    <h1>Cơ Học Đất &<br><span>Nền Móng</span> — Luyện Tập Online</h1>
+    <p>Hệ thống bài tập tự sinh số liệu theo STT · Tự chấm điểm · Kết quả về Google Sheet<br>Tuân thủ TCVN 9362:2012 · TCVN 10304:2014</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="n">11</span><span class="l">Chương</span></div>
+      <div class="hero-stat"><span class="n">54h</span><span class="l">Tín chỉ</span></div>
+      <div class="hero-stat"><span class="n">18</span><span class="l">Buổi học</span></div>
+      <div class="hero-stat"><span class="n">4</span><span class="l">CLO</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SV INFOBAR (sau đăng nhập) -->
+<div id="sv-infobar">
+  <div class="sv-bar">
+    <div class="sv-av" id="sv-av">?</div>
+    <div class="sv-info">
+      <div class="sv-name" id="sv-name">–</div>
+      <div class="sv-meta" id="sv-meta">–</div>
+    </div>
+    <div class="sv-clock" id="sv-clock">00:00</div>
+    <button class="btn-exit" onclick="APP.exitConfirm()"><i class="ti ti-x"></i> Thoát</button>
+  </div>
+</div>
+
+<!-- PROGRESS TỔNG -->
+<div class="prog-wrap hidden chapter-section" id="prog-wrap">
+  <div class="prog-card">
+    <span class="prog-label"><i class="ti ti-chart-bar"></i>Tiến độ tổng thể</span>
+    <div class="prog-track"><div class="prog-fill" id="total-fill" style="width:0%"></div></div>
+    <span class="prog-pct" id="total-pct">0 / 11 chương</span>
+  </div>
+</div>
+
+<!-- INFO ROW -->
+<div class="info-row hidden chapter-section" id="info-row">
+  <div class="info-chip"><i class="ti ti-building-bank"></i><span>Trường:</span> <b>ĐHXD Hà Nội</b></div>
+  <div class="info-chip"><i class="ti ti-user-check"></i><span>Giảng viên:</span> <b>Bộ môn CHDNM</b></div>
+  <div class="info-chip"><i class="ti ti-file-certificate"></i><span>Tiêu chuẩn:</span> <b>TCVN 9362:2012 · 10304:2014</b></div>
+  <div class="info-chip"><i class="ti ti-clock"></i><span>Học phần:</span> <b>LT 36h · BT 12h · TN 6h</b></div>
+</div>
+
+<!-- ════════ FORM ĐĂNG NHẬP ════════ -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <div class="login-hd">
+      <span class="lbadge">BƯỚC 1</span>
+      <h2>Nhập thông tin sinh viên để bắt đầu làm bài</h2>
+    </div>
+    <div class="login-body">
+      <div class="warn-box">
+        ⚠️ <b>Lưu ý:</b> Bài làm <b>không lưu tạm</b> khi đóng tab. Hoàn thành và nộp trong một lần.
+        Mỗi MSSV chỉ nộp <b>1 lần</b> mỗi chương.
+        <b>Số thứ tự (STT)</b> trong danh sách lớp sinh ra số liệu bài tập riêng cho bạn — nhập đúng để có đề đúng.
+      </div>
+      <div class="form-grid">
+        <div class="field span2">
+          <label>Họ và Tên đầy đủ</label>
+          <input type="text" id="f-name" placeholder="Nguyễn Văn An" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label>Mã Số Sinh Viên (MSSV)</label>
+          <input type="text" id="f-mssv" placeholder="2351xxxxxx" />
+        </div>
+        <div class="field">
+          <label>Số Thứ Tự trong lớp (1 – 200)</label>
+          <input type="number" id="f-stt" placeholder="VD: 12" min="1" max="200" />
+        </div>
+        <div class="field span2">
+          <label>Chọn Lớp</label>
+          <select id="f-class">
+            <option value="">— Chọn lớp của bạn —</option>
+          </select>
+        </div>
+      </div>
+      <div id="login-err" class="err-box hidden"></div>
+      <button class="btn btn-primary" onclick="APP.start()" style="margin-top:8px">
+        <i class="ti ti-player-play"></i> Bắt Đầu Làm Bài
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PHẦN I: CƠ HỌC ĐẤT ════════ -->
+<div class="divider hidden chapter-section" style="margin-top:28px" id="div-p1">
+  <i class="ti ti-mountain"></i>
+  Phần I — Cơ Học Đất (Chương MĐ – 6)
+</div>
+<div class="sec-head hidden chapter-section" id="head-p1">
+  <h2><i class="ti ti-books" style="font-size:18px"></i> Tính chất & Ứng xử của đất</h2>
+  <p>Nắm vững lý thuyết nền tảng trước khi thiết kế móng · CLO1, CLO2</p>
+</div>
+<div class="grid hidden chapter-section" id="grid-p1"></div>
+
+<!-- ════════ PHẦN II: NỀN MÓNG ════════ -->
+<div class="divider hidden chapter-section" style="margin-top:4px" id="div-p2">
+  <i class="ti ti-building"></i>
+  Phần II — Nền Móng (Chương 7 – 10)
+</div>
+<div class="sec-head hidden chapter-section" id="head-p2">
+  <h2><i class="ti ti-crane" style="font-size:18px"></i> Thiết kế Nền & Móng</h2>
+  <p>Ứng dụng cơ học đất vào thiết kế móng nông, móng cọc · CLO3, CLO4</p>
+</div>
+<div class="grid hidden chapter-section" id="grid-p2"></div>
+
+<!-- FOOTER -->
+<footer>
+  <b>Cơ Học Đất · Nền Móng</b> — Bài Tập Online · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội<br>
+  <span style="margin-top:4px;display:block">54 giờ · 3 tín chỉ · 4 CLO · TCVN 9362:2012 · TCVN 10304:2014 · TCVN 9351:2012</span>
+</footer>
+
+<!-- config.js (load từ file ngoài, fallback inline) -->
+<script>
+// Fallback nếu config.js ngoài chưa có
+if (!window.CHAPTER_SCHEDULE) {
+  window.CHAPTER_SCHEDULE = {
+    c0: {active:true}, c1:{active:true}, c2:{active:true},
+    c3:{active:false}, c4:{active:false}, c5:{active:true},
+    c6:{active:false}, c7:{active:false}, c8:{active:false},
+    c9:{active:false}, c10:{active:false},
+  };
+}
+</script>
+<script src="config.js" onerror="console.log('[NCM] config.js not found, using defaults.')"></script>
+
+<script>
+// ════════════════════════════════════════
+//  11 CHƯƠNG — metadata hiển thị trên trang chủ
+//  Thêm chương mới: thêm object vào cuối, đặt part:1 (CHĐ) hoặc part:2 (NM)
+//  href: đường dẫn tới file index_CX.html của chương
+//  bai: tổng số bài tập (chỉ để hiển thị, không tự tính)
+//  id phải khớp với CHAPTER_SCHEDULE trong config.js (c0..c10)
+// ════════════════════════════════════════
+var CHAPTERS = [
+  {
+    id:'c0', part:1, num:'MĐ',
+    title:'Chương Mở Đầu',
+    topics:'Giới thiệu môn học · Các công trình thực tế · Chuẩn đầu ra CLO',
+    tags:[{t:'Lý thuyết',c:'ly'}],
+    bai:3, buoi:'B1',
+    href:'chuong-00/index_C0.html'
+  },
+  {
+    id:'c1', part:1, num:'C.1',
+    title:'Chương 1 — Tính Chất Vật Lý & Phân Loại Đất',
+    topics:'Sự hình thành đất · Chỉ tiêu vật lý · Phân loại & trạng thái đất',
+    tags:[{t:'Lý thuyết',c:'ly'},{t:'Tính toán',c:'tt'}],
+    bai:12, buoi:'B1–B2',
+    href:'chuong-01/index_C1.html'
+  },
+  {
+    id:'c2', part:1, num:'C.2',
+    title:'Chương 2 — Ứng Suất Trong Đất',
+    topics:'Ứng suất tổng / hữu hiệu · Bài toán Boussinesq · Tải phân bố · Áp lực tiếp xúc',
+    tags:[{t:'Lý thuyết',c:'ly'},{t:'Tính toán',c:'tt'}],
+    bai:18, buoi:'B3–B4',
+    href:'chuong-02/index_C2.html'
+  },
+  {
+    id:'c3', part:1, num:'C.3',
+    title:'Chương 3 — Tính Chất Cơ Học Của Đất',
+    topics:'Tính thấm (Darcy) · Tính nén lún (oedometer) · Sức kháng cắt (Mohr-Coulomb) · Đầm chặt',
+    tags:[{t:'Lý thuyết',c:'ly'},{t:'Tính toán',c:'tt'},{t:'Thí nghiệm',c:'ktr'}],
+    bai:24, buoi:'B5–B8',
+    href:'chuong-03/index_C3.html'
+  },
+  {
+    id:'c4', part:1, num:'C.4',
+    title:'Chương 4 — Độ Lún Của Nền Đất',
+    topics:'Lún cuối cùng (đàn hồi) · Cộng lún từng lớp · Lún theo thời gian',
+    tags:[{t:'Tính toán',c:'tt'}],
+    bai:10, buoi:'B8',
+    href:'chuong-04/index_C4.html'
+  },
+  {
+    id:'c5', part:1, num:'C.5',
+    title:'Chương 5 — Sức Chịu Tải Của Nền & Ổn Định Mái',
+    topics:'SCT theo cân bằng giới hạn · Ổn định mái (phẳng, trụ tròn) · Biện pháp giữ ổn định',
+    tags:[{t:'Tính toán',c:'tt'},{t:'Kiểm tra',c:'ktr'}],
+    bai:14, buoi:'B9',
+    href:'chuong-05/index_C5.html'
+  },
+  {
+    id:'c6', part:1, num:'C.6',
+    title:'Chương 6 — Áp Lực Đất Lên Tường Chắn',
+    topics:'Áp lực chủ động / bị động · Rankine & Coulomb · Tường trọng lực, công xon, rọ đá',
+    tags:[{t:'Lý thuyết',c:'ly'},{t:'Tính toán',c:'tt'}],
+    bai:12, buoi:'B12',
+    href:'chuong-06/index_C6.html'
+  },
+  {
+    id:'c7', part:2, num:'C.7',
+    title:'Chương 7 — Vấn Đề Chung Về Nền & Móng',
+    topics:'Phân loại nền móng · Địa chất công trình · Tài liệu thiết kế · Nguyên tắc TTGH',
+    tags:[{t:'Lý thuyết',c:'ly'}],
+    bai:8, buoi:'B13',
+    href:'chuong-07/index_C7.html'
+  },
+  {
+    id:'c8', part:2, num:'C.8',
+    title:'Chương 8 — Móng Nông Trên Nền Thiên Nhiên',
+    topics:'Phân loại, cấu tạo · Kiểm tra TTGH cường độ & biến dạng · Kết cấu móng BTCT',
+    tags:[{t:'Tính toán',c:'tt'},{t:'Kiểm tra',c:'ktr'}],
+    bai:20, buoi:'B13–B14',
+    href:'chuong-08/index_C8.html'
+  },
+  {
+    id:'c9', part:2, num:'C.9',
+    title:'Chương 9 — Nền Đất Yếu & Gia Cố Nền',
+    topics:'Đặc điểm đất yếu · Gia tải trước, đệm cát · Phạm vi ứng dụng · Công trình điển hình',
+    tags:[{t:'Lý thuyết',c:'ly'}],
+    bai:8, buoi:'B15',
+    href:'chuong-09/index_C9.html'
+  },
+  {
+    id:'c10', part:2, num:'C.10',
+    title:'Chương 10 — Móng Cọc',
+    topics:'Phân loại cọc · SCT theo đất nền & vật liệu (SPT, nén tĩnh) · Thiết kế móng cọc đài thấp · Số lượng & bố trí cọc',
+    tags:[{t:'Tính toán',c:'tt'},{t:'Kiểm tra',c:'ktr'}],
+    bai:22, buoi:'B16–B18',
+    href:'chuong-10/index_C10.html'
+  }
+];
+
+// ════════════════════════════════════════
+//  CHAPTERS_DEF — rút gọn từ CHAPTERS[] để hiển thị trong bảng lịch Admin
+//  Tự sinh từ CHAPTERS[], không cần sửa thủ công
+// ════════════════════════════════════════
+var CHAPTERS_DEF = CHAPTERS.map(function(c){
+  return {id:c.id, icon:c.num, name:c.num==='MĐ'?'Mở Đầu':c.num, desc:c.title.replace(/^Chương \d+ — /,'').replace(/^Chương Mở Đầu/,'Mở Đầu')};
+});
+
+// ════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════
+var _toastT;
+function toast(msg, dur) {
+  dur = dur||3000;
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_toastT);
+  _toastT=setTimeout(function(){el.classList.remove('show');},dur);
+}
+function loading(v){document.getElementById('loading-overlay').classList.toggle('show',v);}
+function togGH(hd){hd.classList.toggle('open');hd.nextElementSibling.classList.toggle('open');}
+
+// ── TIMER — bộ đếm giờ làm bài, hiện trên header và infobar SV ──
+// Gọi TIMER.start() khi SV đăng nhập; TIMER.elapsed() để lấy chuỗi giờ:phút
+var TIMER = {
+  t:0, iv:null,
+  start:function(){
+    this.t=Date.now(); clearInterval(this.iv);
+    this.iv=setInterval(function(){
+      var s=Math.floor((Date.now()-TIMER.t)/1000);
+      var str=(String(Math.floor(s/60)).padStart(2,'0'))+':'+(String(s%60).padStart(2,'0'));
+      document.getElementById('timer-badge').textContent=str;
+      document.getElementById('sv-clock').textContent=str;
+    },1000);
+  },
+  elapsed:function(){
+    var s=Math.floor((Date.now()-this.t)/1000);
+    return (String(Math.floor(s/60)).padStart(2,'0'))+':'+(String(s%60).padStart(2,'0'));
+  },
+  stop:function(){clearInterval(this.iv);}
+};
+
+// ════════════════════════════════════════
+//  CONFIG (localStorage)
+// ════════════════════════════════════════
+// CFG_KEY: key lưu trong localStorage trình duyệt SV — đổi tên nếu muốn reset toàn bộ
+var CFG_KEY='ncm_cfg_v1';
+// DEF_CFG: cài đặt mặc định — bị ghi đè bởi config.js (GitHub) hoặc Admin panel
+// adminPw: mật khẩu mặc định, đổi qua Admin → tab Cài đặt (lưu vào localStorage)
+var DEF_CFG={
+  workerUrl:'https://dqt-chdnm.bmchdnm.workers.dev', // ← fallback khi config.js chưa load
+  minAttemptPct:5,     // % câu phải làm để được nộp — test: 5, chính thức: 70-80
+  teacher:'Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội',
+  adminPw:'admin2024', // ← mật khẩu admin mặc định (đổi qua Admin → Cài đặt)
+  showFeedback:false,
+  showScore:true,
+  classes:[
+    {id:'KT1',  name:'KT1'},
+    {id:'KT2',  name:'KT2'},
+    {id:'KT3',  name:'KT3'},
+    {id:'KT4',  name:'KT4'},
+    {id:'KT5',  name:'KT5'},
+    {id:'KT6',  name:'KT6'},
+    {id:'KT7',  name:'KT7'},
+    {id:'KT8',  name:'KT8'},
+    {id:'KT9',  name:'KT9'},
+    {id:'KT10', name:'KT10'},
+    {id:'BDS1', name:'BDS1'},
+    {id:'BDS2', name:'BDS2'},
+    {id:'QD1',  name:'QD1'},
+    {id:'QD2',  name:'QD2'},
+    {id:'KTE',  name:'KTE'},
+    {id:'CDQ1', name:'CDQ1'},
+    {id:'CDQ2', name:'CDQ2'},
+    {id:'NV01', name:'NV01'},
+    {id:'NV02', name:'NV02'},
+    {id:'NV03', name:'NV03'},
+  ],
+  // Lịch mặc định (fallback khi không dùng Admin panel)
+  // open/close: null = không giới hạn thời gian; active:false = khóa chương
+  // Thực tế GV dùng Admin panel → lưu vào localStorage (ghi đè DEF_CFG)
+  // Hoặc dùng config.js trên GitHub → CHAPTER_SCHEDULE (ưu tiên cao nhất)
+  schedule:{
+    c0:{open:null,close:null,minPct:60,active:true},
+    c1:{open:null,close:null,minPct:70,active:true},
+    c2:{open:null,close:null,minPct:5,active:true},
+    c3:{open:null,close:null,minPct:70,active:false},
+    c4:{open:null,close:null,minPct:70,active:false},
+    c5:{open:null,close:null,minPct:70,active:true},
+    c6:{open:null,close:null,minPct:70,active:false},
+    c7:{open:null,close:null,minPct:70,active:false},
+    c8:{open:null,close:null,minPct:70,active:false},
+    c9:{open:null,close:null,minPct:70,active:false},
+    c10:{open:null,close:null,minPct:70,active:false},
+  }
+};
+function loadCfg(){
+  try{var s=JSON.parse(localStorage.getItem(CFG_KEY));
+    return s?Object.assign({},DEF_CFG,s,{schedule:Object.assign({},DEF_CFG.schedule,s.schedule||{}),classes:s.classes||DEF_CFG.classes}):DEF_CFG;
+  }catch(e){return DEF_CFG;}
+}
+function saveCfg(c){localStorage.setItem(CFG_KEY,JSON.stringify(c));}
+
+// ════════════════════════════════════════
+//  sendResult() — gọi từ file bài tập (chuong-XX/*.html) khi SV nhấn Nộp bài
+//  payload: { name, mssv, stt, classId, chapterId, score, correct, total, duration }
+//  Dùng window.WORKER_URL từ config.js (ưu tiên) hoặc cfg.workerUrl (localStorage)
+// ════════════════════════════════════════
+function sendResult(payload){
+  var cfg=loadCfg();
+  var url=cfg.workerUrl;
+  if(!url){console.warn('[NCM] Chưa cấu hình Worker URL.');return;}
+  fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      timestamp:new Date().toLocaleString('vi-VN'),
+      name:String(payload.name||'').trim(),
+      mssv:String(payload.mssv||'').trim(),
+      stt:Number(payload.stt)||0,
+      classId:String(payload.classId||''),
+      chapterId:String(payload.chapterId||payload.chapter||''),
+      score:Number(payload.score)||0,
+      correct:Number(payload.correct)||0,
+      total:Number(payload.total)||0,
+      duration:String(payload.duration||''),
+    })
+  }).then(function(r){return r.json();})
+    .then(function(d){if(d.ok)console.log('[NCM] ✅ Đã ghi Google Sheet.');else throw new Error(d.error);})
+    .catch(function(e){console.error('[NCM] ❌',e.message);});
+}
+
+// ════════════════════════════════════════
+//  ADMIN
+// ════════════════════════════════════════
+var ADMIN = {
+  logged:false,
+  open:function(){
+    document.getElementById('admin-overlay').classList.add('show');
+    if(this.logged)this.showDash();
+    else{
+      document.getElementById('admin-login').classList.remove('hidden');
+      document.getElementById('admin-dash').classList.add('hidden');
+      document.getElementById('admin-pw').value='';
+      document.getElementById('admin-pw-err').classList.add('hidden');
+      setTimeout(function(){document.getElementById('admin-pw').focus();},80);
+    }
+  },
+  close:function(){document.getElementById('admin-overlay').classList.remove('show');},
+  login:function(){
+    var pw=document.getElementById('admin-pw').value;
+    if(pw!==loadCfg().adminPw){
+      var el=document.getElementById('admin-pw-err');
+      el.textContent='❌ Mật khẩu không đúng.';el.classList.remove('hidden');return;
+    }
+    this.logged=true;this.showDash();
+  },
+  showDash:function(){
+    document.getElementById('admin-login').classList.add('hidden');
+    document.getElementById('admin-dash').classList.remove('hidden');
+    this.renderSch();this.renderCls();this.renderCfg();
+  },
+  switchTab:function(name,btn){
+    document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.admin-pane').forEach(function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById('pane-'+name).classList.add('active');
+  },
+  renderSch:function(){
+    var cfg=loadCfg();
+    document.getElementById('sch-tbody').innerHTML=CHAPTERS_DEF.map(function(ch){
+      var s=cfg.schedule[ch.id]||{minPct:70,active:false};
+      return '<tr>'
+        +'<td><b>'+ch.icon+' '+ch.name+'</b><br><span style="font-size:10px;color:var(--muted)">'+ch.desc+'</span></td>'
+        +'<td><input type="datetime-local" id="so-'+ch.id+'" value="'+(s.open||'')+'"/></td>'
+        +'<td><input type="datetime-local" id="sc-'+ch.id+'" value="'+(s.close||'')+'"/></td>'
+        +'<td><input type="number" class="pct-inp" id="sp-'+ch.id+'" value="'+(s.minPct||70)+'" min="0" max="100"/>%</td>'
+        +'<td><label class="toggle-sw"><input type="checkbox" id="sa-'+ch.id+'" '+(s.active?'checked':'')+'><span class="toggle-sl"></span></label></td>'
+        +'</tr>';
+    }).join('');
+  },
+  saveSchedule:function(){
+    var cfg=loadCfg();
+    CHAPTERS_DEF.forEach(function(ch){
+      cfg.schedule[ch.id]={
+        open:document.getElementById('so-'+ch.id)?.value||null,
+        close:document.getElementById('sc-'+ch.id)?.value||null,
+        minPct:parseInt(document.getElementById('sp-'+ch.id)?.value)||70,
+        active:document.getElementById('sa-'+ch.id)?.checked||false,
+      };
+    });
+    saveCfg(cfg);APP.renderGrid();
+    document.getElementById('sch-msg').innerHTML='<div class="succ-box">✅ Đã lưu lịch!</div>';
+    setTimeout(function(){document.getElementById('sch-msg').innerHTML='';},2400);
+    toast('✅ Đã lưu lịch bài tập!');
+  },
+  resetSchedule:function(){
+    if(!confirm('Reset lịch về mặc định?'))return;
+    var cfg=loadCfg();cfg.schedule=Object.assign({},DEF_CFG.schedule);saveCfg(cfg);this.renderSch();
+    toast('↺ Đã reset lịch!');
+  },
+  renderCls:function(){
+    var cfg=loadCfg();
+    document.getElementById('cls-list').innerHTML=(cfg.classes||[]).map(function(c,i){
+      return '<li class="cls-item">'
+        +'<span class="cls-badge">'+String(i+1).padStart(2,'0')+'</span>'
+        +'<input type="text" id="ci-'+i+'" value="'+c.id+'" placeholder="Mã lớp (68XDC1)"/>'
+        +'<input type="text" id="cn-'+i+'" value="'+c.name+'" placeholder="Tên hiển thị"/>'
+        +'<button class="btn btn-danger btn-sm" onclick="ADMIN.removeCls('+i+')"><i class="ti ti-x"></i></button>'
+        +'</li>';
+    }).join('');
+  },
+  addClass:function(){var cfg=loadCfg();cfg.classes.push({id:'',name:''});saveCfg(cfg);this.renderCls();},
+  removeCls:function(i){var cfg=loadCfg();cfg.classes.splice(i,1);saveCfg(cfg);this.renderCls();},
+  saveClasses:function(){
+    var cfg=loadCfg();
+    cfg.classes=Array.from({length:cfg.classes.length},function(_,i){
+      return {id:(document.getElementById('ci-'+i)?.value||'').trim(),name:(document.getElementById('cn-'+i)?.value||'').trim()};
+    }).filter(function(c){return c.id;});
+    saveCfg(cfg);APP.populateClasses();
+    document.getElementById('cls-msg').innerHTML='<div class="succ-box">✅ Đã lưu danh sách lớp!</div>';
+    setTimeout(function(){document.getElementById('cls-msg').innerHTML='';},2400);
+    toast('✅ Đã lưu danh sách lớp!');
+  },
+  renderCfg:function(){
+    var cfg=loadCfg();
+    document.getElementById('cfg-worker').value=cfg.workerUrl||'';
+    document.getElementById('cfg-attempt-pct').value=cfg.minAttemptPct!=null?cfg.minAttemptPct:5;
+    document.getElementById('cfg-teacher').value=cfg.teacher||'';
+    document.getElementById('cfg-pw').value='';
+    document.getElementById('opt-feedback').checked=cfg.showFeedback!==false;
+    document.getElementById('opt-score').checked=cfg.showScore!==false;
+  },
+  saveSettings:function(){
+    var cfg=loadCfg();
+    cfg.workerUrl=document.getElementById('cfg-worker').value.trim();
+    cfg.minAttemptPct=parseInt(document.getElementById('cfg-attempt-pct').value)||5;
+    cfg.teacher=document.getElementById('cfg-teacher').value.trim();
+    cfg.showFeedback=document.getElementById('opt-feedback').checked;
+    cfg.showScore=document.getElementById('opt-score').checked;
+    var pw=document.getElementById('cfg-pw').value.trim();
+    if(pw)cfg.adminPw=pw;
+    saveCfg(cfg);
+    if(cfg.teacher)document.getElementById('hdr-sub').textContent=cfg.teacher;
+    document.getElementById('cfg-msg').innerHTML='<div class="succ-box">✅ Đã lưu cài đặt!</div>';
+    setTimeout(function(){document.getElementById('cfg-msg').innerHTML='';},2400);
+    toast('✅ Đã lưu cài đặt!');
+  }
+};
+
+// ════════════════════════════════════════
+//  APP
+// ════════════════════════════════════════
+var APP = {
+  student: null,
+
+  init:function(){
+    var cfg=loadCfg();
+    if(cfg.teacher)document.getElementById('hdr-sub').textContent=cfg.teacher;
+    this.populateClasses();
+    this.renderGrid();
+    this.updateTotalProg();
+    // Restore SV từ sessionStorage (tiện khi F5)
+    try{
+      var sv=JSON.parse(sessionStorage.getItem('ncm_sv'));
+      if(sv&&sv.name){
+        document.getElementById('f-name').value=sv.name||'';
+        document.getElementById('f-mssv').value=sv.mssv||'';
+        document.getElementById('f-stt').value=sv.stt||'';
+        document.getElementById('f-class').value=sv.classId||'';
+        // Tự động restore đăng nhập
+        this.student=sv;
+        document.getElementById('sv-av').textContent=sv.name.charAt(0).toUpperCase();
+        document.getElementById('sv-name').textContent=sv.name;
+        document.getElementById('sv-meta').textContent='MSSV: '+sv.mssv+' · STT: '+sv.stt+' · '+sv.classId;
+        document.getElementById('sv-infobar').classList.add('show');
+        document.getElementById('timer-badge').style.display='block';
+        document.getElementById('login-wrap').style.display='none';
+        document.querySelectorAll('.chapter-section').forEach(function(el){el.classList.remove('hidden');});
+        TIMER.start();
+      }
+    }catch(e){}
+  },
+
+  populateClasses:function(){
+    // Nguồn lớp theo thứ tự ưu tiên: config.js (GitHub) → Admin panel (localStorage) → DEF_CFG
+    // Chỉ sửa CLASS_LIST trong config.js → push lên GitHub là xong (SV thấy ngay)
+    var list=(window.CLASS_LIST&&window.CLASS_LIST.length)
+      ? window.CLASS_LIST
+      : (loadCfg().classes||[]);
+    var sel=document.getElementById('f-class');
+    var cur=sel.value;
+    sel.innerHTML='<option value="">— Chọn lớp của bạn —</option>';
+    list.forEach(function(c){
+      var o=document.createElement('option');
+      o.value=c.id;o.textContent=c.name||c.id;
+      if(c.id===cur)o.selected=true;
+      sel.appendChild(o);
+    });
+  },
+
+  chStatus:function(chId){
+    // Trả về: 'open' | 'locked' | 'soon' | 'closed'
+    // Nguồn ưu tiên: window.CHAPTER_SCHEDULE (config.js GitHub) → localStorage
+    var s;
+    if(window.CHAPTER_SCHEDULE&&window.CHAPTER_SCHEDULE[chId]!==undefined)
+      s=window.CHAPTER_SCHEDULE[chId];
+    else{var cfg=loadCfg();s=cfg.schedule?.[chId];}
+    if(!s||!s.active)return'locked';
+    var now=Date.now();
+    var op=s.open?new Date(s.open).getTime():null;
+    var cl=s.close?new Date(s.close).getTime():null;
+    if(op&&now<op)return'soon';
+    if(cl&&now>cl)return'closed';
+    return'open';
+  },
+
+  getProg:function(id){
+    try{var v=localStorage.getItem('prog_'+id);return v?JSON.parse(v):{done:0,total:0};}
+    catch(e){return{done:0,total:0};}
+  },
+
+  renderGrid:function(){
+    document.getElementById('grid-p1').innerHTML='';
+    document.getElementById('grid-p2').innerHTML='';
+    var self=this;
+    CHAPTERS.forEach(function(ch){
+      var card=self.buildCard(ch);
+      document.getElementById(ch.part===1?'grid-p1':'grid-p2').appendChild(card);
+    });
+  },
+
+  buildCard:function(ch){
+    var st=this.chStatus(ch.id);
+    var prog=this.getProg(ch.id);
+    var pct=prog.total?Math.round(prog.done/prog.total*100):0;
+    var tagsHtml=ch.tags.map(function(t){return'<span class="ctag '+t.c+'">'+t.t+'</span>';}).join('');
+    var footerRight='';
+    if(pct===100){
+      footerRight='<span class="badge-done">✓ Hoàn thành</span>';
+    } else if(prog.total>0){
+      footerRight='<div class="cprog-mini"><div class="cprog-track"><div class="cprog-fill-m" style="width:'+pct+'%"></div></div><span class="cprog-pct">'+pct+'%</span></div>';
+    } else {
+      var lbl={open:'✅ Đang mở',soon:'🕐 Chưa mở',locked:'🔒 Chưa mở',closed:'⛔ Đã đóng'};
+      var cls={open:'badge-open',soon:'badge-soon',locked:'badge-locked',closed:'badge-locked'};
+      footerRight='<span class="'+cls[st]+'">'+lbl[st]+'</span>';
+    }
+    var a=document.createElement('a');
+    a.className='ccard'+(st==='locked'?' locked':'');
+    a.href=ch.href;
+    a.innerHTML=[
+      '<div class="ccard-hd">',
+        '<div class="cnum">'+ch.num+'</div>',
+        '<div class="ccard-hd-txt">',
+          '<h3>'+ch.title+'</h3>',
+          '<div class="ctopics">'+ch.topics+'</div>',
+        '</div>',
+      '</div>',
+      '<div class="ccard-body"><div class="ctag-row">'+tagsHtml+'</div></div>',
+      '<div class="ccard-footer">',
+        '<span class="cbai">Buổi <b>'+ch.buoi+'</b> · <b>'+ch.bai+'</b> bài tập</span>',
+        footerRight,
+      '</div>'
+    ].join('');
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      if(st==='locked'){toast('🔒 Chương chưa được mở. Vui lòng chờ giảng viên.');return;}
+      if(st==='soon'){toast('🕐 Chưa đến giờ mở chương này.');return;}
+      if(st==='closed'){toast('⛔ Đã hết hạn nộp bài.');return;}
+      if(!APP.student){
+        toast('⚠️ Hãy nhập thông tin sinh viên trước!');
+        document.getElementById('f-name').focus();
+        document.getElementById('login-wrap').scrollIntoView({behavior:'smooth'});
+        return;
+      }
+      sessionStorage.setItem('ncm_sv',JSON.stringify(APP.student));
+      window.location.href=ch.href;
+    });
+    return a;
+  },
+
+  updateTotalProg:function(){
+    var done=0,total=0,completed=0;
+    CHAPTERS.forEach(function(ch){
+      var p=APP.getProg(ch.id);
+      done+=(p.done||0); total+=(p.total||0);
+      if(p.total&&p.done===p.total)completed++;
+    });
+    var pct=total?Math.round(done/total*100):0;
+    document.getElementById('total-fill').style.width=pct+'%';
+    document.getElementById('total-pct').textContent=pct+'% hoàn thành ('+completed+'/11 chương)';
+  },
+
+  start:function(){
+    var name=document.getElementById('f-name').value.trim();
+    var mssv=document.getElementById('f-mssv').value.trim();
+    var stt=parseInt(document.getElementById('f-stt').value);
+    var classId=document.getElementById('f-class').value;
+    var errEl=document.getElementById('login-err');
+    errEl.classList.add('hidden');
+    if(!name){errEl.textContent='⚠️ Vui lòng nhập họ tên.';errEl.classList.remove('hidden');return;}
+    if(!mssv){errEl.textContent='⚠️ Vui lòng nhập MSSV.';errEl.classList.remove('hidden');return;}
+    if(!stt||stt<1||stt>200){errEl.textContent='⚠️ Số thứ tự phải từ 1 đến 200.';errEl.classList.remove('hidden');return;}
+    if(!classId){errEl.textContent='⚠️ Vui lòng chọn lớp.';errEl.classList.remove('hidden');return;}
+    this.student={name:name,mssv:mssv,stt:stt,classId:classId};
+    sessionStorage.setItem('ncm_sv',JSON.stringify(this.student));
+    // UI
+    document.getElementById('sv-av').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('sv-name').textContent=name;
+    document.getElementById('sv-meta').textContent='MSSV: '+mssv+' · STT: '+stt+' · '+classId;
+    document.getElementById('sv-infobar').classList.add('show');
+    document.getElementById('timer-badge').style.display='block';
+    document.getElementById('login-wrap').style.display='none';
+    // Hiện tất cả phần chương
+    document.querySelectorAll('.chapter-section').forEach(function(el){el.classList.remove('hidden');});
+    TIMER.start();
+    this.renderGrid();
+    this.updateTotalProg();
+    // Scroll xuống danh sách chương
+    setTimeout(function(){document.getElementById('prog-wrap').scrollIntoView({behavior:'smooth',block:'start'});},120);
+    toast('✅ Xin chào '+name+'! Chọn chương đang mở để bắt đầu làm bài.');
+  },
+
+  exitConfirm:function(){
+    if(!confirm('⚠️ Thoát về trang chính?\n(Bài làm chưa nộp sẽ bị mất)'))return;
+    this.student=null;
+    sessionStorage.removeItem('ncm_sv');
+    TIMER.stop();
+    document.getElementById('sv-infobar').classList.remove('show');
+    document.getElementById('timer-badge').style.display='none';
+    document.getElementById('timer-badge').textContent='00:00';
+    document.getElementById('sv-clock').textContent='00:00';
+    document.getElementById('login-wrap').style.display='block';
+    // Ẩn lại phần chương
+    document.querySelectorAll('.chapter-section').forEach(function(el){el.classList.add('hidden');});
+    // Scroll lên đầu
+    window.scrollTo({top:0,behavior:'smooth'});
+    this.renderGrid();
+  }
+};
+
+// Phím tắt: Escape đóng Admin panel
+document.addEventListener('keydown',function(e){if(e.key==='Escape')ADMIN.close();});
+
+// INIT
+window.addEventListener('load',function(){APP.init();});
+</script>
+</body>
+</html>
