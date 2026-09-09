@@ -1,0 +1,770 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5.3 — Sức Chịu Tải Của Nền (Terzaghi)</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:600}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;transition:border-color .15s;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 8px;text-align:center;white-space:nowrap}
+table.tbl td{padding:4px 8px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+table.tbl tr.hi td{background:#FFF9C4;font-weight:700;color:var(--A)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C5.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 5</a>
+    <div class="hdr-title">
+      <h1>5.3 — Sức Chịu Tải Của Nền (Terzaghi, 1943)</h1>
+      <p>p<sub>gh</sub> · Bảng tra N · Móng đơn & móng băng · Hệ số an toàn</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 5.3 — Sức Chịu Tải</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT + BẢNG N -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-building-skyscraper"></i>
+    <div><h2>Công thức Terzaghi & Bảng tra N</h2></div>
+    <span class="cbadge">CÔNG THỨC</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fml-box">
+          <div class="ftitle"><i class="ti ti-sigma"></i> Móng băng (bài toán phẳng)</div>
+          <div class="frow" style="font-size:14px">p<sub>gh</sub> = ½·N<sub>γ</sub>·b·γ + N<sub>q</sub>·q + N<sub>c</sub>·c</div>
+          <div class="frow">q = γ<sub>tb</sub>·h<sub>m</sub> &nbsp;<span style="color:var(--muted);font-size:11px">(tải đất trên đáy móng)</span></div>
+        </div>
+        <div class="fml-box">
+          <div class="ftitle"><i class="ti ti-building"></i> Móng đơn (hệ số hình dạng α)</div>
+          <div class="frow" style="font-size:13px">p<sub>gh</sub> = α₁·½N<sub>γ</sub>bγ + α₂·N<sub>q</sub>q + α₃·N<sub>c</sub>c</div>
+          <div class="frow" style="font-size:12px">Móng tròn: α₁=1.2, α₂=1.0, α₃=1.3</div>
+          <div class="frow" style="font-size:12px">Móng vuông: α₁=0.8, α₂=1.0, α₃=1.3</div>
+        </div>
+        <div class="fml-box">
+          <div class="ftitle"><i class="ti ti-shield-check"></i> Hệ số an toàn</div>
+          <div class="frow">[p] = p<sub>gh</sub> / F<sub>s</sub> &nbsp;·&nbsp; F<sub>s</sub> = p<sub>gh</sub>/p<sub>tx</sub></div>
+          <div class="frow">F<sub>s</sub> ≥ 2~3 thì nền an toàn</div>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>φ°</th><th>N<sub>γ</sub></th><th>N<sub>q</sub></th><th>N<sub>c</sub></th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>0.0</td><td>1.0</td><td>5.7</td></tr>
+            <tr><td>5</td><td>0.5</td><td>1.6</td><td>7.3</td></tr>
+            <tr><td>10</td><td>1.2</td><td>2.7</td><td>9.6</td></tr>
+            <tr><td>15</td><td>2.5</td><td>4.4</td><td>12.9</td></tr>
+            <tr><td>17</td><td>3.4</td><td>5.5</td><td>14.6</td></tr>
+            <tr><td>18</td><td>3.9</td><td>6.0</td><td>15.5</td></tr>
+            <tr><td>20</td><td>5.0</td><td>7.4</td><td>17.7</td></tr>
+            <tr><td>22</td><td>6.4</td><td>9.2</td><td>20.3</td></tr>
+            <tr><td>25</td><td>9.7</td><td>12.7</td><td>25.1</td></tr>
+            <tr><td>28</td><td>15.4</td><td>17.8</td><td>31.6</td></tr>
+            <tr class="hi"><td>30</td><td>19.7</td><td>22.5</td><td>37.2</td></tr>
+            <tr><td>32</td><td>24.5</td><td>28.5</td><td>44.0</td></tr>
+            <tr><td>35</td><td>42.4</td><td>41.4</td><td>57.8</td></tr>
+          </tbody>
+        </table>
+        <div class="earth-box" style="margin-top:8px;font-size:12px">💡 φ=30° (hàng vàng): bộ N<sub>γ</sub>=19.7, N<sub>q</sub>=22.5, N<sub>c</sub>=37.2 hay dùng nhất trong bài thi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Móng đơn, đất rời, đủ thông số -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Móng đơn, nền đất rời (c = 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Bước 1 — Tra bảng N theo φ</div>
+      <div class="frow" id="a1-Nrow">φ = ? → N<sub>γ</sub>=?, N<sub>q</sub>=?, N<sub>c</sub>=0 (c=0)</div>
+      <div class="ftitle" style="margin-top:8px"><i class="ti ti-calculator"></i> Bước 2 — Tính q và p<sub>gh</sub></div>
+      <div class="frow">q = γ × h<sub>m</sub></div>
+      <div class="frow">p<sub>gh</sub> = α₁·½N<sub>γ</sub>bγ + α₂·N<sub>q</sub>q &nbsp;(móng đơn, hệ số α cho ở đề)</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Móng đơn, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Móng đơn, nền đất dính (c, φ)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Bước 1 — Tra bảng N theo φ</div>
+      <div class="frow" id="a2-Nrow">φ = ? → N<sub>γ</sub>=?, N<sub>q</sub>=?, N<sub>c</sub>=?</div>
+      <div class="ftitle" style="margin-top:8px"><i class="ti ti-calculator"></i> Bước 2 — Tính q và p<sub>gh</sub></div>
+      <div class="frow">q = γ × h<sub>m</sub></div>
+      <div class="frow">p<sub>gh</sub> = α₁·½N<sub>γ</sub>bγ + α₂·N<sub>q</sub>q + α₃·N<sub>c</sub>c</div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Móng băng, đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Móng băng, nền đất rời (c = 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Bước 1 — Tra bảng N theo φ</div>
+      <div class="frow" id="a3-Nrow">φ = ? → N<sub>γ</sub>=?, N<sub>q</sub>=?, N<sub>c</sub>=0</div>
+      <div class="ftitle" style="margin-top:8px"><i class="ti ti-calculator"></i> Bước 2 — Tính q và p<sub>gh</sub> (móng băng, không α)</div>
+      <div class="frow">q = γ × h<sub>m</sub></div>
+      <div class="frow">p<sub>gh</sub> = ½N<sub>γ</sub>bγ + N<sub>q</sub>q</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+  </div>
+</div>
+
+<!-- A4: Móng băng, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Móng băng, nền đất dính (c, φ)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Bước 1 — Tra bảng N theo φ</div>
+      <div class="frow" id="a4-Nrow">φ = ? → N<sub>γ</sub>=?, N<sub>q</sub>=?, N<sub>c</sub>=?</div>
+      <div class="ftitle" style="margin-top:8px"><i class="ti ti-calculator"></i> Bước 2 — Tính q và p<sub>gh</sub></div>
+      <div class="frow">q = γ × h<sub>m</sub></div>
+      <div class="frow">p<sub>gh</sub> = ½N<sub>γ</sub>bγ + N<sub>q</sub>q + N<sub>c</sub>c</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- A5: Cho sẵn N, móng đơn, tính Fs -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Cho sẵn N, móng đơn · Tính F<sub>s</sub></h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-calculator"></i> Đề đã cho sẵn N — chỉ tính trực tiếp</div>
+      <div class="frow">q = γ·h<sub>m</sub> &nbsp;·&nbsp; p<sub>gh</sub> = α₁·½N<sub>γ</sub>bγ + α₂·N<sub>q</sub>q + α₃·N<sub>c</sub>c</div>
+      <div class="frow">F<sub>s</sub> = p<sub>gh</sub> / p<sub>tx</sub></div>
+      <div class="frow" id="a5-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+  </div>
+</div>
+
+<!-- A6: Cho sẵn N, móng băng, tính Fs -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A6 — Cho sẵn N, móng băng · Tính F<sub>s</sub></h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A6</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a6-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-calculator"></i> Đề đã cho sẵn N — chỉ tính trực tiếp</div>
+      <div class="frow">q = γ·h<sub>m</sub> &nbsp;·&nbsp; p<sub>gh</sub> = ½N<sub>γ</sub>bγ + N<sub>q</sub>q + N<sub>c</sub>c</div>
+      <div class="frow">F<sub>s</sub> = p<sub>gh</sub> / p<sub>tx</sub></div>
+      <div class="frow" id="a6-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a6-q"></div>
+  </div>
+</div>
+
+<!-- A7: Tính ngược c hoặc q từ pgh -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A7 — Cho p<sub>gh</sub> và N · Tính ngược lực dính c</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A7</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a7-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-calculator"></i> Giải ngược từ công thức Terzaghi</div>
+      <div class="frow">p<sub>gh</sub> = ½N<sub>γ</sub>bγ + N<sub>q</sub>q + N<sub>c</sub>·c</div>
+      <div class="frow"><em>c = [p<sub>gh</sub> − ½N<sub>γ</sub>bγ − N<sub>q</sub>q] / N<sub>c</sub></em></div>
+      <div class="frow" id="a7-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a7-q"></div>
+  </div>
+</div>
+
+<!-- A8: Tính ngược q từ pgh (đất rời) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A8 — Cho p<sub>gh</sub> và N · Tính ngược tải trọng đất q (đất rời)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A8</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a8-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-calculator"></i> Giải ngược từ công thức Terzaghi (c=0)</div>
+      <div class="frow">p<sub>gh</sub> = ½N<sub>γ</sub>bγ + N<sub>q</sub>·q</div>
+      <div class="frow"><em>q = [p<sub>gh</sub> − ½N<sub>γ</sub>bγ] / N<sub>q</sub></em></div>
+      <div class="frow" id="a8-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a8-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>5.3 · Sức Chịu Tải Nền</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="5.4_ON_DINH_MAI.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2()        : làm tròn 1/2 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+// Bảng tra Terzaghi: PHI_VALS → N_GAMMA/N_Q/N_C; PHI_RIGID/PHI_DINH: danh sách φ dùng để sinh đề
+var PHI_VALS=[0,5,10,15,17,18,20,22,25,28,30,32,35];
+var N_GAMMA=[0,0.5,1.2,2.5,3.4,3.9,5.0,6.4,9.7,15.4,19.7,24.5,42.4];
+var N_Q=[1.0,1.6,2.7,4.4,5.5,6.0,7.4,9.2,12.7,17.8,22.5,28.5,41.4];
+var N_C=[5.7,7.3,9.6,12.9,14.6,15.5,17.7,20.3,25.1,31.6,37.2,44.0,57.8];
+var PHI_RIGID=[25,28,30,32,35]; // dùng cho đất rời, c=0
+var PHI_DINH=[15,17,18,20,22,25]; // dùng cho đất dính, c>0
+// Hàm tra bảng: nhận φ (độ), trả về {Ng, Nq, Nc} tương ứng
+function getN(phi){var idx=PHI_VALS.indexOf(phi);if(idx<0)idx=PHI_VALS.indexOf(30);return{Ng:N_GAMMA[idx],Nq:N_Q[idx],Nc:N_C[idx]};}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và cập nhật tiến độ
+   chkFill(id, ans, tol): so sánh ô nhập với đáp án ±tol, tô màu, lưu ANS[id]
+   makeQ(...)           : tạo HTML hàng nhập đáp số, đăng ký ANS[id]=null
+   updateProg()         : đếm tiến độ, lưu 'prog_c5_53', kích hoạt nút Nộp
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c5_53',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 5 — Nộp bài lên server
+   chapterId      = 'C5-53-SCTNen'
+   WORKER_URL     : từ config.js (fallback URL mặc định)
+   MIN_ATTEMPT_PCT: từ config.js (fallback 5%)
+   submitResult() : POST {name, mssv, stt, classId, chapterId, score,
+                    correct, total, duration} lên WORKER_URL
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C5-53-SCTNen',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   genA(stt)  : sinh nhóm A có gợi ý (A1..A8) — Terzaghi cho móng đơn/băng
+                đất rời/dính; mỗi bài dùng seed riêng theo STT
+   genBC(stt) : sinh nhóm B (có công thức sẵn) và C (tự tra bảng) — nhiều
+                loại bài mẫu tương tự; seed khác với nhóm A
+   ================================================================ */
+function genA(stt){
+  // ── A1: Móng đơn, đất rời ──
+  (function(){
+    var rng=seededRng(stt*7+201);
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var alpha1=0.8,alpha2=1.0; // móng vuông
+    var q=r2(gam*hm);
+    var t1=r2(alpha1*0.5*N.Ng*b*gam);var t2=r2(alpha2*N.Nq*q);
+    var pgh=r2(t1+t2);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng đơn (vuông) cạnh <b>b = '+b+' m</b>, chôn sâu h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền cát đồng nhất γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, c = 0. '
+      +'Hệ số hình dạng móng vuông: α₁ = 0.8, α₂ = 1.0. Tính q và p<sub>gh</sub>.';
+    document.getElementById('a1-Nrow').innerHTML='φ = '+phi+'° → N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>, N<sub>c</sub> = 0 (c = 0)';
+    document.getElementById('a1-hint').innerHTML=
+      'q = '+gam+' × '+hm+' = ?<br>'
+      +'α₁½N<sub>γ</sub>bγ = 0.8×0.5×'+N.Ng+'×'+b+'×'+gam+' = ?<br>'
+      +'α₂N<sub>q</sub>q = 1.0×'+N.Nq+'×? = ?';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-q1','q = γ×h<sub>m</sub> (kN/m²)',q,1,'kN/m²')
+      +makeQ('a1-t1','α₁½N<sub>γ</sub>bγ (kN/m²)',t1,r2(t1*0.03),'kN/m²')
+      +makeQ('a1-t2','α₂N<sub>q</sub>q (kN/m²)',t2,r2(t2*0.03),'kN/m²')
+      +makeQ('a1-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  })();
+
+  // ── A2: Móng đơn, đất dính ──
+  (function(){
+    var rng=seededRng(stt*11+203);
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var alpha1=1.2,alpha2=1.0,alpha3=1.3; // móng tròn
+    var q=r2(gam*hm);
+    var t1=r2(alpha1*0.5*N.Ng*b*gam);var t2=r2(alpha2*N.Nq*q);var t3=r2(alpha3*N.Nc*c);
+    var pgh=r2(t1+t2+t3);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng đơn (tròn) đường kính b = <b>'+b+' m</b>, chôn sâu h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền đất sét γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>. '
+      +'Hệ số hình dạng móng tròn: α₁=1.2, α₂=1.0, α₃=1.3. Tính q và p<sub>gh</sub>.';
+    document.getElementById('a2-Nrow').innerHTML='φ = '+phi+'° → N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>, N<sub>c</sub> = <b>'+N.Nc+'</b>';
+    document.getElementById('a2-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ?<br>'
+      +'α₁½N<sub>γ</sub>bγ=1.2×0.5×'+N.Ng+'×'+b+'×'+gam+'=?<br>'
+      +'α₂N<sub>q</sub>q=1.0×'+N.Nq+'×?=? &nbsp;·&nbsp; α₃N<sub>c</sub>c=1.3×'+N.Nc+'×'+c+'=?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-q1','q = γ×h<sub>m</sub> (kN/m²)',q,1,'kN/m²')
+      +makeQ('a2-t1','α₁½N<sub>γ</sub>bγ (kN/m²)',t1,r2(t1*0.03),'kN/m²')
+      +makeQ('a2-t2','α₂N<sub>q</sub>q (kN/m²)',t2,r2(t2*0.03),'kN/m²')
+      +makeQ('a2-t3','α₃N<sub>c</sub>c (kN/m²)',t3,r2(t3*0.03),'kN/m²')
+      +makeQ('a2-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  })();
+
+  // ── A3: Móng băng, đất rời ──
+  (function(){
+    var rng=seededRng(stt*13+205);
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.8);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var q=r2(gam*hm);
+    var t1=r2(0.5*N.Ng*b*gam);var t2=r2(N.Nq*q);
+    var pgh=r2(t1+t2);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng băng bề rộng b = <b>'+b+' m</b>, chôn sâu h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền cát γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, c = 0. Tính q và p<sub>gh</sub>.';
+    document.getElementById('a3-Nrow').innerHTML='φ = '+phi+'° → N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>, N<sub>c</sub> = 0';
+    document.getElementById('a3-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ?<br>½N<sub>γ</sub>bγ = 0.5×'+N.Ng+'×'+b+'×'+gam+' = ?<br>N<sub>q</sub>q = '+N.Nq+'×? = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-q1','q = γ×h<sub>m</sub> (kN/m²)',q,1,'kN/m²')
+      +makeQ('a3-t1','½N<sub>γ</sub>bγ (kN/m²)',t1,r2(t1*0.03),'kN/m²')
+      +makeQ('a3-t2','N<sub>q</sub>q (kN/m²)',t2,r2(t2*0.03),'kN/m²')
+      +makeQ('a3-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  })();
+
+  // ── A4: Móng băng, đất dính ──
+  (function(){
+    var rng=seededRng(stt*17+207);
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.8);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var q=r2(gam*hm);
+    var t1=r2(0.5*N.Ng*b*gam);var t2=r2(N.Nq*q);var t3=r2(N.Nc*c);
+    var pgh=r2(t1+t2+t3);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng băng bề rộng b = <b>'+b+' m</b>, chôn sâu h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền đất sét γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>. Tính q và p<sub>gh</sub>.';
+    document.getElementById('a4-Nrow').innerHTML='φ = '+phi+'° → N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>, N<sub>c</sub> = <b>'+N.Nc+'</b>';
+    document.getElementById('a4-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ?<br>½N<sub>γ</sub>bγ = 0.5×'+N.Ng+'×'+b+'×'+gam+' = ?<br>N<sub>q</sub>q=?, N<sub>c</sub>c='+N.Nc+'×'+c+'=?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-q1','q = γ×h<sub>m</sub> (kN/m²)',q,1,'kN/m²')
+      +makeQ('a4-t1','½N<sub>γ</sub>bγ (kN/m²)',t1,r2(t1*0.03),'kN/m²')
+      +makeQ('a4-t2','N<sub>q</sub>q (kN/m²)',t2,r2(t2*0.03),'kN/m²')
+      +makeQ('a4-t3','N<sub>c</sub>c (kN/m²)',t3,r2(t3*0.03),'kN/m²')
+      +makeQ('a4-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  })();
+
+  // ── A5: Cho sẵn N, móng đơn → Fs ──
+  (function(){
+    var rng=seededRng(stt*19+209);
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var alpha1=0.8,alpha2=1.0,alpha3=1.3;
+    var q=r2(gam*hm);
+    var pgh=r2(alpha1*0.5*N.Ng*b*gam+alpha2*N.Nq*q+alpha3*N.Nc*c);
+    var ptx=Math.round(pgh*0.3+pgh*rng()*0.3);
+    var Fs=r2(pgh/ptx);
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng đơn vuông cạnh b = <b>'+b+' m</b>, chôn sâu h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>. '
+      +'N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>, N<sub>c</sub> = <b>'+N.Nc+'</b>. α₁=0.8, α₂=1.0, α₃=1.3. '
+      +'Tải tiếp xúc p<sub>tx</sub> = <b>'+ptx+' kN/m²</b>. Tính p<sub>gh</sub> và hệ số an toàn F<sub>s</sub>.';
+    document.getElementById('a5-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ?<br>'
+      +'p<sub>gh</sub> = 0.8×0.5×'+N.Ng+'×'+b+'×'+gam+' + 1.0×'+N.Nq+'×? + 1.3×'+N.Nc+'×'+c+' = ?<br>'
+      +'F<sub>s</sub> = p<sub>gh</sub>/'+ptx+' = ?';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²')
+      +makeQ('a5-Fs','F<sub>s</sub> = p<sub>gh</sub>/p<sub>tx</sub>',Fs,0.12,'');
+  })();
+
+  // ── A6: Cho sẵn N, móng băng → Fs ──
+  (function(){
+    var rng=seededRng(stt*23+211);
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var q=r2(gam*hm);
+    var pgh=r2(0.5*N.Ng*b*gam+N.Nq*q);
+    var ptx=Math.round(pgh*0.3+pgh*rng()*0.25);
+    var Fs=r2(pgh/ptx);
+    document.getElementById('a6-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng băng b = <b>'+b+' m</b>, h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền cát γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b>, N<sub>γ</sub> = <b>'+N.Ng+'</b>, N<sub>q</sub> = <b>'+N.Nq+'</b>. '
+      +'Tải tiếp xúc p<sub>tx</sub> = <b>'+ptx+' kN/m²</b>. Theo Terzaghi, tính F<sub>s</sub>.';
+    document.getElementById('a6-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ?<br>'
+      +'p<sub>gh</sub> = 0.5×'+N.Ng+'×'+b+'×'+gam+' + '+N.Nq+'×? = ?<br>'
+      +'F<sub>s</sub> = p<sub>gh</sub>/'+ptx+' = ?';
+    document.getElementById('a6-q').innerHTML=
+      makeQ('a6-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²')
+      +makeQ('a6-Fs','F<sub>s</sub> = p<sub>gh</sub>/p<sub>tx</sub>',Fs,0.12,'');
+  })();
+
+  // ── A7: Tính ngược c ──
+  (function(){
+    var rng=seededRng(stt*29+213);
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);var cTrue=Math.round(8+rng()*22);
+    var q=r2(gam*hm);
+    var t1=r2(0.5*N.Ng*b*gam);var t2=r2(N.Nq*q);
+    var pgh=r2(t1+t2+N.Nc*cTrue);
+    var cCalc=r1((pgh-t1-t2)/N.Nc);
+    document.getElementById('a7-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng băng b = <b>'+b+' m</b>, h<sub>m</sub> = <b>'+hm+' m</b>. '
+      +'Nền γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b> (N<sub>γ</sub>=<b>'+N.Ng+'</b>, N<sub>q</sub>=<b>'+N.Nq+'</b>, N<sub>c</sub>=<b>'+N.Nc+'</b>). '
+      +'Biết sức chịu tải giới hạn p<sub>gh</sub> = <b>'+pgh+' kN/m²</b>. Tính ngược lực dính c của đất.';
+    document.getElementById('a7-hint').innerHTML=
+      'q = '+gam+'×'+hm+' = ? &nbsp;·&nbsp; ½N<sub>γ</sub>bγ = ?<br>'
+      +'c = ['+pgh+' − ½N<sub>γ</sub>bγ − N<sub>q</sub>q] / '+N.Nc+' = ?';
+    document.getElementById('a7-q').innerHTML=
+      makeQ('a7-q1','q = γ×h<sub>m</sub> (kN/m²)',q,1,'kN/m²')
+      +makeQ('a7-c','c (kPa)',cCalc,1.5,'kPa');
+  })();
+
+  // ── A8: Tính ngược q (đất rời) ──
+  (function(){
+    var rng=seededRng(stt*31+217);
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var hmTrue=r1(1.0+rng()*1.5);
+    var t1=r2(0.5*N.Ng*b*gam);
+    var qTrue=r2(gam*hmTrue);
+    var pgh=r2(t1+N.Nq*qTrue);
+    var qCalc=r1((pgh-t1)/N.Nq);
+    document.getElementById('a8-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Móng băng b = <b>'+b+' m</b>. Nền cát γ = <b>'+gam+' kN/m³</b>, φ = <b>'+phi+'°</b> '
+      +'(N<sub>γ</sub>=<b>'+N.Ng+'</b>, N<sub>q</sub>=<b>'+N.Nq+'</b>, c=0). '
+      +'Biết p<sub>gh</sub> = <b>'+pgh+' kN/m²</b>. Tính ngược tải trọng đất q (= γ·h<sub>m</sub>) phía trên đáy móng.';
+    document.getElementById('a8-hint').innerHTML=
+      '½N<sub>γ</sub>bγ = 0.5×'+N.Ng+'×'+b+'×'+gam+' = ?<br>'
+      +'q = ['+pgh+' − ½N<sub>γ</sub>bγ] / '+N.Nq+' = ?';
+    document.getElementById('a8-q').innerHTML=
+      makeQ('a8-t1','½N<sub>γ</sub>bγ (kN/m²)',t1,r2(t1*0.03),'kN/m²')
+      +makeQ('a8-q1','q (kN/m²)',qCalc,1,'kN/m²');
+  })();
+}
+
+function genBC(stt){
+  var BCFG=[
+    {id:'b1',title:'Bài B1 · Móng đơn, đất rời',fml:'p<sub>gh</sub>=α₁½N<sub>γ</sub>bγ+α₂N<sub>q</sub>q',type:'donr',seeds:[37,301]},
+    {id:'b2',title:'Bài B2 · Móng đơn, đất dính',fml:'p<sub>gh</sub>=α₁½N<sub>γ</sub>bγ+α₂N<sub>q</sub>q+α₃N<sub>c</sub>c',type:'donc',seeds:[41,303]},
+    {id:'b3',title:'Bài B3 · Móng băng, đất rời',fml:'p<sub>gh</sub>=½N<sub>γ</sub>bγ+N<sub>q</sub>q',type:'bangr',seeds:[43,305]},
+    {id:'b4',title:'Bài B4 · Móng băng, đất dính',fml:'p<sub>gh</sub>=½N<sub>γ</sub>bγ+N<sub>q</sub>q+N<sub>c</sub>c',type:'bangc',seeds:[47,307]},
+    {id:'b5',title:'Bài B5 · Cho sẵn N, móng đơn → F<sub>s</sub>',fml:'p<sub>gh</sub>=α₁½N<sub>γ</sub>bγ+α₂N<sub>q</sub>q+α₃N<sub>c</sub>c &nbsp;·&nbsp; F<sub>s</sub>=p<sub>gh</sub>/p<sub>tx</sub>',type:'donfs',seeds:[53,311]},
+    {id:'b6',title:'Bài B6 · Cho sẵn N, móng băng → F<sub>s</sub>',fml:'p<sub>gh</sub>=½N<sub>γ</sub>bγ+N<sub>q</sub>q &nbsp;·&nbsp; F<sub>s</sub>=p<sub>gh</sub>/p<sub>tx</sub>',type:'bangfs',seeds:[59,313]},
+    {id:'b7',title:'Bài B7 · Tính ngược c từ p<sub>gh</sub>',fml:'c = [p<sub>gh</sub>−½N<sub>γ</sub>bγ−N<sub>q</sub>q] / N<sub>c</sub>',type:'invc',seeds:[61,317]},
+    {id:'b8',title:'Bài B8 · Tính ngược q từ p<sub>gh</sub> (đất rời)',fml:'q = [p<sub>gh</sub>−½N<sub>γ</sub>bγ] / N<sub>q</sub>',type:'invq',seeds:[67,319]},
+  ];
+
+  var bhtml='';
+  BCFG.forEach(function(b){
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>'+b.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+b.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+b.id+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+b.fml+'</div></div>'
+      +'<div id="'+b.id+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+
+  BCFG.forEach(function(b){genOne(b,stt,false);});
+
+  var CCFG=[
+    {id:'c1',title:'Bài C1 · Tự nhận biết — Móng đơn, đất rời',type:'donr',seeds:[71,401]},
+    {id:'c2',title:'Bài C2 · Tự nhận biết — Móng đơn, đất dính',type:'donc',seeds:[73,403]},
+    {id:'c3',title:'Bài C3 · Tự nhận biết — Móng băng, đất rời',type:'bangr',seeds:[79,405]},
+    {id:'c4',title:'Bài C4 · Tự nhận biết — Móng băng, đất dính',type:'bangc',seeds:[83,407]},
+    {id:'c5',title:'Bài C5 · Tự nhận biết — Cho sẵn N, móng đơn → F<sub>s</sub>',type:'donfs',seeds:[89,409]},
+    {id:'c6',title:'Bài C6 · Tự nhận biết — Cho sẵn N, móng băng → F<sub>s</sub>',type:'bangfs',seeds:[97,413]},
+    {id:'c7',title:'Bài C7 · Tự nhận biết — Tính ngược c',type:'invc',seeds:[101,417]},
+    {id:'c8',title:'Bài C8 · Tự nhận biết — Tính ngược q (đất rời)',type:'invq',seeds:[103,419]},
+  ];
+
+  var chtml='';
+  CCFG.forEach(function(c){
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>'+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+c.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+c.id+'-prob">⏳</div>'
+      +'<div id="'+c.id+'-q"></div></div></div>';
+  });
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CCFG.forEach(function(c){genOne(c,stt,true);});
+}
+
+function genOne(cfg,stt,hideHint){
+  var rng=seededRng(stt*cfg.seeds[0]+cfg.seeds[1]);
+  var id=cfg.id;
+
+  if(cfg.type==='donr'){
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var q=r2(gam*hm);var t1=r2(0.8*0.5*N.Ng*b*gam);var t2=r2(1.0*N.Nq*q);var pgh=r2(t1+t2);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng đơn vuông b='+b+' m, h<sub>m</sub>='+hm+' m. Nền cát γ='+gam+' kN/m³, φ='+phi+'° (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', c=0). α₁=0.8, α₂=1.0. Tính p<sub>gh</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-q1','q (kN/m²)',q,1,'kN/m²')+makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  }
+  else if(cfg.type==='donc'){
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var q=r2(gam*hm);var t1=r2(1.2*0.5*N.Ng*b*gam);var t2=r2(1.0*N.Nq*q);var t3=r2(1.3*N.Nc*c);var pgh=r2(t1+t2+t3);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng đơn tròn b='+b+' m, h<sub>m</sub>='+hm+' m. Nền sét γ='+gam+' kN/m³, φ='+phi+'°, c='+c+' kPa (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', N<sub>c</sub>='+N.Nc+'). α₁=1.2, α₂=1.0, α₃=1.3. Tính p<sub>gh</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-q1','q (kN/m²)',q,1,'kN/m²')+makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  }
+  else if(cfg.type==='bangr'){
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.8);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var q=r2(gam*hm);var pgh=r2(0.5*N.Ng*b*gam+N.Nq*q);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng băng b='+b+' m, h<sub>m</sub>='+hm+' m. Nền cát γ='+gam+' kN/m³, φ='+phi+'° (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', c=0). Tính p<sub>gh</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-q1','q (kN/m²)',q,1,'kN/m²')+makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  }
+  else if(cfg.type==='bangc'){
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.8);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var q=r2(gam*hm);var pgh=r2(0.5*N.Ng*b*gam+N.Nq*q+N.Nc*c);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng băng b='+b+' m, h<sub>m</sub>='+hm+' m. Nền sét γ='+gam+' kN/m³, φ='+phi+'°, c='+c+' kPa (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', N<sub>c</sub>='+N.Nc+'). Tính p<sub>gh</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-q1','q (kN/m²)',q,1,'kN/m²')+makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²');
+  }
+  else if(cfg.type==='donfs'){
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.2+rng()*1.3);var gam=r1(17+rng()*2.5);var c=Math.round(8+rng()*22);
+    var q=r2(gam*hm);var pgh=r2(0.8*0.5*N.Ng*b*gam+1.0*N.Nq*q+1.3*N.Nc*c);
+    var ptx=Math.round(pgh*0.3+pgh*rng()*0.3);var Fs=r2(pgh/ptx);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng đơn vuông b='+b+' m, h<sub>m</sub>='+hm+' m. γ='+gam+', φ='+phi+'°, c='+c+' kPa. N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', N<sub>c</sub>='+N.Nc+'. α₁=0.8,α₂=1.0,α₃=1.3. p<sub>tx</sub>='+ptx+' kN/m². Tính p<sub>gh</sub> và F<sub>s</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²')+makeQ(id+'-Fs','F<sub>s</sub>',Fs,0.12,'');
+  }
+  else if(cfg.type==='bangfs'){
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);
+    var q=r2(gam*hm);var pgh=r2(0.5*N.Ng*b*gam+N.Nq*q);
+    var ptx=Math.round(pgh*0.3+pgh*rng()*0.25);var Fs=r2(pgh/ptx);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng băng b='+b+' m, h<sub>m</sub>='+hm+' m. γ='+gam+', φ='+phi+'°, N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+'. p<sub>tx</sub>='+ptx+' kN/m². Tính p<sub>gh</sub> và F<sub>s</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgh','p<sub>gh</sub> (kN/m²)',pgh,r2(pgh*0.04),'kN/m²')+makeQ(id+'-Fs','F<sub>s</sub>',Fs,0.12,'');
+  }
+  else if(cfg.type==='invc'){
+    var phi=PHI_DINH[Math.floor(rng()*6)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var hm=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);var cTrue=Math.round(8+rng()*22);
+    var q=r2(gam*hm);var t1=r2(0.5*N.Ng*b*gam);var t2=r2(N.Nq*q);var pgh=r2(t1+t2+N.Nc*cTrue);
+    var cCalc=r1((pgh-t1-t2)/N.Nc);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng băng b='+b+' m, h<sub>m</sub>='+hm+' m. γ='+gam+', φ='+phi+'° (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', N<sub>c</sub>='+N.Nc+'). p<sub>gh</sub>='+pgh+' kN/m². Tính ngược lực dính c.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-c','c (kPa)',cCalc,1.5,'kPa');
+  }
+  else if(cfg.type==='invq'){
+    var phi=PHI_RIGID[Math.floor(rng()*5)];var N=getN(phi);
+    var b=r1(1.0+rng()*1.5);var gam=r1(17+rng()*2.5);var hmTrue=r1(1.0+rng()*1.5);
+    var t1=r2(0.5*N.Ng*b*gam);var qTrue=r2(gam*hmTrue);var pgh=r2(t1+N.Nq*qTrue);
+    var qCalc=r1((pgh-t1)/N.Nq);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Móng băng b='+b+' m. Nền cát γ='+gam+', φ='+phi+'° (N<sub>γ</sub>='+N.Ng+', N<sub>q</sub>='+N.Nq+', c=0). p<sub>gh</sub>='+pgh+' kN/m². Tính ngược q (=γ·h<sub>m</sub>).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-q1','q (kN/m²)',qCalc,1,'kN/m²');
+  }
+}
+
+/* ================================================================
+   KHỞI TẠO — window.onload
+   Hiển thị tên/STT SV; gọi genA(stt)+genBC(stt) để sinh đề;
+   đặt TOTAL_QUESTIONS; đặt nút Nộp bài về trạng thái khóa; gọi updateProg()
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

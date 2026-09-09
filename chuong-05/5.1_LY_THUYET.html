@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5.1 — Lý Thuyết Phá Hoại Nền</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+/* ── Reset toàn cục và style body ── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+/* ── Thanh tiêu đề cố định (sticky) trên cùng, nền xanh đậm ── */
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+/* ── Hộp tiến độ làm bài: thanh ngang thể hiện % câu đã làm ── */
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+/* ── Thanh thông tin sinh viên (gradient xanh), hiện tên + STT ── */
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+/* ── Card (thẻ) chứa nội dung: lý thuyết, câu hỏi, bài số ── */
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+/* ── Hộp công thức: nền xanh nhạt, viền trái xanh đậm, font monospace ── */
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+/* ── Hộp lý thuyết (xanh nhạt) và hộp gợi ý (vàng cam) ── */
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7}
+.theory-lbl{font-weight:700;color:var(--P);font-size:11px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:600}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:2px 0}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* ── Câu hỏi trắc nghiệm (MCQ): khung, câu hỏi, các lựa chọn, phản hồi ── */
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:12px 15px 9px;font-size:14px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 7px;border-radius:4px;margin-right:6px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2c{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+/* Màu khi chọn đúng (xanh lá) hoặc sai (đỏ); reveal-ok = hiện đáp án đúng mờ */
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal-ok{background:var(--Glt)!important;opacity:.6}.mcq-opt.reveal-ok .mkey{background:var(--G);color:#fff}
+/* Phần giải thích bên dưới câu hỏi, ẩn mặc định, hiện sau khi chọn */
+.mcq-exp{padding:9px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:#b71c1c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-p{background:var(--P);color:#fff}.btn-a{background:var(--A);color:#fff}
+.btn:hover{opacity:.85}
+/* ── Thanh điều hướng cố định dưới cùng: nộp bài và chuyển trang ── */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.mcq-opts.g2c{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C5.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 5</a>
+    <div class="hdr-title">
+      <h1>5.1 — Lý Thuyết Phá Hoại Nền</h1>
+      <p>Ba hình thức phá hoại · Giai đoạn · Vesic 1973</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 5.1 — Lý Thuyết</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700">Câu hỏi lý thuyết — <span id="sv-display">đang tải...</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Phần này không sinh số liệu ngẫu nhiên — đáp án cố định</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-alert-triangle"></i>
+    <div><h2>Ba Hình Thức Phá Hoại Của Nền (Vesic, 1973)</h2><p>Phá hoại tổng thể · Phá hoại cục bộ · Phá hoại thủng (xuyên)</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="theory">
+          <div class="theory-lbl"><i class="ti ti-bulb"></i> 1. Phá hoại cắt tổng thể (General Shear)</div>
+          Mặt trượt phát triển <b>rõ ràng, liên tục</b> từ mép móng ra đến mặt đất. Đặc trưng cho <b>nền cát chặt, sét cứng</b>. Xuất hiện trồi đất hai bên. Đường p-s có <b>đỉnh nhọn rõ ràng</b> tại p<sub>gh</sub>.
+        </div>
+        <div class="theory">
+          <div class="theory-lbl"><i class="ti ti-bulb"></i> 2. Phá hoại cắt cục bộ (Local Shear)</div>
+          Mặt trượt hình thành <b>một phần</b>, không hoàn chỉnh. Đặc trưng cho <b>cát xốp, sét mềm vừa</b>. Trồi đất ít rõ. Đường p-s <b>uốn cong từ từ</b>, không có đỉnh nhọn.
+        </div>
+        <div class="theory">
+          <div class="theory-lbl"><i class="ti ti-bulb"></i> 3. Phá hoại xuyên thủng (Punching Shear)</div>
+          Móng <b>lún sâu không có mặt trượt ra ngoài</b>. Đặc trưng cho <b>đất rất xốp/yếu, móng sâu</b>. Không có trồi đất. Đường p-s <b>tuyến tính cho đến khi thủng</b>.
+        </div>
+      </div>
+      <div>
+        <svg viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:10px;border:1px solid var(--brd);background:#F8FBFF">
+          <!-- Tiêu đề -->
+          <text x="170" y="18" font-size="10" font-weight="700" fill="#0D47A1" text-anchor="middle" font-family="sans-serif">Ba hình thức phá hoại cắt (Vesic, 1973)</text>
+
+          <!-- ① Tổng thể -->
+          <text x="60" y="36" font-size="9" font-weight="700" fill="#C62828" text-anchor="middle" font-family="sans-serif">① Tổng thể</text>
+          <rect x="10" y="42" width="100" height="80" fill="#D7C89B" opacity=".45" rx="2"/>
+          <rect x="35" y="42" width="50" height="10" rx="2" fill="#90A4AE" stroke="#546E7A" stroke-width="1.2"/>
+          <path d="M35 52 Q15 75 28 108" fill="none" stroke="#1565C0" stroke-width="2"/>
+          <path d="M85 52 Q105 75 92 108" fill="none" stroke="#1565C0" stroke-width="2"/>
+          <path d="M28 108 Q60 118 92 108" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="4,2"/>
+          <text x="60" y="130" font-size="8" fill="#1565C0" text-anchor="middle" font-family="sans-serif">Mặt trượt rõ ràng</text>
+
+          <!-- ② Cục bộ -->
+          <text x="170" y="36" font-size="9" font-weight="700" fill="#E65100" text-anchor="middle" font-family="sans-serif">② Cục bộ</text>
+          <rect x="120" y="42" width="100" height="80" fill="#D7C89B" opacity=".45" rx="2"/>
+          <rect x="145" y="42" width="50" height="10" rx="2" fill="#90A4AE" stroke="#546E7A" stroke-width="1.2"/>
+          <path d="M145 52 Q130 68 138 90" fill="none" stroke="#E65100" stroke-width="2"/>
+          <path d="M195 52 Q210 68 202 90" fill="none" stroke="#E65100" stroke-width="2"/>
+          <path d="M138 90 Q170 98 202 90" fill="none" stroke="#E65100" stroke-width="2" stroke-dasharray="3,3" opacity=".5"/>
+          <text x="170" y="130" font-size="8" fill="#E65100" text-anchor="middle" font-family="sans-serif">Mặt trượt không hoàn chỉnh</text>
+
+          <!-- ③ Thủng -->
+          <text x="280" y="36" font-size="9" font-weight="700" fill="#2E7D32" text-anchor="middle" font-family="sans-serif">③ Xuyên thủng</text>
+          <rect x="230" y="42" width="100" height="80" fill="#D7C89B" opacity=".45" rx="2"/>
+          <rect x="255" y="42" width="50" height="10" rx="2" fill="#90A4AE" stroke="#546E7A" stroke-width="1.2"/>
+          <rect x="265" y="52" width="30" height="55" fill="#795548" opacity=".3" stroke="#795548" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="280" y="130" font-size="8" fill="#2E7D32" text-anchor="middle" font-family="sans-serif">Lún xuyên, không trồi</text>
+
+          <!-- Đường cong p-s -->
+          <text x="170" y="155" font-size="9" font-weight="700" fill="#546E7A" text-anchor="middle" font-family="sans-serif">Đường quan hệ p-s (tải-lún)</text>
+          <!-- Trục -->
+          <line x1="20" y1="260" x2="320" y2="260" stroke="#999" stroke-width="1"/>
+          <line x1="20" y1="165" x2="20" y2="262" stroke="#999" stroke-width="1"/>
+          <text x="170" y="275" font-size="8" fill="#546E7A" text-anchor="middle" font-family="sans-serif">Tải trọng p</text>
+          <text x="12" y="215" font-size="8" fill="#546E7A" text-anchor="middle" font-family="sans-serif" transform="rotate(-90,12,215)">Lún s</text>
+          <!-- Đường 1: Tổng thể - đỉnh nhọn -->
+          <path d="M30 165 Q80 210 130 255" fill="none" stroke="#C62828" stroke-width="2"/>
+          <circle cx="85" cy="207" r="3" fill="#C62828"/>
+          <text x="90" y="204" font-size="7.5" fill="#C62828" font-family="sans-serif">p&#8336;&#8341; ①</text>
+          <!-- Đường 2: Cục bộ - uốn -->
+          <path d="M30 165 Q100 220 180 255" fill="none" stroke="#E65100" stroke-width="1.8" stroke-dasharray="5,2"/>
+          <!-- Đường 3: Thủng - gần tuyến tính -->
+          <path d="M30 165 Q170 220 290 255" fill="none" stroke="#2E7D32" stroke-width="1.8" stroke-dasharray="2,3"/>
+          <text x="295" y="248" font-size="7" fill="#2E7D32" font-family="sans-serif">③</text>
+          <text x="185" y="248" font-size="7" fill="#E65100" font-family="sans-serif">②</text>
+        </svg>
+        <div class="earth-box" style="margin-top:8px;font-size:12px">
+          📌 <b>Nhớ nhanh:</b> Nền chặt/cứng → phá hoại tổng thể (đỉnh rõ). Nền vừa → cục bộ. Nền rất yếu/sâu → xuyên thủng.
+        </div>
+      </div>
+    </div>
+
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-layers"></i> Ba giai đoạn làm việc của nền dưới tải trọng</div>
+      <div class="frow"><b>Giai đoạn I — Nén chặt (biến dạng bé):</b> Nền làm việc đàn hồi, p &lt; p<sub>gh</sub>/3. Lún tuyến tính.</div>
+      <div class="frow"><b>Giai đoạn II — Phát triển dẻo:</b> Vùng dẻo phát triển từ mép móng, p<sub>gh</sub>/3 &lt; p &lt; p<sub>gh</sub>. Lún tăng nhanh hơn.</div>
+      <div class="frow"><b>Giai đoạn III — Phá hoại:</b> Vùng dẻo lan rộng, mặt trượt hình thành, p ≥ p<sub>gh</sub>. Lún đột ngột, nền phá hoại.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MCQ LÝ THUYẾT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-help-circle"></i>
+    <div><h2>Câu Hỏi Trắc Nghiệm Lý Thuyết</h2><p>10 câu · Phá hoại nền · Công thức Terzaghi · Ổn định mái</p></div>
+    <span class="cbadge">MCQ</span></div>
+  <div class="card-body">
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q1</span>Hình thức phá hoại nào đặc trưng cho nền cát chặt và sét cứng có mặt trượt rõ ràng chạy ra đến mặt đất?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,0)"><span class="mkey">A</span><span>Phá hoại cắt tổng thể — mặt trượt liên tục, trồi đất rõ, đường p-s có đỉnh nhọn</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,0)"><span class="mkey">B</span><span>Phá hoại cắt cục bộ</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,0)"><span class="mkey">C</span><span>Phá hoại xuyên thủng</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,0)"><span class="mkey">D</span><span>Phá hoại theo phương ngang</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q1">✓ Phá hoại cắt tổng thể (General Shear Failure): mặt trượt hoàn chỉnh, trồi đất hai bên, đường p-s có đỉnh rõ tại p<sub>gh</sub>. Vesic (1973) phân loại dựa trên độ chặt của đất và độ sâu móng.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q2</span>Phá hoại xuyên thủng (Punching Shear) thường xảy ra với điều kiện nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1)"><span class="mkey">A</span><span>Nền cát chặt, móng nông</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1)"><span class="mkey">B</span><span>Nền đất rất xốp, yếu hoặc móng sâu — móng lún xuống mà không có mặt trượt, không trồi đất</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1)"><span class="mkey">C</span><span>Nền đất vừa, móng có chiều rộng lớn</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1)"><span class="mkey">D</span><span>Nền sét cứng, móng sâu</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q2">✓ Phá hoại xuyên thủng đặc trưng cho đất rất xốp/mềm hoặc móng sâu. Không có mặt trượt ra mặt đất, không trồi đất. Đường p-s gần như tuyến tính cho đến khi thủng.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q3</span>Trong công thức Terzaghi p<sub>gh</sub> = ½·N<sub>&#947;</sub>·b·&#947; + N<sub>q</sub>·q + N<sub>c</sub>·c, đại lượng q được xác định như thế nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0)"><span class="mkey">A</span><span>q = &#947;<sub>tb</sub>·h<sub>m</sub> — tải trọng tương đương của cột đất trên mặt đáy móng (phụ tải)</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0)"><span class="mkey">B</span><span>q = tải trọng công trình chia diện tích móng</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0)"><span class="mkey">C</span><span>q = áp lực nước ngầm tại đáy móng</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0)"><span class="mkey">D</span><span>q = trọng lượng riêng đất nhân bề rộng móng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q3">✓ q = &#947;<sub>tb</sub>·h<sub>m</sub> là "phụ tải" — trọng lượng cột đất bên cạnh móng trên đơn vị diện tích. Đây là thành phần đóng góp do độ sâu chôn móng, KHÔNG phải tải công trình.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q4</span>Khi đất sét bão hòa có &#966;=0° (không thoát nước), công thức Terzaghi cho móng băng rút gọn thành dạng nào?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,0)"><span class="mkey">A</span><span>p<sub>gh</sub> = 5.7·c<sub>u</sub> + q &nbsp;(N<sub>&#947;</sub>=0, N<sub>q</sub>=1, N<sub>c</sub>=5.7)</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,0)"><span class="mkey">B</span><span>p<sub>gh</sub> = ½·N<sub>&#947;</sub>·b·&#947;</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,0)"><span class="mkey">C</span><span>p<sub>gh</sub> = N<sub>c</sub>·c (bỏ qua q)</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,0)"><span class="mkey">D</span><span>p<sub>gh</sub> = N<sub>q</sub>·q + N<sub>c</sub>·c</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q4">✓ &#966;=0°: N<sub>&#947;</sub>=0, N<sub>q</sub>=1, N<sub>c</sub>=5.7. Vậy p<sub>gh</sub> = ½×0×b×&#947; + 1×q + 5.7×c<sub>u</sub> = 5.7c<sub>u</sub>+q. Đây là dạng bài thi rất phổ biến.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q5</span>Hệ số sức chịu tải N<sub>&#947;</sub>, N<sub>q</sub>, N<sub>c</sub> trong công thức Terzaghi phụ thuộc vào yếu tố nào?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,0)"><span class="mkey">A</span><span>Góc ma sát trong &#966; của đất (tra bảng theo &#966;)</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,0)"><span class="mkey">B</span><span>Lực dính c và trọng lượng riêng &#947;</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,0)"><span class="mkey">C</span><span>Chiều rộng móng b và độ sâu h<sub>m</sub></span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,0)"><span class="mkey">D</span><span>Hệ số an toàn F<sub>s</sub></span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q5">✓ N<sub>&#947;</sub>, N<sub>q</sub>, N<sub>c</sub> chỉ phụ thuộc vào góc ma sát trong &#966;. Tra bảng theo &#966; — &#966; càng lớn thì N càng tăng nhanh (phi tuyến). &#966;=30°: bộ số N hay dùng nhất trong bài thi.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q6</span>Sức chịu tải cho phép [p] và sức chịu tải giới hạn p<sub>gh</sub> liên hệ như thế nào? Hệ số an toàn F<sub>s</sub> thông thường là bao nhiêu?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,0)"><span class="mkey">A</span><span>[p] = p<sub>gh</sub>/F<sub>s</sub> với F<sub>s</sub> = 2~3 (thường dùng 3 cho móng thông thường)</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,0)"><span class="mkey">B</span><span>[p] = p<sub>gh</sub> × F<sub>s</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,0)"><span class="mkey">C</span><span>[p] = p<sub>gh</sub> − F<sub>s</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,0)"><span class="mkey">D</span><span>[p] = p<sub>gh</sub> + F<sub>s</sub></span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q6">✓ [p] = p<sub>gh</sub>/F<sub>s</sub>. Hệ số F<sub>s</sub>=2~3 để đảm bảo biên an toàn — nền chỉ phá hoại khi tải đạt p<sub>gh</sub>, thiết kế giữ áp lực ≤ [p].</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q7</span>Mái đất rời (c=0) ổn định khi điều kiện nào sau đây thỏa mãn?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,0)"><span class="mkey">A</span><span>&#946; &#8804; &#966; — góc mái nhỏ hơn hoặc bằng góc ma sát trong</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,0)"><span class="mkey">B</span><span>&#946; &#8805; &#966;</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,0)"><span class="mkey">C</span><span>&#946; = 90° − &#966;</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,0)"><span class="mkey">D</span><span>&#946; &#8804; 45° − &#966;/2</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q7">✓ Với đất rời (c=0): F<sub>s</sub>=tg&#966;/tg&#946; &#8805; 1 &#8594; &#946; &#8804; &#966;. Góc đổ tự nhiên của đất rời chính là &#966; — đây là điều kiện tự nhiên của mái đất rời.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q8</span>Công thức tính chiều cao đào thẳng đứng lớn nhất h<sub>max</sub> cho đất sét thuần túy (&#966;=0) là gì?</div>
+      <div class="mcq-opts g2c">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,0)"><span class="mkey">A</span><span>h<sub>max</sub> = 4·c<sub>u</sub>/&#947; &nbsp;(F<sub>s</sub>=1)</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,0)"><span class="mkey">B</span><span>h<sub>max</sub> = 2·c<sub>u</sub>/&#947;</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,0)"><span class="mkey">C</span><span>h<sub>max</sub> = 5.7·c<sub>u</sub>/&#947;</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,0)"><span class="mkey">D</span><span>h<sub>max</sub> = c<sub>u</sub>/(&#947;·F<sub>s</sub>)</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q8">✓ h<sub>max</sub> = 4c<sub>u</sub>/&#947; (khi F<sub>s</sub>=1). Có hệ số an toàn: h<sub>max</sub> = 4c<sub>u</sub>/(&#947;·F<sub>s</sub>). Với &#966; &#8800; 0°: h<sub>max</sub> = (4c/&#947;)·tg(45°+&#966;/2)/F<sub>s</sub>.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q9</span>Trong bài toán ổn định mái dính (c,&#966;), hệ số K ổn định được tính theo công thức nào?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q9-0" onclick="pickMCQ('q9',0,0)"><span class="mkey">A</span><span>K = (G·tg&#966;·cos&#945; + c·BA) / (G·sin&#945;) — tỉ số lực giữ / lực gây trượt</span></div>
+        <div class="mcq-opt" id="mco-q9-1" onclick="pickMCQ('q9',1,0)"><span class="mkey">B</span><span>K = G·sin&#945; / (G·tg&#966;·cos&#945; + c·BA)</span></div>
+        <div class="mcq-opt" id="mco-q9-2" onclick="pickMCQ('q9',2,0)"><span class="mkey">C</span><span>K = tg&#966;/tg&#945;</span></div>
+        <div class="mcq-opt" id="mco-q9-3" onclick="pickMCQ('q9',3,0)"><span class="mkey">D</span><span>K = c·BA / (G·sin&#945;)</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q9">✓ K = &#8721;Lực giữ / &#8721;Lực trượt = (G·tg&#966;·cos&#945; + c·BA)/(G·sin&#945;). Điều kiện ổn định: K &#8805; [K] = 1.2~1.5. Cần xét nhiều giá trị &#945; để tìm K<sub>min</sub>.</div>
+    </div>
+
+    <div class="mcq-wrap">
+      <div class="mcq-q"><span class="mcq-num">Q10</span>Khi tính móng chữ nhật (không phải móng băng) theo Terzaghi, cần làm gì so với công thức móng băng?</div>
+      <div class="mcq-opts">
+        <div class="mcq-opt" id="mco-q10-0" onclick="pickMCQ('q10',0,0)"><span class="mkey">A</span><span>Nhân thêm hệ số hình dạng: &#945;&#8321;, &#945;&#8322;, &#945;&#8323; vào các số hạng N<sub>&#947;</sub>, N<sub>q</sub>, N<sub>c</sub> tương ứng</span></div>
+        <div class="mcq-opt" id="mco-q10-1" onclick="pickMCQ('q10',1,0)"><span class="mkey">B</span><span>Dùng cùng công thức, không cần hiệu chỉnh</span></div>
+        <div class="mcq-opt" id="mco-q10-2" onclick="pickMCQ('q10',2,0)"><span class="mkey">C</span><span>Chỉ đổi b thành diện tích móng</span></div>
+        <div class="mcq-opt" id="mco-q10-3" onclick="pickMCQ('q10',3,0)"><span class="mkey">D</span><span>Chia kết quả cho 2</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q10">✓ Móng chữ nhật: p<sub>gh</sub> = &#945;&#8321;·½N<sub>&#947;</sub>b&#947; + &#945;&#8322;·N<sub>q</sub>q + &#945;&#8323;·N<sub>c</sub>c. Móng tròn: &#945;&#8321;=1.2, &#945;&#8322;=1.0, &#945;&#8323;=1.3. Móng vuông: &#945;&#8321;=0.8, &#945;&#8322;=1.0, &#945;&#8323;=1.3. Móng CX: &#945;&#8321;=1&#8722;0.2b/l, &#945;&#8322;=1, &#945;&#8323;=1+0.2b/l.</div>
+    </div>
+
+    <div class="warn-box">&#9888; <b>Lỗi hay gặp:</b> (1) Nhầm q=tải công trình — thực ra q là trọng lượng đất bên trên mặt đáy móng. (2) Quên hệ số &#945; khi móng không phải băng. (3) Dùng &#946;>&#966; cho mái đất rời. (4) Chỉ xét một mặt trượt, bỏ qua tìm K<sub>min</sub>.</div>
+  </div>
+</div>
+</main>
+
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>5.1 · Lý Thuyết Phá Hoại</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="5.2_TRANG_THAI.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu MCQ (key='mcq-q1'..'mcq-q10')
+                    null=chưa làm · true=đúng · false=sai
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu (10 MCQ lý thuyết cố định)
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'].forEach(function(k){ANS['mcq-'+k]=null;});
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   getSV(): đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   ================================================================ */
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và cập nhật tiến độ
+   pickMCQ(id, picked, correct): tô màu ok/no/reveal-ok, lưu ANS['mcq-id'],
+                                  gọi updateProg()
+   updateProg()                : đếm attempted/done/total, cập nhật thanh
+                                 tiến độ, lưu 'prog_c5_51', kích hoạt nút Nộp
+   ================================================================ */
+function pickMCQ(id,picked,correct){
+  if(ANS['mcq-'+id]!==undefined&&ANS['mcq-'+id]!==null)return;
+  document.querySelectorAll('[id^="mco-'+id+'-"]').forEach(function(el,i){
+    el.onclick=null;
+    if(i===picked&&picked===correct)el.classList.add('ok');
+    else if(i===picked)el.classList.add('no');
+    else if(i===correct)el.classList.add('reveal-ok');
+  });
+  var exp=document.getElementById('exp-'+id);
+  if(exp){exp.classList.add('show');exp.classList.add(picked===correct?'ok-exp':'no-exp');}
+  ANS['mcq-'+id]=(picked===correct);updateProg();
+}
+
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  // Lưu tiến độ vào localStorage để trang mục lục (index_C5.html) đọc được
+  try{localStorage.setItem('prog_c5_51',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 5 — Nộp bài lên server
+   chapterId      = 'C5-51-LyThuyet'
+   WORKER_URL     : từ config.js (fallback URL mặc định)
+   MIN_ATTEMPT_PCT: từ config.js (fallback 5%)
+   submitResult() : POST {name, mssv, stt, classId, chapterId, score,
+                    correct, total, duration} lên WORKER_URL
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');
+    return;
+  }
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C5-51-LyThuyet',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỞI TẠO — window.onload
+   Hiển thị tên/STT SV từ sessionStorage; đặt TOTAL_QUESTIONS;
+   đặt nút Nộp bài về trạng thái khóa ban đầu; gọi updateProg()
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

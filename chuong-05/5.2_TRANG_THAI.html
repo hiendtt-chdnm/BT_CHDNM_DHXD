@@ -1,0 +1,769 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5.2 — Trạng Thái Ứng Suất Tại Điểm</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}
+.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:600}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:180px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;transition:border-color .15s;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 7px;border-radius:4px;margin-right:6px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal-ok{background:var(--Glt)!important;opacity:.6}.mcq-opt.reveal-ok .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:#b71c1c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;transition:opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-p{background:var(--P);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C5.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 5</a>
+    <div class="hdr-title">
+      <h1>5.2 — Trạng Thái Ứng Suất Tại Điểm</h1>
+      <p>Vòng tròn Mohr · sinθ<sub>max</sub> · Kết luận trạng thái điểm M</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 5.2 — Trạng Thái Tại Điểm</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT TÓM TẮT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>Công thức sinθ<sub>max</sub> — Hai trường hợp</h2></div>
+    <span class="cbadge">CÔNG THỨC</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle">Đất rời (c = 0)</div>
+        <div class="frow">sin θ<sub>max</sub> = (σ₁ − σ₃) / (σ₁ + σ₃)</div>
+        <div class="frow" style="margin-top:6px;font-size:11px;color:var(--muted)">Nếu cho σz, σx, τxz:</div>
+        <div class="frow" style="font-size:12px">R = √[((σz−σx)/2)² + τ²]</div>
+        <div class="frow" style="font-size:12px">σ₁=(σz+σx)/2+R, σ₃=(σz+σx)/2−R</div>
+        <div class="frow" style="margin-top:6px"><em>Điều kiện: sinθmax ≤ sinφ</em></div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">Đất dính (c > 0, φ > 0)</div>
+        <div class="frow">sin θ<sub>max</sub> = (σ₁ − σ₃) / (σ₁ + σ₃ + 2c/tanφ)</div>
+        <div class="frow" style="margin-top:6px;font-size:12px">sinθmax = √[(σx−σz)²+4τxz²] / (σx+σz+2c/tgφ)</div>
+        <div class="frow" style="margin-top:6px"><em>Điều kiện: sinθmax ≤ sinφ</em></div>
+      </div>
+    </div>
+    <div class="earth-box">
+      📌 <b>Kết luận trạng thái:</b><br>
+      sinθmax <b>&lt; sinφ</b> → Điểm M ở <b>trạng thái đàn hồi</b> (an toàn)<br>
+      sinθmax <b>= sinφ</b> → Điểm M ở <b>trạng thái cân bằng giới hạn</b><br>
+      sinθmax <b>&gt; sinφ</b> → Điểm M ở <b>trạng thái phá hoại</b> (không an toàn)
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ · Cho công thức + gợi ý số</div>
+
+<!-- A1: σ1,σ3 → sinθmax (đất rời) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Cho ứng suất chính σ₁, σ₃ · Đất rời (c = 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức — Đất rời c = 0</div>
+      <div class="frow">sinθ<sub>max</sub> = (σ₁ − σ₃) / (σ₁ + σ₃)</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a1-hint">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+    <div class="succ-box" id="a1-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A2: σ1,σ3 → sinθmax (đất dính) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Cho ứng suất chính σ₁, σ₃ · Đất dính (c > 0, φ > 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức — Đất dính</div>
+      <div class="frow">sinθ<sub>max</sub> = (σ₁ − σ₃) / (σ₁ + σ₃ + 2c/tanφ)</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a2-hint">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+    <div class="succ-box" id="a2-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A3: σz,σx,τ → sinθmax (đất rời) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Cho σ<sub>z</sub>, σ<sub>x</sub>, τ<sub>xz</sub> · Đất rời (c = 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức trực tiếp từ ứng suất vuông góc</div>
+      <div class="frow">R = √[((σz − σx)/2)² + τxz²]</div>
+      <div class="frow">σ₁ + σ₃ = σz + σx &nbsp;·&nbsp; σ₁ − σ₃ = 2R</div>
+      <div class="frow">sinθ<sub>max</sub> = 2R / (σz + σx) &nbsp;(c = 0)</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a3-hint">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+    <div class="succ-box" id="a3-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A4: σz,σx,τ → sinθmax (đất dính) -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Cho σ<sub>z</sub>, σ<sub>x</sub>, τ<sub>xz</sub> · Đất dính (c > 0, φ > 0)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức trực tiếp — Đất dính</div>
+      <div class="frow">R = √[((σz − σx)/2)² + τxz²]</div>
+      <div class="frow">σ₁ + σ₃ = σz + σx &nbsp;·&nbsp; σ₁ − σ₃ = 2R</div>
+      <div class="frow">sinθ<sub>max</sub> = 2R / (σz + σx + 2c/tanφ)</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a4-hint">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+    <div class="succ-box" id="a4-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A5: σz,σx,τ → sinθmax → kết luận -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Cho σ<sub>z</sub>, σ<sub>x</sub>, τ<sub>xz</sub> · Tính sinθmax và kết luận trạng thái</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình 3 bước</div>
+      <div class="frow">① R = √[((σz − σx)/2)² + τxz²]</div>
+      <div class="frow">② sinθ<sub>max</sub> = 2R / (σz + σx + 2c/tanφ)</div>
+      <div class="frow">③ So sánh sinθmax với sinφ → kết luận trạng thái</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a5-hint">Thay số: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+    <div class="mcq-wrap" id="a5-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái điểm M là:</div>
+      <div class="mcq-opts" id="a5-opts"></div>
+      <div class="mcq-exp" id="exp-a5mcq"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A6: σ1,σ3 → sinθmax → kết luận -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A6 — Cho ứng suất chính σ₁, σ₃ · Tính sinθmax và kết luận trạng thái</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A6</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a6-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① sinθ<sub>max</sub> = (σ₁ − σ₃) / (σ₁ + σ₃ + 2c/tanφ)</div>
+      <div class="frow">② sinφ = sin(φ°) → tra bảng hoặc tính</div>
+      <div class="frow">③ So sánh sinθmax với sinφ → kết luận</div>
+      <div class="frow" style="margin-top:4px;font-size:12px;color:var(--muted)" id="a6-hint">Thay số: (...)</div>
+    </div>
+    <div id="a6-q"></div>
+    <div class="mcq-wrap" id="a6-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái điểm M là:</div>
+      <div class="mcq-opts" id="a6-opts"></div>
+      <div class="mcq-exp" id="exp-a6mcq"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>5.2 · Trạng Thái Tại Điểm</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">&#9660; Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="5.3_SCT_NEN.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu
+   PHI_OPTS       : danh sách φ (°) dùng để sinh đề — [20,22,25,28,30]
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+var PHI_OPTS=[20,22,25,28,30];
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2/r3()     : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và cập nhật tiến độ
+   chkFill(id, ans, tol) : so sánh ô nhập với đáp án ±tol, tô màu, lưu ANS[id]
+   checkShowMCQ(id)      : hiện MCQ kết luận khi SV đã điền đủ ô số cần thiết
+   pickMCQ(...)          : xử lý chọn đáp án MCQ, lưu ANS['mcq-name']
+   makeQ(...)            : tạo HTML hàng nhập đáp số, đăng ký ANS[id]=null
+   makeMCQState(...)     : tạo 3 lựa chọn MCQ kết luận trạng thái điểm M
+   updateProg()          : đếm tiến độ, lưu 'prog_c5_52', kích hoạt nút Nộp
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;
+  // Hiện kết quả / MCQ sau khi làm đủ bài số
+  checkShowMCQ(id);
+  updateProg();
+}
+
+function checkShowMCQ(id){
+  // A5: hiện MCQ sau khi làm xong sin
+  if(id==='a5-sin'){
+    var el=document.getElementById('a5-mcq-wrap');
+    if(el&&ANS['a5-num']!==null&&ANS['a5-sin']!==null)el.style.display='block';
+  }
+  // A6: hiện MCQ sau khi làm xong sin
+  if(id==='a6-sin'){
+    var el=document.getElementById('a6-mcq-wrap');
+    if(el)el.style.display='block';
+  }
+}
+
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal-ok';
+  var exp=document.getElementById('exp-'+name+'mcq');
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-exp':'no-exp');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row">'
+    +'<span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span>'
+    +'<span class="chip" id="ck-'+id+'"></span></div>';
+}
+
+// makeMCQState: tạo 3 lựa chọn kết luận trạng thái điểm M
+  var opts=[
+    'Trạng thái <b>đàn hồi</b> — sinθmax &lt; sinφ (an toàn)',
+    'Trạng thái <b>cân bằng giới hạn</b> — sinθmax = sinφ',
+    'Trạng thái <b>phá hoại</b> — sinθmax &gt; sinφ (nguy hiểm)'
+  ];
+  var html=opts.map(function(o,i){
+    return '<div class="mcq-opt" id="mco-'+name+'-'+i+'" '
+      +'onclick="pickMCQ(\''+name+'\','+i+','+correct+',\''+
+      (i===0?'✓ sinθmax='+sinVal+' &lt; sinφ='+sinPhi+' → Điểm M ở trạng thái đàn hồi, an toàn.':
+       i===1?'✓ sinθmax='+sinVal+' ≈ sinφ='+sinPhi+' → Trạng thái cân bằng giới hạn.':
+              '✓ sinθmax='+sinVal+' &gt; sinφ='+sinPhi+' → Điểm M bị phá hoại, không an toàn.')
+      +'\')">'
+      +'<span class="mkey">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></div>';
+  }).join('');
+  document.getElementById(name+'-opts').innerHTML=html;
+  ANS['mcq-'+name]=null;
+}
+
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c5_52',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 5 — Nộp bài lên server
+   chapterId      = 'C5-52-TrangThai'
+   WORKER_URL     : từ config.js (fallback URL mặc định)
+   MIN_ATTEMPT_PCT: từ config.js (fallback 5%)
+   submitResult() : POST {name, mssv, stt, classId, chapterId, score,
+                    correct, total, duration} lên WORKER_URL
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C5-52-TrangThai',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   genAll(stt): sinh toàn bộ đề bài (A1..A6) — trạng thái tại điểm
+                trong đất rời/dính, dùng seededRng(seed) để mỗi STT
+                có đề khác nhau nhưng tái lập được
+   ================================================================ */
+function genAll(stt){
+  // ── A1: σ1,σ3 → sinθmax (đất rời) ──
+  (function(){
+    var rng=seededRng(stt*7+101);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var s1=Math.round(60+rng()*80); var s3=Math.round(10+rng()*40);
+    if(s3>=s1)s3=Math.round(s1*0.3);
+    var sinTh=r3((s1-s3)/(s1+s3));
+    var sinPhi=r3(Math.sin(phi*Math.PI/180));
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Điểm M trong nền <b>đất rời</b> (c = 0, φ = <b>'+phi+'°</b>). '
+      +'Ứng suất chính lớn nhất σ₁ = <b>'+s1+' kPa</b>, ứng suất chính nhỏ nhất σ₃ = <b>'+s3+' kPa</b>. '
+      +'Tính sinθ<sub>max</sub>.';
+    document.getElementById('a1-hint').innerHTML=
+      'sinθmax = ('+s1+' − '+s3+') / ('+s1+' + '+s3+') = '+r1(s1-s3)+' / '+r1(s1+s3)+' = ?';
+    document.getElementById('a1-q').innerHTML=makeQ('a1-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    document.getElementById('a1-kq').textContent='sinφ = sin'+phi+'° = '+sinPhi+' — Dùng để so sánh ở bài A5/A6';
+    document.getElementById('a1-kq').style.display='';
+  })();
+
+  // ── A2: σ1,σ3 → sinθmax (đất dính) ──
+  (function(){
+    var rng=seededRng(stt*11+103);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var c=Math.round(5+rng()*20);
+    var s1=Math.round(60+rng()*90); var s3=Math.round(15+rng()*40);
+    if(s3>=s1)s3=Math.round(s1*0.3);
+    var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+    var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Điểm M trong <b>đất dính</b>: góc ma sát trong φ = <b>'+phi+'°</b>, lực dính c = <b>'+c+' kPa</b>. '
+      +'Ứng suất chính lớn nhất σ₁ = <b>'+s1+' kPa</b>, ứng suất chính nhỏ nhất σ₃ = <b>'+s3+' kPa</b>. '
+      +'Tính sinθ<sub>max</sub>.';
+    document.getElementById('a2-hint').innerHTML=
+      '2c/tanφ = 2×'+c+'/tan'+phi+'° = '+twoctg+' kPa<br>'
+      +'sinθmax = ('+s1+'−'+s3+') / ('+s1+'+'+s3+'+'+twoctg+') = '+r1(s1-s3)+' / '+r1(s1+s3+twoctg)+' = ?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-2ctg','2c/tanφ &nbsp;(kPa)',twoctg,1,'kPa')
+      +makeQ('a2-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+  })();
+
+  // ── A3: σz,σx,τ → sinθmax (đất rời) ──
+  (function(){
+    var rng=seededRng(stt*13+105);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var sz=r1(40+rng()*60); var sx=r1(10+rng()*35); var tau=r1(rng()*20);
+    var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+    var den=r1(sx+sz);
+    var sinTh=r3(num/den);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tại điểm M trong <b>đất rời</b> (c = 0, φ = <b>'+phi+'°</b>): '
+      +'ứng suất thẳng đứng σ<sub>z</sub> = <b>'+sz+' kPa</b>, ứng suất ngang σ<sub>x</sub> = <b>'+sx+' kPa</b>, '
+      +'ứng suất cắt τ<sub>xz</sub> = <b>'+tau+' kPa</b>. Tính sinθ<sub>max</sub>.';
+    document.getElementById('a3-hint').innerHTML=
+      'Tử số: √[('+sx+'−'+sz+')²+4×'+tau+'²] = √['+r2(Math.pow(sx-sz,2))+'+'+r2(4*tau*tau)+'] = ?<br>'
+      +'Mẫu số: σx+σz = '+r1(sx+sz)+'<br>'
+      +'sinθmax = ?/'+r1(sx+sz)+' = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-num','√[(σx−σz)²+4τ²]',num,0.5,'')
+      +makeQ('a3-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+  })();
+
+  // ── A4: σz,σx,τ → sinθmax (đất dính) ──
+  (function(){
+    var rng=seededRng(stt*17+107);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var c=Math.round(5+rng()*20);
+    var sz=r1(45+rng()*65); var sx=r1(10+rng()*35); var tau=r1(rng()*22);
+    var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+    var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+    var den=r1(sx+sz+twoctg);
+    var sinTh=r3(num/den);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tại điểm M trong <b>đất dính</b> (φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>): '
+      +'ứng suất thẳng đứng σ<sub>z</sub> = <b>'+sz+' kPa</b>, ứng suất ngang σ<sub>x</sub> = <b>'+sx+' kPa</b>, '
+      +'ứng suất cắt τ<sub>xz</sub> = <b>'+tau+' kPa</b>. Tính sinθ<sub>max</sub>.';
+    document.getElementById('a4-hint').innerHTML=
+      '2c/tgφ = 2×'+c+'/tg'+phi+'° = '+twoctg+' kPa<br>'
+      +'Tử số: √[('+sx+'−'+sz+')²+4×'+tau+'²] = ?<br>'
+      +'Mẫu số: '+sz+'+'+sx+'+'+twoctg+' = '+r1(sz+sx+twoctg)+'<br>'
+      +'sinθmax = ?/'+r1(sz+sx+twoctg)+' = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-2ctg','2c/tgφ &nbsp;(kPa)',twoctg,1,'kPa')
+      +makeQ('a4-num','√[(σx−σz)²+4τ²]',num,0.5,'')
+      +makeQ('a4-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+  })();
+
+  // ── A5: σz,σx,τ → sinθmax → kết luận trạng thái ──
+  (function(){
+    var rng=seededRng(stt*19+109);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var c=Math.round(8+rng()*18);
+    var sz=r1(45+rng()*60); var sx=r1(10+rng()*30); var tau=r1(rng()*20);
+    var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+    var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+    var sinTh=r3(num/(sz+sx+twoctg));
+    var sinPhi=r3(Math.sin(phi*Math.PI/180));
+    var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tại điểm M trong <b>đất dính</b> (φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>): '
+      +'σ<sub>z</sub> = <b>'+sz+' kPa</b>, σ<sub>x</sub> = <b>'+sx+' kPa</b>, τ<sub>xz</sub> = <b>'+tau+' kPa</b>. '
+      +'Tính sinθ<sub>max</sub>, so sánh với sinφ và xác định trạng thái điểm M.';
+    document.getElementById('a5-hint').innerHTML=
+      'sinφ = sin'+phi+'° = <b>'+sinPhi+'</b> &nbsp;·&nbsp; 2c/tgφ = '+twoctg+' kPa<br>'
+      +'Tử số: √[('+sx+'−'+sz+')²+4×'+tau+'²] = ?<br>'
+      +'sinθmax = ? / ('+sz+'+'+sx+'+'+twoctg+') = ? / '+r1(sz+sx+twoctg)+' = ?';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-num','① √[(σx−σz)²+4τ²]',num,0.5,'')
+      +makeQ('a5-sin','② sinθ<sub>max</sub>',sinTh,0.008,'');
+    makeMCQState('a5',sinTh,sinPhi,state);
+  })();
+
+  // ── A6: σ1,σ3 → sinθmax → kết luận ──
+  (function(){
+    var rng=seededRng(stt*23+111);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var c=Math.round(5+rng()*20);
+    var s1=Math.round(70+rng()*100); var s3=Math.round(15+rng()*50);
+    if(s3>=s1)s3=Math.round(s1*0.3);
+    var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+    var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+    var sinPhi=r3(Math.sin(phi*Math.PI/180));
+    var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+    document.getElementById('a6-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Điểm M trong <b>đất dính</b> (φ = <b>'+phi+'°</b>, c = <b>'+c+' kPa</b>). '
+      +'Ứng suất chính lớn nhất σ₁ = <b>'+s1+' kPa</b>, ứng suất chính nhỏ nhất σ₃ = <b>'+s3+' kPa</b>. '
+      +'Tính sinθ<sub>max</sub>, so sánh với sinφ và xác định trạng thái điểm M.';
+    document.getElementById('a6-hint').innerHTML=
+      'sinφ = sin'+phi+'° = <b>'+sinPhi+'</b><br>'
+      +'2c/tanφ = '+twoctg+' kPa<br>'
+      +'sinθmax = ('+s1+'−'+s3+') / ('+s1+'+'+s3+'+'+twoctg+') = ?';
+    document.getElementById('a6-q').innerHTML=
+      makeQ('a6-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    makeMCQState('a6',sinTh,sinPhi,state);
+  })();
+
+  // ── NHÓM B: Có công thức ──
+  var BCFG=[
+    {id:'b1',title:'Bài B1 · σ₁, σ₃ → sinθmax (đất rời)',
+     fml:'sinθmax = (σ₁ − σ₃) / (σ₁ + σ₃)',seeds:[29,113],type:'s1s3r'},
+    {id:'b2',title:'Bài B2 · σ₁, σ₃ → sinθmax (đất dính)',
+     fml:'sinθmax = (σ₁ − σ₃) / (σ₁ + σ₃ + 2c/tanφ)',seeds:[31,117],type:'s1s3c'},
+    {id:'b3',title:'Bài B3 · σz, σx, τ → sinθmax (đất rời)',
+     fml:'sinθmax = √[(σx−σz)²+4τ²] / (σx+σz) &nbsp;&nbsp;(c=0)',seeds:[37,119],type:'szt r'},
+    {id:'b4',title:'Bài B4 · σz, σx, τ → sinθmax (đất dính)',
+     fml:'sinθmax = √[(σx−σz)²+4τ²] / (σx+σz+2c/tgφ)',seeds:[41,121],type:'sztc'},
+    {id:'b5',title:'Bài B5 · σz, σx, τ → sinθmax → kết luận trạng thái',
+     fml:'sinθmax = √[(σx−σz)²+4τ²] / (σx+σz+2c/tgφ) · So sánh với sinφ',seeds:[43,127],type:'sztck'},
+    {id:'b6',title:'Bài B6 · σ₁, σ₃ → sinθmax → kết luận trạng thái',
+     fml:'sinθmax = (σ₁−σ₃)/(σ₁+σ₃+2c/tanφ) · So sánh với sinφ',seeds:[47,131],type:'s1s3ck'},
+  ];
+
+  var bhtml='';
+  BCFG.forEach(function(b){
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>'+b.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+b.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+b.id+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức đã xác định</div>'
+      +'<div class="frow">'+b.fml+'</div></div>'
+      +'<div id="'+b.id+'-q"></div>'
+      +(b.type.endsWith('k')?'<div class="mcq-wrap" style="margin-top:4px"><div class="mcq-q"><span class="mcq-num">?</span>Trạng thái điểm M là:</div><div class="mcq-opts" id="'+b.id+'-opts"></div><div class="mcq-exp" id="exp-'+b.id+'mcq"></div></div>':'')+
+      '</div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+
+  BCFG.forEach(function(b){
+    var rng=seededRng(stt*b.seeds[0]+b.seeds[1]);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var c=Math.round(5+rng()*20);
+    var sinPhi=r3(Math.sin(phi*Math.PI/180));
+    if(b.type==='s1s3r'){
+      var s1=Math.round(60+rng()*90);var s3=Math.round(10+rng()*40);if(s3>=s1)s3=Math.round(s1*0.3);
+      var sinTh=r3((s1-s3)/(s1+s3));
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất rời (c=0, φ=<b>'+phi+'°</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. Tính sinθmax.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(b.type==='s1s3c'){
+      var s1=Math.round(65+rng()*95);var s3=Math.round(15+rng()*45);if(s3>=s1)s3=Math.round(s1*0.3);
+      var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+      var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+c+' kPa</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. Tính sinθmax.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(b.type==='szt r'){
+      var sz=r1(40+rng()*70);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sx+sz));
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất rời (c=0, φ=<b>'+phi+'°</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax dùng công thức trực tiếp.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(b.type==='sztc'){
+      var sz=r1(45+rng()*65);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sz+sx+twoctg));
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+c+' kPa</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(b.type==='sztck'){
+      var sz=r1(45+rng()*65);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sz+sx+twoctg));
+      var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+c+' kPa</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax, so sánh với sinφ=<b>'+sinPhi+'</b> và kết luận.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+      makeMCQState(b.id,sinTh,sinPhi,state);
+    } else if(b.type==='s1s3ck'){
+      var s1=Math.round(65+rng()*95);var s3=Math.round(15+rng()*45);if(s3>=s1)s3=Math.round(s1*0.3);
+      var twoctg=r2(2*c/Math.tan(phi*Math.PI/180));
+      var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+      var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+      document.getElementById(b.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+c+' kPa</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. sinφ=<b>'+sinPhi+'</b>. Tính sinθmax và kết luận trạng thái.';
+      document.getElementById(b.id+'-q').innerHTML=makeQ(b.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+      makeMCQState(b.id,sinTh,sinPhi,state);
+    }
+  });
+
+  // ── NHÓM C: Chỉ đầu bài ──
+  var CCFG=[
+    {id:'c1',title:'Bài C1 · Tự nhận biết — σ₁, σ₃ · Đất rời',seeds:[53,137],type:'s1s3r'},
+    {id:'c2',title:'Bài C2 · Tự nhận biết — σ₁, σ₃ · Đất dính',seeds:[59,139],type:'s1s3c'},
+    {id:'c3',title:'Bài C3 · Tự nhận biết — σz, σx, τ · Đất rời',seeds:[61,143],type:'szt r'},
+    {id:'c4',title:'Bài C4 · Tự nhận biết — σz, σx, τ · Đất dính',seeds:[67,149],type:'sztc'},
+    {id:'c5',title:'Bài C5 · Tự nhận biết — σz, σx, τ · Kết luận trạng thái',seeds:[71,151],type:'sztck'},
+    {id:'c6',title:'Bài C6 · Tự nhận biết — σ₁, σ₃ · Kết luận trạng thái',seeds:[73,157],type:'s1s3ck'},
+  ];
+
+  var chtml='';
+  CCFG.forEach(function(c){
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>'+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+c.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+c.id+'-prob">⏳</div>'
+      +'<div id="'+c.id+'-q"></div>'
+      +(c.type.endsWith('k')?'<div class="mcq-wrap" style="margin-top:4px"><div class="mcq-q"><span class="mcq-num">?</span>Trạng thái điểm M là:</div><div class="mcq-opts" id="'+c.id+'-opts"></div><div class="mcq-exp" id="exp-'+c.id+'mcq"></div></div>':'')+
+      '</div></div>';
+  });
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CCFG.forEach(function(c){
+    var rng=seededRng(stt*c.seeds[0]+c.seeds[1]);
+    var phi=PHI_OPTS[Math.floor(rng()*5)];
+    var cv=Math.round(5+rng()*20);
+    var sinPhi=r3(Math.sin(phi*Math.PI/180));
+    if(c.type==='s1s3r'){
+      var s1=Math.round(60+rng()*90);var s3=Math.round(10+rng()*40);if(s3>=s1)s3=Math.round(s1*0.3);
+      var sinTh=r3((s1-s3)/(s1+s3));
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất rời (c=0, φ=<b>'+phi+'°</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. Tính sinθmax.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(c.type==='s1s3c'){
+      var s1=Math.round(65+rng()*95);var s3=Math.round(15+rng()*45);if(s3>=s1)s3=Math.round(s1*0.3);
+      var twoctg=r2(2*cv/Math.tan(phi*Math.PI/180));
+      var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+cv+' kPa</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. Tính sinθmax.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(c.type==='szt r'){
+      var sz=r1(40+rng()*70);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sx+sz));
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất rời (c=0, φ=<b>'+phi+'°</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(c.type==='sztc'){
+      var sz=r1(45+rng()*65);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var twoctg=r2(2*cv/Math.tan(phi*Math.PI/180));
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sz+sx+twoctg));
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+cv+' kPa</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+    } else if(c.type==='sztck'){
+      var sz=r1(45+rng()*65);var sx=r1(10+rng()*35);var tau=r1(rng()*22);
+      var twoctg=r2(2*cv/Math.tan(phi*Math.PI/180));
+      var num=r2(Math.sqrt(Math.pow(sx-sz,2)+4*tau*tau));
+      var sinTh=r3(num/(sz+sx+twoctg));
+      var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+cv+' kPa</b>). σz=<b>'+sz+'</b>, σx=<b>'+sx+'</b>, τxz=<b>'+tau+' kPa</b>. Tính sinθmax, so sánh với sinφ=<b>'+sinPhi+'</b> và kết luận trạng thái điểm M.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-num','√[(σx−σz)²+4τ²]',num,0.5,'')+makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+      makeMCQState(c.id,sinTh,sinPhi,state);
+    } else if(c.type==='s1s3ck'){
+      var s1=Math.round(65+rng()*95);var s3=Math.round(15+rng()*45);if(s3>=s1)s3=Math.round(s1*0.3);
+      var twoctg=r2(2*cv/Math.tan(phi*Math.PI/180));
+      var sinTh=r3((s1-s3)/(s1+s3+twoctg));
+      var state=sinTh<sinPhi-0.005?0:(sinTh>sinPhi+0.005?2:1);
+      document.getElementById(c.id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Đất dính (φ=<b>'+phi+'°</b>, c=<b>'+cv+' kPa</b>). σ₁=<b>'+s1+' kPa</b>, σ₃=<b>'+s3+' kPa</b>. sinφ='+sinPhi+'. Tính sinθmax và kết luận trạng thái điểm M.';
+      document.getElementById(c.id+'-q').innerHTML=makeQ(c.id+'-sin','sinθ<sub>max</sub>',sinTh,0.008,'');
+      makeMCQState(c.id,sinTh,sinPhi,state);
+    }
+  });
+
+  updateProg();
+}
+
+/* ================================================================
+   KHỞI TẠO — window.onload
+   Hiển thị tên/STT SV; gọi genAll(stt) để sinh đề; đặt TOTAL_QUESTIONS;
+   đặt nút Nộp bài về trạng thái khóa ban đầu; gọi updateProg()
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genAll(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>
