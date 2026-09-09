@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.5 — Tóm Tắt Công Thức Thi Chương 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính (#1565C0), --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --V=tím (#6A1B9A — màu tham chiếu bài 4.4 Tổng hợp), --Vlt=tím nhạt
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--V:#6A1B9A;--Vlt:#EDE7F6;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd)}
+.card-hd i{font-size:20px}.card-hd h2{font-size:14px;font-weight:700;flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+
+/* ── Mỗi mục công thức có màu riêng ── */
+.blk-blue .card-hd{background:var(--Plt)}.blk-blue .card-hd i,.blk-blue .card-hd h2{color:var(--Pdk)}
+.blk-blue .cbadge{background:var(--P)}
+.blk-blue .fml-box{border-left-color:var(--P);background:#F8FBFF;border-color:#BBDEFB}
+.blk-blue .ftitle{color:var(--P)}
+.blk-blue .frow em{color:var(--Pdk)}
+.blk-blue .tag{background:var(--Plt);color:var(--Pdk)}
+
+.blk-green .card-hd{background:var(--Glt)}.blk-green .card-hd i,.blk-green .card-hd h2{color:var(--Gdk)}
+.blk-green .cbadge{background:var(--G)}
+.blk-green .fml-box{border-left-color:var(--G);background:#F4FBF4;border-color:#C8E6C9}
+.blk-green .ftitle{color:var(--G)}
+.blk-green .frow em{color:var(--Gdk)}
+.blk-green .tag{background:var(--Glt);color:var(--Gdk)}
+
+.blk-orange .card-hd{background:var(--Alt)}.blk-orange .card-hd i,.blk-orange .card-hd h2{color:#E65100}
+.blk-orange .cbadge{background:#E65100}
+.blk-orange .fml-box{border-left-color:#E65100;background:#FFFDF5;border-color:#FFE082}
+.blk-orange .ftitle{color:#E65100}
+.blk-orange .frow em{color:#BF360C}
+.blk-orange .tag{background:var(--Alt);color:#E65100}
+
+.blk-red .card-hd{background:var(--Rlt)}.blk-red .card-hd i,.blk-red .card-hd h2{color:var(--R)}
+.blk-red .cbadge{background:var(--R)}
+.blk-red .fml-box{border-left-color:var(--R);background:#FFF8F8;border-color:#FFCDD2}
+.blk-red .ftitle{color:var(--R)}
+
+.fml-box{border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:2.0}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:2px;color:var(--Pdk)}
+.frow em{font-weight:700;font-style:normal}
+.frow .ann{font-size:11px;color:var(--muted);font-family:var(--sans);margin-left:8px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.tip-box{background:#E8F5E9;border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk)}
+.note-box{background:var(--Alt);border-left:4px solid var(--A);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.divider{height:1px;background:var(--brd);margin:4px 0}
+/* Tiến độ mini */
+.prog-mini{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:14px 18px;margin-bottom:16px}
+.prog-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.prog-item{border-radius:8px;padding:10px 8px;text-align:center;border:1px solid var(--brd)}
+.prog-item .pi-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.prog-item .pi-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--P)}
+.prog-item .pi-bar{height:5px;background:var(--Plt);border-radius:3px;margin-top:6px;overflow:hidden}
+.prog-item .pi-fill{height:100%;background:var(--P);border-radius:3px;transition:width .4s}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+@media(max-width:620px){.two-col,.three-col{grid-template-columns:1fr}.prog-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C4.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 4</a>
+    <div class="hdr-title">
+      <h1>4.5 — Tóm Tắt Công Thức Thi Chương 4</h1>
+      <p>Chỉ công thức thi cốt lõi · Không bài tập · Chú ý làm bài</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══ TIẾN ĐỘ TOÀN CHƯƠNG ══ -->
+<div class="prog-mini">
+  <div style="font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:4px"><i class="ti ti-target" style="vertical-align:-2px;margin-right:5px"></i>Tiến độ tổng Chương 4</div>
+  <div style="font-size:12px;color:var(--muted)">Tổng hợp từ localStorage · Bấm vào bài để tiếp tục</div>
+  <div class="prog-grid" id="prog-grid">
+    <a href="4.1_DANH_HOI.html" class="prog-item" style="text-decoration:none">
+      <div class="pi-label">4.1 Đàn hồi</div>
+      <div class="pi-val" id="p41">–/–</div>
+      <div class="pi-bar"><div class="pi-fill" id="pf41" style="width:0%"></div></div>
+    </a>
+    <a href="4.2_CONG_LUN.html" class="prog-item" style="text-decoration:none">
+      <div class="pi-label">4.2 Cộng lún</div>
+      <div class="pi-val" id="p42">–/–</div>
+      <div class="pi-bar"><div class="pi-fill" id="pf42" style="width:0%;background:var(--G)"></div></div>
+    </a>
+    <a href="4.3_CO_KET.html" class="prog-item" style="text-decoration:none">
+      <div class="pi-label">4.3 Cố kết</div>
+      <div class="pi-val" id="p43">–/–</div>
+      <div class="pi-bar"><div class="pi-fill" id="pf43" style="width:0%;background:#E65100"></div></div>
+    </a>
+    <a href="4.4_TONG_HOP.html" class="prog-item" style="text-decoration:none">
+      <div class="pi-label">4.4 Tổng hợp</div>
+      <div class="pi-val" id="p44">–/–</div>
+      <div class="pi-bar"><div class="pi-fill" id="pf44" style="width:0%;background:var(--V)"></div></div>
+    </a>
+    <div class="prog-item" style="background:var(--Plt)">
+      <div class="pi-label" style="color:var(--P)">Tổng C4</div>
+      <div class="pi-val" id="p-total" style="font-size:16px">0%</div>
+      <div class="pi-bar"><div class="pi-fill" id="pf-total" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KHỐI 1: LÚN ĐÀN HỒI ══ -->
+<div class="card blk-blue">
+  <div class="card-hd">
+    <i class="ti ti-arrow-down-circle"></i>
+    <div><h2>1 — Lún Đàn Hồi (Schleicher)</h2><p>CT chính + 2 dạng suy ngược → thi hay ra</p></div>
+    <span class="cbadge">4.1</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="tag">Công thức chính</div>
+        <div class="ftitle"><i class="ti ti-sigma"></i> Tính S (móng đơn/băng)</div>
+        <div class="frow"><em>S = (1−μ₀²) · p<sub>gl</sub> · b · ω / E₀</em></div>
+        <div class="frow">p<sub>gl</sub> = p<sub>tx</sub> − γ · h<sub>m</sub></div>
+        <div class="frow">b = cạnh NGẮN móng [m]</div>
+        <div class="frow">ω = tra bảng theo l/b</div>
+        <div class="frow">Móng băng: ω<sub>b</sub> = 1.0</div>
+      </div>
+      <div class="fml-box">
+        <div class="tag">Suy ngược — thi hay ra</div>
+        <div class="ftitle"><i class="ti ti-arrow-back-up"></i> 2 dạng đảo công thức</div>
+        <div class="frow"><em>E₀</em> = (1−μ₀²)·p<sub>gl</sub>·b·ω / S</div>
+        <div class="frow" style="font-size:11px;color:var(--muted)">(Biết S đo được → tìm E₀ đất)</div>
+        <div class="divider"></div>
+        <div class="frow"><em>p<sub>gl</sub></em> = S · E₀ / [(1−μ₀²)·b·ω]</div>
+        <div class="frow" style="font-size:11px;color:var(--muted)">(Cho S giới hạn → tìm p<sub>gl</sub> cho phép)</div>
+        <div class="frow"><em>p<sub>tx</sub></em> = p<sub>gl</sub> + γ · h<sub>m</sub></div>
+      </div>
+    </div>
+    <div class="three-col">
+      <div class="fml-box" style="font-size:12px">
+        <div class="ftitle">Bảng ω</div>
+        <div class="frow">l/b=1.0 → ω=<em>0.88</em></div>
+        <div class="frow">l/b=1.5 → ω=<em>1.08</em></div>
+        <div class="frow">l/b=2.0 → ω=<em>1.22</em></div>
+        <div class="frow">l/b=3.0 → ω=<em>1.44</em></div>
+        <div class="frow">l/b=5.0 → ω=<em>1.68</em></div>
+      </div>
+      <div class="warn-box" style="font-size:12px">
+        ⚠️ <b>Lỗi hay gặp:</b><br>
+        • Nhầm b = cạnh dài<br>
+        • Quên đổi S: cm → m<br>
+        • Nhầm p<sub>tx</sub> với p<sub>gl</sub>
+      </div>
+      <div class="tip-box" style="font-size:12px">
+        ✅ <b>Nhớ nhanh:</b><br>
+        • Đơn vị S ra <b>mét</b><br>
+        • ×100 để ra <b>cm</b><br>
+        • μ₀ thường = 0.25~0.35
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KHỐI 2: CỘNG LÚN ══ -->
+<div class="card blk-green">
+  <div class="card-hd">
+    <i class="ti ti-stack-2"></i>
+    <div><h2>2 — Cộng Lún Từng Phân Tố</h2><p>4 CT tính S<sub>i</sub> + suy ngược a, m<sub>v</sub>, Δσ</p></div>
+    <span class="cbadge">4.2</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="tag">4 công thức tính S<sub>i</sub></div>
+        <div class="ftitle"><i class="ti ti-sigma"></i> Lún 1 phân tố (kết quả ra m)</div>
+        <div class="frow"><em>CT1:</em> S<sub>i</sub> = (e₀−e₁)·h / (1+e₀)</div>
+        <div class="frow"><em>CT2:</em> S<sub>i</sub> = a·Δσ·h / (1+e₀)</div>
+        <div class="frow"><em>CT3:</em> S<sub>i</sub> = m<sub>v</sub>·Δσ·h</div>
+        <div class="frow"><em>CT4:</em> S<sub>i</sub> = β·Δσ·h/E₀ &nbsp;<span class="ann">(β=1−2μ²/(1−μ))</span></div>
+        <div class="frow" style="margin-top:6px"><em>S = Σ Sᵢ</em> (tổng đến điểm tắt lún)</div>
+      </div>
+      <div class="fml-box">
+        <div class="tag">Suy ngược — thi hay ra</div>
+        <div class="ftitle"><i class="ti ti-arrow-back-up"></i> Tìm ngược hệ số</div>
+        <div class="frow"><em>a</em> = S·(1+e₀) / (Δσ·h) &nbsp;<span class="ann">S đổi ra m!</span></div>
+        <div class="frow"><em>m<sub>v</sub></em> = S / (Δσ·h) &nbsp;<span class="ann">S đổi ra m!</span></div>
+        <div class="frow"><em>Δσ</em> = S / (m<sub>v</sub>·h) &nbsp;<span class="ann">hoặc S·(1+e₀)/(a·h)</span></div>
+        <div class="divider"></div>
+        <div class="ftitle" style="margin-top:4px"><i class="ti ti-arrows-exchange"></i> Quan hệ a ↔ m<sub>v</sub></div>
+        <div class="frow"><em>m<sub>v</sub></em> = a / (1+e₀)</div>
+        <div class="frow"><em>a</em> = m<sub>v</sub>·(1+e₀)</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-filter"></i> Điều kiện tắt lún</div>
+        <div class="frow"><em>Δσᵢ ≤ 0.2 · σ<sub>bt,i</sub></em> → dừng</div>
+        <div class="frow">σ<sub>bt,i</sub> = γ·z<sub>giữa,i</sub> (bản thân tại giữa PT)</div>
+        <div class="frow">H<sub>ah</sub> = chiều sâu PT đầu tiên thỏa</div>
+      </div>
+      <div class="warn-box" style="font-size:12px">
+        ⚠️ <b>Lỗi hay gặp:</b><br>
+        • S tính ra m, không đổi sang cm khi cộng lẫn lộn<br>
+        • Nhầm σ<sub>bt</sub> với Δσ trong điều kiện tắt lún<br>
+        • Quên nhân ×100 khi đề hỏi kết quả bằng cm
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KHỐI 3: CỐ KẾT ══ -->
+<div class="card blk-orange">
+  <div class="card-hd">
+    <i class="ti ti-clock"></i>
+    <div><h2>3 — Cố Kết Theo Thời Gian (Terzaghi 1D)</h2><p>T<sub>v</sub> → U → S(t) và tính ngược t</p></div>
+    <span class="cbadge">4.3</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="tag">Công thức thuận</div>
+        <div class="ftitle"><i class="ti ti-sigma"></i> Tính S(t)</div>
+        <div class="frow"><em>T<sub>v</sub></em> = C<sub>v</sub> · t / H²<sub>dr</sub></div>
+        <div class="frow">→ Tra bảng T<sub>v</sub> → <em>U(%)</em></div>
+        <div class="frow"><em>S(t)</em> = U(t) · S<sub>∞</sub></div>
+        <div class="divider"></div>
+        <div class="frow">1 mặt thoát: <em>H<sub>dr</sub> = H</em></div>
+        <div class="frow">2 mặt thoát: <em>H<sub>dr</sub> = H/2</em></div>
+      </div>
+      <div class="fml-box">
+        <div class="tag">Suy ngược</div>
+        <div class="ftitle"><i class="ti ti-arrow-back-up"></i> Tính t hoặc U</div>
+        <div class="frow"><em>t</em> = T<sub>v</sub> · H²<sub>dr</sub> / C<sub>v</sub></div>
+        <div class="frow" style="font-size:11px;color:#795548">(Từ U → tra bảng → T<sub>v</sub> → tính t)</div>
+        <div class="divider"></div>
+        <div class="frow"><em>U(t)</em> = S(t) / S<sub>∞</sub> × 100%</div>
+        <div class="frow" style="font-size:11px;color:#795548">(Từ S(t) đo được → tính U → tra T<sub>v</sub>)</div>
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-table"></i> Bảng tra U – T<sub>v</sub> (cốt lõi cần nhớ)</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-size:12px;margin-top:4px">
+        <div style="text-align:center;font-weight:700;color:#E65100">T<sub>v</sub></div>
+        <div style="text-align:center">0.05</div><div style="text-align:center">0.197</div>
+        <div style="text-align:center">0.40</div><div style="text-align:center">0.50</div>
+        <div style="text-align:center">0.848</div>
+        <div style="text-align:center;font-weight:700;color:#E65100">U (%)</div>
+        <div style="text-align:center">25</div><div style="text-align:center;font-weight:700;color:#BF360C">50</div>
+        <div style="text-align:center">70</div><div style="text-align:center">76</div>
+        <div style="text-align:center;font-weight:700;color:#BF360C">90</div>
+      </div>
+      <div class="frow" style="font-size:11px;color:#795548;margin-top:6px">Nhớ 2 điểm đặc biệt: T<sub>v</sub>=0.197↔U=50% &nbsp;|&nbsp; T<sub>v</sub>=0.848↔U=90%</div>
+    </div>
+    <div class="warn-box" style="font-size:12px">⚠️ <b>Lỗi hay gặp nhất:</b> Dùng H thay H/2 khi thoát nước 2 mặt → T<sub>v</sub> sai 4 lần → U sai rất lớn!</div>
+  </div>
+</div>
+
+<!-- ══ KHỐI 4: LỖI HAY GẶP ══ -->
+<div class="card blk-red">
+  <div class="card-hd">
+    <i class="ti ti-alert-triangle"></i>
+    <div><h2>4 — Tổng Hợp Lỗi Hay Gặp Khi Thi</h2></div>
+    <span class="cbadge">CHÚ Ý</span>
+  </div>
+  <div class="card-body">
+    <div class="three-col">
+      <div class="fml-box" style="border-left-color:var(--R);background:#FFF8F8;border-color:#FFCDD2;font-size:12px">
+        <div class="ftitle" style="color:var(--R)"><i class="ti ti-number-1"></i> Đàn hồi</div>
+        <div class="frow" style="color:#7f0000">• b = cạnh NGẮN (không phải cạnh bất kỳ)</div>
+        <div class="frow" style="color:#7f0000">• S ra đơn vị m, ×100 để ra cm</div>
+        <div class="frow" style="color:#7f0000">• p<sub>gl</sub> ≠ p<sub>tx</sub> (phải trừ γ·h<sub>m</sub>)</div>
+        <div class="frow" style="color:#7f0000">• Móng băng dùng ω=1.0 riêng</div>
+      </div>
+      <div class="fml-box" style="border-left-color:var(--R);background:#FFF8F8;border-color:#FFCDD2;font-size:12px">
+        <div class="ftitle" style="color:var(--R)"><i class="ti ti-number-2"></i> Cộng lún</div>
+        <div class="frow" style="color:#7f0000">• S<sub>i</sub> ra m, cộng xong mới ×100 ra cm</div>
+        <div class="frow" style="color:#7f0000">• Tắt lún: Δσ ≤ 0.2·σ<sub>bt</sub> (không phải ngược)</div>
+        <div class="frow" style="color:#7f0000">• z<sub>giữa</sub> ≠ z<sub>đáy phân tố</sub></div>
+        <div class="frow" style="color:#7f0000">• S ngược: phải đổi S cm→m trước!</div>
+      </div>
+      <div class="fml-box" style="border-left-color:var(--R);background:#FFF8F8;border-color:#FFCDD2;font-size:12px">
+        <div class="ftitle" style="color:var(--R)"><i class="ti ti-number-3"></i> Cố kết</div>
+        <div class="frow" style="color:#7f0000">• 2 mặt thoát: H<sub>dr</sub>=H/2, KHÔNG phải H</div>
+        <div class="frow" style="color:#7f0000">• T<sub>v</sub> tính từ H<sub>dr</sub>, không từ H</div>
+        <div class="frow" style="color:#7f0000">• U là phần trăm (0–100), không phải 0–1</div>
+        <div class="frow" style="color:#7f0000">• S(t)=U·S<sub>∞</sub> chứ không phải S(t)=T<sub>v</sub>·S<sub>∞</sub></div>
+      </div>
+    </div>
+    <div class="note-box">📋 <b>Khi thi:</b> Đọc kỹ đề — thoát nước 1 hay 2 mặt? Đề cho p<sub>tx</sub> hay p<sub>gl</sub>? Đề hỏi S (cm) hay S (m)? Đề cho diện tích F hay cho b×l riêng? — Xác định đúng trước khi bấm máy tính.</div>
+  </div>
+</div>
+
+<!-- ══ KHỐI 5: BẢNG SO SÁNH NHANH ══ -->
+<div class="card">
+  <div class="card-hd" style="background:var(--Plt)">
+    <i class="ti ti-table" style="color:var(--P)"></i>
+    <div><h2 style="color:var(--Pdk)">5 — Bảng So Sánh 3 Phương Pháp Tính Lún</h2></div>
+    <span class="cbadge" style="background:var(--P)">SO SÁNH</span>
+  </div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--brd)">
+      <table style="border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)">
+        <thead>
+          <tr style="background:var(--Pdk);color:#fff">
+            <th style="padding:8px 12px;text-align:left">Tiêu chí</th>
+            <th style="padding:8px 10px;text-align:center">Đàn hồi (4.1)</th>
+            <th style="padding:8px 10px;text-align:center">Cộng lún (4.2)</th>
+            <th style="padding:8px 10px;text-align:center">Cố kết (4.3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:6px 12px;font-weight:600;color:var(--Pdk)">Áp dụng</td>
+            <td style="padding:6px 10px;text-align:center">Nền đàn hồi đồng nhất</td>
+            <td style="padding:6px 10px;text-align:center">Nền nhiều lớp Oedometer</td>
+            <td style="padding:6px 10px;text-align:center">Lún theo thời gian</td>
+          </tr>
+          <tr style="background:#F0F7FF">
+            <td style="padding:6px 12px;font-weight:600;color:var(--Pdk)">Hệ số chính</td>
+            <td style="padding:6px 10px;text-align:center">E₀, μ₀, ω</td>
+            <td style="padding:6px 10px;text-align:center">a hoặc m<sub>v</sub></td>
+            <td style="padding:6px 10px;text-align:center">C<sub>v</sub>, T<sub>v</sub>, U</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 12px;font-weight:600;color:var(--Pdk)">Đầu vào</td>
+            <td style="padding:6px 10px;text-align:center">b, l, p<sub>gl</sub>, E₀, μ₀</td>
+            <td style="padding:6px 10px;text-align:center">Δσ, h, a/m<sub>v</sub>, e₀</td>
+            <td style="padding:6px 10px;text-align:center">S<sub>∞</sub>, C<sub>v</sub>, H, t</td>
+          </tr>
+          <tr style="background:#F0F7FF">
+            <td style="padding:6px 12px;font-weight:600;color:var(--Pdk)">Kết quả</td>
+            <td style="padding:6px 10px;text-align:center">S tức thời (cm)</td>
+            <td style="padding:6px 10px;text-align:center">S cuối (cm)</td>
+            <td style="padding:6px 10px;text-align:center">S(t) tại thời điểm t</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 12px;font-weight:600;color:var(--Pdk)">Điểm hay bị điểm</td>
+            <td style="padding:6px 10px;text-align:center;color:var(--R)">Nhầm b; quên ÷100</td>
+            <td style="padding:6px 10px;text-align:center;color:var(--R)">Nhầm S m↔cm; tắt lún sai</td>
+            <td style="padding:6px 10px;text-align:center;color:var(--R)">H thay H/2 (2 mặt)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <div style="font-size:12px;opacity:.8">4.5 — Tóm tắt công thức thi · Chương 4</div>
+  <div style="display:flex;gap:10px">
+    <a href="4.4_TONG_HOP.html" class="btn btn-ghost btn-sm">← 4.4</a>
+    <a href="index_C4.html" class="btn btn-ghost btn-sm"><i class="ti ti-home"></i> Hub C4</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — TỔNG HỢP TIẾN ĐỘ CHƯƠNG 4
+   Đọc 4 key localStorage (prog_c4_41 → prog_c4_44), hiển thị
+   tiến độ từng bài + tổng thể lên trang Tóm tắt chương 4
+   ⚠️ Không có bài tập — chỉ đọc dữ liệu tiến độ từ localStorage
+================================================================ */
+window.onload=function(){
+  var keys=['prog_c4_41','prog_c4_42','prog_c4_43','prog_c4_44'];
+  var ids=['41','42','43','44'];
+  var tD=0,tA=0;
+  keys.forEach(function(k,i){
+    try{
+      var d=JSON.parse(localStorage.getItem(k)||'null');
+      if(d&&d.total>0){
+        var pct=Math.round(d.done/d.total*100);
+        document.getElementById('p'+ids[i]).textContent=d.done+'/'+d.total;
+        document.getElementById('pf'+ids[i]).style.width=pct+'%';
+        tD+=d.done;tA+=d.total;
+      }
+    }catch(e){}
+  });
+  if(tA>0){
+    var tot=Math.round(tD/tA*100);
+    document.getElementById('p-total').textContent=tot+'%';
+    document.getElementById('pf-total').style.width=tot+'%';
+  }
+};
+</script>
+</body>
+</html>

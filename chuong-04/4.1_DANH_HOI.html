@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.1 — Lún Đàn Hồi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính (#1565C0), --Pdk/Plt=tối/nhạt; --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --Alt=nền vàng nhạt (cảnh báo nhẹ / earth-box)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:16px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:#1565C0;font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:600}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0 10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:120px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center;transition:border-color .15s}
+.ans-inp:focus{border-color:var(--P);background:var(--Plt)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-nop{background:#FF8F00;color:#fff}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C4.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 4</a>
+    <div class="hdr-title">
+      <h1>4.1 — Lún Theo Lý Thuyết Đàn Hồi</h1>
+      <p>Tính S · Tính E₀ · Tính p<sub>gl</sub> · Móng đơn & Móng băng · Bảng ω</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 4.1 — Lún Đàn Hồi</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ LÝ THUYẾT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrow-down-circle"></i>
+    <div><h2>Lý Thuyết & Công Thức — Lún Đàn Hồi (Schleicher)</h2><p>Áp dụng cho móng cứng trên nền đàn hồi đồng nhất</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-sigma"></i> Công thức lún đàn hồi</div>
+        <div class="frow"><em>S</em> = (1−μ₀²) · p<sub>gl</sub> · b · ω / E₀</div>
+        <div class="frow" style="margin-top:6px">Trong đó:</div>
+        <div class="frow">p<sub>gl</sub> = p<sub>tx</sub> − γ · h<sub>m</sub>  [kN/m²]</div>
+        <div class="frow">b = cạnh NGẮN móng [m]</div>
+        <div class="frow">ω = hệ số hình dạng (tra l/b)</div>
+        <div class="frow">E₀ [kN/m²], μ₀ = hệ số Poisson</div>
+        <div class="frow" style="margin-top:8px;color:#555">Bài toán ngược:</div>
+        <div class="frow">E₀ = (1−μ₀²)·p<sub>gl</sub>·b·ω / S</div>
+        <div class="frow">p<sub>gl</sub> = S·E₀ / [(1−μ₀²)·b·ω]</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="ftitle" style="margin-bottom:4px"><i class="ti ti-table"></i> Bảng hệ số hình dạng ω (móng cứng)</div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Loại móng</th><th>l/b</th><th>ω</th></tr></thead>
+            <tbody>
+              <tr><td style="text-align:left;padding-left:10px">Móng vuông</td><td>1.0</td><td><b>0.88</b></td></tr>
+              <tr><td style="text-align:left;padding-left:10px">Chữ nhật</td><td>1.5</td><td><b>1.08</b></td></tr>
+              <tr><td style="text-align:left;padding-left:10px">Chữ nhật</td><td>2.0</td><td><b>1.22</b></td></tr>
+              <tr><td style="text-align:left;padding-left:10px">Chữ nhật</td><td>3.0</td><td><b>1.44</b></td></tr>
+              <tr><td style="text-align:left;padding-left:10px">Chữ nhật</td><td>5.0</td><td><b>1.68</b></td></tr>
+              <tr><td style="text-align:left;padding-left:10px">Chữ nhật</td><td>≥10</td><td><b>2.12</b></td></tr>
+              <tr style="background:#FFF8E1"><td style="text-align:left;padding-left:10px"><b>Móng băng</b></td><td>→ ∞</td><td><b>ω→∞</b> → dùng CT riêng</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="fml-box" style="margin-top:4px">
+          <div class="ftitle"><i class="ti ti-line"></i> Móng băng (dải vô hạn)</div>
+          <div class="frow"><em>S</em> = (1−μ₀²) · p<sub>gl</sub> · b · ω<sub>b</sub> / E₀</div>
+          <div class="frow">ω<sub>b</sub> = 1.0 (quy ước cho móng băng)</div>
+          <div class="frow" style="font-size:11px;color:var(--muted)">Hoặc dùng công thức Steinbrenner cho H hữu hạn</div>
+        </div>
+      </div>
+    </div>
+    <div class="earth-box">📌 <b>Lưu ý quan trọng:</b> b luôn là cạnh <b>NGẮN</b> (không phân biệt l hay b trong đề). Kết quả S tính ra đơn vị <b>m</b> — cần nhân ×100 để ra cm. Móng băng dùng ω<sub>b</sub>=1.0 và b là chiều rộng băng.</div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn lý thuyết</div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Trong công thức S=(1−μ₀²)·p<sub>gl</sub>·b·ω/E₀, b là đại lượng gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,1,'✓ Đúng. b là cạnh NGẮN của móng. Nếu l<b thì đổi lại: b=cạnh ngắn, l=cạnh dài.')"><span class="mkey">A</span><span>Cạnh ngắn của móng</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,1,'❌ b là cạnh ngắn, không phải cạnh dài.')"><span class="mkey">B</span><span>Cạnh dài của móng</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,1,'❌ b là cạnh ngắn, không phải trung bình.')"><span class="mkey">C</span><span>Trung bình cộng (l+b)/2</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,1,'❌ b là cạnh ngắn, không phải diện tích.')"><span class="mkey">D</span><span>Diện tích đáy móng</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>p<sub>gl</sub> (áp lực gây lún) được tính như thế nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,0,'❌ Sai. p_tx là tải truyền xuống đáy móng, chưa trừ đất đào lên.')"><span class="mkey">A</span><span>p<sub>gl</sub> = p<sub>tx</sub></span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,0,'✓ Đúng! p_gl = p_tx − γ·h_m. Trừ đi trọng lượng đất đào trong hố móng.')"><span class="mkey">B</span><span>p<sub>gl</sub> = p<sub>tx</sub> − γ·h<sub>m</sub></span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,0,'❌ Sai chiều. p_gl là phần tải tăng thêm so với trọng lượng đất ban đầu.')"><span class="mkey">C</span><span>p<sub>gl</sub> = γ·h<sub>m</sub> − p<sub>tx</sub></span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,0,'❌ p_gl không phải tổng, mà là hiệu.')"><span class="mkey">D</span><span>p<sub>gl</sub> = p<sub>tx</sub> + γ·h<sub>m</sub></span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q2"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q3</span>Móng chữ nhật b=1.5m, l=3.0m → tỷ số l/b và hệ số ω là bao nhiêu?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0,'❌ l/b=3.0/1.5=2.0 → ω=1.22, không phải 1.08.')"><span class="mkey">A</span><span>l/b = 2.0 → ω = 1.08</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0,'✓ Đúng! l/b = 3.0/1.5 = 2.0 → tra bảng → ω = 1.22')"><span class="mkey">B</span><span>l/b = 2.0 → ω = 1.22</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0,'❌ l/b = 3.0/1.5 = 2.0 chứ không phải 3.0.')"><span class="mkey">C</span><span>l/b = 3.0 → ω = 1.44</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0,'❌ Móng chữ nhật, không phải vuông.')"><span class="mkey">D</span><span>l/b = 1.0 → ω = 0.88</span></div>
+      </div>
+      <div class="mcq-exp" id="exp-q3"></div></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>Nhóm A — Hướng dẫn đầy đủ · Bài A1 – A6</h2><p>Có gợi ý từng bước · Số liệu sinh theo STT</p></div>
+    <span class="cbadge" style="background:#2E7D32">NHÓM A</span></div>
+  <div class="card-body">
+
+    <!-- A1 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A1 — Tính S · Móng đơn chữ nhật</div>
+    <div class="earth-box" id="a1-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a1-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>
+      <div class="frow">Bước 1: p<sub>gl</sub> = p<sub>tx</sub> − γ·h<sub>m</sub> = ? kN/m²</div>
+      <div class="frow">Bước 2: Tính l/b → tra bảng → ω = ?</div>
+      <div class="frow">Bước 3: (1−μ₀²) = 1 − μ₀² = ?</div>
+      <div class="frow">Bước 4: S = (1−μ₀²)·p<sub>gl</sub>·b·ω / E₀ [m] → ×100 → cm</div>
+    </div>
+    <div id="a1-q"></div>
+
+    <!-- A2 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A2 — Tính S · Móng băng</div>
+    <div class="earth-box" id="a2-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a2-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng dùng ω<sub>b</sub>=1.0</div>
+      <div class="frow">p<sub>gl</sub> = p<sub>tx</sub> − γ·h<sub>m</sub></div>
+      <div class="frow">S = (1−μ₀²)·p<sub>gl</sub>·b·<em>1.0</em> / E₀  (ω<sub>b</sub>=1.0 cho móng băng)</div>
+    </div>
+    <div id="a2-q"></div>
+
+    <!-- A3 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A3 — Tính E₀ · Móng đơn chữ nhật</div>
+    <div class="earth-box" id="a3-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a3-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Đảo công thức tìm E₀</div>
+      <div class="frow">E₀ = (1−μ₀²)·p<sub>gl</sub>·b·ω / S</div>
+      <div class="frow">⚠ S phải đổi từ cm → m trước khi tính!</div>
+      <div class="frow">S [m] = S [cm] / 100</div>
+    </div>
+    <div id="a3-q"></div>
+
+    <!-- A4 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A4 — Tính E₀ · Móng băng</div>
+    <div class="earth-box" id="a4-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a4-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng tính E₀</div>
+      <div class="frow">E₀ = (1−μ₀²)·p<sub>gl</sub>·b·<em>1.0</em> / S  (ω<sub>b</sub>=1.0)</div>
+      <div class="frow">⚠ S cm → m trước khi tính!</div>
+    </div>
+    <div id="a4-q"></div>
+
+    <!-- A5 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A5 — Tính p<sub>gl</sub> và p<sub>tx</sub> · Móng đơn chữ nhật</div>
+    <div class="earth-box" id="a5-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a5-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Đảo công thức tìm p<sub>gl</sub></div>
+      <div class="frow">p<sub>gl</sub> = S·E₀ / [(1−μ₀²)·b·ω]</div>
+      <div class="frow">S cm → m; sau đó p<sub>tx</sub> = p<sub>gl</sub> + γ·h<sub>m</sub></div>
+    </div>
+    <div id="a5-q"></div>
+
+    <!-- A6 -->
+    <div class="sec-lbl"><i class="ti ti-square-rounded-letter-a" style="font-size:13px"></i> A6 — Tính p<sub>gl</sub> và p<sub>tx</sub> · Móng băng</div>
+    <div class="earth-box" id="a6-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a6-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng tính p<sub>gl</sub></div>
+      <div class="frow">p<sub>gl</sub> = S·E₀ / [(1−μ₀²)·b·<em>1.0</em>]  (ω<sub>b</sub>=1.0)</div>
+      <div class="frow">p<sub>tx</sub> = p<sub>gl</sub> + γ·h<sub>m</sub></div>
+    </div>
+    <div id="a6-q"></div>
+
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>Nhóm B — Có công thức · Tự thay số · Bài B1 – B6</h2><p>Chỉ hiện công thức, không gợi ý bước tính · Số liệu sinh theo STT</p></div>
+    <span class="cbadge" style="background:#E65100">NHÓM B</span></div>
+  <div class="card-body">
+    <div id="b-cards"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-brain"></i>
+    <div><h2>Nhóm C — Chỉ đề bài · Tự làm hoàn toàn · Bài C1 – C6</h2><p>Không gợi ý · Số liệu sinh theo STT</p></div>
+    <span class="cbadge" style="background:#C62828">NHÓM C</span></div>
+  <div class="card-body">
+    <div id="c-cards"></div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-weight:700">0/0</span>
+    <span style="opacity:.6;font-size:12px">câu đúng</span>
+  </div>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-nop btn-sm" id="btn-nop" onclick="submitResult()">🔒 Nộp bài</button>
+    <a href="index_C4.html" class="btn btn-ghost btn-sm"><i class="ti ti-home"></i> Hub C4</a>
+    <a href="4.2_CONG_LUN.html" class="btn btn-ghost btn-sm">4.2 Cộng lún →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS: object {id → true/false/null} ghi nhận kết quả từng câu
+   _submitted: cờ khóa sau khi nộp bài (chống nộp nhiều lần)
+   TOTAL_QUESTIONS: đếm sau genA() + genBC() trong window.onload
+================================================================ */
+var ANS={}, _submitted=false, TOTAL_QUESTIONS=0;
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH
+   r1/r2/r3(v): làm tròn 1/2/3 chữ số thập phân
+   deg2rad(d): đổi góc độ sang radian (dùng tính lún đàn hồi)
+   seededRng(seed): sinh số ngẫu nhiên có hạt giống LCG
+     s = (s*9301 + 49297) % 233280  (khác công thức ch2/ch3!)
+   getSV(): đọc thông tin sinh viên từ sessionStorage
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function deg2rad(d){return d*Math.PI/180}
+function seededRng(seed){var s=(seed%233280+233280)%233280||1;return function(){s=(s*9301+49297)%233280;return s/233280;}}
+
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+/* ================================================================
+   KHỐI 3 — BẢNG TRA ω & UI THU GỌN
+   OMEGA_LB[6]: mảng l/b; OMEGA_W[6]: hệ số biến dạng ω tương ứng
+   getOmega(lb): nội suy tuyến tính ω theo tỉ lệ l/b móng
+   togS(hd): toggle mở/đóng khối hướng dẫn (thêm/xóa class open)
+================================================================ */
+var OMEGA_LB=[1,1.5,2,3,5,10];
+var OMEGA_W=[0.88,1.08,1.22,1.44,1.68,2.12];
+function getOmega(lb){
+  if(lb<=1)return 0.88;if(lb>=10)return 2.12;
+  for(var i=0;i<OMEGA_LB.length-1;i++){
+    if(lb>=OMEGA_LB[i]&&lb<=OMEGA_LB[i+1]){
+      var t=(lb-OMEGA_LB[i])/(OMEGA_LB[i+1]-OMEGA_LB[i]);
+      return r3(OMEGA_W[i]+t*(OMEGA_W[i+1]-OMEGA_W[i]));
+    }
+  }
+  return 1.22;
+}
+
+function togS(hd){hd.classList.toggle('open');hd.nextElementSibling.classList.toggle('open');}
+
+/* ================================================================
+   KHỐI 4 — LOGIC CHẤM & NỘP BÀI
+   chkFill(id,ans,tol): chấm ô nhập số, cập nhật ANS + giao diện
+   pickMCQ(name,picked,correct,expText): chấm câu trắc nghiệm
+   updateProg(): tính % hoàn thành, lưu 'prog_c4_41' localStorage
+   makeQ(id,label,ans,tol,unit): sinh HTML ô nhập + đăng ký ANS
+   submitResult(): nộp bài — gửi POST chapter:'4.1'
+   ⚠️ updateProg chỉ lưu done/total (không có attempted như ch2/ch3)
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);
+  var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+
+function pickMCQ(name,picked,correct,expText){
+  var isOk=(picked===correct);
+  ['0','1','2','3'].forEach(function(i){
+    var el=document.getElementById('mco-'+name+'-'+i);
+    if(!el)return;
+    el.classList.remove('ok','no','reveal');
+    if(parseInt(i)===picked)el.classList.add(isOk?'ok':'no');
+    else if(parseInt(i)===correct&&!isOk)el.classList.add('reveal');
+  });
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.textContent=expText;exp.className='mcq-exp show '+(isOk?'ok-e':'no-e');}
+  ANS['mcq-'+name]=isOk;updateProg();
+}
+
+function updateProg(){
+  var total=0,done=0;
+  Object.keys(ANS).forEach(function(k){total++;if(ANS[k]===true)done++;});
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=done+' / '+total+' ('+pct+'%)';
+  document.getElementById('hdr-prog').textContent=done+' / '+total;
+  document.getElementById('nav-prog').textContent=done+'/'+total;
+  try{localStorage.setItem('prog_c4_41',JSON.stringify({done:done,total:total}));}catch(e){}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn&&!_submitted)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">('+pct+'%/'+minPct+'%)</span>';
+}
+
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'+
+    '<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'+
+    '<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+
+function submitResult(){
+  if(_submitted){alert('Bài đã nộp rồi!');return;}
+  var total=Object.keys(ANS).length,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]===true)done++;});
+  var pct=total?Math.round(done/total*100):0;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(pct<minPct){alert('Cần đạt ít nhất '+minPct+'% ('+Math.ceil(total*minPct/100)+' câu đúng) trước khi nộp.');return;}
+  var sv=getSV();
+  var url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!url){alert('Chưa có Worker URL. Liên hệ GV.');return;}
+  var payload={name:sv?sv.name:'?',mssv:sv?sv.mssv:'?',stt:sv?sv.stt:0,lop:sv?sv.lop:'?',chapter:'4.1',score:pct,time:Math.round((Date.now()-(window._startTime||Date.now()))/1000)};
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(){_submitted=true;document.getElementById('btn-nop').textContent='✅ Đã nộp ('+pct+'%)';document.getElementById('btn-nop').style.background='#2E7D32';})
+    .catch(function(){alert('Lỗi kết nối. Vui lòng thử lại.');});
+}
+
+/* ================================================================
+   KHỐI 5 — SINH SỐ LIỆU NHÓM A (6 bài — lún đàn hồi móng nông)
+   genA(stt): 6 IIFE độc lập, seed theo stt sinh viên
+     A1: Tính S — móng đơn    S=(1−μ²)·pgl·b·ω/E₀, ω tra bảng l/b
+     A2: Tính S — móng băng   S=(1−μ²)·pgl·b·1.0/E₀, ωb=1.0
+     A3: Tính E₀ — móng đơn   E₀=(1−μ²)·pgl·b·ω/S
+     A4: Tính E₀ — móng băng  E₀=(1−μ²)·pgl·b·1.0/S
+     A5: Tính pgl — móng đơn  pgl=S·E₀/[(1−μ²)·b·ω]
+     A6: Tính pgl — móng băng pgl=S·E₀/[(1−μ²)·b·1.0]
+================================================================ */
+/* ════ SINH SỐ LIỆU NHÓM A ════ */
+function genA(stt){
+  var lbOpts=[1,1.5,2,3,5],wOpts=[0.88,1.08,1.22,1.44,1.68];
+
+  // A1: Tính S – móng đơn
+  (function(){
+    var rng=seededRng(stt*11+3);
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx];
+    var b=r1(1.0+rng()*1.5),l=r1(b*lb);
+    var E0=Math.round((7000+rng()*11000)/500)*500;
+    var mu=r2(0.25+rng()*0.10);
+    var ptx=Math.round(150+rng()*150),gam=r1(17.5+rng()*1.5),hm=r1(1.0+rng()*1.5);
+    var pgl=r2(ptx-gam*hm),coeff=r3(1-mu*mu),Scm=r2(coeff*pgl*b*w/E0*100);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài A1:</b> Móng đơn chữ nhật b=<b>'+b+'m</b>, l=<b>'+l+'m</b>, h<sub>m</sub>=<b>'+hm+'m</b>. '+
+      'p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. <b>Tính S (cm).</b>';
+    document.getElementById('a1-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>'+
+      '<div class="frow">Bước 1: p<sub>gl</sub> = '+ptx+' − '+gam+'×'+hm+' = ? kN/m²</div>'+
+      '<div class="frow">Bước 2: l/b = '+lb+' → tra bảng → ω = <em>'+w+'</em></div>'+
+      '<div class="frow">Bước 3: (1−μ₀²) = 1 − '+mu+'² = ?</div>'+
+      '<div class="frow">Bước 4: S = (1−μ₀²) × p<sub>gl</sub> × '+b+' × '+w+' / '+E0+' [m] × 100 = ? cm</div>';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+
+      makeQ('a1-coeff','(1−μ₀²)',coeff,0.012,'')+
+      makeQ('a1-S','S (cm)',Scm,0.35,'cm');
+  })();
+
+  // A2: Tính S – móng băng
+  (function(){
+    var rng=seededRng(stt*13+5);
+    var b=r1(1.2+rng()*1.8);
+    var E0=Math.round((6000+rng()*10000)/500)*500;
+    var mu=r2(0.25+rng()*0.12);
+    var ptx=Math.round(120+rng()*160),gam=r1(17+rng()*2),hm=r1(0.8+rng()*1.5);
+    var pgl=r2(ptx-gam*hm),coeff=r3(1-mu*mu),Scm=r2(coeff*pgl*b*1.0/E0*100);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài A2:</b> Móng băng rộng b=<b>'+b+'m</b>, h<sub>m</sub>=<b>'+hm+'m</b>. '+
+      'p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. <b>Tính S (cm).</b> (Dùng ω<sub>b</sub>=1.0)';
+    document.getElementById('a2-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng ω<sub>b</sub>=1.0</div>'+
+      '<div class="frow">p<sub>gl</sub> = '+ptx+' − '+gam+'×'+hm+' = ? kN/m²</div>'+
+      '<div class="frow">S = (1−'+mu+'²) × p<sub>gl</sub> × '+b+' × <em>1.0</em> / '+E0+' [m] × 100 = ? cm</div>';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+
+      makeQ('a2-coeff','(1−μ₀²)',coeff,0.012,'')+
+      makeQ('a2-S','S (cm)',Scm,0.35,'cm');
+  })();
+
+  // A3: Tính E0 – móng đơn
+  (function(){
+    var rng=seededRng(stt*17+7);
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx];
+    var b=r1(1.0+rng()*2.0);
+    var E0true=Math.round((5000+rng()*12000)/500)*500;
+    var mu=r2(0.25+rng()*0.10);
+    var ptx=Math.round(140+rng()*160),gam=r1(17+rng()*2),hm=r1(0.8+rng()*1.5);
+    var pgl=r2(ptx-gam*hm),coeff=r3(1-mu*mu);
+    var Scm=r2(coeff*pgl*b*w/E0true*100);
+    var E0ans=Math.round(coeff*pgl*b*w/(Scm/100));
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài A3:</b> Móng đơn b=<b>'+b+'m</b>, l/b='+lb+' (ω='+w+'), h<sub>m</sub>=<b>'+hm+'m</b>. '+
+      'p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, μ₀=<b>'+mu+'</b>. Đo được S=<b>'+Scm+' cm</b>. <b>Tính E₀ (kN/m²).</b>';
+    document.getElementById('a3-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Đảo công thức tìm E₀</div>'+
+      '<div class="frow">p<sub>gl</sub> = '+ptx+' − '+gam+'×'+hm+' = ? kN/m²</div>'+
+      '<div class="frow">S = '+Scm+' cm = ? m  (÷100)</div>'+
+      '<div class="frow">E₀ = (1−μ₀²)·p<sub>gl</sub>·b·ω / S = '+coeff+'×p<sub>gl</sub>×'+b+'×'+w+' / S = ?</div>';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+
+      makeQ('a3-Sm','S (m) = '+Scm+' cm ÷ 100',r2(Scm/100),0.001,'m')+
+      makeQ('a3-E0','E₀ (kN/m²)',E0ans,Math.round(E0ans*0.04)+100,'kN/m²');
+  })();
+
+  // A4: Tính E0 – móng băng
+  (function(){
+    var rng=seededRng(stt*19+9);
+    var b=r1(1.5+rng()*2.0);
+    var E0true=Math.round((5000+rng()*10000)/500)*500;
+    var mu=r2(0.25+rng()*0.12);
+    var ptx=Math.round(120+rng()*160),gam=r1(17+rng()*2),hm=r1(0.8+rng()*1.5);
+    var pgl=r2(ptx-gam*hm),coeff=r3(1-mu*mu);
+    var Scm=r2(coeff*pgl*b*1.0/E0true*100);
+    var E0ans=Math.round(coeff*pgl*b/(Scm/100));
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài A4:</b> Móng băng rộng b=<b>'+b+'m</b>, h<sub>m</sub>=<b>'+hm+'m</b>. '+
+      'p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, μ₀=<b>'+mu+'</b>. Đo được S=<b>'+Scm+' cm</b>. <b>Tính E₀ (kN/m²).</b> (ω<sub>b</sub>=1.0)';
+    document.getElementById('a4-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng ω<sub>b</sub>=1.0</div>'+
+      '<div class="frow">E₀ = (1−μ₀²)·p<sub>gl</sub>·b·<em>1.0</em> / S  →  S đổi sang m trước!</div>';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+
+      makeQ('a4-Sm','S (m) = '+Scm+' cm ÷ 100',r2(Scm/100),0.001,'m')+
+      makeQ('a4-E0','E₀ (kN/m²)',E0ans,Math.round(E0ans*0.04)+100,'kN/m²');
+  })();
+
+  // A5: Tính pgl, ptx – móng đơn
+  (function(){
+    var rng=seededRng(stt*23+11);
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx];
+    var b=r1(1.5+rng()*1.5);
+    var E0=Math.round((6000+rng()*8000)/500)*500;
+    var mu=r2(0.27+rng()*0.08);
+    var gam=r1(17+rng()*2),hm=r1(1.0+rng()*1.0);
+    var Scm=r1(5+rng()*9);
+    var coeff=r3(1-mu*mu);
+    var pgl=r2(Scm/100*E0/(coeff*b*w));
+    var ptx=r2(pgl+gam*hm);
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài A5:</b> Móng đơn b=<b>'+b+'m</b>, l/b='+lb+' (ω='+w+'), h<sub>m</sub>=<b>'+hm+'m</b>, γ='+gam+' kN/m³. '+
+      'E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. Yêu cầu S ≤ <b>'+Scm+' cm</b>. <b>Tính p<sub>gl</sub> và p<sub>tx</sub> cho phép.</b>';
+    document.getElementById('a5-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý</div>'+
+      '<div class="frow">S = '+Scm+' cm = ? m</div>'+
+      '<div class="frow">p<sub>gl</sub> = S·E₀ / [(1−μ₀²)·b·ω] = ?</div>'+
+      '<div class="frow">p<sub>tx</sub> = p<sub>gl</sub> + γ·h<sub>m</sub> = p<sub>gl</sub> + '+gam+'×'+hm+' = ?</div>';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-Sm','S (m) = '+Scm+' cm ÷ 100',r3(Scm/100),0.001,'m')+
+      makeQ('a5-coeff','(1−μ₀²)',coeff,0.012,'')+
+      makeQ('a5-pgl','p<sub>gl</sub> (kN/m²)',pgl,Math.max(r2(pgl*0.03),2),'kN/m²')+
+      makeQ('a5-ptx','p<sub>tx</sub> (kN/m²)',ptx,Math.max(r2(ptx*0.03),2),'kN/m²');
+  })();
+
+  // A6: Tính pgl, ptx – móng băng
+  (function(){
+    var rng=seededRng(stt*29+13);
+    var b=r1(1.5+rng()*2.0);
+    var E0=Math.round((5000+rng()*8000)/500)*500;
+    var mu=r2(0.27+rng()*0.08);
+    var gam=r1(17+rng()*2),hm=r1(0.8+rng()*1.2);
+    var Scm=r1(4+rng()*8);
+    var coeff=r3(1-mu*mu);
+    var pgl=r2(Scm/100*E0/(coeff*b*1.0));
+    var ptx=r2(pgl+gam*hm);
+    document.getElementById('a6-prob').innerHTML=
+      '🏗️ <b>Đề bài A6:</b> Móng băng rộng b=<b>'+b+'m</b>, h<sub>m</sub>=<b>'+hm+'m</b>, γ='+gam+' kN/m³. '+
+      'E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. Yêu cầu S ≤ <b>'+Scm+' cm</b>. <b>Tính p<sub>gl</sub> và p<sub>tx</sub> cho phép.</b> (ω<sub>b</sub>=1.0)';
+    document.getElementById('a6-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Móng băng ω<sub>b</sub>=1.0</div>'+
+      '<div class="frow">p<sub>gl</sub> = S·E₀ / [(1−μ₀²)·b·<em>1.0</em>]  →  S đổi sang m!</div>'+
+      '<div class="frow">p<sub>tx</sub> = p<sub>gl</sub> + γ·h<sub>m</sub></div>';
+    document.getElementById('a6-q').innerHTML=
+      makeQ('a6-Sm','S (m) = '+Scm+' cm ÷ 100',r3(Scm/100),0.001,'m')+
+      makeQ('a6-coeff','(1−μ₀²)',coeff,0.012,'')+
+      makeQ('a6-pgl','p<sub>gl</sub> (kN/m²)',pgl,Math.max(r2(pgl*0.03),2),'kN/m²')+
+      makeQ('a6-ptx','p<sub>tx</sub> (kN/m²)',ptx,Math.max(r2(ptx*0.03),2),'kN/m²');
+  })();
+}
+
+/* ================================================================
+   KHỐI 6 — SINH THẺ B & C (6 dạng — lún đàn hồi)
+   CFG[6]: config {id, title, type, fml} cho từng dạng bài B/C
+   genBC(stt): render HTML shell tất cả thẻ B/C vào #b-cards/#c-cards
+   genOne(id,type,stt,s1,s2,lbOpts,wOpts): sinh số liệu 1 thẻ
+     Các type: tinhS_don, tinhS_bang, tinhE_don, tinhE_bang,
+                tinhP_don, tinhP_bang
+================================================================ */
+/* ════ SINH SỐ LIỆU NHÓM B & C ════ */
+var CFG=[
+  {id:'1',title:'Tính S — Móng đơn',   type:'tinhS_don',
+   fml:'S = (1−μ₀²)·p<sub>gl</sub>·b·ω / E₀  |  p<sub>gl</sub>=p<sub>tx</sub>−γ·h<sub>m</sub>  |  ω tra bảng l/b'},
+  {id:'2',title:'Tính S — Móng băng',  type:'tinhS_bang',
+   fml:'S = (1−μ₀²)·p<sub>gl</sub>·b·<b>1.0</b> / E₀  |  p<sub>gl</sub>=p<sub>tx</sub>−γ·h<sub>m</sub>  |  ω<sub>b</sub>=1.0'},
+  {id:'3',title:'Tính E₀ — Móng đơn', type:'tinhE_don',
+   fml:'E₀ = (1−μ₀²)·p<sub>gl</sub>·b·ω / S  |  S cm→m (÷100)  |  ω tra bảng l/b'},
+  {id:'4',title:'Tính E₀ — Móng băng',type:'tinhE_bang',
+   fml:'E₀ = (1−μ₀²)·p<sub>gl</sub>·b·<b>1.0</b> / S  |  S cm→m  |  ω<sub>b</sub>=1.0'},
+  {id:'5',title:'Tính p<sub>gl</sub> — Móng đơn', type:'tinhP_don',
+   fml:'p<sub>gl</sub>=S·E₀/[(1−μ₀²)·b·ω]  |  p<sub>tx</sub>=p<sub>gl</sub>+γ·h<sub>m</sub>  |  S cm→m'},
+  {id:'6',title:'Tính p<sub>gl</sub> — Móng băng',type:'tinhP_bang',
+   fml:'p<sub>gl</sub>=S·E₀/[(1−μ₀²)·b·<b>1.0</b>]  |  p<sub>tx</sub>=p<sub>gl</sub>+γ·h<sub>m</sub>  |  ω<sub>b</sub>=1.0'},
+];
+
+function genBC(stt){
+  var lbOpts=[1,1.5,2,3,5],wOpts=[0.88,1.08,1.22,1.44,1.68];
+  var bhtml='',chtml='';
+  CFG.forEach(function(c){
+    var bid='b'+c.id,cid='c'+c.id;
+    bhtml+='<div class="sec-lbl"><i class="ti ti-square-rounded-letter-b" style="font-size:13px"></i> B'+c.id+' — '+c.title+'</div>'+
+      '<div class="earth-box" id="'+bid+'-prob">⏳</div>'+
+      '<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'+
+      '<div id="'+bid+'-q"></div>';
+    chtml+='<div class="sec-lbl"><i class="ti ti-square-rounded-letter-c" style="font-size:13px"></i> C'+c.id+' — '+c.title+'</div>'+
+      '<div class="earth-box" id="'+cid+'-prob">⏳</div>'+
+      '<div id="'+cid+'-q"></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  var seedBases=[31,37,41,43,47,53];
+  CFG.forEach(function(c,idx){
+    genOne('b'+c.id,c.type,stt,seedBases[idx],5001+idx*20,lbOpts,wOpts);
+    genOne('c'+c.id,c.type,stt,seedBases[idx]+97,5101+idx*20,lbOpts,wOpts);
+  });
+}
+
+function genOne(id,type,stt,s1,s2,lbOpts,wOpts){
+  var rng=seededRng(stt*s1+s2);
+  var b=r1(1.2+rng()*1.8);
+  var mu=r2(0.25+rng()*0.10);
+  var gam=r1(17+rng()*2),hm=r1(0.8+rng()*1.5);
+  var coeff=r3(1-mu*mu);
+
+  if(type==='tinhS_don'){
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx],l=r1(b*lb);
+    var E0=Math.round((7000+rng()*10000)/500)*500;
+    var ptx=Math.round(140+rng()*160),pgl=r2(ptx-gam*hm);
+    var Scm=r2(coeff*pgl*b*w/E0*100);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng đơn b=<b>'+b+'m</b>, l=<b>'+l+'m</b>, h<sub>m</sub>='+hm+'m. p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. <b>Tính S (cm).</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+makeQ(id+'-S','S (cm)',Scm,0.35,'cm');
+  }
+  else if(type==='tinhS_bang'){
+    var E0=Math.round((6000+rng()*10000)/500)*500;
+    var ptx=Math.round(120+rng()*160),pgl=r2(ptx-gam*hm);
+    var Scm=r2(coeff*pgl*b/E0*100);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng băng b=<b>'+b+'m</b>, h<sub>m</sub>='+hm+'m. p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. <b>Tính S (cm).</b> (ω<sub>b</sub>=1.0)';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+makeQ(id+'-S','S (cm)',Scm,0.35,'cm');
+  }
+  else if(type==='tinhE_don'){
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx];
+    var E0true=Math.round((5000+rng()*12000)/500)*500;
+    var ptx=Math.round(140+rng()*160),pgl=r2(ptx-gam*hm);
+    var Scm=r2(coeff*pgl*b*w/E0true*100);
+    var E0ans=Math.round(coeff*pgl*b*w/(Scm/100));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng đơn b=<b>'+b+'m</b>, l/b='+lb+' (ω='+w+'), h<sub>m</sub>='+hm+'m. p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, μ₀=<b>'+mu+'</b>. Đo được S=<b>'+Scm+' cm</b>. <b>Tính E₀.</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+makeQ(id+'-Sm','S (m)',r2(Scm/100),0.001,'m')+makeQ(id+'-E0','E₀ (kN/m²)',E0ans,Math.round(E0ans*0.04)+100,'kN/m²');
+  }
+  else if(type==='tinhE_bang'){
+    var E0true=Math.round((5000+rng()*10000)/500)*500;
+    var ptx=Math.round(120+rng()*160),pgl=r2(ptx-gam*hm);
+    var Scm=r2(coeff*pgl*b/E0true*100);
+    var E0ans=Math.round(coeff*pgl*b/(Scm/100));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng băng b=<b>'+b+'m</b>, h<sub>m</sub>='+hm+'m. p<sub>tx</sub>=<b>'+ptx+' kN/m²</b>, γ='+gam+' kN/m³, μ₀=<b>'+mu+'</b>. Đo được S=<b>'+Scm+' cm</b>. <b>Tính E₀.</b> (ω<sub>b</sub>=1.0)';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,1.5,'kN/m²')+makeQ(id+'-Sm','S (m)',r2(Scm/100),0.001,'m')+makeQ(id+'-E0','E₀ (kN/m²)',E0ans,Math.round(E0ans*0.04)+100,'kN/m²');
+  }
+  else if(type==='tinhP_don'){
+    var idx=Math.floor(rng()*5),lb=lbOpts[idx],w=wOpts[idx];
+    var E0=Math.round((6000+rng()*8000)/500)*500;
+    var Scm=r1(5+rng()*9);
+    var pgl=r2(Scm/100*E0/(coeff*b*w));
+    var ptx=r2(pgl+gam*hm);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng đơn b=<b>'+b+'m</b>, l/b='+lb+' (ω='+w+'), h<sub>m</sub>='+hm+'m, γ='+gam+' kN/m³. E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. S ≤ <b>'+Scm+' cm</b>. <b>Tính p<sub>gl</sub> và p<sub>tx</sub>.</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,Math.max(r2(pgl*0.03),2),'kN/m²')+makeQ(id+'-ptx','p<sub>tx</sub> (kN/m²)',ptx,Math.max(r2(ptx*0.03),2),'kN/m²');
+  }
+  else if(type==='tinhP_bang'){
+    var E0=Math.round((5000+rng()*8000)/500)*500;
+    var Scm=r1(4+rng()*8);
+    var pgl=r2(Scm/100*E0/(coeff*b));
+    var ptx=r2(pgl+gam*hm);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Móng băng b=<b>'+b+'m</b>, h<sub>m</sub>='+hm+'m, γ='+gam+' kN/m³. E₀=<b>'+E0+' kN/m²</b>, μ₀=<b>'+mu+'</b>. S ≤ <b>'+Scm+' cm</b>. <b>Tính p<sub>gl</sub> và p<sub>tx</sub>.</b> (ω<sub>b</sub>=1.0)';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-pgl','p<sub>gl</sub> (kN/m²)',pgl,Math.max(r2(pgl*0.03),2),'kN/m²')+makeQ(id+'-ptx','p<sub>tx</sub> (kN/m²)',ptx,Math.max(r2(ptx*0.03),2),'kN/m²');
+  }
+}
+
+/* ================================================================
+   KHỐI 7 — KHỞI TẠO & WINDOW.ONLOAD
+   Ghi timestamp bắt đầu làm bài vào window._startTime
+   Đăng ký 3 câu MCQ (mcq-q1/q2/q3) vào ANS với giá trị null
+   window.onload: đọc SV, gọi genA(stt), genBC(stt),
+     đếm TOTAL_QUESTIONS = Object.keys(ANS).length
+================================================================ */
+window._startTime=Date.now();
+['mcq-q1','mcq-q2','mcq-q3'].forEach(function(k){ANS[k]=null;});
+
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

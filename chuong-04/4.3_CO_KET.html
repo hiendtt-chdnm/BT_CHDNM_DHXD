@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.3 — Cố Kết Theo Thời Gian</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=cam đỏ chính (#E65100 — màu chủ đạo bài 4.3 Cố kết), --Pdk/Plt=tối/nhạt
+   --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo), --Alt=vàng nhạt
+   --bg=nền trang (cam nhạt #FFF3E0), --sur=nền card, --brd=viền vàng cam, --muted=chữ mờ ── */
+:root{--P:#E65100;--Pdk:#BF360C;--Plt:#FBE9E7;--Pmd:#F4511E;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#FFF3E0;--sur:#fff;--brd:#FFCC80;--muted:#546E7A;--text:#1C0A00;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(230,81,0,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:16px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Alt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--Pmd));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#FFF8E1;border:1.5px solid #FFE082;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:#4E342E}
+.frow em{color:#BF360C;font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--R)}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:var(--Gdk);font-weight:600}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0 10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FFFDF7;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:120px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center;transition:border-color .15s}
+.ans-inp:focus{border-color:var(--P);background:var(--Alt)}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FFFDF7;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd)}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center}
+table.tbl td{padding:5px 10px;text-align:center;border-bottom:1px solid var(--Alt)}
+table.tbl tr:nth-child(even) td{background:#FFFDE7}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-nop{background:#FF8F00;color:#fff}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C4.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 4</a>
+    <div class="hdr-title">
+      <h1>4.3 — Lún Cố Kết Theo Thời Gian</h1>
+      <p>Nhân tố T<sub>v</sub> · Độ cố kết U(t) · S(t) = U · S<sub>∞</sub> · Thoát nước 1 & 2 mặt</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 4.3 — Cố Kết</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ LÝ THUYẾT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-clock"></i>
+    <div><h2>Lý Thuyết — Cố Kết Thấm Terzaghi 1D</h2><p>T<sub>v</sub> → U(%) → S(t)</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-sigma"></i> Công thức cơ bản</div>
+        <div class="frow"><em>T<sub>v</sub></em> = C<sub>v</sub> · t / H²<sub>dr</sub></div>
+        <div class="frow" style="margin-top:5px">Chiều dài thoát nước H<sub>dr</sub>:</div>
+        <div class="frow">• 1 mặt thoát: <em>H<sub>dr</sub> = H</em></div>
+        <div class="frow">• 2 mặt thoát: <em>H<sub>dr</sub> = H/2</em></div>
+        <div class="frow" style="margin-top:5px"><em>S(t)</em> = U(t) · S<sub>∞</sub></div>
+        <div class="frow">U(t) = S(t) / S<sub>∞</sub>  [thập phân hoặc %]</div>
+        <div class="frow" style="margin-top:5px">Tính ngược t:</div>
+        <div class="frow">t = T<sub>v</sub> · H²<sub>dr</sub> / C<sub>v</sub></div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-chart-line"></i> Xấp xỉ U theo T<sub>v</sub></div>
+        <div class="frow">U &lt; 60%: <em>U = 2√(T<sub>v</sub>/π) × 100%</em></div>
+        <div class="frow" style="font-size:11px;color:#795548">Tương đương: T<sub>v</sub> = π/4 · (U/100)²</div>
+        <div class="frow" style="margin-top:5px">U ≥ 60%: <em>U = [1 − (8/π²)·e^(−π²T<sub>v</sub>/4)] × 100%</em></div>
+        <div class="frow" style="margin-top:8px">Một số điểm đặc biệt:</div>
+        <div class="frow">U=50%→T<sub>v</sub>=0.197 · U=90%→T<sub>v</sub>=0.848</div>
+        <div class="frow">U=95%→T<sub>v</sub>=1.163 · U=99%→T<sub>v</sub>=1.781</div>
+      </div>
+    </div>
+    <div class="sec-lbl"><i class="ti ti-table" style="font-size:13px"></i> Bảng tra U – T<sub>v</sub></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>T<sub>v</sub></th><th>0.05</th><th>0.10</th><th>0.20</th><th>0.30</th><th>0.40</th><th>0.50</th><th>0.70</th><th>0.848</th><th>1.0</th><th>1.5</th><th>2.0</th></tr></thead>
+        <tbody><tr><td style="font-weight:700;text-align:left;padding-left:8px">U (%)</td><td>25</td><td>36</td><td>51</td><td>61</td><td>70</td><td>76</td><td>85</td><td>90</td><td>93</td><td>98</td><td>99</td></tr></tbody>
+      </table>
+    </div>
+    <div class="warn-box">⚠️ <b>Lỗi hay gặp nhất:</b> Dùng H thay vì H/2 khi thoát nước 2 mặt → T<sub>v</sub> sai 4 lần → U sai rất lớn!</div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn lý thuyết</div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Lớp sét dày H=6m, thoát nước 2 mặt. Chiều dài thoát nước H<sub>dr</sub> là bao nhiêu?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,0,'✓ Đúng! 2 mặt thoát → H_dr = H/2 = 6/2 = 3m. Nước thoát ra cả trên lẫn dưới, đường thoát dài nhất chỉ là nửa chiều dày.')"><span class="mkey">A</span><span>H<sub>dr</sub> = 3 m</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,0,'❌ H_dr=6m là của trường hợp 1 mặt thoát nước.')"><span class="mkey">B</span><span>H<sub>dr</sub> = 6 m</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,0,'❌ Không có quy tắc chia 3 trong bài toán cố kết.')"><span class="mkey">C</span><span>H<sub>dr</sub> = 2 m</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,0,'❌ Không chia 4.')"><span class="mkey">D</span><span>H<sub>dr</sub> = 1.5 m</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>T<sub>v</sub> = 0.197 tương ứng với độ cố kết U bằng bao nhiêu?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1,'❌ U=36% tương ứng T_v=0.10.')"><span class="mkey">A</span><span>U ≈ 36%</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1,'✓ Đúng! T_v=0.197 là giá trị đặc biệt tương ứng U=50%. Cần ghi nhớ.')"><span class="mkey">B</span><span>U ≈ 50%</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1,'❌ U=61% tương ứng T_v=0.30.')"><span class="mkey">C</span><span>U ≈ 61%</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1,'❌ U=76% tương ứng T_v=0.50.')"><span class="mkey">D</span><span>U ≈ 76%</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q3</span>Công thức tính ngược t khi biết U (và T<sub>v</sub>) là gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,2,'❌ Đây là công thức tính T_v không phải t.')"><span class="mkey">A</span><span>t = C<sub>v</sub> / (T<sub>v</sub> · H²<sub>dr</sub>)</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,2,'❌ Sai — mẫu số phải là C_v.')"><span class="mkey">B</span><span>t = T<sub>v</sub> · C<sub>v</sub> / H²<sub>dr</sub></span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,2,'✓ Đúng! Từ T_v = C_v·t/H²_dr → t = T_v·H²_dr / C_v.')"><span class="mkey">C</span><span>t = T<sub>v</sub> · H²<sub>dr</sub> / C<sub>v</sub></span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,2,'❌ Đây là nghịch đảo, không đúng.')"><span class="mkey">D</span><span>t = C<sub>v</sub> · H²<sub>dr</sub> / T<sub>v</sub></span></div>
+      </div><div class="mcq-exp" id="exp-q3"></div></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>Nhóm A — Hướng dẫn đầy đủ · A1 – A4</h2><p>Có gợi ý từng bước · Số liệu sinh theo STT</p></div>
+    <span class="cbadge" style="background:#2E7D32">NHÓM A</span></div>
+  <div class="card-body">
+
+    <div class="sec-lbl">A1 — Tính S(t) · Thoát nước 1 mặt</div>
+    <div class="earth-box" id="a1-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a1-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>
+      <div class="frow">B1: 1 mặt thoát → H<sub>dr</sub> = H</div>
+      <div class="frow">B2: T<sub>v</sub> = C<sub>v</sub> × t / H²<sub>dr</sub></div>
+      <div class="frow">B3: Tra bảng T<sub>v</sub> → U (%)</div>
+      <div class="frow">B4: S(t) = U/100 × S<sub>∞</sub></div>
+    </div>
+    <div id="a1-q"></div>
+
+    <div class="sec-lbl">A2 — Tính S(t) · Thoát nước 2 mặt</div>
+    <div class="earth-box" id="a2-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a2-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>
+      <div class="frow">B1: <em>2 mặt thoát → H<sub>dr</sub> = H/2</em>  ← lưu ý quan trọng!</div>
+      <div class="frow">B2: T<sub>v</sub> = C<sub>v</sub> × t / H²<sub>dr</sub></div>
+      <div class="frow">B3: Tra bảng T<sub>v</sub> → U (%)</div>
+      <div class="frow">B4: S(t) = U/100 × S<sub>∞</sub></div>
+    </div>
+    <div id="a2-q"></div>
+
+    <div class="sec-lbl">A3 — Tính ngược thời gian t (cho U, C<sub>v</sub>, H)</div>
+    <div class="earth-box" id="a3-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a3-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Tra T<sub>v</sub> từ U, rồi tính t</div>
+      <div class="frow">B1: Từ U (%) → tra bảng ngược → T<sub>v</sub></div>
+      <div class="frow">B2: Xác định H<sub>dr</sub> (1 hay 2 mặt)</div>
+      <div class="frow">B3: t = T<sub>v</sub> × H²<sub>dr</sub> / C<sub>v</sub>  [năm]</div>
+    </div>
+    <div id="a3-q"></div>
+
+    <div class="sec-lbl">A4 — Tính U(t) từ S(t) và S<sub>∞</sub></div>
+    <div class="earth-box" id="a4-prob">⏳ Đang tải số liệu...</div>
+    <div class="fml-box" id="a4-hint">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý</div>
+      <div class="frow">U(t) = S(t) / S<sub>∞</sub> × 100%</div>
+      <div class="frow">Sau đó tra bảng ngược → T<sub>v</sub> tương ứng</div>
+    </div>
+    <div id="a4-q"></div>
+
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-pencil"></i>
+    <div><h2>Nhóm B — Có công thức · B1 – B4</h2><p>Tự thay số · Không gợi ý bước</p></div>
+    <span class="cbadge" style="background:#E65100">NHÓM B</span></div>
+  <div class="card-body"><div id="b-cards"></div></div>
+</div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-brain"></i>
+    <div><h2>Nhóm C — Chỉ đề bài · C1 – C4</h2><p>Tự làm hoàn toàn</p></div>
+    <span class="cbadge" style="background:#C62828">NHÓM C</span></div>
+  <div class="card-body"><div id="c-cards"></div></div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-weight:700">0/0</span>
+    <span style="opacity:.6;font-size:12px">câu đúng</span>
+  </div>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-nop btn-sm" id="btn-nop" onclick="submitResult()">🔒 Nộp bài</button>
+    <a href="4.2_CONG_LUN.html" class="btn btn-ghost btn-sm">← 4.2</a>
+    <a href="index_C4.html" class="btn btn-ghost btn-sm"><i class="ti ti-home"></i></a>
+    <a href="4.4_TONG_HOP.html" class="btn btn-ghost btn-sm">4.4 Tổng hợp →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS: object {id → true/false/null} ghi nhận kết quả từng câu
+   _submitted: cờ khóa sau khi nộp bài (chống nộp nhiều lần)
+   TOTAL_QUESTIONS: đếm sau genA() + genBC() trong window.onload
+================================================================ */
+var ANS={}, _submitted=false, TOTAL_QUESTIONS=0;
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH
+   r1/r2/r3(v): làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): sinh số ngẫu nhiên có hạt giống LCG
+     s = (s*9301 + 49297) % 233280  (khác công thức ch2/ch3!)
+   getSV(): đọc thông tin sinh viên từ sessionStorage
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=(seed%233280+233280)%233280||1;return function(){s=(s*9301+49297)%233280;return s/233280;}}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+/* ================================================================
+   KHỐI 3 — BẢNG CỐ KẾT & NỘI SUY Tv/U
+   getU(Tv): tính U(%) từ Tv theo xấp xỉ Terzaghi 2 vế
+     Tv < 0.217 → U = 2√(Tv/π)×100; ngược lại → chuỗi tắt dần
+   TV_TAB / U_TAB: 20 cặp điểm rời rạc để nội suy ngược
+   getTv(Upct): tra ngược Tv từ U(%) qua nội suy tuyến tính
+================================================================ */
+/* ── Tính U từ Tv (xấp xỉ Terzaghi) ── */
+function getU(Tv){
+  if(Tv<=0)return 0;
+  var U;
+  if(Tv<0.217) U=2*Math.sqrt(Tv/Math.PI)*100;
+  else U=(1-8/Math.PI/Math.PI*Math.exp(-Math.PI*Math.PI*Tv/4))*100;
+  return Math.min(r1(U),99);
+}
+/* ── Tra Tv từ U dùng bảng rời rạc (nội suy tuyến tính) ── */
+var TV_TAB=[0,0.008,0.020,0.031,0.049,0.071,0.099,0.126,0.159,0.197,0.238,0.285,0.340,0.403,0.477,0.567,0.684,0.848,1.163,1.781];
+var U_TAB =[0,10,   15,   19,   25,   30,   36,   40,   45,   50,   55,   60,   65,   70,   75,   80,   85,   90,   95,   99  ];
+function getTv(Upct){
+  if(Upct<=0)return 0; if(Upct>=99)return 1.781;
+  for(var i=0;i<U_TAB.length-1;i++){
+    if(Upct>=U_TAB[i]&&Upct<=U_TAB[i+1]){
+      var t=(Upct-U_TAB[i])/(U_TAB[i+1]-U_TAB[i]);
+      return r3(TV_TAB[i]+t*(TV_TAB[i+1]-TV_TAB[i]));
+    }
+  }
+  return r3(Math.PI/4*Math.pow(Upct/100,2));
+}
+
+/* ================================================================
+   KHỐI 4 — LOGIC CHẤM & NỘP BÀI
+   chkFill(id,ans,tol): chấm ô nhập số, cập nhật ANS + giao diện
+   pickMCQ(name,picked,correct,expText): chấm câu trắc nghiệm
+   updateProg(): tính % hoàn thành, lưu 'prog_c4_43' localStorage
+   makeQ(id,label,ans,tol,unit): sinh HTML ô nhập + đăng ký ANS
+   submitResult(): nộp bài — gửi POST chapter:'4.3'
+   ⚠️ updateProg chỉ lưu done/total (không có attempted như ch2/ch3)
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id),chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,picked,correct,expText){
+  var isOk=(picked===correct);
+  ['0','1','2','3'].forEach(function(i){
+    var el=document.getElementById('mco-'+name+'-'+i);if(!el)return;
+    el.classList.remove('ok','no','reveal');
+    if(parseInt(i)===picked)el.classList.add(isOk?'ok':'no');
+    else if(parseInt(i)===correct&&!isOk)el.classList.add('reveal');
+  });
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.textContent=expText;exp.className='mcq-exp show '+(isOk?'ok-e':'no-e');}
+  ANS['mcq-'+name]=isOk;updateProg();
+}
+function updateProg(){
+  var total=0,done=0;
+  Object.keys(ANS).forEach(function(k){total++;if(ANS[k]===true)done++;});
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=done+' / '+total+' ('+pct+'%)';
+  document.getElementById('hdr-prog').textContent=done+' / '+total;
+  document.getElementById('nav-prog').textContent=done+'/'+total;
+  try{localStorage.setItem('prog_c4_43',JSON.stringify({done:done,total:total}));}catch(e){}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn&&!_submitted)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">('+pct+'%/'+minPct+'%)</span>';
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'+
+    '<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'+
+    '<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function submitResult(){
+  if(_submitted){alert('Bài đã nộp rồi!');return;}
+  var total=Object.keys(ANS).length,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]===true)done++;});
+  var pct=total?Math.round(done/total*100):0;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(pct<minPct){alert('Cần đạt ít nhất '+minPct+'% trước khi nộp.');return;}
+  var sv=getSV(),url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!url){alert('Chưa có Worker URL.');return;}
+  var payload={name:sv?sv.name:'?',mssv:sv?sv.mssv:'?',stt:sv?sv.stt:0,lop:sv?sv.lop:'?',chapter:'4.3',score:pct,time:Math.round((Date.now()-(window._startTime||Date.now()))/1000)};
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(){_submitted=true;document.getElementById('btn-nop').textContent='✅ Đã nộp ('+pct+'%)';document.getElementById('btn-nop').style.background='#2E7D32';})
+    .catch(function(){alert('Lỗi kết nối. Vui lòng thử lại.');});
+}
+
+/* ================================================================
+   KHỐI 5 — SINH SỐ LIỆU NHÓM A (4 bài — cố kết Terzaghi)
+   genA(stt): 4 IIFE độc lập, seed theo stt sinh viên
+     A1: Tính S(t) — 1 mặt thoát, Hdr=H
+     A2: Tính S(t) — 2 mặt thoát, Hdr=H/2
+     A3: Tìm thời gian t khi biết U(%) — tra ngược getTv(U)
+     A4: Tính U(t) từ S(t)/S∞, tra ngược Tv và kiểm tra
+================================================================ */
+/* ════ SINH SỐ LIỆU NHÓM A ════ */
+function genA(stt){
+
+  // A1: Tính S(t) — 1 mặt thoát
+  (function(){
+    var rng=seededRng(stt*11+3);
+    var H=r1(3+rng()*4);
+    var Cv=r1(0.5+rng()*2.5);
+    var t=Math.round(1+rng()*4);
+    var Scuoi=r1(6+rng()*16);
+    var Hdr=H; // 1 mat thoat
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);
+    var St=r1(U/100*Scuoi);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>A1:</b> Lớp sét dày H=<b>'+H+'m</b>, thoát nước <b>1 mặt</b>. '+
+      'C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. '+
+      '<b>Tính T<sub>v</sub>, U(%) và S(t) sau t='+t+' năm.</b>';
+    document.getElementById('a1-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>'+
+      '<div class="frow">B1: 1 mặt → H<sub>dr</sub> = H = <em>'+Hdr+'m</em></div>'+
+      '<div class="frow">B2: T<sub>v</sub> = '+Cv+'×'+t+' / '+Hdr+'² = '+Cv*t+' / '+r2(Hdr*Hdr)+' = ?</div>'+
+      '<div class="frow">B3: Tra bảng T<sub>v</sub>='+Tv+' → U ≈ ? %</div>'+
+      '<div class="frow">B4: S(t) = U/100 × '+Scuoi+' = ? cm</div>';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-Hdr','H<sub>dr</sub> (m)',Hdr,0.15,'m')+
+      makeQ('a1-Tv','T<sub>v</sub>',Tv,0.05,'')+
+      makeQ('a1-U','U (%)',U,6,'%')+
+      makeQ('a1-St','S(t) (cm)',St,0.8,'cm');
+  })();
+
+  // A2: Tính S(t) — 2 mặt thoát
+  (function(){
+    var rng=seededRng(stt*13+7);
+    var H=r1(4+rng()*6);
+    var Cv=r1(0.5+rng()*3);
+    var t=Math.round(1+rng()*5);
+    var Scuoi=r1(5+rng()*18);
+    var Hdr=r1(H/2); // 2 mat thoat
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);
+    var St=r1(U/100*Scuoi);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>A2:</b> Lớp sét dày H=<b>'+H+'m</b>, thoát nước <b>2 mặt</b>. '+
+      'C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. '+
+      '<b>Tính H<sub>dr</sub>, T<sub>v</sub>, U(%) và S(t) sau t='+t+' năm.</b>';
+    document.getElementById('a2-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý — Chú ý H<sub>dr</sub>=H/2!</div>'+
+      '<div class="frow">B1: 2 mặt → H<sub>dr</sub> = '+H+'/2 = <em>'+Hdr+'m</em></div>'+
+      '<div class="frow">B2: T<sub>v</sub> = '+Cv+'×'+t+' / '+Hdr+'² = ?</div>'+
+      '<div class="frow">B3: Tra bảng T<sub>v</sub>='+Tv+' → U ≈ ? %</div>'+
+      '<div class="frow">B4: S(t) = U/100 × '+Scuoi+' = ? cm</div>';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-Hdr','H<sub>dr</sub> = H/2 (m)',Hdr,0.15,'m')+
+      makeQ('a2-Tv','T<sub>v</sub>',Tv,0.05,'')+
+      makeQ('a2-U','U (%)',U,6,'%')+
+      makeQ('a2-St','S(t) (cm)',St,0.8,'cm');
+  })();
+
+  // A3: Tính ngược t — cho U
+  (function(){
+    var rng=seededRng(stt*17+11);
+    var H=r1(3+rng()*5);
+    var Cv=r1(0.5+rng()*2.5);
+    var mat=(rng()<0.5)?1:2;
+    var Hdr=(mat===2)?r1(H/2):H;
+    // Chọn U từ bảng chuẩn để t cho đẹp
+    var U_opts=[50,60,70,80,90];
+    var U=U_opts[Math.floor(rng()*U_opts.length)];
+    var Tv=getTv(U);
+    var t=r1(Tv*Hdr*Hdr/Cv);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>A3:</b> Lớp sét dày H=<b>'+H+'m</b>, thoát nước <b>'+(mat===2?'2 mặt':'1 mặt')+'</b>. '+
+      'C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. Khi độ cố kết U=<b>'+U+'%</b>, '+
+      '<b>cần bao nhiêu năm?</b>';
+    document.getElementById('a3-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý</div>'+
+      '<div class="frow">B1: H<sub>dr</sub> = '+(mat===2?H+'/2 = '+Hdr:H)+' m</div>'+
+      '<div class="frow">B2: U='+U+'% → tra bảng ngược → T<sub>v</sub> = <em>'+Tv+'</em></div>'+
+      '<div class="frow">B3: t = T<sub>v</sub>×H²<sub>dr</sub>/C<sub>v</sub> = '+Tv+'×'+Hdr+'²/'+Cv+' = ? năm</div>';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-Hdr','H<sub>dr</sub> (m)',Hdr,0.15,'m')+
+      makeQ('a3-Tv','T<sub>v</sub> tại U='+U+'%',Tv,0.04,'')+
+      makeQ('a3-t','t (năm)',t,r1(t*0.08)+0.2,'năm');
+  })();
+
+  // A4: Tính U từ S(t) và S∞
+  (function(){
+    var rng=seededRng(stt*19+13);
+    var H=r1(3+rng()*5);
+    var Cv=r1(0.5+rng()*2.5);
+    var mat=(rng()<0.5)?1:2;
+    var Hdr=(mat===2)?r1(H/2):H;
+    var t=Math.round(1+rng()*5);
+    var Scuoi=r1(8+rng()*20);
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);
+    var St=r1(U/100*Scuoi);
+    var Tv_check=getTv(U);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>A4:</b> Lớp sét dày H=<b>'+H+'m</b>, thoát nước <b>'+(mat===2?'2 mặt':'1 mặt')+'</b>. '+
+      'C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. '+
+      'Sau t=<b>'+t+' năm</b> đo được S(t)=<b>'+St+' cm</b>. '+
+      '<b>Tính U(t) và kiểm tra T<sub>v</sub> tương ứng.</b>';
+    document.getElementById('a4-hint').innerHTML=
+      '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý</div>'+
+      '<div class="frow">U(t) = S(t)/S<sub>∞</sub> × 100% = '+St+'/'+Scuoi+' × 100 = ? %</div>'+
+      '<div class="frow">Tra bảng ngược U=?% → T<sub>v</sub> = ?</div>'+
+      '<div class="frow">Kiểm tra: T<sub>v</sub> tính = C<sub>v</sub>·t/H²<sub>dr</sub> = '+Cv+'×'+t+'/'+Hdr+'² = '+Tv+'  ✓</div>';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-U','U(t) (%)',U,6,'%')+
+      makeQ('a4-Tv','T<sub>v</sub> tra bảng',Tv_check,0.05,'')+
+      makeQ('a4-check','T<sub>v</sub> kiểm tra = C<sub>v</sub>·t/H²<sub>dr</sub>',Tv,0.05,'');
+  })();
+}
+
+/* ================================================================
+   KHỐI 6 — SINH THẺ B & C (4 dạng — cố kết)
+   CFG[4]: config {id, title, type, fml} cho từng dạng bài B/C
+   genBC(stt): render HTML shell tất cả thẻ B/C vào #b-cards/#c-cards
+   genOne(id,type,stt,s1,s2): sinh số liệu cho 1 thẻ theo type
+     Các type: st_1mat (S(t) 1 mặt), st_2mat (S(t) 2 mặt),
+                tinht (tìm t từ U), tinhU (tính U từ S(t)/S∞)
+================================================================ */
+/* ════ SINH SỐ LIỆU NHÓM B & C ════ */
+var CFG=[
+  {id:'1',title:'Tính S(t) — Thoát nước 1 mặt',   type:'st_1mat',
+   fml:'H<sub>dr</sub>=H  |  T<sub>v</sub>=C<sub>v</sub>·t/H²<sub>dr</sub>  |  Tra bảng → U(%)  |  S(t)=U/100·S<sub>∞</sub>'},
+  {id:'2',title:'Tính S(t) — Thoát nước 2 mặt',   type:'st_2mat',
+   fml:'H<sub>dr</sub>=H/2  |  T<sub>v</sub>=C<sub>v</sub>·t/H²<sub>dr</sub>  |  Tra bảng → U(%)  |  S(t)=U/100·S<sub>∞</sub>'},
+  {id:'3',title:'Tính ngược t (cho U)',             type:'tinht',
+   fml:'U(%) → tra bảng → T<sub>v</sub>  |  t = T<sub>v</sub>·H²<sub>dr</sub>/C<sub>v</sub>  (năm)'},
+  {id:'4',title:'Tính U(t) từ S(t) và S<sub>∞</sub>', type:'tinhU',
+   fml:'U(t) = S(t)/S<sub>∞</sub> × 100%  |  Tra bảng ngược U → T<sub>v</sub>'},
+];
+
+function genBC(stt){
+  var bhtml='',chtml='';
+  CFG.forEach(function(c){
+    var bid='b'+c.id,cid='c'+c.id;
+    bhtml+='<div class="sec-lbl">B'+c.id+' — '+c.title+'</div>'+
+      '<div class="earth-box" id="'+bid+'-prob">⏳</div>'+
+      '<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'+
+      '<div id="'+bid+'-q"></div>';
+    chtml+='<div class="sec-lbl">C'+c.id+' — '+c.title+'</div>'+
+      '<div class="earth-box" id="'+cid+'-prob">⏳</div>'+
+      '<div id="'+cid+'-q"></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+  var seeds=[31,37,41,43];
+  CFG.forEach(function(c,idx){
+    genOne('b'+c.id,c.type,stt,seeds[idx],7001+idx*20);
+    genOne('c'+c.id,c.type,stt,seeds[idx]+97,7101+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+  var H=r1(3+rng()*6);
+  var Cv=r1(0.5+rng()*3);
+  var Scuoi=r1(6+rng()*18);
+
+  if(type==='st_1mat'){
+    var t=Math.round(1+rng()*5);
+    var Hdr=H;
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);var St=r1(U/100*Scuoi);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>1 mặt</b>. C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. <b>Tính T<sub>v</sub>, U(%), S(t) sau t='+t+' năm.</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',Tv,0.05,'')+makeQ(id+'-U','U (%)',U,6,'%')+makeQ(id+'-St','S(t) (cm)',St,0.8,'cm');
+  }
+  else if(type==='st_2mat'){
+    var t=Math.round(1+rng()*6);
+    var Hdr=r1(H/2);
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);var St=r1(U/100*Scuoi);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>2 mặt</b>. C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. <b>Tính H<sub>dr</sub>, T<sub>v</sub>, U(%), S(t) sau t='+t+' năm.</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Hdr','H<sub>dr</sub> (m)',Hdr,0.15,'m')+makeQ(id+'-Tv','T<sub>v</sub>',Tv,0.05,'')+makeQ(id+'-U','U (%)',U,6,'%')+makeQ(id+'-St','S(t) (cm)',St,0.8,'cm');
+  }
+  else if(type==='tinht'){
+    var mat=(rng()<0.5)?1:2;
+    var Hdr=(mat===2)?r1(H/2):H;
+    var U_opts=[50,60,70,80,90];
+    var U=U_opts[Math.floor(rng()*U_opts.length)];
+    var Tv=getTv(U);
+    var t=r1(Tv*Hdr*Hdr/Cv);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>'+(mat===2?'2 mặt':'1 mặt')+'</b>. C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. Cần đạt U=<b>'+U+'%</b>. <b>Cần bao nhiêu năm?</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub> tại U='+U+'%',Tv,0.04,'')+makeQ(id+'-t','t (năm)',t,r1(t*0.08)+0.2,'năm');
+  }
+  else if(type==='tinhU'){
+    var mat=(rng()<0.5)?1:2;
+    var Hdr=(mat===2)?r1(H/2):H;
+    var t=Math.round(1+rng()*5);
+    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var U=getU(Tv);var St=r1(U/100*Scuoi);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>'+(mat===2?'2 mặt':'1 mặt')+'</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. Sau t=<b>'+t+' năm</b> đo được S(t)=<b>'+St+' cm</b>. <b>Tính U(t) (%).</b>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-U','U(t) (%)',U,6,'%');
+  }
+}
+
+/* ================================================================
+   KHỐI 7 — KHỞI TẠO & WINDOW.ONLOAD
+   Ghi timestamp bắt đầu làm bài vào window._startTime
+   Đăng ký 3 câu MCQ (mcq-q1/q2/q3) vào ANS với giá trị null
+   window.onload: đọc SV, gọi genA(stt), genBC(stt),
+     đếm TOTAL_QUESTIONS = Object.keys(ANS).length
+================================================================ */
+window._startTime=Date.now();
+['mcq-q1','mcq-q2','mcq-q3'].forEach(function(k){ANS[k]=null;});
+
+window.onload=function(){
+  var sv=getSV(),stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt); genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

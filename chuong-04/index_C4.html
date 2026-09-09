@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chương 4 — Độ Lún Của Nền Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính (#1565C0), --Pdk/Plt/Pmd=tối/nhạt/trung bình của xanh chính
+   --G=xanh lá (đúng), --Glt/Gdk=nhạt/đậm xanh lá
+   --R=đỏ (sai), --Rlt=nền đỏ nhạt; --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền xanh nhạt, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+main{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+.hero{background:linear-gradient(135deg,var(--Pdk),var(--Pmd));color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:0 4px 24px rgba(13,71,161,.25)}
+.hero h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:20px;font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:5px}
+.sv-bar{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px;box-shadow:var(--sh)}
+.sv-bar i{font-size:24px;color:var(--P)}
+.sv-name{font-size:15px;font-weight:700}.sv-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.sv-num{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--P);background:var(--Plt);padding:6px 18px;border-radius:10px;margin-left:auto}
+.sec-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.note-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 16px;font-size:13px;line-height:1.7;color:#4E342E;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.dc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.dc:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(21,101,192,.15)}
+.dc-hd{padding:16px 18px 12px;border-bottom:1px solid var(--Plt);display:flex;align-items:flex-start;gap:12px}
+.dc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dc-hd h3{font-size:14px;font-weight:700;color:var(--Pdk);line-height:1.3;margin-bottom:3px}
+.dc-hd p{font-size:11px;color:var(--muted)}
+.dc-body{padding:13px 18px;flex:1;display:flex;flex-direction:column;gap:7px}
+.dc-feat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.dc-feat i{font-size:14px;color:var(--P);flex-shrink:0}
+.dc-foot{padding:12px 18px;border-top:1px solid var(--Plt);display:flex;align-items:center;justify-content:space-between}
+.go-btn{background:var(--P);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none}
+.prog-wrap{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px 20px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px;font-weight:600}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="../index.html" class="back-btn"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+    <div class="hdr-title">
+      <h1>Chương 4 — Độ Lún Của Nền Đất</h1>
+      <p>NCM: Cơ Học Đất - Nền Móng · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <h2><i class="ti ti-arrow-bar-down" style="vertical-align:-3px;margin-right:8px"></i>Chương 4 — Độ Lún Của Nền Đất</h2>
+    <p>Lún đàn hồi · Cộng lún từng phân tố · Cố kết theo thời gian · Bài toán tổng hợp TCVN</p>
+    <div class="hero-meta">
+      <div class="hero-chip"><i class="ti ti-book-2"></i> 5 bài học</div>
+      <div class="hero-chip"><i class="ti ti-clock"></i> ~10 tiết</div>
+      <div class="hero-chip"><i class="ti ti-math-function"></i> Elastic · Oedometer · Terzaghi · TCVN</div>
+    </div>
+  </div>
+
+  <div class="sv-bar">
+    <i class="ti ti-id-badge-2"></i>
+    <div>
+      <div class="sv-name" id="sv-display">Đang tải...</div>
+      <div class="sv-sub">Số liệu tự sinh theo STT · <a href="../index.html" style="color:var(--P)">Đổi thông tin ở Trang chủ</a></div>
+    </div>
+    <div class="sv-num" id="sv-badge">–</div>
+  </div>
+
+  <div class="note-box">💡 <b>Lưu ý:</b> Các bài trong chương này có liên hệ với nhau theo quy trình tính lún TCVN — nên học theo thứ tự từ 4.1 → 4.5. Bài 4.4 là bài tổng hợp áp dụng toàn bộ kiến thức các bài trước.</div>
+
+  <div class="sec-lbl"><i class="ti ti-list-check"></i> Các bài học</div>
+  <div class="grid">
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E3F2FD"><i class="ti ti-arrow-down-circle" style="color:#1565C0"></i></div>
+        <div><h3>4.1 — Lún Đàn Hồi</h3><p>Tính S · Tính E₀ · Tính p<sub>gl</sub> · Bảng ω</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> S = (1−μ₀²)·p<sub>gl</sub>·b·ω / E₀</div>
+        <div class="dc-feat"><i class="ti ti-table"></i> Tra bảng hệ số ω theo hình dạng móng · 3 dạng bài thi</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-41">– / –</span>
+        <a class="go-btn" href="4.1_DANH_HOI.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E8F5E9"><i class="ti ti-stack-2" style="color:#2E7D32"></i></div>
+        <div><h3>4.2 — Cộng Lún Từng Phân Tố</h3><p>Hệ số nén a · Hệ số nén thể tích m<sub>v</sub></p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> S<sub>i</sub> = a·Δσ<sub>i</sub>·h<sub>i</sub>/(1+e₀) = m<sub>v</sub>·Δσ<sub>i</sub>·h<sub>i</sub></div>
+        <div class="dc-feat"><i class="ti ti-filter"></i> Điều kiện tắt lún: Δσ<sub>i</sub> ≤ 0.2·σ<sub>bt,i</sub></div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-42">– / –</span>
+        <a class="go-btn" href="4.2_CONG_LUN.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FFF8E1"><i class="ti ti-clock" style="color:#FF8F00"></i></div>
+        <div><h3>4.3 — Cố Kết Theo Thời Gian</h3><p>Nhân tố thời gian T<sub>v</sub> · Độ cố kết U(%)</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> T<sub>v</sub> = C<sub>v</sub>·t / H²<sub>dr</sub> → U(%) → S(t)</div>
+        <div class="dc-feat"><i class="ti ti-chart-line"></i> S(t) = U · S<sub>cuối</sub> (lý thuyết Terzaghi 1D)</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-43">– / –</span>
+        <a class="go-btn" href="4.3_CO_KET.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#EDE7F6"><i class="ti ti-layers-intersect" style="color:#6A1B9A"></i></div>
+        <div><h3>4.4 — Bài Toán Tổng Hợp</h3><p>σ<sub>bt</sub> + Δσ + Cộng lún · Quy trình TCVN</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> Phân tầng → tính Δσ<sub>i</sub> → kiểm tra → cộng S<sub>i</sub></div>
+        <div class="dc-feat"><i class="ti ti-checklist"></i> Quy trình đầy đủ theo TCVN 9362:2012</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-44">– / –</span>
+        <a class="go-btn" href="4.4_TONG_HOP.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FFEBEE"><i class="ti ti-clipboard-list" style="color:#C62828"></i></div>
+        <div><h3>4.5 — Tóm Tắt & Ôn Tập</h3><p>Bảng công thức · MCQ · Lỗi hay gặp</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-notes"></i> Bảng tổng hợp toàn bộ công thức chương 4</div>
+        <div class="dc-feat"><i class="ti ti-help-circle"></i> Câu hỏi trắc nghiệm ôn tập tổng kết</div>
+        <div class="dc-feat"><i class="ti ti-alert-triangle"></i> Các lỗi thường gặp khi làm bài thi</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-45">– / –</span>
+        <a class="go-btn" href="4.5_TOM_TAT.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:5px"></i>Tiến độ tổng Chương 4</span><span id="total-prog-text" style="color:var(--muted);font-weight:500">Chưa có dữ liệu</span></div>
+    <div class="prog-track"><div class="prog-fill" id="total-prog-fill" style="width:0%"></div></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px">Tiến độ được lưu tự động trong trình duyệt khi bạn hoàn thành mỗi bài.</p>
+  </div>
+</main>
+<script>
+/* ================================================================
+   KHỐI 1 — HIỂN THỊ SV & TIẾN ĐỘ CHƯƠNG 4
+   Đọc sessionStorage để hiển thị tên/MSSV sinh viên
+   Đọc 5 key localStorage (prog_c4_41 → prog_c4_45), cập nhật
+   tiến độ từng bài và tổng thể trên trang index chương 4
+================================================================ */
+window.onload=function(){
+  var sv=null;
+  try{sv=JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){}
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-badge').textContent='#'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ để nhập thông tin';
+    document.getElementById('sv-badge').textContent='–';
+  }
+  var keys=['prog_c4_41','prog_c4_42','prog_c4_43','prog_c4_44','prog_c4_45'];
+  var ids=['prog-41','prog-42','prog-43','prog-44','prog-45'];
+  var tD=0,tA=0;
+  keys.forEach(function(k,i){
+    try{var d=JSON.parse(localStorage.getItem(k)||'null');
+      if(d&&d.total){document.getElementById(ids[i]).textContent=d.done+' / '+d.total;tD+=d.done;tA+=d.total;}}catch(e){}
+  });
+  if(tA){document.getElementById('total-prog-text').textContent=tD+' / '+tA+' ('+Math.round(tD/tA*100)+'%)';
+    document.getElementById('total-prog-fill').style.width=Math.round(tD/tA*100)+'%';}
+};
+</script>
+</body>
+</html>
