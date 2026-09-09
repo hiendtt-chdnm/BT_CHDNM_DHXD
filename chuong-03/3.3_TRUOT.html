@@ -1,0 +1,964 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.3 — Sức Chống Cắt Của Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:120px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tcard{border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.65}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd);margin:6px 0}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+svg.diag{width:100%;max-width:380px;display:block;margin:8px auto}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C3.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 3</a>
+    <div class="hdr-title">
+      <h1>3.3 — Sức Chống Cắt Của Đất</h1>
+      <p>Phá hoại trượt · Sức kháng cắt tại M · TN cắt phẳng · TN 3 trục</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 3.3 — Sức Chống Cắt</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ 1. HIỆN TƯỢNG PHÁ HOẠI — BẢN CHẤT TRƯỢT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-cut"></i>
+    <div><h2>1 — Hiện tượng phá hoại của nền đất: bản chất là phá hoại TRƯỢT</h2></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Khi nền đất bị quá tải (vượt p<sub>gh</sub> đã học ở bài 3.2), đất <b>không bị "vỡ nát"</b> như vật liệu giòn, mà bị phá hoại theo cơ chế <b>trượt</b> — các khối đất trượt lên nhau dọc theo 1 hoặc nhiều mặt trượt cong, lan dần từ dưới đáy móng ra ngoài.</div>
+    <svg class="diag" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="140" width="340" height="50" fill="#D7CCC8" stroke="#5D4037" stroke-width="1"/>
+      <rect x="140" y="110" width="80" height="30" fill="#90A4AE" stroke="#37474F" stroke-width="1.5"/>
+      <text x="180" y="100" text-anchor="middle" font-size="10" fill="#37474F">Móng</text>
+      <line x1="180" y1="80" x2="180" y2="108" stroke="#C62828" stroke-width="3" marker-end="url(#arS)"/>
+      <defs><marker id="arS" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L8,3L0,6Z" fill="#C62828"/></marker></defs>
+      <text x="180" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#C62828">p</text>
+      <path d="M140,140 Q90,160 50,185" stroke="#1565C0" stroke-width="2.5" fill="none" stroke-dasharray="4,2"/>
+      <path d="M220,140 Q270,160 310,185" stroke="#1565C0" stroke-width="2.5" fill="none" stroke-dasharray="4,2"/>
+      <circle cx="200" cy="160" r="3.5" fill="#C62828"/>
+      <text x="207" y="163" font-size="10" font-weight="700" fill="#C62828">M</text>
+      <text x="55" y="195" font-size="9" fill="#0D47A1">Mặt trượt</text>
+      <text x="270" y="195" font-size="9" fill="#0D47A1">Mặt trượt</text>
+    </svg>
+    <div class="earth-box">📌 <b>Quan sát tại 1 điểm M</b> nằm trên mặt trượt: khi tải tăng dần, ứng suất tại M cũng tăng theo. Đến một lúc nào đó, lực gây trượt tại M (song song mặt trượt) vượt quá khả năng chống lại của đất tại M — đất tại M bị phá hoại, mặt trượt "kích hoạt" tại đó và lan rộng ra. <b>Sức chống cắt của đất chính là đại lượng quyết định thời điểm và vị trí phá hoại này.</b></div>
+  </div>
+</div>
+
+<!-- ══ 2. SỨC KHÁNG CẮT TRÊN MẶT PHẲNG α QUA M ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-angle"></i>
+    <div><h2>2 — Sức kháng cắt trên mặt phẳng α đi qua điểm M</h2></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Tại điểm M trong khối đất, xét 1 mặt phẳng tưởng tượng nghiêng góc α bất kỳ đi qua M. Ứng suất tác dụng lên mặt phẳng này có thể phân tích thành 2 thành phần vuông góc nhau.</div>
+    <svg class="diag" viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Mũi tên xanh lá cho σ -->
+        <marker id="arN2" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#2E7D32"/></marker>
+        <!-- Mũi tên đỏ cho τ (gây trượt, hướng xuống dọc mặt phẳng) -->
+        <marker id="arTau" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#C62828"/></marker>
+        <!-- Mũi tên tím cho τ_f (sức kháng cắt, hướng lên dọc mặt phẳng) -->
+        <marker id="arTf" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#6A1B9A"/></marker>
+      </defs>
+
+      <!-- Mặt phẳng α nghiêng ~30°: từ (40,185) đến (290,40) -->
+      <!-- Vector dọc mặt phẳng (lên): dx=250, dy=-145 → chuẩn hoá×70: (56,-41) -->
+      <!-- Vector vuông góc (ra ngoài, sang phải-xuống): dx=145,dy=250 → chuẩn hoá×60: (33,57) -->
+      <line x1="40" y1="185" x2="300" y2="35" stroke="#0D47A1" stroke-width="2.5"/>
+      <text x="304" y="32" font-size="10" fill="#0D47A1" font-weight="600">mặt phẳng α</text>
+
+      <!-- Điểm M -->
+      <circle cx="160" cy="110" r="4.5" fill="#C62828"/>
+      <text x="167" y="107" font-size="12" font-weight="700" fill="#C62828">M</text>
+
+      <!-- σ: VUÔNG GÓC mặt phẳng, hướng ra ngoài (sang phải-xuống) -->
+      <!-- Từ M(160,110) theo hướng (33,57) -->
+      <line x1="160" y1="110" x2="193" y2="167" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#arN2)"/>
+      <text x="197" y="167" font-size="11" font-weight="700" fill="#2E7D32">σ</text>
+      <text x="197" y="180" font-size="9" fill="#2E7D32">(pháp tuyến ⊥ mặt phẳng)</text>
+
+      <!-- Ký hiệu góc vuông σ với mặt phẳng -->
+      <polyline points="168,123 179,116 172,103" fill="none" stroke="#2E7D32" stroke-width="1.2"/>
+
+      <!-- τ: SONG SONG mặt phẳng, hướng XUỐNG (gây trượt) -->
+      <!-- Từ M(160,110) theo hướng ngược lên (−56,+41) → xuống mặt phẳng: (+56,−41) đổi chiều → dùng hướng xuống-trái (-56,+41) -->
+      <line x1="160" y1="110" x2="104" y2="151" stroke="#C62828" stroke-width="2.5" marker-end="url(#arTau)"/>
+      <text x="60" y="160" font-size="11" font-weight="700" fill="#C62828">τ</text>
+      <text x="38" y="172" font-size="9" fill="#C62828">(lực gây trượt ↘ dọc mặt phẳng)</text>
+
+      <!-- s_f: SONG SONG mặt phẳng, hướng LÊN (sức kháng cắt, chống lại τ) -->
+      <!-- Từ M(160,110) theo hướng lên mặt phẳng: (56,−41) -->
+      <line x1="160" y1="110" x2="216" y2="69" stroke="#6A1B9A" stroke-width="2.5" marker-end="url(#arTf)"/>
+      <text x="220" y="65" font-size="11" font-weight="700" fill="#6A1B9A">τ<tspan font-size="8" baseline-shift="sub">f</tspan></text>
+      <text x="220" y="78" font-size="9" fill="#6A1B9A">= c + σ·tanφ</text>
+      <text x="220" y="90" font-size="9" fill="#6A1B9A">(sức kháng cắt ↗ chống trượt)</text>
+    </svg>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Hai thành phần ứng suất trên mặt phẳng α</div>
+      <div class="frow"><b>σ (ứng suất pháp):</b> vuông góc mặt phẳng — có xu hướng nén ép, KHÔNG gây trượt</div>
+      <div class="frow"><b>τ (ứng suất tiếp = ứng suất gây trượt):</b> song song mặt phẳng — đây là thành phần <b>gây ra hiện tượng trượt</b> dọc mặt phẳng α</div>
+    </div>
+    <div class="earth-box">📌 <b>Vì sao gọi "sức kháng cắt" / "sức chống cắt"?</b> Vì lực phá hoại trên mặt trượt luôn là ứng suất <b>cắt</b> (tiếp tuyến) τ — đất không bị kéo đứt hay nén vỡ mà bị <b>cắt trượt</b> dọc mặt phẳng. Khả năng đất chống lại được τ gọi là <b>sức kháng cắt (τ<sub>f</sub>)</b> — giá trị τ tối đa mà đất chịu được trước khi trượt xảy ra trên mặt phẳng đó.</div>
+  </div>
+</div>
+
+<!-- ══ 3. SỨC KHÁNG CẮT TẠI 1 ĐIỂM & TRẠNG THÁI M ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-circle-dot"></i>
+    <div><h2>3 — Sức kháng cắt tại 1 điểm & xác định trạng thái của M</h2></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Qua điểm M có <b>vô số mặt phẳng α</b> khác nhau (xoay 360°), mỗi mặt phẳng có cặp (σ, τ) riêng. Trong số đó, sẽ tồn tại 1 mặt phẳng mà tỷ số τ/τ<sub>f</sub> là lớn nhất — đó là mặt phẳng <b>dễ trượt nhất</b>, quyết định trạng thái của điểm M.</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Tiêu chuẩn phá hoại Mohr-Coulomb (sức kháng cắt giới hạn)</div>
+      <div class="frow">τ<sub>f</sub> = c + σ·tanφ &nbsp;(τ<sub>f</sub>: sức kháng cắt lớn nhất mà đất chịu được tại ứng suất pháp σ)</div>
+      <div class="frow" style="font-size:11px;color:var(--muted)">c: lực dính (kPa) · φ: góc ma sát trong (°) — 2 đặc trưng kháng cắt cơ bản của đất</div>
+    </div>
+    <div class="three-col">
+      <div class="tcard" style="background:#E8F5E9;border-left:4px solid #2E7D32">
+        <b style="color:#1B5E20">τ &lt; τ<sub>f</sub></b><br>
+        Trạng thái <b>ĐÀN HỒI / ỔN ĐỊNH</b><br>
+        Đất tại M chưa bị phá hoại, vẫn an toàn
+      </div>
+      <div class="tcard" style="background:#FFF9C4;border-left:4px solid #F9A825">
+        <b style="color:#F57F17">τ = τ<sub>f</sub></b><br>
+        Trạng thái <b>CÂN BẰNG GIỚI HẠN</b><br>
+        Đất tại M ở ngưỡng phá hoại — bắt đầu trượt
+      </div>
+      <div class="tcard" style="background:#FFEBEE;border-left:4px solid #C62828">
+        <b style="color:#B71C1C">τ &gt; τ<sub>f</sub></b><br>
+        Trạng thái <b>PHÁ HOẠI</b><br>
+        Đất tại M đã trượt, mất khả năng chịu lực
+      </div>
+    </div>
+    <div class="earth-box">📌 <b>Liên hệ với chương 2 (Trạng thái tại điểm):</b> Đây chính là khái niệm sinθ<sub>max</sub> so với sinφ đã học — bản chất là so sánh ứng suất gây trượt thực tế với sức kháng cắt giới hạn tại mặt phẳng nguy hiểm nhất qua M.</div>
+  </div>
+</div>
+
+<!-- ══ 4. ĐẶC TRƯNG KHÁNG CẮT & CÁC CẶP ĐẶC TRƯNG ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-tags"></i>
+    <div><h2>4 — Đặc trưng kháng cắt và các cặp đặc trưng (c, φ)</h2></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Mỗi loại đất có 1 cặp đặc trưng kháng cắt riêng (c, φ) — đây là "chỉ số DNA" quyết định sức chống cắt của đất đó tại mọi mặt phẳng, mọi ứng suất σ.</div>
+    <div class="two-col">
+      <div class="tcard" style="background:#E1F5FE;border-left:4px solid #0277BD">
+        <b style="color:#01579B">LỰC DÍNH c (kPa)</b><br>
+        Thành phần kháng cắt <b>không phụ thuộc σ</b> — do lực hút phân tử/liên kết hóa lý giữa các hạt sét mịn. Đất rời (cát): c≈0. Đất dính (sét): c lớn.
+      </div>
+      <div class="tcard" style="background:#FFF3E0;border-left:4px solid #E65100">
+        <b style="color:#BF360C">GÓC MA SÁT TRONG φ (°)</b><br>
+        Thành phần kháng cắt <b>tỷ lệ với σ</b> — do ma sát và sự chèn ép giữa các hạt khi trượt lên nhau. Đất rời: φ lớn. Đất dính: φ thường nhỏ hơn.
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle">Phân loại theo cặp đặc trưng (c, φ)</div>
+      <div class="frow">Đất rời thuần túy (cát sạch): c ≈ 0, φ &gt; 0 &nbsp;→ τ<sub>f</sub> = σ·tanφ</div>
+      <div class="frow">Đất dính bão hòa, không thoát nước (UU): φ ≈ 0, τ<sub>f</sub> = c<sub>u</sub> (sức kháng cắt không thoát nước)</div>
+      <div class="frow">Đất dính thông thường: c &gt; 0 và φ &gt; 0 &nbsp;→ τ<sub>f</sub> = c + σ·tanφ (đầy đủ Mohr-Coulomb)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. THÍ NGHIỆM XÁC ĐỊNH ĐẶC TRƯNG KHÁNG CẮT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-flask"></i>
+    <div><h2>5 — Thí nghiệm xác định đặc trưng kháng cắt (c, φ)</h2><p>Trọng tâm: thí nghiệm cắt phẳng</p></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 Để xác định (c, φ) của 1 loại đất, cần làm thí nghiệm trên ít nhất <b>2 mẫu</b> ở 2 cấp áp lực nén khác nhau, đo ứng suất gây trượt τ tương ứng, rồi giải hệ 2 phương trình Mohr-Coulomb để tìm c, φ.</div>
+
+    <div class="ftitle" style="margin-top:4px">5.1 — Thí nghiệm cắt phẳng (Direct Shear Test) ⭐ Trọng tâm chương này</div>
+    <svg class="diag" viewBox="0 0 360 210" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arP" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#C62828"/></marker>
+        <marker id="arT" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#1565C0"/></marker>
+      </defs>
+      <!-- Tấm nén trên (piston/load plate) -->
+      <rect x="90" y="52" width="160" height="12" rx="2" fill="#90A4AE" stroke="#455A64" stroke-width="1.5"/>
+      <!-- Hộp cắt nửa TRÊN (cố định) -->
+      <rect x="80" y="64" width="180" height="45" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <!-- Mẫu đất nửa trên — fill hatching approximated -->
+      <rect x="82" y="66" width="176" height="41" fill="#D7CCC8"/>
+      <!-- Hộp cắt nửa DƯỚI (di chuyển sang phải khi kéo T) -->
+      <rect x="80" y="109" width="180" height="45" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <!-- Mẫu đất nửa dưới -->
+      <rect x="82" y="111" width="176" height="41" fill="#D7CCC8"/>
+      <!-- Mặt cắt (mặt trượt) nằm giữa 2 hộp -->
+      <line x1="75" y1="109" x2="265" y2="109" stroke="#C62828" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="268" y="113" font-size="9" fill="#C62828" font-weight="600">mặt trượt</text>
+      <!-- Ký hiệu gạch chéo đất -->
+      <line x1="100" y1="70" x2="115" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="120" y1="70" x2="135" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="140" y1="70" x2="155" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="160" y1="70" x2="175" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="180" y1="70" x2="195" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="200" y1="70" x2="215" y2="85" stroke="#A1887F" stroke-width="1"/>
+      <line x1="100" y1="115" x2="115" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <line x1="120" y1="115" x2="135" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <line x1="140" y1="115" x2="155" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <line x1="160" y1="115" x2="175" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <line x1="180" y1="115" x2="195" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <line x1="200" y1="115" x2="215" y2="130" stroke="#A1887F" stroke-width="1"/>
+      <!-- Lực P: tải đứng từ trên xuống vào hộp trên -->
+      <line x1="170" y1="18" x2="170" y2="50" stroke="#C62828" stroke-width="3" marker-end="url(#arP)"/>
+      <text x="170" y="13" text-anchor="middle" font-size="11" font-weight="700" fill="#C62828">P (tải thẳng đứng)</text>
+      <!-- Lực T: kéo ngang vào hộp DƯỚI → gây trượt tại mặt cắt -->
+      <line x1="260" y1="131" x2="315" y2="131" stroke="#1565C0" stroke-width="3" marker-end="url(#arT)"/>
+      <text x="318" y="127" font-size="11" font-weight="700" fill="#1565C0">T</text>
+      <text x="318" y="139" font-size="9" fill="#1565C0">(kéo ngang)</text>
+      <!-- Hộp trên: cố định (mũi tên chặn -->
+      <line x1="80" y1="72" x2="55" y2="72" stroke="#555" stroke-width="2"/>
+      <line x1="55" y1="65" x2="55" y2="115" stroke="#555" stroke-width="3"/>
+      <text x="30" y="95" font-size="9" fill="#555" text-anchor="middle">cố</text>
+      <text x="30" y="106" font-size="9" fill="#555" text-anchor="middle">định</text>
+      <!-- Label -->
+      <text x="180" y="200" text-anchor="middle" font-size="9" fill="#555">Hộp cắt 2 nửa: nửa trên cố định, nửa dưới di chuyển theo T</text>
+    </svg>
+    <div class="fml-box">
+      <div class="ftitle">Quy trình & công thức</div>
+      <div class="frow">Đặt mẫu vào hộp cắt 2 nửa, tác dụng tải đứng P (gây σ), sau đó kéo ngang lực T tăng dần đến khi mẫu trượt</div>
+      <div class="frow">σ = P/A &nbsp;·&nbsp; τ = T/A &nbsp;(A: diện tích mặt cắt mẫu)</div>
+      <div class="frow">Lặp lại với ≥2 mẫu ở các P khác nhau → 2 cặp (σ, τ) → giải hệ tìm c, φ:</div>
+      <div class="frow">tgφ = (τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c = τ₁ − σ₁·tgφ</div>
+    </div>
+
+    <div class="ftitle" style="margin-top:10px">5.2 — Thí nghiệm nén 3 trục (Triaxial Test) — giới thiệu sơ đồ</div>
+    <svg class="diag" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="100" y="30" width="80" height="120" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+      <line x1="140" y1="5" x2="140" y2="28" stroke="#C62828" stroke-width="3" marker-end="url(#ar3a)"/>
+      <defs><marker id="ar3a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="#C62828"/></marker></defs>
+      <text x="140" y="0" text-anchor="middle" font-size="10" font-weight="700" fill="#C62828">σ₁ (dọc trục)</text>
+      <line x1="95" y1="60" x2="60" y2="60" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#ar3b)"/>
+      <line x1="185" y1="60" x2="220" y2="60" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#ar3b)"/>
+      <defs><marker id="ar3b" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0L6,2.5L0,5Z" fill="#2E7D32"/></marker></defs>
+      <text x="140" y="65" text-anchor="middle" font-size="10" font-weight="700" fill="#2E7D32">σ₃ (áp lực buồng, mọi phía)</text>
+      <text x="140" y="180" text-anchor="middle" font-size="9" fill="#333">Mẫu hình trụ bọc màng cao su, nén trong buồng áp lực nước</text>
+    </svg>
+    <div class="fml-box">
+      <div class="frow">Mẫu hình trụ chịu áp lực buồng σ₃ đều mọi phía, sau đó tăng thêm ứng suất dọc trục (độ lệch q) đến khi phá hoại, ghi σ₁ tại thời điểm phá hoại</div>
+      <div class="frow" style="font-size:12px;color:var(--muted)">3 sơ đồ chính: UU (không cố kết-không thoát nước), CU (cố kết-không thoát nước), CD (cố kết-thoát nước). Chương trình này KHÔNG đi sâu — chỉ giới thiệu để sinh viên biết sơ đồ tồn tại, trọng tâm bài tập vẫn là cắt phẳng và công thức quan hệ σ₁-σ₃ tổng (không xét u).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MCQ LÝ THUYẾT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-help-circle"></i>
+    <div><h2>Câu hỏi ôn tập — Bản chất phá hoại trượt & sức kháng cắt</h2></div>
+    <span class="cbadge" style="background:#6A1B9A">MCQ</span></div>
+  <div class="card-body">
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Khi nền đất bị phá hoại do quá tải, cơ chế phá hoại của đất là gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,1,'❌ Đất không vỡ giòn như bê tông hay đá.')"><span class="mkey">A</span><span>Vỡ giòn như vật liệu cứng</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,1,'✓ Đất phá hoại theo cơ chế trượt: các khối đất trượt lên nhau dọc theo mặt trượt, không phải vỡ nát.')"><span class="mkey">B</span><span>Trượt dọc theo mặt trượt</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,1,'❌')"><span class="mkey">C</span><span>Bốc hơi thể tích đột ngột</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,1,'❌')"><span class="mkey">D</span><span>Tan chảy thành chất lỏng</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>Trên 1 mặt phẳng α đi qua điểm M, thành phần ứng suất nào gây ra hiện tượng trượt?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1,'❌ σ vuông góc mặt phẳng, có xu hướng nén ép chứ không gây trượt.')"><span class="mkey">A</span><span>Ứng suất pháp σ</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1,'✓ Ứng suất tiếp τ (song song mặt phẳng) là thành phần gây trượt — đây cũng là lý do gọi là sức kháng CẮT.')"><span class="mkey">B</span><span>Ứng suất tiếp τ</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1,'❌')"><span class="mkey">C</span><span>Cả σ và τ đều không gây trượt</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1,'❌')"><span class="mkey">D</span><span>Trọng lượng riêng γ</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q3</span>Vì sao gọi là "sức kháng cắt" hay "sức chống cắt" của đất?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0,'✓ Vì lực gây phá hoại trên mặt trượt luôn là ứng suất cắt (tiếp tuyến) τ — đất bị cắt trượt chứ không kéo đứt hay nén vỡ.')"><span class="mkey">A</span><span>Vì lực phá hoại luôn là ứng suất cắt (tiếp tuyến) τ</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0,'❌')"><span class="mkey">B</span><span>Vì đất luôn bị kéo đứt</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0,'❌')"><span class="mkey">C</span><span>Vì đất luôn bị nén vỡ</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0,'❌')"><span class="mkey">D</span><span>Tên gọi không có ý nghĩa vật lý cụ thể</span></div>
+      </div><div class="mcq-exp" id="exp-q3"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q4</span>τ<sub>f</sub> (sức kháng cắt) khác gì với τ (ứng suất gây trượt thực tế)?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,1,'❌')"><span class="mkey">A</span><span>τ<sub>f</sub> và τ luôn bằng nhau</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,1,'✓ τf là giá trị giới hạn lớn nhất đất chịu được tại σ đó (đặc trưng của đất), còn τ là ứng suất thực tế phát sinh do tải trọng ngoài — so sánh 2 đại lượng này để xác định trạng thái.')"><span class="mkey">B</span><span>τ<sub>f</sub> là giới hạn đất chịu được, τ là ứng suất thực tế</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,1,'❌')"><span class="mkey">C</span><span>τ<sub>f</sub> không có ý nghĩa thực tế</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,1,'❌')"><span class="mkey">D</span><span>τ luôn lớn hơn τ<sub>f</sub></span></div>
+      </div><div class="mcq-exp" id="exp-q4"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q5</span>Tại điểm M, khi τ = τ<sub>f</sub> trên mặt phẳng nguy hiểm nhất, M đang ở trạng thái nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,1,'❌')"><span class="mkey">A</span><span>Hoàn toàn an toàn, chưa có nguy cơ</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,1,'✓ τ=τf là trạng thái cân bằng giới hạn — ngưỡng bắt đầu trượt, điểm chuyển tiếp giữa ổn định và phá hoại.')"><span class="mkey">B</span><span>Cân bằng giới hạn — ngưỡng bắt đầu trượt</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,1,'❌')"><span class="mkey">C</span><span>Đã bị phá hoại hoàn toàn từ lâu</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,1,'❌')"><span class="mkey">D</span><span>Không xác định được trạng thái</span></div>
+      </div><div class="mcq-exp" id="exp-q5"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q6</span>Đặc trưng kháng cắt nào của đất KHÔNG phụ thuộc vào ứng suất pháp σ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,0,'✓ Lực dính c là thành phần kháng cắt không đổi, không phụ thuộc σ — do liên kết hóa lý giữa các hạt sét.')"><span class="mkey">A</span><span>Lực dính c</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,0,'❌ Thành phần σ·tgφ tỷ lệ thuận với σ.')"><span class="mkey">B</span><span>Góc ma sát trong φ</span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,0,'❌')"><span class="mkey">C</span><span>Cả c và φ đều phụ thuộc σ</span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,0,'❌')"><span class="mkey">D</span><span>Không đặc trưng nào phụ thuộc σ</span></div>
+      </div><div class="mcq-exp" id="exp-q6"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q7</span>Đất cát sạch (đất rời thuần túy) thường có đặc trưng kháng cắt như thế nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,0,'✓ Cát sạch gần như không có lực dính giữa các hạt rời (c≈0), sức kháng cắt chủ yếu do ma sát góc φ.')"><span class="mkey">A</span><span>c ≈ 0, φ &gt; 0</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,0,'❌')"><span class="mkey">B</span><span>c &gt; 0, φ ≈ 0</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,0,'❌')"><span class="mkey">C</span><span>Cả c và φ đều bằng 0</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,0,'❌')"><span class="mkey">D</span><span>Cả c và φ đều rất lớn</span></div>
+      </div><div class="mcq-exp" id="exp-q7"></div></div>
+
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q8</span>Trong thí nghiệm cắt phẳng, cần tối thiểu bao nhiêu mẫu (ở các cấp σ khác nhau) để xác định đủ cặp (c, φ)?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,1,'❌ 1 mẫu chỉ cho 1 cặp (σ,τ), không đủ giải hệ 2 ẩn.')"><span class="mkey">A</span><span>1 mẫu</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,1,'✓ Cần tối thiểu 2 mẫu ở 2 cấp σ khác nhau, cho 2 phương trình để giải ra 2 ẩn c và φ.')"><span class="mkey">B</span><span>2 mẫu</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,1,'❌ Không bắt buộc, dù càng nhiều mẫu càng chính xác.')"><span class="mkey">C</span><span>10 mẫu</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,1,'❌')"><span class="mkey">D</span><span>Không cần mẫu nào</span></div>
+      </div><div class="mcq-exp" id="exp-q8"></div></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Xác định trạng thái tại M trên mặt phẳng alpha -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Cho ứng suất trên mặt phẳng α qua M: xác định τ<sub>f</sub>, τ, trạng thái M</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">τ<sub>f</sub> = c + σ·tanφ &nbsp;(sức kháng cắt giới hạn tại σ đã cho)</div>
+      <div class="frow">So sánh τ (ứng suất gây trượt thực tế trên mặt phẳng) với τ<sub>f</sub> → trạng thái M</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+    <div class="mcq-wrap" id="a1-mcq-wrap" style="display:none">
+      <div class="mcq-q"><span class="mcq-num">?</span>Trạng thái tại M:</div>
+      <div class="mcq-opts" id="a1-opts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- A2: Cắt phẳng đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — TN cắt phẳng xác định đặc trưng kháng cắt cho đất RỜI</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">σ₁=P₁/A, τ₁=T₁/A &nbsp;·&nbsp; σ₂=P₂/A, τ₂=T₂/A</div>
+      <div class="frow">tgφ = (τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c = τ₁−σ₁tgφ &nbsp;(đất rời: c thường ≈0)</div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Cắt phẳng đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — TN cắt phẳng xác định đặc trưng kháng cắt cho đất DÍNH</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">σ₁=P₁/A, τ₁=T₁/A &nbsp;·&nbsp; σ₂=P₂/A, τ₂=T₂/A</div>
+      <div class="frow">tgφ = (τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c = τ₁−σ₁tgφ &nbsp;(đất dính: c &gt; 0 rõ rệt)</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+  </div>
+</div>
+
+<!-- A4: TN 3 trục CU - ứng suất tổng, công thức Nphi -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — TN nén 3 trục (sơ đồ CU): xác định c, φ theo ứng suất TỔNG</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức liên hệ σ₁ - σ₃ (không xét u, dùng ứng suất tổng)</div>
+      <div class="frow">σ₁ = σ₃·N<sub>φ</sub> + 2c·√N<sub>φ</sub> &nbsp;(N<sub>φ</sub> = tan²(45°+φ/2))</div>
+      <div class="frow">Từ 2 mẫu (σ₃,σ₁) → giải hệ 2 phương trình tìm N<sub>φ</sub> (→φ) và c</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- A5: Cho c, phi -> tính ứng suất trong TN cắt phẳng -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Cho c, φ đã biết: xác định lực T cần thiết gây trượt trong TN cắt phẳng</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức ngược (thiết kế thí nghiệm)</div>
+      <div class="frow">σ = P/A &nbsp;·&nbsp; τ<sub>f</sub> = c + σ·tanφ &nbsp;·&nbsp; T<sub>f</sub> = τ<sub>f</sub>×A</div>
+      <div class="frow" id="a5-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+<!-- ══ TỔNG HỢP CÔNG THỨC ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-file-description" style="font-size:12px"></i> Tổng hợp công thức (phần thi)</div>
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>Công thức trọng tâm — Thi cử</h2></div>
+    <span class="cbadge">📋 CF</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle">Sức kháng cắt tại 1 điểm</div>
+        <div class="frow">τ<sub>f</sub> = c + σ·tanφ</div>
+        <div class="frow">τ&lt;τ<sub>f</sub>: ổn định · τ=τ<sub>f</sub>: giới hạn · τ&gt;τ<sub>f</sub>: phá hoại</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">TN cắt phẳng (c, φ)</div>
+        <div class="frow">σ=P/A, τ=T/A</div>
+        <div class="frow">tgφ=(τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c=τ₁−σ₁tgφ</div>
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle">TN nén 3 trục (ứng suất tổng, không xét u)</div>
+      <div class="frow">σ₁ = σ₃·N<sub>φ</sub> + 2c√N<sub>φ</sub> &nbsp;·&nbsp; N<sub>φ</sub> = tan²(45°+φ/2)</div>
+    </div>
+    <div class="earth-box">💡 Đơn vị: σ, τ, c [kPa]; φ [độ]. 1 kPa = 1 kN/m².</div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>3.3 · Sức Chống Cắt</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="3.4_DAM_CHAT.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS            : lưu kết quả từng câu (null = chưa làm, true/false)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: đếm sau genA()+genBC() trong window.onload
+================================================================ */
+
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   r1/r2/r3(v)    : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG s = s*16807 % 2147483647, cho số [0,1) theo STT
+   getSV()        : đọc thông tin SV từ sessionStorage
+   scrollNext()   : cuộn đến ô chưa làm tiếp theo
+   deg2rad(d)     : đổi độ sang radian (dùng cho tgφ trong bài kháng cắt)
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+function deg2rad(d){return d*Math.PI/180}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & THEO DÕI TIẾN ĐỘ
+   chkFill(id,ans,tol)              : chấm ô số, class ok/no, gọi updateProg
+   ⚠️ chkFill: sau khi chấm ô 'a1-tau' sẽ bật block MCQ 'a1-mcq-wrap' (logic riêng bài A1)
+   pickMCQ(name,picked,correct,expText): chấm MCQ, lock, hiện giải thích
+   makeQ(id,label,ans,tol,unit)     : tạo HTML 1 ô nhập số + chip kết quả
+   updateProg(): cập nhật tiến độ (attempted/done/total), lưu 'prog_c3_33'
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;
+  if(id==='a1-tau'){var w=document.getElementById('a1-mcq-wrap');if(w)w.style.display='block';}
+  updateProg();
+}
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c3_33',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI (submitResult)
+   submitResult(): kiểm tra MIN_ATTEMPT_PCT, gửi lên Cloudflare Worker
+   chapterId: 'C3-33-Truot' — phân loại kết quả trên server
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C3-33-Truot',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 5 — SINH BÀI A (genA)
+   genA(stt): sinh 5 bài kháng cắt theo STT, mỗi bài là 1 IIFE độc lập
+   A1: Xác định trạng thái tại M — so sánh τ với τf = c + σ·tgφ
+   A2: TN cắt phẳng đất rời — từ 2 mẫu tính tgφ, φ (c ≈ 0)
+   A3: TN cắt phẳng đất dính — từ 2 mẫu tính φ và c
+   A4: TN 3 trục CU — Nφ = (σ₁₂-σ₁₁)/(σ₃₂-σ₃₁), tính φ, c theo ứng suất tổng
+   A5: Cho c, φ → tính σ = P/A, τf, lực ngang T cần thiết để gây trượt
+================================================================ */
+function genA(stt){
+  // A1: Xác định trạng thái M
+  (function(){
+    var rng=seededRng(stt*7+5101);
+    var c=Math.round(5+rng()*20);
+    var phi=Math.round(18+rng()*17);
+    var sig=r2(80+rng()*150);
+    var tauf=r2(c+sig*Math.tan(deg2rad(phi)));
+    var caseIdx=Math.floor(rng()*3);
+    var tau;
+    if(caseIdx===0)tau=r2(tauf*(0.5+rng()*0.35));
+    else if(caseIdx===1)tau=tauf;
+    else tau=r2(tauf*(1.05+rng()*0.3));
+    var ttIdx=caseIdx;
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất tại điểm M có đặc trưng kháng cắt c=<b>'+c+' kPa</b>, φ=<b>'+phi+'°</b>. '
+      +'Trên mặt phẳng α đi qua M, ứng suất pháp σ=<b>'+sig+' kPa</b>, ứng suất gây trượt thực tế τ=<b>'+tau+' kPa</b>. '
+      +'Xác định sức kháng cắt giới hạn τ<sub>f</sub> và trạng thái tại M.';
+    document.getElementById('a1-hint').innerHTML=
+      'τ<sub>f</sub> = '+c+' + '+sig+'×tg'+phi+'° = ?<br>So sánh τ='+tau+' với τ<sub>f</sub> → trạng thái?';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-tauf','τ<sub>f</sub> = c+σ·tgφ (kPa)',tauf,2,'kPa')
+      +makeQ('a1-tau','τ (cho sẵn, kiểm tra đọc đề) (kPa)',tau,0.5,'kPa');
+    var opts=['τ &lt; τ<sub>f</sub> — Ổn định (đàn hồi)','τ = τ<sub>f</sub> — Cân bằng giới hạn','τ &gt; τ<sub>f</sub> — Phá hoại'];
+    var html=opts.map(function(o,i){return '<div class="mcq-opt" id="mco-a1-'+i+'" onclick="pickMCQ(\'a1\','+i+','+ttIdx+')"><span class="mkey">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></div>';}).join('');
+    document.getElementById('a1-opts').innerHTML=html;
+    ANS['mcq-a1']=null;
+  })();
+
+  // A2: Cắt phẳng đất rời
+  (function(){
+    var rng=seededRng(stt*11+5103);
+    var A_cm2=Math.round(40+rng()*20);
+    var phi_deg=Math.round(28+rng()*12);
+    var c_kPa=Math.round(rng()*2); // ~0 cho đất rời
+    var P1=Math.round(80+rng()*40);
+    var P2=Math.round(200+rng()*60);
+    var sig1=r2(P1/A_cm2*10);var sig2=r2(P2/A_cm2*10);
+    var tanphi=Math.tan(deg2rad(phi_deg));
+    var T1=Math.round((c_kPa/10+sig1/10*tanphi)*A_cm2);
+    var T2=Math.round((c_kPa/10+sig2/10*tanphi)*A_cm2);
+    var tau1=r2(T1/A_cm2*10);var tau2=r2(T2/A_cm2*10);
+    var tanphi_ans=r3((tau2-tau1)/(sig2-sig1));
+    var phi_ans=r1(Math.atan(tanphi_ans)*180/Math.PI);
+    var c_ans=r2(tau1-sig1*tanphi_ans);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): TN cắt phẳng trên mẫu cát, diện tích A=<b>'+A_cm2+' cm²</b>:<br>'
+      +'<div class="tbl-wrap"><table class="tbl"><tr><th>Tải đứng P (N)</th><th>Tải ngang gây trượt T (N)</th></tr>'
+      +'<tr><td>'+P1+'</td><td>'+T1+'</td></tr><tr><td>'+P2+'</td><td>'+T2+'</td></tr></table></div>'
+      +'Xác định góc ma sát trong φ và lực dính c của đất rời này.';
+    document.getElementById('a2-hint').innerHTML=
+      'σ₁=P₁/A×10=? &nbsp;τ₁=T₁/A×10=?<br>σ₂=P₂/A×10=? &nbsp;τ₂=T₂/A×10=?<br>'
+      +'tgφ=(τ₂−τ₁)/(σ₂−σ₁)=? → φ=? &nbsp;·&nbsp; c=τ₁−σ₁×tgφ=?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-sig1','σ₁ = P₁/A (kPa)',sig1,1,'kPa')
+      +makeQ('a2-tau1','τ₁ = T₁/A (kPa)',tau1,1,'kPa')
+      +makeQ('a2-sig2','σ₂ = P₂/A (kPa)',sig2,1,'kPa')
+      +makeQ('a2-tau2','τ₂ = T₂/A (kPa)',tau2,1,'kPa')
+      +makeQ('a2-phi','φ (°)',phi_ans,1,'°')
+      +makeQ('a2-c','c (kPa)',c_ans,2,'kPa');
+  })();
+
+  // A3: Cắt phẳng đất dính
+  (function(){
+    var rng=seededRng(stt*13+5105);
+    var A_cm2=Math.round(40+rng()*20);
+    var phi_deg=Math.round(12+rng()*14);
+    var c_kPa=Math.round(10+rng()*22);
+    var a_stt=Math.floor(rng()*30);
+    var P1=Math.round(100+a_stt+rng()*20);var P2=Math.round(240+a_stt+rng()*20);
+    var sig1=r2(P1/A_cm2*10);var sig2=r2(P2/A_cm2*10);
+    var tanphi=Math.tan(deg2rad(phi_deg));
+    var T1=Math.round((c_kPa/10+sig1/10*tanphi)*A_cm2);
+    var T2=Math.round((c_kPa/10+sig2/10*tanphi)*A_cm2);
+    var tau1=r2(T1/A_cm2*10);var tau2=r2(T2/A_cm2*10);
+    var tanphi_ans=r3((tau2-tau1)/(sig2-sig1));
+    var phi_ans=r1(Math.atan(tanphi_ans)*180/Math.PI);
+    var c_ans=r2(tau1-sig1*tanphi_ans);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): TN cắt phẳng trên mẫu sét, diện tích A=<b>'+A_cm2+' cm²</b>:<br>'
+      +'<div class="tbl-wrap"><table class="tbl"><tr><th>Tải đứng P (N)</th><th>Tải ngang gây trượt T (N)</th></tr>'
+      +'<tr><td>'+P1+'</td><td>'+T1+'</td></tr><tr><td>'+P2+'</td><td>'+T2+'</td></tr></table></div>'
+      +'Xác định góc ma sát trong φ và lực dính c của đất dính này.';
+    document.getElementById('a3-hint').innerHTML=
+      'σ₁=P₁/A×10=? &nbsp;τ₁=T₁/A×10=?<br>σ₂=P₂/A×10=? &nbsp;τ₂=T₂/A×10=?<br>'
+      +'tgφ=(τ₂−τ₁)/(σ₂−σ₁)=? → φ=? &nbsp;·&nbsp; c=τ₁−σ₁×tgφ=?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-sig1','σ₁ = P₁/A (kPa)',sig1,1,'kPa')
+      +makeQ('a3-tau1','τ₁ = T₁/A (kPa)',tau1,1,'kPa')
+      +makeQ('a3-sig2','σ₂ = P₂/A (kPa)',sig2,1,'kPa')
+      +makeQ('a3-tau2','τ₂ = T₂/A (kPa)',tau2,1,'kPa')
+      +makeQ('a3-phi','φ (°)',phi_ans,1,'°')
+      +makeQ('a3-c','c (kPa)',c_ans,2,'kPa');
+  })();
+
+  // A4: TN 3 trục, ứng suất tổng, công thức Nphi
+  (function(){
+    var rng=seededRng(stt*17+5107);
+    var phi_deg=Math.round(16+rng()*16);
+    var c_kPa=Math.round(5+rng()*22);
+    var Nphi=r3(Math.pow(Math.tan(deg2rad(45+phi_deg/2)),2));
+    var sig3_1=Math.round(80+rng()*40);
+    var sig3_2=Math.round(180+rng()*50);
+    var sig1_1=Math.round(sig3_1*Nphi+2*c_kPa*Math.sqrt(Nphi));
+    var sig1_2=Math.round(sig3_2*Nphi+2*c_kPa*Math.sqrt(Nphi));
+    var Nphi_ans=r3((sig1_2-sig1_1)/(sig3_2-sig3_1));
+    var phi_ans=r1((Math.atan(Math.sqrt(Nphi_ans))*180/Math.PI-45)*2);
+    var c_ans=r2((sig1_1-sig3_1*Nphi_ans)/(2*Math.sqrt(Nphi_ans)));
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): TN nén 3 trục sơ đồ CU trên 2 mẫu đất (chỉ xét ứng suất tổng, không cho áp lực nước lỗ rỗng u):<br>'
+      +'<div class="tbl-wrap"><table class="tbl"><tr><th>Mẫu</th><th>σ₃ (kPa)</th><th>σ₁ khi phá hoại (kPa)</th></tr>'
+      +'<tr><td>1</td><td>'+sig3_1+'</td><td>'+sig1_1+'</td></tr>'
+      +'<tr><td>2</td><td>'+sig3_2+'</td><td>'+sig1_2+'</td></tr></table></div>'
+      +'Xác định N<sub>φ</sub>, góc ma sát trong φ và lực dính c (theo ứng suất tổng).';
+    document.getElementById('a4-hint').innerHTML=
+      'σ₁=σ₃N<sub>φ</sub>+2c√N<sub>φ</sub> cho từng mẫu → trừ 2 phương trình:<br>'
+      +'N<sub>φ</sub> = (σ₁₂−σ₁₁)/(σ₃₂−σ₃₁) = ?<br>'
+      +'φ = (arctan(√N<sub>φ</sub>) − 45°)×2 = ?<br>'
+      +'c = (σ₁₁ − σ₃₁×N<sub>φ</sub>) / (2√N<sub>φ</sub>) = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-Nphi','N<sub>φ</sub>',Nphi_ans,0.1,'')
+      +makeQ('a4-phi','φ (°)',phi_ans,1.2,'°')
+      +makeQ('a4-c','c (kPa)',c_ans,2.5,'kPa');
+  })();
+
+  // A5: Cho c, phi -> tính T cần thiết
+  (function(){
+    var rng=seededRng(stt*19+5109);
+    var c=Math.round(8+rng()*20);
+    var phi=Math.round(18+rng()*18);
+    var A_cm2=Math.round(40+rng()*25);
+    var P=Math.round(150+rng()*200);
+    var sig=r2(P/A_cm2*10);
+    var tauf=r2(c+sig*Math.tan(deg2rad(phi)));
+    var Tf=Math.round(tauf/10*A_cm2);
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất có đặc trưng kháng cắt đã biết: c=<b>'+c+' kPa</b>, φ=<b>'+phi+'°</b>. '
+      +'TN cắt phẳng dùng mẫu diện tích A=<b>'+A_cm2+' cm²</b>, tải đứng P=<b>'+P+' N</b>. '
+      +'Xác định ứng suất pháp σ, sức kháng cắt τ<sub>f</sub> và lực ngang T<sub>f</sub> cần thiết để gây trượt mẫu.';
+    document.getElementById('a5-hint').innerHTML=
+      'σ = '+P+'/'+A_cm2+'×10 = ?<br>'
+      +'τ<sub>f</sub> = '+c+' + σ×tg'+phi+'° = ?<br>'
+      +'T<sub>f</sub> = τ<sub>f</sub>×A/10 = ?';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-sig','σ = P/A (kPa)',sig,1,'kPa')
+      +makeQ('a5-tauf','τ<sub>f</sub> (kPa)',tauf,2,'kPa')
+      +makeQ('a5-Tf','T<sub>f</sub> (N)',Tf,Math.max(Tf*0.04,3),'N');
+  })();
+}
+
+/* ================================================================
+   KHỐI 6 — SINH BÀI B/C (genBC + genOne)
+   genBC(stt): render 5 cặp B/C cards, gọi genOne cho từng bài
+   genOne(id,type,stt,s1,s2): điền đề bài vào 1 card
+   5 loại: tt, catRoi, catDinh, truc3, nguoc
+   Bài B: có công thức gợi ý · Bài C: tự nhận biết loại bài
+================================================================ */
+function genBC(stt){
+  var CFG=[
+    {id:'1',title:'Xác định trạng thái tại M trên mặt phẳng α',fml:'τ<sub>f</sub>=c+σtgφ &nbsp;·&nbsp; so sánh τ với τ<sub>f</sub>',type:'tt'},
+    {id:'2',title:'TN cắt phẳng — đất rời',fml:'tgφ=(τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c=τ₁−σ₁tgφ',type:'catRoi'},
+    {id:'3',title:'TN cắt phẳng — đất dính',fml:'tgφ=(τ₂−τ₁)/(σ₂−σ₁) &nbsp;·&nbsp; c=τ₁−σ₁tgφ',type:'catDinh'},
+    {id:'4',title:'TN 3 trục CU — ứng suất tổng',fml:'σ₁=σ₃N<sub>φ</sub>+2c√N<sub>φ</sub>',type:'truc3'},
+    {id:'5',title:'Cho c, φ → tính ứng suất trong TN cắt phẳng',fml:'σ=P/A &nbsp;·&nbsp; τ<sub>f</sub>=c+σtgφ &nbsp;·&nbsp; T<sub>f</sub>=τ<sub>f</sub>A',type:'nguoc'},
+  ];
+
+  var bhtml='',chtml='';
+  CFG.forEach(function(c,idx){
+    var bid='b'+c.id, cid='c'+c.id;
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>Bài '+bid.toUpperCase()+' · '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+bid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+bid+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+bid+'-q"></div></div></div>';
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>Bài '+cid.toUpperCase()+' · Tự nhận biết — '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+cid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+cid+'-prob">⏳</div>'
+      +'<div id="'+cid+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[23,29,31,37,41][idx];
+    genOne('b'+c.id,c.type,stt,seedBase,6101+idx*20);
+    genOne('c'+c.id,c.type,stt,seedBase+97,6201+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+
+  if(type==='tt'){
+    var c=Math.round(5+rng()*20);var phi=Math.round(18+rng()*17);
+    var sig=r2(80+rng()*150);
+    var tauf=r2(c+sig*Math.tan(deg2rad(phi)));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: c='+c+'kPa, φ='+phi+'°, σ='+sig+'kPa. Tính τ<sub>f</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-tauf','τ<sub>f</sub> (kPa)',tauf,2,'kPa');
+  }
+  else if(type==='catRoi'){
+    var A_cm2=Math.round(40+rng()*20);var phi_deg=Math.round(28+rng()*12);
+    var c_kPa=Math.round(rng()*2);
+    var P1=Math.round(80+rng()*40);var P2=Math.round(200+rng()*60);
+    var sig1=r2(P1/A_cm2*10);var sig2=r2(P2/A_cm2*10);
+    var tanphi=Math.tan(deg2rad(phi_deg));
+    var T1=Math.round((c_kPa/10+sig1/10*tanphi)*A_cm2);
+    var T2=Math.round((c_kPa/10+sig2/10*tanphi)*A_cm2);
+    var tau1=r2(T1/A_cm2*10);var tau2=r2(T2/A_cm2*10);
+    var tanphi_ans=r3((tau2-tau1)/(sig2-sig1));
+    var phi_ans=r1(Math.atan(tanphi_ans)*180/Math.PI);
+    var c_ans=r2(tau1-sig1*tanphi_ans);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Cát, A='+A_cm2+'cm². Mẫu 1: P='+P1+'N,T='+T1+'N. Mẫu 2: P='+P2+'N,T='+T2+'N. Tính φ, c.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-phi','φ (°)',phi_ans,1.2,'°')+makeQ(id+'-c','c (kPa)',c_ans,2,'kPa');
+  }
+  else if(type==='catDinh'){
+    var A_cm2=Math.round(40+rng()*20);var phi_deg=Math.round(12+rng()*14);
+    var c_kPa=Math.round(10+rng()*22);var a_stt=Math.floor(rng()*30);
+    var P1=Math.round(100+a_stt+rng()*20);var P2=Math.round(240+a_stt+rng()*20);
+    var sig1=r2(P1/A_cm2*10);var sig2=r2(P2/A_cm2*10);
+    var tanphi=Math.tan(deg2rad(phi_deg));
+    var T1=Math.round((c_kPa/10+sig1/10*tanphi)*A_cm2);
+    var T2=Math.round((c_kPa/10+sig2/10*tanphi)*A_cm2);
+    var tau1=r2(T1/A_cm2*10);var tau2=r2(T2/A_cm2*10);
+    var tanphi_ans=r3((tau2-tau1)/(sig2-sig1));
+    var phi_ans=r1(Math.atan(tanphi_ans)*180/Math.PI);
+    var c_ans=r2(tau1-sig1*tanphi_ans);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Sét, A='+A_cm2+'cm². Mẫu 1: P='+P1+'N,T='+T1+'N. Mẫu 2: P='+P2+'N,T='+T2+'N. Tính φ, c.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-phi','φ (°)',phi_ans,1.2,'°')+makeQ(id+'-c','c (kPa)',c_ans,2,'kPa');
+  }
+  else if(type==='truc3'){
+    var phi_deg=Math.round(16+rng()*16);var c_kPa=Math.round(5+rng()*22);
+    var Nphi=r3(Math.pow(Math.tan(deg2rad(45+phi_deg/2)),2));
+    var sig3_1=Math.round(80+rng()*40);var sig3_2=Math.round(180+rng()*50);
+    var sig1_1=Math.round(sig3_1*Nphi+2*c_kPa*Math.sqrt(Nphi));
+    var sig1_2=Math.round(sig3_2*Nphi+2*c_kPa*Math.sqrt(Nphi));
+    var Nphi_ans=r3((sig1_2-sig1_1)/(sig3_2-sig3_1));
+    var phi_ans=r1((Math.atan(Math.sqrt(Nphi_ans))*180/Math.PI-45)*2);
+    var c_ans=r2((sig1_1-sig3_1*Nphi_ans)/(2*Math.sqrt(Nphi_ans)));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Mẫu 1: σ₃='+sig3_1+',σ₁='+sig1_1+'. Mẫu 2: σ₃='+sig3_2+',σ₁='+sig1_2+' (kPa). Tính N<sub>φ</sub>, φ, c.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Nphi','N<sub>φ</sub>',Nphi_ans,0.12,'')+makeQ(id+'-phi','φ (°)',phi_ans,1.3,'°')+makeQ(id+'-c','c (kPa)',c_ans,2.8,'kPa');
+  }
+  else if(type==='nguoc'){
+    var c=Math.round(8+rng()*20);var phi=Math.round(18+rng()*18);
+    var A_cm2=Math.round(40+rng()*25);var P=Math.round(150+rng()*200);
+    var sig=r2(P/A_cm2*10);
+    var tauf=r2(c+sig*Math.tan(deg2rad(phi)));
+    var Tf=Math.round(tauf/10*A_cm2);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: c='+c+'kPa, φ='+phi+'°, A='+A_cm2+'cm², P='+P+'N. Tính τ<sub>f</sub>, T<sub>f</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-tauf','τ<sub>f</sub> (kPa)',tauf,2,'kPa')+makeQ(id+'-Tf','T<sub>f</sub> (N)',Tf,Math.max(Tf*0.05,3),'N');
+  }
+}
+
+/* ================================================================
+   KHỐI 7 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: đọc SV → khởi tạo 8 MCQ (q1-q8) → genA(stt) → genBC(stt)
+           → đếm TOTAL_QUESTIONS → set nút nộp → updateProg
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(function(k){ANS['mcq-'+k]=null;});
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chương 3 — Tính Chất Cơ Học Của Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+main{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+.hero{background:linear-gradient(135deg,var(--Pdk),var(--Pmd));color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:0 4px 24px rgba(13,71,161,.25)}
+.hero h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:20px;font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:5px}
+.sv-bar{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px;box-shadow:var(--sh)}
+.sv-bar i{font-size:24px;color:var(--P)}
+.sv-name{font-size:15px;font-weight:700}.sv-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.sv-num{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--P);background:var(--Plt);padding:6px 18px;border-radius:10px;margin-left:auto}
+.sec-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.note-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 16px;font-size:13px;line-height:1.7;color:#4E342E;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.dc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.dc:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(21,101,192,.15)}
+.dc-hd{padding:16px 18px 12px;border-bottom:1px solid var(--Plt);display:flex;align-items:flex-start;gap:12px}
+.dc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dc-hd h3{font-size:14px;font-weight:700;color:var(--Pdk);line-height:1.3;margin-bottom:3px}
+.dc-hd p{font-size:11px;color:var(--muted)}
+.dc-body{padding:13px 18px;flex:1;display:flex;flex-direction:column;gap:7px}
+.dc-feat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.dc-feat i{font-size:14px;color:var(--P);flex-shrink:0}
+.dc-foot{padding:12px 18px;border-top:1px solid var(--Plt);display:flex;align-items:center;justify-content:space-between}
+.go-btn{background:var(--P);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none}
+.prog-wrap{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px 20px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px;font-weight:600}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="../index.html" class="back-btn"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+    <div class="hdr-title">
+      <h1>Chương 3 — Tính Chất Cơ Học Của Đất</h1>
+      <p>NCM: Cơ Học Đất - Nền Móng · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <h2><i class="ti ti-droplet-half-2" style="vertical-align:-3px;margin-right:8px"></i>Chương 3 — Tính Chất Cơ Học Của Đất</h2>
+    <p>Tính thấm · Biến dạng (nén lún) · Sức chống cắt · Đầm chặt đất</p>
+    <div class="hero-meta">
+      <div class="hero-chip"><i class="ti ti-book-2"></i> 4 bài độc lập</div>
+      <div class="hero-chip"><i class="ti ti-clock"></i> ~8 tiết</div>
+      <div class="hero-chip"><i class="ti ti-math-function"></i> Darcy · Oedometer · Mohr-Coulomb · Proctor</div>
+    </div>
+  </div>
+
+  <div class="sv-bar">
+    <i class="ti ti-id-badge-2"></i>
+    <div><div class="sv-name" id="sv-display">Đang tải...</div><div class="sv-sub">Số liệu tự sinh theo STT · <a href="../index.html" style="color:var(--P)">Đổi thông tin ở Trang chủ</a></div></div>
+    <div class="sv-num" id="sv-badge">–</div>
+  </div>
+
+  <div class="note-box">💡 <b>Lưu ý:</b> 4 bài trong chương này độc lập với nhau (mỗi bài là một chủ đề riêng: thấm, lún, sức chống cắt, đầm chặt) — mỗi bài có lý thuyết và công thức tổng hợp riêng, không dùng chung.</div>
+
+  <div class="sec-lbl"><i class="ti ti-list-check"></i> Các bài học</div>
+  <div class="grid">
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E3F2FD"><i class="ti ti-droplet" style="color:#1565C0"></i></div>
+        <div><h3>3.1 — Tính Thấm Của Đất</h3><p>Darcy · Cột nước không đổi/thay đổi · k tương đương</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> v=ki, Q=kiA, k thí nghiệm, k<sub>h</sub>/k<sub>v</sub></div>
+        <div class="dc-feat"><i class="ti ti-flask"></i> TN trong phòng & hiện trường (bơm hút nước)</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-31">– / –</span>
+        <a class="go-btn" href="3.1_THAM.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FFF9C4"><i class="ti ti-arrow-bar-down" style="color:#F9A825"></i></div>
+        <div><h3>3.2 — Biến Dạng & Độ Lún</h3><p>Thí nghiệm Oedometer · e, a, m<sub>v</sub>, S</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> Đường cong nén lún e-σ, hệ số nén a, m<sub>v</sub></div>
+        <div class="dc-feat"><i class="ti ti-chart-line"></i> Nội suy độ lún tại cấp tải bất kỳ</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-32">– / –</span>
+        <a class="go-btn" href="3.2_LUN.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E8F5E9"><i class="ti ti-cut" style="color:#2E7D32"></i></div>
+        <div><h3>3.3 — Sức Chống Cắt Của Đất</h3><p>Mohr-Coulomb · Cắt phẳng · Nén 3 trục CU</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> τ = σ·tgφ + c, xác định c, φ từ 2 mẫu</div>
+        <div class="dc-feat"><i class="ti ti-circle-dot"></i> Nén 3 trục: c', φ' hữu hiệu</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-33">– / –</span>
+        <a class="go-btn" href="3.3_TRUOT.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#F3E5F5"><i class="ti ti-stack-2" style="color:#6A1B9A"></i></div>
+        <div><h3>3.4 — Đầm Chặt Đất</h3><p>Thí nghiệm Proctor · γ<sub>k,max</sub>, w<sub>opt</sub></p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> Đường cong đầm chặt, độ ẩm tối ưu</div>
+        <div class="dc-feat"><i class="ti ti-target"></i> Kiểm soát chất lượng đắp nền</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Lý thuyết → Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-34">– / –</span>
+        <a class="go-btn" href="3.4_DAM_CHAT.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:5px"></i>Tiến độ tổng Chương 3</span><span id="total-prog-text" style="color:var(--muted);font-weight:500">Chưa có dữ liệu</span></div>
+    <div class="prog-track"><div class="prog-fill" id="total-prog-fill" style="width:0%"></div></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px">Tiến độ được lưu tự động trong trình duyệt khi bạn hoàn thành mỗi bài.</p>
+  </div>
+</main>
+<script>
+/* ================================================================
+   KHỐI 1 — KHỞI TẠO TRANG (window.onload)
+   Đọc 4 localStorage keys: 'prog_c3_31' → 'prog_c3_34'
+   Hiển thị tiến độ từng bài (prog-31 đến prog-34) và tổng
+   Đọc SV từ sessionStorage → hiển thị tên/MSSV/STT
+================================================================ */
+window.onload=function(){
+  var sv=null;
+  try{sv=JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){}
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-badge').textContent='#'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ để nhập thông tin';
+    document.getElementById('sv-badge').textContent='–';
+  }
+  var keys=['prog_c3_31','prog_c3_32','prog_c3_33','prog_c3_34'];
+  var ids=['prog-31','prog-32','prog-33','prog-34'];
+  var tD=0,tA=0;
+  keys.forEach(function(k,i){
+    try{var d=JSON.parse(localStorage.getItem(k)||'null');
+      if(d&&d.total){document.getElementById(ids[i]).textContent=d.done+' / '+d.total;tD+=d.done;tA+=d.total;}}catch(e){}
+  });
+  if(tA){document.getElementById('total-prog-text').textContent=tD+' / '+tA+' ('+Math.round(tD/tA*100)+'%)';
+    document.getElementById('total-prog-fill').style.width=Math.round(tD/tA*100)+'%';}
+};
+</script>
+</body>
+</html>

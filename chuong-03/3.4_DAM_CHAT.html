@@ -1,0 +1,592 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.4 — Đầm Chặt Đất</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:120px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--brd);margin:6px 0}
+table.tbl{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)}
+table.tbl th{background:var(--Pdk);color:#fff;padding:6px 10px;text-align:center;white-space:nowrap}
+table.tbl td{padding:5px 10px;text-align:center;border-bottom:1px solid var(--Plt)}
+table.tbl tr:nth-child(even) td{background:#F0F7FF}
+table.tbl .rowlabel{background:var(--Plt);font-weight:700;color:var(--Pdk)}
+.mcq-wrap{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C3.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 3</a>
+    <div class="hdr-title">
+      <h1>3.4 — Đầm Chặt Đất</h1>
+      <p>Thí nghiệm Proctor · γ<sub>k,max</sub>, w<sub>opt</sub> · Độ chặt K</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 3.4 — Đầm Chặt Đất</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ LÝ THUYẾT ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-stack-2"></i>
+    <div><h2>Lý thuyết — Thí nghiệm Proctor & Đầm chặt đất</h2></div>
+    <span class="cbadge">LÝ THUYẾT</span></div>
+  <div class="card-body">
+    <div class="theory">💡 <b>TN Proctor</b>: đầm mẫu đất bằng năng lượng tiêu chuẩn ở các độ ẩm w khác nhau, đo γ<sub>tn</sub> mỗi lần đầm, suy ra γ<sub>k</sub>. Vẽ đường cong γ<sub>k</sub>-w → tìm điểm đỉnh là độ ẩm tối ưu w<sub>opt</sub> và dung trọng khô lớn nhất γ<sub>k,max</sub>.</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Công thức cốt lõi</div>
+      <div class="frow">γ<sub>k</sub> = γ<sub>tn</sub> / (1 + 0.01w) &nbsp;(quy đổi từ mỗi lần đầm)</div>
+      <div class="frow">K = γ<sub>k</sub> / γ<sub>k,max</sub> &nbsp;(hệ số đầm chặt, đánh giá chất lượng đắp)</div>
+      <div class="frow">γ<sub>k,bão hòa</sub>(w) = Δ·γ<sub>w</sub> / (1 + 0.01·w·Δ) &nbsp;(đường bão hòa S=100%, Δ=tỷ trọng hạt)</div>
+    </div>
+    <div class="earth-box">💡 Tại w<sub>opt</sub>, đường cong γ<sub>k</sub>-w đạt cực đại γ<sub>k,max</sub> và luôn nằm DƯỚI đường bão hòa S=100%. Yêu cầu thi công nền đường/đắp đập thường K ≥ 0.90~0.98.</div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q1</span>Tại độ ẩm tối ưu w<sub>opt</sub>, dung trọng khô γ<sub>k</sub> đạt giá trị như thế nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-lt1-0" onclick="pickMCQ('lt1',0,1,'❌ Nhỏ nhất là sai, phải là lớn nhất.')"><span class="mkey">A</span><span>Nhỏ nhất</span></div>
+        <div class="mcq-opt" id="mco-lt1-1" onclick="pickMCQ('lt1',1,1,'✓ Đường cong γk-w có dạng parabol lồi, đỉnh tại wopt cho γk,max — đầm chặt hiệu quả nhất.')"><span class="mkey">B</span><span>Lớn nhất (γ<sub>k,max</sub>)</span></div>
+        <div class="mcq-opt" id="mco-lt1-2" onclick="pickMCQ('lt1',2,1,'❌')"><span class="mkey">C</span><span>Bằng γ<sub>tn</sub></span></div>
+        <div class="mcq-opt" id="mco-lt1-3" onclick="pickMCQ('lt1',3,1,'❌')"><span class="mkey">D</span><span>Không xác định</span></div>
+      </div><div class="mcq-exp" id="exp-lt1"></div></div>
+    <div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">Q2</span>Hệ số đầm chặt K được tính theo công thức nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-lt2-0" onclick="pickMCQ('lt2',0,0,'✓ K = γk thực tế hiện trường / γk,max thí nghiệm Proctor, đánh giá mức độ đầm chặt đạt được.')"><span class="mkey">A</span><span>K = γ<sub>k</sub> / γ<sub>k,max</sub></span></div>
+        <div class="mcq-opt" id="mco-lt2-1" onclick="pickMCQ('lt2',1,0,'❌')"><span class="mkey">B</span><span>K = γ<sub>k,max</sub> / γ<sub>k</sub></span></div>
+        <div class="mcq-opt" id="mco-lt2-2" onclick="pickMCQ('lt2',2,0,'❌')"><span class="mkey">C</span><span>K = w / w<sub>opt</sub></span></div>
+        <div class="mcq-opt" id="mco-lt2-3" onclick="pickMCQ('lt2',3,0,'❌')"><span class="mkey">D</span><span>K = γ<sub>tn</sub> / γ<sub>k</sub></span></div>
+      </div><div class="mcq-exp" id="exp-lt2"></div></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Tính gamma_k từ TN -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Quy đổi γ<sub>k</sub> từ kết quả mỗi lần đầm</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">γ<sub>k</sub> = γ<sub>tn</sub> / (1 + 0.01w)</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Đọc bảng TN Proctor - tìm wopt, gamma_k_max -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Xác định w<sub>opt</sub> và γ<sub>k,max</sub> từ bảng TN Proctor</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① Tính γ<sub>k</sub> = γ<sub>tn</sub>/(1+0.01w) cho từng lần đầm</div>
+      <div class="frow">② So sánh, tìm giá trị γ<sub>k</sub> lớn nhất → đó là γ<sub>k,max</sub>, w tương ứng là w<sub>opt</sub></div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Hệ số đầm chặt K -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Hệ số đầm chặt K hiện trường so với TN Proctor</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">γ<sub>k,hiện trường</sub> = γ<sub>tn</sub>/(1+0.01w) &nbsp;·&nbsp; K = γ<sub>k,hiện trường</sub> / γ<sub>k,max</sub></div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+    <div class="earth-box" id="a3-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A4: Đường bão hòa S=100% -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Đường bão hòa S=100% (đường giới hạn lý thuyết)</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">γ<sub>k,bh</sub>(w) = Δ·γ<sub>w</sub> / (1 + 0.01·w·Δ) &nbsp;(γ<sub>w</sub>=10 kN/m³)</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+<!-- ══ TỔNG HỢP CÔNG THỨC ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-file-description" style="font-size:12px"></i> Tổng hợp công thức (phần thi)</div>
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>Công thức trọng tâm — Thi cử</h2></div>
+    <span class="cbadge">📋 CF</span>
+  </div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle">Quy đổi γ<sub>k</sub> từ TN</div>
+        <div class="frow">γ<sub>k</sub> = γ<sub>tn</sub>/(1+0.01w)</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">Hệ số đầm chặt</div>
+        <div class="frow">K = γ<sub>k</sub>/γ<sub>k,max</sub></div>
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle">Đường bão hòa S=100%</div>
+      <div class="frow">γ<sub>k,bh</sub>(w) = Δ·γ<sub>w</sub> / (1+0.01·w·Δ)</div>
+    </div>
+    <div class="earth-box">💡 γ<sub>k</sub> luôn ≤ γ<sub>k,bh</sub> tại cùng độ ẩm w (đường cong Proctor luôn nằm dưới đường bão hòa). Đơn vị: γ [kN/m³], w [%].</div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>3.4 · Đầm Chặt Đất</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="index_C3.html" class="btn btn-sm btn-ghost">Chương 3 ✓</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — BIẾN TOÀN CỤC
+   ANS            : lưu kết quả từng câu (null = chưa làm, true/false)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: đếm sau genA()+genBC() trong window.onload
+================================================================ */
+
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — HÀM TIỆN ÍCH DÙNG CHUNG
+   r1/r2/r3(v)    : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG s = s*16807 % 2147483647, cho số [0,1) theo STT
+   getSV()        : đọc thông tin SV từ sessionStorage
+   scrollNext()   : cuộn đến ô chưa làm tiếp theo
+   (ch3 không có toast/renderSV — dùng alert() và sv-display trực tiếp)
+================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ================================================================
+   KHỐI 3 — CHẤM CÂU HỎI & THEO DÕI TIẾN ĐỘ
+   chkFill(id,ans,tol)              : chấm ô số, class ok/no, gọi updateProg
+   pickMCQ(name,picked,correct,expText): chấm MCQ, lock, hiện giải thích
+   makeQ(id,label,ans,tol,unit)     : tạo HTML 1 ô nhập số + chip kết quả
+   updateProg(): cập nhật tiến độ (attempted/done/total), lưu 'prog_c3_34'
+================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c3_34',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI (submitResult)
+   submitResult(): kiểm tra MIN_ATTEMPT_PCT, gửi lên Cloudflare Worker
+   chapterId: 'C3-34-DamChat' — phân loại kết quả trên server
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C3-34-DamChat',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 5 — HÀM PHỤ TRỢ (TN đầm chặt Proctor)
+   genProctor(rng)  : sinh bảng TN Proctor 5 điểm, đỉnh γk,max tại điểm giữa
+                      trả về {w[], gk[], gtn[], wopt, gkmax}
+   tableProctor(d)  : render bảng HTML w(%) và γtn từ kết quả genProctor
+================================================================ */
+// Sinh bảng TN Proctor 5 điểm, có đỉnh rõ ràng tại 1 điểm giữa
+function genProctor(rng){
+  var wopt=r1(12+rng()*8); // 12-20%
+  var gkmax=r2(1.55+rng()*0.25); // 1.55-1.80 T/m3 quy đổi sau, dùng kN/m3
+  gkmax=r2(16.5+rng()*3); // kN/m3, 16.5-19.5
+  var w=[r1(wopt-6),r1(wopt-3),wopt,r1(wopt+3),r1(wopt+6)];
+  var gk=[];
+  for(var i=0;i<5;i++){
+    var dw=w[i]-wopt;
+    var loss=r2(dw*dw*0.045); // parabol đơn giản
+    gk.push(r2(gkmax-loss));
+  }
+  var gtn=[];
+  for(var i=0;i<5;i++){
+    gtn.push(r2(gk[i]*(1+0.01*w[i])));
+  }
+  return {w:w,gk:gk,gtn:gtn,wopt:wopt,gkmax:gkmax};
+}
+function tableProctor(d){
+  var wCells=d.w.map(function(x){return '<th>'+x+'</th>';}).join('');
+  var gtnCells=d.gtn.map(function(x){return '<td>'+x+'</td>';}).join('');
+  return '<div class="tbl-wrap"><table class="tbl">'
+    +'<tr><th>Lần đầm</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>'
+    +'<tr><td class="rowlabel">w (%)</td>'+wCells+'</tr>'
+    +'<tr><td class="rowlabel">γ<sub>tn</sub> (kN/m³)</td>'+gtnCells+'</tr>'
+    +'</table></div>';
+}
+
+/* ================================================================
+   KHỐI 6 — SINH BÀI A (genA)
+   genA(stt): sinh 4 bài đầm chặt theo STT, mỗi bài là 1 IIFE
+   A1: Quy đổi γk từ γtn, w đơn lẻ — γk = γtn/(1+0.01w)
+   A2: Đọc bảng TN Proctor → tính γk mỗi lần → tìm γk,max và wopt
+   A3: Hệ số đầm chặt K = γk/γk,max → kết luận đạt/chưa đạt [K]
+   A4: Tính γk trên đường bão hòa S=100% — γk,bh = Δ·γw/(1+0.01·w·Δ)
+================================================================ */
+function genA(stt){
+  // A1: Quy đổi gamma_k từ TN đơn lẻ
+  (function(){
+    var rng=seededRng(stt*7+7101);
+    var w=r1(10+rng()*15);
+    var gk=r2(16+rng()*3);
+    var gtn=r2(gk*(1+0.01*w));
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Một mẫu đất sau khi đầm có độ ẩm w=<b>'+w+'%</b>, dung trọng tự nhiên γ<sub>tn</sub>=<b>'+gtn+' kN/m³</b>. '
+      +'Tính dung trọng khô γ<sub>k</sub> của mẫu.';
+    document.getElementById('a1-hint').innerHTML=
+      'γ<sub>k</sub> = '+gtn+' / (1+0.01×'+w+') = ?';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-gk','γ<sub>k</sub> (kN/m³)',gk,0.15,'kN/m³');
+  })();
+
+  // A2: Đọc bảng TN Proctor, tìm wopt, gkmax
+  (function(){
+    var rng=seededRng(stt*11+7103);
+    var d=genProctor(rng);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Kết quả TN Proctor tiêu chuẩn:<br>'+tableProctor(d)
+      +'Tính γ<sub>k</sub> cho từng lần đầm. Xác định γ<sub>k,max</sub> và độ ẩm tối ưu w<sub>opt</sub>.';
+    var gkList=d.w.map(function(w,i){return r2(d.gtn[i]/(1+0.01*w));});
+    var maxIdx=0,maxVal=gkList[0];
+    for(var i=1;i<5;i++){if(gkList[i]>maxVal){maxVal=gkList[i];maxIdx=i;}}
+    document.getElementById('a2-hint').innerHTML=
+      'γ<sub>k</sub> mỗi lần = γ<sub>tn</sub>/(1+0.01w). So sánh 5 giá trị, tìm lớn nhất → đó là γ<sub>k,max</sub>, w tương ứng là w<sub>opt</sub>.';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-gkmax','γ<sub>k,max</sub> (kN/m³)',maxVal,0.1,'kN/m³')
+      +makeQ('a2-wopt','w<sub>opt</sub> (%)',d.w[maxIdx],0.3,'%');
+  })();
+
+  // A3: Hệ số đầm chặt K
+  (function(){
+    var rng=seededRng(stt*13+7105);
+    var gkmax=r2(16.5+rng()*3);
+    var w=r1(10+rng()*15);
+    var gtn=r2((gkmax*(0.85+rng()*0.13))*(1+0.01*w));
+    var gk_hientruong=r2(gtn/(1+0.01*w));
+    var K=r3(gk_hientruong/gkmax);
+    var KReq=r1(0.92+rng()*0.06);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): TN Proctor cho γ<sub>k,max</sub>=<b>'+gkmax+' kN/m³</b>. '
+      +'Tại hiện trường, mẫu đất đắp có độ ẩm w=<b>'+w+'%</b>, γ<sub>tn</sub>=<b>'+gtn+' kN/m³</b>. '
+      +'Yêu cầu thiết kế [K]=<b>'+KReq+'</b>. Tính γ<sub>k</sub> hiện trường và hệ số đầm chặt K, kết luận đạt yêu cầu hay không.';
+    document.getElementById('a3-hint').innerHTML=
+      'γ<sub>k</sub> = '+gtn+'/(1+0.01×'+w+') = ?<br>'
+      +'K = γ<sub>k</sub>/'+gkmax+' = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-gk','γ<sub>k</sub> hiện trường (kN/m³)',gk_hientruong,0.1,'kN/m³')
+      +makeQ('a3-K','K = γ<sub>k</sub>/γ<sub>k,max</sub>',K,0.015,'');
+    var verdict=K>=KReq?'K='+K+' ≥ [K]='+KReq+' → Đạt yêu cầu đầm chặt.':'K='+K+' < [K]='+KReq+' → CHƯA đạt, cần đầm thêm.';
+    document.getElementById('a3-kq').innerHTML='📌 Kết luận: '+verdict;
+    document.getElementById('a3-kq').style.display='';
+  })();
+
+  // A4: Đường bão hòa S=100%
+  (function(){
+    var rng=seededRng(stt*17+7107);
+    var D=r2(2.65+rng()*0.1);
+    var w=r1(14+rng()*10);
+    var gw=10;
+    var gkbh=r2(D*gw/(1+0.01*w*D));
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Đất có tỷ trọng hạt Δ=<b>'+D+'</b>. '
+      +'Tính dung trọng khô trên đường bão hòa γ<sub>k,bh</sub> tại độ ẩm w=<b>'+w+'%</b> (S=100%, γ<sub>w</sub>=10 kN/m³).';
+    document.getElementById('a4-hint').innerHTML=
+      'γ<sub>k,bh</sub> = '+D+'×10 / (1+0.01×'+w+'×'+D+') = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-gkbh','γ<sub>k,bh</sub> (kN/m³)',gkbh,0.15,'kN/m³');
+  })();
+}
+
+/* ================================================================
+   KHỐI 7 — SINH BÀI B/C (genBC + genOne)
+   genBC(stt): render 4 cặp B/C cards, gọi genOne cho từng bài
+   genOne(id,type,stt,s1,s2): điền đề bài vào 1 card
+   4 loại: gk, proctor, K, bh
+   Bài B: có công thức gợi ý · Bài C: tự nhận biết loại bài
+================================================================ */
+function genBC(stt){
+  var CFG=[
+    {id:'1',title:'Quy đổi γ<sub>k</sub> từ TN đơn lẻ',fml:'γ<sub>k</sub> = γ<sub>tn</sub>/(1+0.01w)',type:'gk'},
+    {id:'2',title:'Tìm γ<sub>k,max</sub>, w<sub>opt</sub> từ bảng TN',fml:'Tính γ<sub>k</sub> mỗi lần đầm, so sánh tìm max',type:'proctor'},
+    {id:'3',title:'Hệ số đầm chặt K',fml:'K = γ<sub>k</sub>/γ<sub>k,max</sub>',type:'K'},
+    {id:'4',title:'Đường bão hòa S=100%',fml:'γ<sub>k,bh</sub> = Δγ<sub>w</sub>/(1+0.01wΔ)',type:'bh'},
+  ];
+
+  var bhtml='',chtml='';
+  CFG.forEach(function(c,idx){
+    var bid='b'+c.id, cid='c'+c.id;
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>Bài '+bid.toUpperCase()+' · '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+bid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+bid+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+bid+'-q"></div></div></div>';
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>Bài '+cid.toUpperCase()+' · Tự nhận biết — '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+cid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+cid+'-prob">⏳</div>'
+      +'<div id="'+cid+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[23,29,31,37][idx];
+    genOne('b'+c.id,c.type,stt,seedBase,8101+idx*20);
+    genOne('c'+c.id,c.type,stt,seedBase+97,8201+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+
+  if(type==='gk'){
+    var w=r1(10+rng()*15);var gk=r2(16+rng()*3);var gtn=r2(gk*(1+0.01*w));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: w='+w+'%, γ<sub>tn</sub>='+gtn+' kN/m³. Tính γ<sub>k</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-gk','γ<sub>k</sub> (kN/m³)',gk,0.15,'kN/m³');
+  }
+  else if(type==='proctor'){
+    var d=genProctor(rng);
+    var gkList=d.w.map(function(w,i){return r2(d.gtn[i]/(1+0.01*w));});
+    var maxIdx=0,maxVal=gkList[0];
+    for(var i=1;i<5;i++){if(gkList[i]>maxVal){maxVal=gkList[i];maxIdx=i;}}
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Kết quả TN Proctor:<br>'+tableProctor(d)+'Tính γ<sub>k,max</sub> và w<sub>opt</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-gkmax','γ<sub>k,max</sub> (kN/m³)',maxVal,0.1,'kN/m³')+makeQ(id+'-wopt','w<sub>opt</sub> (%)',d.w[maxIdx],0.3,'%');
+  }
+  else if(type==='K'){
+    var gkmax=r2(16.5+rng()*3);var w=r1(10+rng()*15);
+    var gtn=r2((gkmax*(0.85+rng()*0.13))*(1+0.01*w));
+    var gk_ht=r2(gtn/(1+0.01*w));
+    var K=r3(gk_ht/gkmax);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: γ<sub>k,max</sub>='+gkmax+' kN/m³. Hiện trường w='+w+'%, γ<sub>tn</sub>='+gtn+' kN/m³. Tính K.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-K','K',K,0.015,'');
+  }
+  else if(type==='bh'){
+    var D=r2(2.65+rng()*0.1);var w=r1(14+rng()*10);var gw=10;
+    var gkbh=r2(D*gw/(1+0.01*w*D));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Δ='+D+', w='+w+'%. Tính γ<sub>k,bh</sub> (S=100%).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-gkbh','γ<sub>k,bh</sub> (kN/m³)',gkbh,0.15,'kN/m³');
+  }
+}
+
+/* ================================================================
+   KHỐI 8 — KHỞI TẠO TRANG (window.onload)
+   Thứ tự: đọc SV → khởi tạo 2 MCQ (lt1, lt2) → genA(stt) → genBC(stt)
+           → đếm TOTAL_QUESTIONS → set nút nộp → updateProg
+================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  ANS['mcq-lt1']=null;ANS['mcq-lt2']=null;
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>
