@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chương 6 — Áp Lực Đất Lên Tường Chắn</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--Pmd:#1976D2;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+main{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+.hero{background:linear-gradient(135deg,var(--Pdk),var(--Pmd));color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:0 4px 24px rgba(13,71,161,.25)}
+.hero h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:20px;font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:5px}
+.sv-bar{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px;box-shadow:var(--sh)}
+.sv-bar i{font-size:24px;color:var(--P)}
+.sv-name{font-size:15px;font-weight:700}.sv-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.sv-num{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--P);background:var(--Plt);padding:6px 18px;border-radius:10px;margin-left:auto}
+.sec-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.dc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.dc:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(21,101,192,.15)}
+.dc-hd{padding:16px 18px 12px;border-bottom:1px solid var(--Plt);display:flex;align-items:flex-start;gap:12px}
+.dc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dc-hd h3{font-size:14px;font-weight:700;color:var(--Pdk);line-height:1.3;margin-bottom:3px}
+.dc-hd p{font-size:11px;color:var(--muted)}
+.dc-body{padding:13px 18px;flex:1;display:flex;flex-direction:column;gap:7px}
+.dc-feat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.dc-feat i{font-size:14px;color:var(--P);flex-shrink:0}
+.dc-foot{padding:12px 18px;border-top:1px solid var(--Plt);display:flex;align-items:center;justify-content:space-between}
+.go-btn{background:var(--P);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none}
+.fml-wrap{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:18px 22px;margin-bottom:24px;box-shadow:var(--sh)}
+.fml-wrap h3{font-size:13px;font-weight:700;color:var(--P);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fi{background:var(--Plt);border-left:3px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-family:var(--mono);font-size:12px;line-height:1.8}
+.fi b{color:var(--Pdk);font-family:var(--sans);font-size:11px;font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px}
+.prog-wrap{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px 20px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px;font-weight:600}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+@media(max-width:600px){.fg{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="../index.html" class="back-btn"><i class="ti ti-arrow-left"></i> Trang chủ</a>
+    <div class="hdr-title">
+      <h1>Chương 6 — Áp Lực Đất Lên Tường Chắn</h1>
+      <p>NCM: Cơ Học Đất - Nền Móng · Bộ môn Cơ học đất - Nền móng · ĐHXD Hà Nội</p>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <h2><i class="ti ti-wall" style="vertical-align:-3px;margin-right:8px"></i>Chương 6 — Áp Lực Đất Lên Tường Chắn</h2>
+    <p>Áp lực tĩnh K₀ · Áp lực chủ động Ka · Áp lực bị động Kb · Kiểm tra ổn định lật, trượt</p>
+    <div class="hero-meta">
+      <div class="hero-chip"><i class="ti ti-book-2"></i> 4 dạng bài tập</div>
+      <div class="hero-chip"><i class="ti ti-clock"></i> ~6 tiết</div>
+      <div class="hero-chip"><i class="ti ti-math-function"></i> Rankine · Tam giác áp lực · Lật/Trượt</div>
+    </div>
+  </div>
+
+  <div class="sv-bar">
+    <i class="ti ti-id-badge-2"></i>
+    <div><div class="sv-name" id="sv-display">Đang tải...</div><div class="sv-sub">Số liệu tự sinh theo STT · <a href="../index.html" style="color:var(--P)">Đổi thông tin ở Trang chủ</a></div></div>
+    <div class="sv-num" id="sv-badge">–</div>
+  </div>
+
+  
+
+  <div class="sec-lbl"><i class="ti ti-list-check"></i> Các dạng bài tập</div>
+  <div class="grid">
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FFF3E0"><i class="ti ti-books" style="color:#E65100"></i></div>
+        <div><h3>6.1 — Lý Thuyết Tổng Quan</h3><p>Khái niệm 3 trạng thái áp lực đất</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-list-check"></i> Áp lực tĩnh / chủ động / bị động</div>
+        <div class="dc-feat"><i class="ti ti-help-circle"></i> MCQ ôn lý thuyết</div>
+        <div class="dc-feat"><i class="ti ti-bulb"></i> Điều kiện chuyển trạng thái Rankine</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-61">– / –</span>
+        <a class="go-btn" href="6.1_LY_THUYET.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FFF9C4"><i class="ti ti-line" style="color:#F9A825"></i></div>
+        <div><h3>6.2 — Áp Lực Tĩnh K₀</h3><p>Cường độ &amp; tổng áp lực đất tĩnh</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> K₀=ξ=μ/(1−μ) &nbsp;·&nbsp; p₀=K₀γz</div>
+        <div class="dc-feat"><i class="ti ti-layers"></i> Đất rời & đất dính</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-62">– / –</span>
+        <a class="go-btn" href="6.2_DANG_1.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E3F2FD"><i class="ti ti-arrow-down" style="color:#1565C0"></i></div>
+        <div><h3>6.3 — Áp Lực Chủ Động Ka</h3><p>Đất rời · đất dính · có tải q</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> Ka=tg²(45°−φ/2) &nbsp;·&nbsp; p<sub>a</sub>=Kaγz</div>
+        <div class="dc-feat"><i class="ti ti-triangle"></i> Vùng âm h<sub>c</sub> với đất dính</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-63">– / –</span>
+        <a class="go-btn" href="6.3_DANG_2.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#E8F5E9"><i class="ti ti-arrow-up" style="color:#2E7D32"></i></div>
+        <div><h3>6.4 — Áp Lực Bị Động Kb</h3><p>Đất rời · đất dính</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-math-function"></i> Kb=tg²(45°+φ/2) &nbsp;·&nbsp; p<sub>b</sub>=Kbγz</div>
+        <div class="dc-feat"><i class="ti ti-arrows-diagonal"></i> Ka·Kb=1 — quan hệ nghịch đảo</div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-64">– / –</span>
+        <a class="go-btn" href="6.4_DANG_3.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#F3E5F5"><i class="ti ti-shield-check" style="color:#6A1B9A"></i></div>
+        <div><h3>6.5 — Bài Tập Tổng Hợp</h3><p>Kiểm tra ổn định lật, trượt tường chắn</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-rotate"></i> Hệ số an toàn chống lật K<sub>l</sub></div>
+        <div class="dc-feat"><i class="ti ti-arrows-horizontal"></i> Hệ số an toàn chống trượt K<sub>tr</sub></div>
+        <div class="dc-feat"><i class="ti ti-repeat"></i> Bài A → B → C</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-65">– / –</span>
+        <a class="go-btn" href="6.5_ON_DINH_TUONG.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="dc">
+      <div class="dc-hd">
+        <div class="dc-icon" style="background:#FCE4EC"><i class="ti ti-clipboard-list" style="color:#C62828"></i></div>
+        <div><h3>6.6 — Tổng Hợp &amp; Ôn Tập</h3><p>Bảng công thức · MCQ ôn cuối kỳ</p></div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-feat"><i class="ti ti-books"></i> Toàn bộ công thức chương 6 tại một nơi</div>
+        <div class="dc-feat"><i class="ti ti-help-circle"></i> MCQ ôn tập tổng hợp</div>
+        <div class="dc-feat"><i class="ti ti-alert-triangle"></i> Bài số kết hợp nhiều dạng</div>
+      </div>
+      <div class="dc-foot">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-66">– / –</span>
+        <a class="go-btn" href="6.6_TONG_HOP.html">Vào bài <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:5px"></i>Tiến độ tổng Chương 6</span><span id="total-prog-text" style="color:var(--muted);font-weight:500">Chưa có dữ liệu</span></div>
+    <div class="prog-track"><div class="prog-fill" id="total-prog-fill" style="width:0%"></div></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px">Tiến độ được lưu tự động trong trình duyệt khi bạn hoàn thành mỗi bài.</p>
+  </div>
+</main>
+<script>
+/* ================================================================
+   KHỐI 1 — Khởi tạo trang index (window.onload)
+   Đọc SV từ sessionStorage, hiển thị tên và STT lên header.
+   Đọc 6 khoá localStorage (prog_c6_61..prog_c6_66), hiện tiến độ
+   từng bài và tổng tiến độ toàn Chương 6.
+   ================================================================ */
+window.onload=function(){
+  var sv=null;
+  try{sv=JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){}
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-badge').textContent='#'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ để nhập thông tin';
+    document.getElementById('sv-badge').textContent='–';
+  }
+  var keys=['prog_c6_61','prog_c6_62','prog_c6_63','prog_c6_64','prog_c6_65','prog_c6_66'];
+  var ids=['prog-61','prog-62','prog-63','prog-64','prog-65','prog-66'];
+  var tD=0,tA=0;
+  keys.forEach(function(k,i){
+    try{var d=JSON.parse(localStorage.getItem(k)||'null');
+      if(d&&d.total){document.getElementById(ids[i]).textContent=d.done+' / '+d.total;tD+=d.done;tA+=d.total;}}catch(e){}
+  });
+  if(tA){document.getElementById('total-prog-text').textContent=tD+' / '+tA+' ('+Math.round(tD/tA*100)+'%)';
+    document.getElementById('total-prog-fill').style.width=Math.round(tD/tA*100)+'%';}
+};
+</script>
+</body>
+</html>

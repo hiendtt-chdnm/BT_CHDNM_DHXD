@@ -1,0 +1,799 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.3 — Áp Lực Đất Chủ Động (Ka)</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C6.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 6</a>
+    <div class="hdr-title">
+      <h1>6.3 — Áp Lực Đất Chủ Động (Ka)</h1>
+      <p>Đất rời · đất dính · có tải q · nền 2 lớp</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 6.3 — Áp Lực Chủ Động</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrow-down"></i>
+    <div><h2>Công thức Áp Lực Đất Chủ Động</h2></div>
+    <span class="cbadge">CÔNG THỨC</span></div>
+  <div class="card-body">
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Hệ số áp lực chủ động</div>
+      <div class="frow" style="font-size:14px">Ka = tg²(45° − φ/2)</div>
+    </div>
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle">Đất rời (c = 0)</div>
+        <div class="frow">p<sub>a</sub>(z) = Ka·γ·z</div>
+        <div class="frow">E<sub>c</sub> = ½·Ka·γ·H² &nbsp;(tại H/3 từ đáy)</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">Đất dính (c ≠ 0)</div>
+        <div class="frow">p<sub>a</sub>(z) = Ka·γ·z − 2c·√Ka</div>
+        <div class="frow">h<sub>c</sub> = 2c / (γ·√Ka) &nbsp;(vùng âm bỏ qua)</div>
+        <div class="frow">E<sub>c</sub> = ½·p<sub>a</sub>(H)·(H−h<sub>c</sub>)</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">Đất rời + tải q</div>
+        <div class="frow">p<sub>a</sub>(z) = Ka·(γ·z + q)</div>
+        <div class="frow">E = Ka·q·H + ½·Ka·γ·H² = E₁+E₂</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle">Đất dính + tải q</div>
+        <div class="frow">p<sub>a</sub>(z) = Ka·γ·z − 2c·√Ka + Ka·q</div>
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-layers-intersect"></i> Nền 2 lớp — điểm tính ở lớp 2</div>
+      <div class="frow">Cuối lớp 1 (z=h₁): σ<sub>v1</sub> = γ₁·h₁ &nbsp;·&nbsp; p<sub>a1</sub> = Ka1·γ₁·h₁</div>
+      <div class="frow">Trong lớp 2 (z=h₁+Δz): σ<sub>v2</sub> = γ₁h₁ + γ₂·Δz</div>
+      <div class="frow">p<sub>a2</sub> = Ka2 · σ<sub>v2</sub> &nbsp;(dùng Ka của chính lớp đất chứa điểm tính)</div>
+    </div>
+    <div class="earth-box">💡 Đơn vị: γ [T/m³], c, q, p [T/m²], E [T/m]. (1 T/m² = 10 kPa)</div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Cường độ, đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Cường độ áp lực chủ động tại z · Đất rời</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">Ka = tg²(45°−φ/2) &nbsp;·&nbsp; p<sub>a</sub>(z) = Ka·γ·z</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Cường độ, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Cường độ áp lực chủ động tại z · Đất dính</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">Ka = tg²(45°−φ/2), √Ka</div>
+      <div class="frow">h<sub>c</sub> = 2c/(γ·√Ka) &nbsp;·&nbsp; p<sub>a</sub>(z) = Ka·γ·z − 2c·√Ka</div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Cường độ, đất rời + q -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Cường độ áp lực chủ động tại z · Đất rời + tải q</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">p<sub>a</sub>(0) = Ka·q &nbsp;·&nbsp; p<sub>a</sub>(z) = Ka·(γ·z + q)</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+  </div>
+</div>
+
+<!-- A4: Cường độ, đất dính + q -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Cường độ áp lực chủ động tại z · Đất dính + tải q</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">p<sub>a</sub>(z) = Ka·γ·z − 2c·√Ka + Ka·q</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- A5: Cường độ, nền 2 lớp -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A5 — Cường độ áp lực chủ động · Nền 2 lớp, điểm ở lớp 2</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A5</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a5-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① Ứng suất bản thân tại đáy lớp 1: σ<sub>v1</sub> = γ₁·h₁</div>
+      <div class="frow">② Ứng suất tại điểm tính (lớp 2): σ<sub>v2</sub> = γ₁h₁ + γ₂(z−h₁)</div>
+      <div class="frow">③ Ka2 = tg²(45°−φ₂/2) &nbsp;·&nbsp; p<sub>a</sub> = Ka2 · σ<sub>v2</sub></div>
+      <div class="frow" id="a5-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a5-q"></div>
+  </div>
+</div>
+
+<!-- A6: Tổng áp lực, đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A6 — Tổng áp lực chủ động E<sub>c</sub> · Đất rời</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A6</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a6-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">E<sub>c</sub> = ½·Ka·γ·H²</div>
+      <div class="frow" id="a6-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a6-q"></div>
+  </div>
+</div>
+
+<!-- A7: Tổng áp lực, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A7 — Tổng áp lực chủ động E<sub>c</sub> · Đất dính</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A7</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a7-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① h<sub>c</sub> = 2c/(γ·√Ka) &nbsp;·&nbsp; ② p<sub>a</sub>(H) = Ka·γ·H − 2c√Ka</div>
+      <div class="frow">③ E<sub>c</sub> = ½·p<sub>a</sub>(H)·(H−h<sub>c</sub>)</div>
+      <div class="frow" id="a7-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a7-q"></div>
+  </div>
+</div>
+
+<!-- A8: Tổng áp lực, đất rời + q -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A8 — Tổng áp lực chủ động E · Đất rời + tải q</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A8</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a8-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức — Chia 2 thành phần</div>
+      <div class="frow">E₁ = Ka·q·H &nbsp;(chữ nhật) &nbsp;·&nbsp; E₂ = ½·Ka·γ·H² &nbsp;(tam giác)</div>
+      <div class="frow">E = E₁ + E₂</div>
+      <div class="frow" id="a8-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a8-q"></div>
+  </div>
+</div>
+
+<!-- A9: Tổng áp lực, đất dính + q -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A9 — Tổng áp lực chủ động E · Đất dính + tải q</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A9</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a9-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① p<sub>a</sub>(H) = Ka·γ·H − 2c√Ka + Ka·q</div>
+      <div class="frow">② h<sub>c</sub> = (2c√Ka − Ka·q) / (Ka·γ) &nbsp;(nếu &gt; 0)</div>
+      <div class="frow">③ E = ½·p<sub>a</sub>(H)·(H−h<sub>c</sub>)</div>
+      <div class="frow" id="a9-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a9-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>6.3 · Áp Lực Chủ Động</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="6.4_DANG_3.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2/r3()     : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   deg2rad(d)     : chuyển độ → radian
+   calcKa(phi)    : hệ số áp lực chủ động Ka = tan²(45° − φ/2)
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+function deg2rad(d){return d*Math.PI/180}
+function calcKa(phi){return r3(Math.pow(Math.tan(deg2rad(45-phi/2)),2));}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và tiến độ
+   chkFill(id,ans,tol): so sánh đáp số ô nhập với đáp án, tô xanh/đỏ
+   makeQ(id,…)        : tạo HTML hàng nhập đáp số, đăng ký key vào ANS
+   updateProg()       : cập nhật thanh tiến độ, lưu localStorage 'prog_c6_63', mở nút Nộp
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c6_63',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 5 — Nộp kết quả lên server
+   submitResult()  : POST {chapterId='C6-63-ApLucChuDong', score%, đúng/tổng} lên Worker
+   WORKER_URL      : endpoint Cloudflare Worker (từ config.js)
+   MIN_ATTEMPT_PCT : % tối thiểu phải làm trước khi nộp (từ config.js)
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C6-63-ApLucChuDong',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   genA(stt)  : nhóm A có gợi ý — A1-A9: Ka, cường độ và tổng áp lực chủ động
+                (đất rời, dính, nhiều lớp, có tải q)
+   genBC(stt) : nhóm B (có công thức sẵn) và C (tự nhận biết)
+   ================================================================ */
+function genA(stt){
+  // A1: Cường độ, đất rời
+  (function(){
+    var rng=seededRng(stt*7+2101);
+    var phi=Math.floor(28+rng()*10);
+    var H=Math.floor(4+rng()*6);
+    var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.78+rng()*0.12);
+    var Ka=calcKa(phi);
+    var paz=r2(Ka*gamma*z);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>, lưng tường thẳng đứng. '
+      +'Đất sau tường là cát, φ = <b>'+phi+'°</b>, γ = <b>'+gamma+' T/m³</b>, c = 0. '
+      +'Mặt đất nằm ngang, bỏ qua ma sát ngoài. Tính hệ số Ka và cường độ áp lực chủ động tại z = <b>'+z+' m</b>.';
+    document.getElementById('a1-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ?<br>p<sub>a</sub>('+z+') = Ka × '+gamma+' × '+z+' = ?';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-Ka','Ka = tg²(45°−φ/2)',Ka,0.01,'')
+      +makeQ('a1-paz','p<sub>a</sub>(z) (T/m²)',paz,0.05,'T/m²');
+  })();
+
+  // A2: Cường độ, đất dính
+  (function(){
+    var rng=seededRng(stt*11+2103);
+    var phi=Math.floor(18+rng()*10);
+    var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.15);
+    var cKPa=Math.floor(10+rng()*15);
+    var cT=r2(cKPa/10);
+    var Ka=calcKa(phi);
+    var sqrtKa=r3(Math.sqrt(Ka));
+    var hc=r2(2*cT/(gamma*sqrtKa));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất dính sau tường: '
+      +'φ = <b>'+phi+'°</b>, c = <b>'+cKPa+' kPa = '+cT+' T/m²</b>, γ = <b>'+gamma+' T/m³</b>. Bỏ qua ma sát ngoài. '
+      +'Tính Ka, chiều sâu vùng âm h<sub>c</sub> và cường độ áp lực chủ động tại đáy tường (z=H).';
+    document.getElementById('a2-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ? → √Ka = ?<br>'
+      +'h<sub>c</sub> = 2×'+cT+'/('+gamma+'×√Ka) = ?<br>'
+      +'p<sub>a</sub>(H) = Ka×'+gamma+'×'+H+' − 2×'+cT+'×√Ka = ?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-Ka','Ka',Ka,0.01,'')
+      +makeQ('a2-hc','h<sub>c</sub> (m)',hc,0.08,'m')
+      +makeQ('a2-paH','p<sub>a</sub>(H) (T/m²)',paH,0.05,'T/m²');
+  })();
+
+  // A3: Cường độ, đất rời + q
+  (function(){
+    var rng=seededRng(stt*13+2105);
+    var phi=Math.floor(28+rng()*8);
+    var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.12);
+    var q=Math.floor(10+rng()*20);
+    var qT=r2(q/10);
+    var Ka=calcKa(phi);
+    var paTop=r2(Ka*qT);
+    var paBot=r2(Ka*(gamma*H+qT));
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất rời sau tường: φ = <b>'+phi+'°</b>, '
+      +'γ = <b>'+gamma+' T/m³</b>, c = 0. Mặt đất chịu tải phân bố đều q = <b>'+q+' kN/m² = '+qT+' T/m²</b>. '
+      +'Tính cường độ áp lực chủ động tại đỉnh và đáy tường.';
+    document.getElementById('a3-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ?<br>'
+      +'p<sub>a</sub>(0) = Ka×'+qT+' = ? &nbsp;·&nbsp; p<sub>a</sub>(H) = Ka×('+gamma+'×'+H+'+'+qT+') = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-Ka','Ka',Ka,0.01,'')
+      +makeQ('a3-paTop','p<sub>a</sub>(0) (T/m²)',paTop,0.03,'T/m²')
+      +makeQ('a3-paBot','p<sub>a</sub>(H) (T/m²)',paBot,0.05,'T/m²');
+  })();
+
+  // A4: Cường độ, đất dính + q
+  (function(){
+    var rng=seededRng(stt*17+2107);
+    var phi=Math.floor(18+rng()*10);
+    var H=Math.floor(4+rng()*4);
+    var gamma=r2(1.78+rng()*0.15);
+    var cKPa=Math.floor(10+rng()*14);
+    var cT=r2(cKPa/10);
+    var q=Math.floor(10+rng()*15);
+    var qT=r2(q/10);
+    var Ka=calcKa(phi);
+    var sqrtKa=r3(Math.sqrt(Ka));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa+Ka*qT);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất dính sau tường: φ = <b>'+phi+'°</b>, '
+      +'c = <b>'+cKPa+' kPa</b>, γ = <b>'+gamma+' T/m³</b>. Mặt đất chịu tải phân bố đều q = <b>'+q+' kN/m²</b>. '
+      +'Tính Ka và cường độ áp lực chủ động tại đáy tường.';
+    document.getElementById('a4-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ? → √Ka = ?<br>'
+      +'p<sub>a</sub>(H) = Ka×'+gamma+'×'+H+' − 2×'+cT+'×√Ka + Ka×'+qT+' = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-Ka','Ka',Ka,0.01,'')
+      +makeQ('a4-paH','p<sub>a</sub>(H) (T/m²)',paH,0.06,'T/m²');
+  })();
+
+  // A5: Cường độ, 2 lớp
+  (function(){
+    var rng=seededRng(stt*19+2109);
+    var phi1=Math.floor(26+rng()*8);var phi2=Math.floor(20+rng()*10);
+    var gam1=r2(1.7+rng()*0.2);var gam2=r2(1.8+rng()*0.25);
+    var h1=r1(2+rng()*2);
+    var dz=r1(0.5+rng()*2.5);
+    var z=r1(h1+dz);
+    var Ka2=calcKa(phi2);
+    var sv1=r2(gam1*h1);
+    var sv2=r2(sv1+gam2*dz);
+    var pa2=r2(Ka2*sv2);
+    document.getElementById('a5-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn sau lưng có nền 2 lớp đất rời. '
+      +'Lớp 1: dày h₁ = <b>'+h1+' m</b>, γ₁ = <b>'+gam1+' T/m³</b>, φ₁ = <b>'+phi1+'°</b>. '
+      +'Lớp 2 dày vô hạn: γ₂ = <b>'+gam2+' T/m³</b>, φ₂ = <b>'+phi2+'°</b>. '
+      +'Tính cường độ áp lực chủ động tại điểm M thuộc lớp 2, độ sâu z = <b>'+z+' m</b> (cách mặt đất).';
+    document.getElementById('a5-hint').innerHTML=
+      'Δz (phần trong lớp 2) = '+z+' − '+h1+' = '+dz+' m<br>'
+      +'σ<sub>v1</sub> (đáy lớp 1) = '+gam1+'×'+h1+' = ?<br>'
+      +'σ<sub>v2</sub> (tại M) = σ<sub>v1</sub> + '+gam2+'×'+dz+' = ?<br>'
+      +'Ka2 = tg²(45−'+phi2+'/2)° = ? &nbsp;·&nbsp; p<sub>a</sub> = Ka2 × σ<sub>v2</sub> = ?';
+    document.getElementById('a5-q').innerHTML=
+      makeQ('a5-sv1','① σ<sub>v1</sub> (đáy lớp 1) (T/m²)',sv1,0.05,'T/m²')
+      +makeQ('a5-sv2','② σ<sub>v2</sub> (tại M) (T/m²)',sv2,0.08,'T/m²')
+      +makeQ('a5-Ka2','③ Ka2',Ka2,0.01,'')
+      +makeQ('a5-pa2','④ p<sub>a</sub> tại M (T/m²)',pa2,0.06,'T/m²');
+  })();
+
+  // A6: Tổng áp lực, đất rời
+  (function(){
+    var rng=seededRng(stt*23+2111);
+    var phi=Math.floor(28+rng()*10);
+    var H=Math.floor(4+rng()*6);
+    var gamma=r2(1.78+rng()*0.12);
+    var Ka=calcKa(phi);
+    var Ec=r2(0.5*Ka*gamma*H*H);
+    document.getElementById('a6-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất rời sau tường: φ = <b>'+phi+'°</b>, '
+      +'γ = <b>'+gamma+' T/m³</b>, c = 0. Tính Ka và tổng áp lực chủ động E<sub>c</sub>.';
+    document.getElementById('a6-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ?<br>E<sub>c</sub> = ½×Ka×'+gamma+'×'+H+'² = ?';
+    document.getElementById('a6-q').innerHTML=
+      makeQ('a6-Ka','Ka',Ka,0.01,'')
+      +makeQ('a6-Ec','E<sub>c</sub> (T/m)',Ec,r2(Ec*0.04),'T/m');
+  })();
+
+  // A7: Tổng áp lực, đất dính
+  (function(){
+    var rng=seededRng(stt*29+2113);
+    var phi=Math.floor(15+rng()*12);
+    var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.15);
+    var cKPa=Math.floor(12+rng()*12);
+    var cT=r2(cKPa/10);
+    var Ka=calcKa(phi);
+    var sqrtKa=r3(Math.sqrt(Ka));
+    var hc=r2(2*cT/(gamma*sqrtKa));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa);
+    var Heff=r2(Math.max(0,H-hc));
+    var Ec=paH>0?r2(0.5*paH*Heff):0;
+    document.getElementById('a7-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cao H = <b>'+H+' m</b>. Đất dính sau tường: φ = <b>'+phi+'°</b>, '
+      +'c = <b>'+cKPa+' kPa</b>, γ = <b>'+gamma+' T/m³</b>. Tính h<sub>c</sub>, p<sub>a</sub>(H) và tổng áp lực chủ động E<sub>c</sub>.';
+    document.getElementById('a7-hint').innerHTML=
+      'Ka=tg²(45−'+phi+'/2)°=?, √Ka=? &nbsp;·&nbsp; h<sub>c</sub>=2×'+cT+'/('+gamma+'×√Ka)=?<br>'
+      +'p<sub>a</sub>(H)=Ka×'+gamma+'×'+H+'−2×'+cT+'×√Ka=?<br>'
+      +'E<sub>c</sub>=½×p<sub>a</sub>(H)×(H−h<sub>c</sub>)=?';
+    document.getElementById('a7-q').innerHTML=
+      makeQ('a7-hc','h<sub>c</sub> (m)',hc,0.08,'m')
+      +makeQ('a7-paH','p<sub>a</sub>(H) (T/m²)',paH,0.05,'T/m²')
+      +makeQ('a7-Ec','E<sub>c</sub> (T/m)',Ec,r2(Ec*0.06+0.05),'T/m');
+  })();
+
+  // A8: Tổng áp lực, đất rời + q
+  (function(){
+    var rng=seededRng(stt*31+2117);
+    var phi=Math.floor(28+rng()*8);
+    var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.12);
+    var q=Math.floor(10+rng()*20);
+    var qT=r2(q/10);
+    var Ka=calcKa(phi);
+    var E1=r2(Ka*qT*H);
+    var E2=r2(0.5*Ka*gamma*H*H);
+    var E=r2(E1+E2);
+    document.getElementById('a8-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất rời: φ = <b>'+phi+'°</b>, '
+      +'γ = <b>'+gamma+' T/m³</b>, c = 0. Mặt đất chịu tải phân bố đều q = <b>'+q+' kN/m²</b>. '
+      +'Tính các thành phần áp lực và tổng E.';
+    document.getElementById('a8-hint').innerHTML=
+      'Ka=tg²(45−'+phi+'/2)°=?<br>'
+      +'E₁=Ka×'+qT+'×'+H+'=? &nbsp;·&nbsp; E₂=½×Ka×'+gamma+'×'+H+'²=?<br>'
+      +'E=E₁+E₂=?';
+    document.getElementById('a8-q').innerHTML=
+      makeQ('a8-Ka','Ka',Ka,0.01,'')
+      +makeQ('a8-E1','E₁ = Ka·q·H (T/m)',E1,r2(E1*0.05+0.05),'T/m')
+      +makeQ('a8-E2','E₂ = ½Ka·γ·H² (T/m)',E2,r2(E2*0.05+0.05),'T/m')
+      +makeQ('a8-E','E = E₁+E₂ (T/m)',E,r2(E*0.05+0.08),'T/m');
+  })();
+
+  // A9: Tổng áp lực, đất dính + q
+  (function(){
+    var rng=seededRng(stt*37+2119);
+    var phi=Math.floor(18+rng()*10);
+    var H=Math.floor(4+rng()*4);
+    var gamma=r2(1.78+rng()*0.15);
+    var cKPa=Math.floor(10+rng()*14);
+    var cT=r2(cKPa/10);
+    var q=Math.floor(8+rng()*12);
+    var qT=r2(q/10);
+    var Ka=calcKa(phi);
+    var sqrtKa=r3(Math.sqrt(Ka));
+    var hcRaw=(2*cT*sqrtKa-Ka*qT)/(Ka*gamma);
+    var hc=r2(Math.max(0,hcRaw));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa+Ka*qT);
+    var Heff=r2(Math.max(0,H-hc));
+    var E=paH>0?r2(0.5*paH*Heff):0;
+    document.getElementById('a9-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cao H = <b>'+H+' m</b>. Đất dính: φ = <b>'+phi+'°</b>, c = <b>'+cKPa+' kPa</b>, '
+      +'γ = <b>'+gamma+' T/m³</b>. Tải phân bố q = <b>'+q+' kN/m²</b>. Tính h<sub>c</sub>, p<sub>a</sub>(H) và tổng áp lực E.';
+    document.getElementById('a9-hint').innerHTML=
+      'Ka=tg²(45−'+phi+'/2)°=?, √Ka=?<br>'
+      +'h<sub>c</sub>=(2×'+cT+'×√Ka−Ka×'+qT+')/(Ka×'+gamma+')=?<br>'
+      +'p<sub>a</sub>(H)=Ka×'+gamma+'×'+H+'−2×'+cT+'×√Ka+Ka×'+qT+'=?<br>'
+      +'E=½×p<sub>a</sub>(H)×(H−h<sub>c</sub>)=?';
+    document.getElementById('a9-q').innerHTML=
+      makeQ('a9-hc','h<sub>c</sub> (m)',hc,0.1,'m')
+      +makeQ('a9-paH','p<sub>a</sub>(H) (T/m²)',paH,0.06,'T/m²')
+      +makeQ('a9-E','E (T/m)',E,r2(E*0.06+0.06),'T/m');
+  })();
+}
+
+function genBC(stt){
+  var CFG=[
+    {id:'1',title:'Cường độ tại z · Đất rời',fml:'Ka=tg²(45°−φ/2) &nbsp;·&nbsp; p<sub>a</sub>(z)=Ka·γ·z',type:'roi_pz'},
+    {id:'2',title:'Cường độ tại z · Đất dính',fml:'h<sub>c</sub>=2c/(γ√Ka) &nbsp;·&nbsp; p<sub>a</sub>(z)=Ka·γ·z−2c√Ka',type:'dinh_pz'},
+    {id:'3',title:'Cường độ tại z · Đất rời + tải q',fml:'p<sub>a</sub>(z)=Ka·(γ·z+q)',type:'roi_q_pz'},
+    {id:'4',title:'Cường độ tại z · Đất dính + tải q',fml:'p<sub>a</sub>(z)=Ka·γ·z−2c√Ka+Ka·q',type:'dinh_q_pz'},
+    {id:'5',title:'Cường độ · Nền 2 lớp, điểm ở lớp 2',fml:'σ<sub>v2</sub>=γ₁h₁+γ₂Δz &nbsp;·&nbsp; p<sub>a</sub>=Ka2·σ<sub>v2</sub>',type:'lop2'},
+    {id:'6',title:'Tổng áp lực E<sub>c</sub> · Đất rời',fml:'E<sub>c</sub>=½Ka·γ·H²',type:'roi_Ec'},
+    {id:'7',title:'Tổng áp lực E<sub>c</sub> · Đất dính',fml:'E<sub>c</sub>=½·p<sub>a</sub>(H)·(H−h<sub>c</sub>)',type:'dinh_Ec'},
+    {id:'8',title:'Tổng áp lực E · Đất rời + tải q',fml:'E=Ka·q·H+½Ka·γ·H²',type:'roi_q_E'},
+    {id:'9',title:'Tổng áp lực E · Đất dính + tải q',fml:'E=½·p<sub>a</sub>(H)·(H−h<sub>c</sub>)',type:'dinh_q_E'},
+  ];
+
+  var bhtml='',chtml='';
+  CFG.forEach(function(c,idx){
+    var bid='b'+c.id, cid='c'+c.id;
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>Bài '+bid.toUpperCase()+' · '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+bid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+bid+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+bid+'-q"></div></div></div>';
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>Bài '+cid.toUpperCase()+' · Tự nhận biết — '+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+cid.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+cid+'-prob">⏳</div>'
+      +'<div id="'+cid+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  document.getElementById('c-cards').innerHTML=chtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[41,43,47,53,59,61,67,71,73][idx];
+    genOne('b'+c.id,c.type,stt,seedBase,1801+idx*20);
+    genOne('c'+c.id,c.type,stt,seedBase+97,1901+idx*20);
+  });
+}
+
+function genOne(id,type,stt,s1,s2){
+  var rng=seededRng(stt*s1+s2);
+
+  if(type==='roi_pz'){
+    var phi=Math.floor(28+rng()*10);var H=Math.floor(4+rng()*6);var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.78+rng()*0.12);var Ka=calcKa(phi);var paz=r2(Ka*gamma*z);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời φ='+phi+'°, γ='+gamma+' T/m³. Tính Ka và p<sub>a</sub> tại z='+z+' m.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ka','Ka',Ka,0.01,'')+makeQ(id+'-paz','p<sub>a</sub>(z) (T/m²)',paz,0.05,'T/m²');
+  }
+  else if(type==='dinh_pz'){
+    var phi=Math.floor(18+rng()*10);var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.15);var cKPa=Math.floor(10+rng()*15);var cT=r2(cKPa/10);
+    var Ka=calcKa(phi);var sqrtKa=r3(Math.sqrt(Ka));var hc=r2(2*cT/(gamma*sqrtKa));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính φ='+phi+'°, c='+cKPa+' kPa, γ='+gamma+' T/m³. Tính h<sub>c</sub> và p<sub>a</sub>(H).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-hc','h<sub>c</sub> (m)',hc,0.08,'m')+makeQ(id+'-paH','p<sub>a</sub>(H) (T/m²)',paH,0.05,'T/m²');
+  }
+  else if(type==='roi_q_pz'){
+    var phi=Math.floor(28+rng()*8);var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.12);var q=Math.floor(10+rng()*20);var qT=r2(q/10);
+    var Ka=calcKa(phi);var paTop=r2(Ka*qT);var paBot=r2(Ka*(gamma*H+qT));
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời φ='+phi+'°, γ='+gamma+' T/m³, q='+q+' kN/m². Tính p<sub>a</sub>(0) và p<sub>a</sub>(H).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-paTop','p<sub>a</sub>(0) (T/m²)',paTop,0.03,'T/m²')+makeQ(id+'-paBot','p<sub>a</sub>(H) (T/m²)',paBot,0.05,'T/m²');
+  }
+  else if(type==='dinh_q_pz'){
+    var phi=Math.floor(18+rng()*10);var H=Math.floor(4+rng()*4);
+    var gamma=r2(1.78+rng()*0.15);var cKPa=Math.floor(10+rng()*14);var cT=r2(cKPa/10);
+    var q=Math.floor(10+rng()*15);var qT=r2(q/10);
+    var Ka=calcKa(phi);var sqrtKa=r3(Math.sqrt(Ka));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa+Ka*qT);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính φ='+phi+'°, c='+cKPa+' kPa, γ='+gamma+' T/m³, q='+q+' kN/m². Tính p<sub>a</sub>(H).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-paH','p<sub>a</sub>(H) (T/m²)',paH,0.06,'T/m²');
+  }
+  else if(type==='lop2'){
+    var phi1=Math.floor(26+rng()*8);var phi2=Math.floor(20+rng()*10);
+    var gam1=r2(1.7+rng()*0.2);var gam2=r2(1.8+rng()*0.25);
+    var h1=r1(2+rng()*2);var dz=r1(0.5+rng()*2.5);
+    var Ka2=calcKa(phi2);
+    var sv1=r2(gam1*h1);var sv2=r2(sv1+gam2*dz);var pa2=r2(Ka2*sv2);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Lớp 1 dày h₁='+h1+' m, γ₁='+gam1+', φ₁='+phi1+'°. Lớp 2: γ₂='+gam2+', φ₂='+phi2+'°. Điểm M trong lớp 2, cách đáy lớp 1 Δz='+dz+' m. Tính p<sub>a</sub> tại M.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-sv2','σ<sub>v2</sub> (T/m²)',sv2,0.08,'T/m²')+makeQ(id+'-pa2','p<sub>a</sub> tại M (T/m²)',pa2,0.06,'T/m²');
+  }
+  else if(type==='roi_Ec'){
+    var phi=Math.floor(28+rng()*10);var H=Math.floor(4+rng()*6);
+    var gamma=r2(1.78+rng()*0.12);var Ka=calcKa(phi);var Ec=r2(0.5*Ka*gamma*H*H);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời φ='+phi+'°, γ='+gamma+' T/m³. Tính E<sub>c</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ec','E<sub>c</sub> (T/m)',Ec,r2(Ec*0.04+0.03),'T/m');
+  }
+  else if(type==='dinh_Ec'){
+    var phi=Math.floor(15+rng()*12);var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.15);var cKPa=Math.floor(12+rng()*12);var cT=r2(cKPa/10);
+    var Ka=calcKa(phi);var sqrtKa=r3(Math.sqrt(Ka));var hc=r2(2*cT/(gamma*sqrtKa));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa);var Heff=r2(Math.max(0,H-hc));
+    var Ec=paH>0?r2(0.5*paH*Heff):0;
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính φ='+phi+'°, c='+cKPa+' kPa, γ='+gamma+' T/m³. Tính E<sub>c</sub>.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ec','E<sub>c</sub> (T/m)',Ec,r2(Ec*0.06+0.06),'T/m');
+  }
+  else if(type==='roi_q_E'){
+    var phi=Math.floor(28+rng()*8);var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.78+rng()*0.12);var q=Math.floor(10+rng()*20);var qT=r2(q/10);
+    var Ka=calcKa(phi);var E1=r2(Ka*qT*H);var E2=r2(0.5*Ka*gamma*H*H);var E=r2(E1+E2);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời φ='+phi+'°, γ='+gamma+' T/m³, q='+q+' kN/m². Tính tổng E.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-E1','E₁ (T/m)',E1,r2(E1*0.05+0.05),'T/m')+makeQ(id+'-E2','E₂ (T/m)',E2,r2(E2*0.05+0.05),'T/m')+makeQ(id+'-E','E (T/m)',E,r2(E*0.05+0.08),'T/m');
+  }
+  else if(type==='dinh_q_E'){
+    var phi=Math.floor(18+rng()*10);var H=Math.floor(4+rng()*4);
+    var gamma=r2(1.78+rng()*0.15);var cKPa=Math.floor(10+rng()*14);var cT=r2(cKPa/10);
+    var q=Math.floor(8+rng()*12);var qT=r2(q/10);
+    var Ka=calcKa(phi);var sqrtKa=r3(Math.sqrt(Ka));
+    var hcRaw=(2*cT*sqrtKa-Ka*qT)/(Ka*gamma);var hc=r2(Math.max(0,hcRaw));
+    var paH=r2(Ka*gamma*H-2*cT*sqrtKa+Ka*qT);var Heff=r2(Math.max(0,H-hc));
+    var E=paH>0?r2(0.5*paH*Heff):0;
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính φ='+phi+'°, c='+cKPa+' kPa, γ='+gamma+' T/m³, q='+q+' kN/m². Tính tổng E.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-E','E (T/m)',E,r2(E*0.06+0.06),'T/m');
+  }
+}
+
+/* ================================================================
+   Khởi tạo trang (window.onload)
+   1. Đọc SV từ sessionStorage, hiển thị tên và STT lên header
+   2. Gọi genA(stt) và genBC(stt) để sinh đề bài áp lực chủ động
+   3. Đếm TOTAL_QUESTIONS, khởi tạo nút Nộp bài
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.1 — Lý Thuyết Áp Lực Đất Lên Tường Chắn</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:16px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.frow b{color:var(--R)}
+.theory{background:var(--Plt);border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;line-height:1.7}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--R);line-height:1.6}
+.tip-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--Gdk);line-height:1.6}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:4px 0 10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tcard{border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65}
+.svg-wrap{overflow:hidden;border-radius:8px;border:1px solid var(--brd)}
+/* MCQ */
+.mcq-item{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 6px;border-radius:4px;margin-right:5px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.4}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--Plt);color:var(--P);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.65}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 13px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-e{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-e{background:var(--Rlt);color:#b71c1c}
+/* Nav link cards */
+.nav-link{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#FAFCFF;border:1px solid var(--brd);border-radius:10px;text-decoration:none;color:inherit;transition:background .12s}
+.nav-link:hover{background:var(--Plt)}
+.nav-circle{min-width:32px;height:32px;border-radius:50%;background:var(--P);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-nop{background:#FF8F00;color:#fff}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.three-col{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.mcq-opts.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C6.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 6</a>
+    <div class="hdr-title">
+      <h1>6.1 — Lý Thuyết Áp Lực Đất Lên Tường Chắn</h1>
+      <p>Phân loại tường · Ba trạng thái · Biểu đồ áp lực · Công thức Ka, K₀, Kb</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>6.1 — Lý Thuyết · 12 câu hỏi ôn tập</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Trả lời câu hỏi để kiểm tra hiểu bài</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ PHẦN 1: PHÂN LOẠI TƯỜNG CHẮN ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-wall"></i>
+    <div><h2>1 — Phân Loại Tường Chắn & Hình Thức Mất Ổn Định</h2></div>
+    <span class="cbadge">LT 1</span></div>
+  <div class="card-body">
+    <div class="svg-wrap">
+      <svg viewBox="0 0 580 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <defs>
+          <marker id="a-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#e53935"/></marker>
+          <marker id="a-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#1565c0"/></marker>
+          <marker id="a-grn" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#1b5e20"/></marker>
+          <marker id="a-dn-g" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L3.5,10 L7,0 Z" fill="#1b5e20"/></marker>
+          <pattern id="hatch-sand" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#bcaaa4" stroke-width="1.5"/></pattern>
+          <pattern id="hatch-clay" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#a5d6a7" stroke-width="1.5"/></pattern>
+          <linearGradient id="g-sand" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff9c4"/><stop offset="100%" stop-color="#ffe082"/></linearGradient>
+          <linearGradient id="g-wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#90a4ae"/><stop offset="100%" stop-color="#607d8b"/></linearGradient>
+        </defs>
+        <rect width="580" height="205" fill="#fafbff" rx="8"/>
+        <!-- ① TƯỜNG TRỌNG LỰC -->
+        <rect x="4" y="4" width="182" height="197" rx="6" fill="#fffde7" stroke="#f9a825" stroke-width="1.5"/>
+        <text x="95" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#e65100">① Tường trọng lực</text>
+        <rect x="14" y="28" width="70" height="138" fill="url(#g-sand)"/>
+        <rect x="14" y="28" width="70" height="138" fill="url(#hatch-sand)" opacity="0.5"/>
+        <line x1="8" y1="28" x2="98" y2="28" stroke="#5d4037" stroke-width="1.5"/>
+        <polygon points="84,28 112,28 120,166 76,166" fill="#90a4ae" stroke="#455a64" stroke-width="1.5"/>
+        <rect x="63" y="166" width="72" height="12" fill="#607d8b" stroke="#37474f" stroke-width="1.5"/>
+        <rect x="10" y="178" width="170" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="1" opacity="0.8"/>
+        <line x1="108" y1="148" x2="86" y2="148" stroke="#e53935" stroke-width="1.8" marker-end="url(#a-red)"/>
+        <text x="115" y="152" font-size="8.5" fill="#e53935" font-weight="600">Ea</text>
+        <line x1="98" y1="55" x2="98" y2="85" stroke="#1b5e20" stroke-width="2.5" marker-end="url(#a-dn-g)"/>
+        <text x="106" y="76" font-size="9" fill="#1b5e20" font-weight="700">W</text>
+        <text x="20" y="195" font-size="8" fill="#888" font-style="italic">Ổn định nhờ W bản thân</text>
+        <!-- ② TƯỜNG CỪ -->
+        <rect x="200" y="4" width="182" height="197" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+        <text x="291" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#0d47a1">② Tường cừ</text>
+        <rect x="210" y="28" width="68" height="120" fill="url(#g-sand)"/>
+        <rect x="210" y="28" width="68" height="120" fill="url(#hatch-sand)" opacity="0.5"/>
+        <line x1="204" y1="28" x2="288" y2="28" stroke="#5d4037" stroke-width="1.5"/>
+        <rect x="278" y="28" width="12" height="148" fill="url(#g-wall)" stroke="#37474f" stroke-width="1.5"/>
+        <rect x="290" y="105" width="72" height="71" fill="#c8e6c9" opacity="0.7"/>
+        <rect x="290" y="105" width="72" height="71" fill="url(#hatch-clay)" opacity="0.35"/>
+        <line x1="204" y1="105" x2="372" y2="105" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="212" y="100" font-size="8" fill="#555">Mặt đào</text>
+        <line x1="278" y1="75" x2="258" y2="75" stroke="#e53935" stroke-width="1.8" marker-end="url(#a-red)"/>
+        <text x="214" y="79" font-size="8.5" fill="#e53935">Ea →</text>
+        <line x1="290" y1="135" x2="310" y2="135" stroke="#1b5e20" stroke-width="1.8" marker-end="url(#a-grn)"/>
+        <text x="315" y="139" font-size="8.5" fill="#1b5e20">← Eb</text>
+        <rect x="205" y="178" width="172" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="1" opacity="0.8"/>
+        <text x="214" y="195" font-size="8" fill="#888" font-style="italic">Ổn định: Ea ≤ Eb</text>
+        <!-- ③ MẤT ỔN ĐỊNH -->
+        <rect x="396" y="4" width="180" height="197" rx="6" fill="#fff0f0" stroke="#ef9a9a" stroke-width="1.5"/>
+        <text x="486" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#c62828">③ Mất ổn định ngoài</text>
+        <polygon points="448,38 464,38 470,155 440,155" fill="#90a4ae" stroke="#455a64" stroke-width="1.2"/>
+        <rect x="430" y="155" width="52" height="8" fill="#607d8b" stroke="#37474f" stroke-width="1"/>
+        <rect x="404" y="163" width="168" height="10" fill="#c8e6c9" stroke="#388e3c" stroke-width="1" opacity="0.8"/>
+        <rect x="404" y="38" width="44" height="125" fill="url(#g-sand)" opacity="0.7"/>
+        <!-- Mũi tên trượt -->
+        <line x1="430" y1="160" x2="405" y2="160" stroke="#c62828" stroke-width="2" marker-end="url(#a-red)"/>
+        <text x="404" y="148" font-size="8" fill="#c62828" font-weight="600">①Trượt</text>
+        <!-- Mũi tên lật -->
+        <text x="465" y="135" font-size="8" fill="#e65100" font-weight="600">②Lật</text>
+        <path d="M470,155 Q490,130 475,115" stroke="#e65100" stroke-width="1.8" fill="none" marker-end="url(#a-red)"/>
+        <!-- Nền phá hoại -->
+        <text x="415" y="183" font-size="8" fill="#7b1fa2" font-weight="600">③Phá hoại nền</text>
+      </svg>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
+      <div style="background:#fffde7;border-left:3px solid #f9a825;border-radius:0 6px 6px 0;padding:8px 12px">
+        <b style="color:#e65100">① Tường trọng lực</b> — ổn định nhờ <b>trọng lượng bản thân</b>. Thường dùng cho H &lt; 5–6m.
+      </div>
+      <div style="background:#e3f2fd;border-left:3px solid #1565c0;border-radius:0 6px 6px 0;padding:8px 12px">
+        <b style="color:#0d47a1">② Tường cừ</b> — ổn định nhờ <b>cừ cắm sâu</b> vào đất, dùng áp lực bị động Eb chống Ea.
+      </div>
+    </div>
+    <div class="warn-box">⚠️ <b>3 hình thức mất ổn định ngoài:</b> ① Trượt phẳng theo đáy (Ea &gt; f·N) &nbsp;② Lật quanh mép trước (M<sub>lật</sub> &gt; M<sub>giữ</sub>) &nbsp;③ Phá hoại nền (áp lực đáy móng vượt sức chịu tải)</div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn tập</div>
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q1</span>Tường chắn loại nào ổn định nhờ phần cừ cắm sâu trong đất và lợi dụng áp lực bị động?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,2,'❌ Tường trọng lực ổn định nhờ trọng lượng bản thân W.')"><span class="mkey">A</span><span>Tường trọng lực</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,2,'❌ Tường bán trọng lực cũng dùng trọng lượng + bản đáy kéo dài.')"><span class="mkey">B</span><span>Tường bán trọng lực</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,2,'✓ Tường cừ: phần cắm sâu dưới mặt đào tạo ra áp lực bị động Eb cân bằng áp lực chủ động Ea.')"><span class="mkey">C</span><span>Tường cừ</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,2,'❌ Tường neo thêm thanh neo/mỏ neo, khác với tường cừ đơn.')"><span class="mkey">D</span><span>Tường neo</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q2</span>Hình thức mất ổn định nào xảy ra khi tường bị xoay quanh mép dưới phía trước?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1,'❌ Trượt phẳng là tường trượt ngang, không xoay.')"><span class="mkey">A</span><span>Trượt phẳng theo đáy</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1,'✓ Lật quanh mép trước: M_lật (do Ea) &gt; M_giữ (do W) → tường xoay quanh mép dưới phía trước.')"><span class="mkey">B</span><span>Lật quanh mép trước</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1,'❌ Phá hoại nền là khi áp lực đáy móng vượt sức chịu tải nền.')"><span class="mkey">C</span><span>Phá hoại sức chịu tải nền</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1,'❌ Đây không phải hình thức mất ổn định ngoài của tường chắn.')"><span class="mkey">D</span><span>Lún không đều</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q3</span>Điều kiện kiểm tra ổn định CHỐNG TRƯỢT của tường trọng lực là gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0,'✓ Chống trượt: lực ma sát đáy móng f·N ≥ Ea (tổng áp lực đất ngang). Hệ số K_tr = f·N/Ea ≥ [K_tr].')"><span class="mkey">A</span><span>Lực ma sát đáy móng ≥ Tổng áp lực đất ngang Ea</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0,'❌ Đây là điều kiện chống lật, không phải chống trượt.')"><span class="mkey">B</span><span>Momen giữ ≥ Momen lật</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0,'❌ Đây là điều kiện về sức chịu tải nền.')"><span class="mkey">C</span><span>Áp lực đáy móng ≤ Sức chịu tải nền</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0,'❌')"><span class="mkey">D</span><span>Chiều cao tường ≥ H tối thiểu</span></div>
+      </div><div class="mcq-exp" id="exp-q3"></div></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 2: BA LOẠI ÁP LỰC ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrows-horizontal"></i>
+    <div><h2>2 — Ba Loại Áp Lực Đất — Quan Hệ Với Chuyển Vị Tường</h2></div>
+    <span class="cbadge">LT 2</span></div>
+  <div class="card-body">
+    <div class="svg-wrap">
+      <svg viewBox="0 0 580 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <defs>
+          <marker id="b-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#e53935"/></marker>
+          <marker id="b-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#1565c0"/></marker>
+          <marker id="b-org" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#e65100"/></marker>
+          <marker id="b-grn" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,3.5 L0,7 Z" fill="#1b5e20"/></marker>
+          <pattern id="hs2" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#bcaaa4" stroke-width="1.5"/></pattern>
+          <pattern id="hc2" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#a5d6a7" stroke-width="1.5"/></pattern>
+          <linearGradient id="gs2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff9c4"/><stop offset="100%" stop-color="#ffe082"/></linearGradient>
+          <linearGradient id="gc2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e8f5e9"/><stop offset="100%" stop-color="#c8e6c9"/></linearGradient>
+          <linearGradient id="gw2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#90a4ae"/><stop offset="100%" stop-color="#607d8b"/></linearGradient>
+        </defs>
+        <rect width="580" height="210" fill="#fafbff" rx="8"/>
+        <!-- ① CHỦ ĐỘNG -->
+        <rect x="4" y="4" width="180" height="202" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1.5"/>
+        <text x="94" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#0d47a1">Chủ động (Ea)</text>
+        <text x="94" y="30" text-anchor="middle" font-size="8.5" fill="#555">Tường dịch ra xa →</text>
+        <rect x="14" y="36" width="65" height="132" fill="url(#gs2)"/>
+        <rect x="14" y="36" width="65" height="132" fill="url(#hs2)" opacity="0.4"/>
+        <line x1="8" y1="36" x2="92" y2="36" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="14" y1="168" x2="79" y2="36" stroke="#e53935" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <rect x="80" y="36" width="14" height="132" fill="url(#gw2)" stroke="#455a64" stroke-width="1.5"/>
+        <line x1="94" y1="72" x2="114" y2="72" stroke="#e53935" stroke-width="2.5" marker-end="url(#b-red)"/>
+        <rect x="114" y="65" width="55" height="13" fill="white" rx="2" opacity="0.9"/>
+        <text x="142" y="75" text-anchor="middle" font-size="8.5" fill="#e53935" font-weight="700">Δ≈0.5%H</text>
+        <polygon points="94,36 94,168 128,168" fill="rgba(21,101,192,0.2)" stroke="#1565c0" stroke-width="1.5"/>
+        <line x1="126" y1="168" x2="96" y2="168" stroke="#1565c0" stroke-width="1.8" marker-end="url(#b-blue)"/>
+        <rect x="110" y="178" width="54" height="14" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+        <text x="137" y="189" text-anchor="middle" font-size="9.5" fill="#1565c0" font-weight="700">Ea (nhỏ nhất)</text>
+        <text x="94" y="202" text-anchor="middle" font-size="8" fill="#555">Ka &lt; K₀ &lt; Kb</text>
+        <!-- ② TĨNH -->
+        <rect x="200" y="4" width="180" height="202" rx="6" fill="#fffde7" stroke="#fff176" stroke-width="1.5"/>
+        <text x="290" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#e65100">Tĩnh (E₀)</text>
+        <text x="290" y="30" text-anchor="middle" font-size="8.5" fill="#555">Tường không chuyển vị</text>
+        <rect x="210" y="36" width="68" height="132" fill="url(#gs2)" opacity="0.8"/>
+        <rect x="210" y="36" width="68" height="132" fill="url(#hs2)" opacity="0.4"/>
+        <line x1="204" y1="36" x2="286" y2="36" stroke="#5d4037" stroke-width="1.5"/>
+        <rect x="278" y="36" width="14" height="132" fill="url(#gw2)" stroke="#455a64" stroke-width="1.5"/>
+        <polygon points="292,36 292,168 352,168" fill="rgba(230,81,0,0.2)" stroke="#e65100" stroke-width="1.5"/>
+        <line x1="350" y1="168" x2="294" y2="168" stroke="#e65100" stroke-width="1.8" marker-end="url(#b-org)"/>
+        <rect x="320" y="178" width="50" height="14" fill="#fff3e0" rx="3" stroke="#ffb74d" stroke-width="1"/>
+        <text x="345" y="189" text-anchor="middle" font-size="9.5" fill="#e65100" font-weight="700">E₀ (TB)</text>
+        <rect x="216" y="120" width="60" height="30" fill="white" rx="4" opacity="0.9" stroke="#ffe082" stroke-width="1"/>
+        <text x="246" y="134" text-anchor="middle" font-size="8.5" fill="#e65100">K₀=μ/(1−μ)</text>
+        <text x="246" y="146" text-anchor="middle" font-size="8" fill="#555">μ: hệ số Poisson</text>
+        <!-- ③ BỊ ĐỘNG -->
+        <rect x="396" y="4" width="180" height="202" rx="6" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+        <text x="486" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#1b5e20">Bị động (Eb)</text>
+        <text x="486" y="30" text-anchor="middle" font-size="8.5" fill="#555">Tường đẩy vào đất ←</text>
+        <rect x="406" y="36" width="68" height="132" fill="url(#gc2)" opacity="0.8"/>
+        <rect x="406" y="36" width="68" height="132" fill="url(#hc2)" opacity="0.4"/>
+        <line x1="400" y1="36" x2="484" y2="36" stroke="#5d4037" stroke-width="1.5"/>
+        <rect x="474" y="36" width="14" height="132" fill="url(#gw2)" stroke="#455a64" stroke-width="1.5"/>
+        <line x1="474" y1="72" x2="454" y2="72" stroke="#1b5e20" stroke-width="2.5" marker-end="url(#b-grn)"/>
+        <rect x="400" y="65" width="50" height="13" fill="white" rx="2" opacity="0.9"/>
+        <text x="425" y="75" text-anchor="middle" font-size="8.5" fill="#1b5e20" font-weight="700">Δ≈5%H</text>
+        <polygon points="488,36 488,168 565,168" fill="rgba(27,94,32,0.22)" stroke="#2e7d32" stroke-width="1.5"/>
+        <line x1="563" y1="168" x2="490" y2="168" stroke="#2e7d32" stroke-width="1.8" marker-end="url(#b-grn)"/>
+        <rect x="530" y="178" width="46" height="14" fill="#e8f5e9" rx="3" stroke="#a5d6a7" stroke-width="1"/>
+        <text x="553" y="189" text-anchor="middle" font-size="9.5" fill="#1b5e20" font-weight="700">Eb (lớn nhất)</text>
+        <text x="486" y="202" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Kb = 1/Ka</text>
+      </svg>
+    </div>
+    <div class="three-col">
+      <div class="tcard" style="background:#FFF9C4;border-left:4px solid #F9A825">
+        <b style="color:#E65100">TĨNH (K₀)</b><br>
+        Tường <b>không chuyển vị</b>. Đất ở trạng thái nghỉ tự nhiên.<br>
+        <span style="font-family:monospace;font-size:11px">K₀ = μ/(1−μ)</span>
+      </div>
+      <div class="tcard" style="background:#E3F2FD;border-left:4px solid #1565C0">
+        <b style="color:#0D47A1">CHỦ ĐỘNG (Ka)</b><br>
+        Tường <b>dịch ra xa</b> khối đất. Áp lực <b>giảm đến nhỏ nhất</b>. Δ ≈ 0.5–1%H.<br>
+        <span style="font-family:monospace;font-size:11px">Ka = tg²(45°−φ/2)</span>
+      </div>
+      <div class="tcard" style="background:#E8F5E9;border-left:4px solid #2E7D32">
+        <b style="color:#1B5E20">BỊ ĐỘNG (Kb)</b><br>
+        Tường <b>đẩy vào</b> khối đất. Áp lực <b>tăng đến lớn nhất</b>. Δ ≈ 2–5%H.<br>
+        <span style="font-family:monospace;font-size:11px">Kb = tg²(45°+φ/2)</span>
+      </div>
+    </div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-arrows-sort"></i> Quan hệ giữa 3 hệ số áp lực</div>
+      <div class="frow">Ka &lt; K₀ &lt; Kb &nbsp;&nbsp;·&nbsp;&nbsp; <em>Ka · Kb = 1</em></div>
+      <div class="frow" style="font-size:12px;color:var(--muted)">Chuyển vị để đạt Ka rất nhỏ (~0.001H), đạt Kb cần gấp 5–10 lần hơn</div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn tập</div>
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q4</span>Khi tường dịch chuyển rời xa khối đất, áp lực đất đạt giá trị:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,1,'❌ Áp lực bị động xảy ra khi tường đẩy VÀO đất, ngược chiều.')"><span class="mkey">A</span><span>Tăng đến cực đại (bị động Eb)</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,1,'✓ Tường rời xa → đất giãn nở → áp lực GIẢM xuống giá trị nhỏ nhất = áp lực chủ động Ea.')"><span class="mkey">B</span><span>Giảm đến cực tiểu (chủ động Ea)</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,1,'❌ Không thay đổi chỉ đúng khi Δ=0 (tĩnh).')"><span class="mkey">C</span><span>Không thay đổi</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,1,'❌ Không bằng 0 trừ khi đất không có trọng lượng.')"><span class="mkey">D</span><span>Bằng 0</span></div>
+      </div><div class="mcq-exp" id="exp-q4"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q5</span>Thứ tự đúng về độ lớn của 3 loại áp lực đất là:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,2,'❌ Ngược chiều.')"><span class="mkey">A</span><span>Ea &gt; E₀ &gt; Eb</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,2,'❌ Eb là lớn nhất, không thể nhỏ hơn Ea.')"><span class="mkey">B</span><span>Eb &gt; Ea &gt; E₀</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,2,'✓ Ea &lt; E₀ &lt; Eb. Chủ động nhỏ nhất, bị động lớn nhất. Ka·Kb=1 nên Kb=1/Ka &gt; Ka.')"><span class="mkey">C</span><span>Ea &lt; E₀ &lt; Eb</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,2,'❌ E₀ không nhỏ hơn Ea.')"><span class="mkey">D</span><span>E₀ &lt; Ea &lt; Eb</span></div>
+      </div><div class="mcq-exp" id="exp-q5"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q6</span>Để áp lực bị động Eb hình thành cần chuyển vị tường khoảng bao nhiêu % H so với chủ động Ea?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,2,'❌ Bằng nhau là không đúng.')"><span class="mkey">A</span><span>Bằng nhau (~0.5%H)</span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,2,'❌ Ít hơn là sai, bị động cần nhiều hơn.')"><span class="mkey">B</span><span>Ít hơn (~0.1%H)</span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,2,'✓ Đúng! Ea cần Δ≈0.5%H rất nhỏ, còn Eb cần Δ≈2–5%H, tức gấp 5–10 lần. Đây là lý do trong thực tế hay dùng Ea thiên về an toàn.')"><span class="mkey">C</span><span>Nhiều hơn nhiều (~2–5%H)</span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,2,'❌')"><span class="mkey">D</span><span>Không cần chuyển vị</span></div>
+      </div><div class="mcq-exp" id="exp-q6"></div></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 3: CÔNG THỨC Ka, K₀, Kb + BIỂU ĐỒ ÁP LỰC ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>3 — Công Thức Ka, K₀, Kb & Dạng Biểu Đồ Áp Lực</h2></div>
+    <span class="cbadge">LT 3</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-sigma"></i> Hệ số áp lực đất (Rankine)</div>
+        <div class="frow">Ka = tg²(45° − φ/2) &nbsp;<em style="font-size:11px">(chủ động)</em></div>
+        <div class="frow">Kb = tg²(45° + φ/2) &nbsp;<em style="font-size:11px">(bị động)</em></div>
+        <div class="frow">K₀ = μ/(1−μ) &nbsp;<em style="font-size:11px">(tĩnh, μ = hệ số Poisson)</em></div>
+        <div class="frow" style="margin-top:6px"><em>Ka · Kb = 1</em> &nbsp;→&nbsp; Kb = 1/Ka</div>
+        <div class="frow">φ=30°: Ka=0.333, Kb=3.0 → Kb/Ka=<em>9 lần</em></div>
+        <div class="frow">φ=20°: Ka=0.490, Kb=2.04</div>
+        <div class="frow">φ=35°: Ka=0.271, Kb=3.69</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#FFFDE7;border:1px solid #FFF176;border-radius:8px;padding:10px 12px;font-size:12px">
+          <b style="color:#E65100">📊 Dạng biểu đồ áp lực chủ động:</b><br>
+          • <b>Đất rời (c=0):</b> Tam giác — p=0 trên đỉnh, tăng tuyến tính xuống đáy. E = ½·Ka·γ·H²<br>
+          • <b>Đất dính (c≠0):</b> Có vùng âm h<sub>c</sub> phía trên (bỏ qua), phần dương từ h<sub>c</sub> đến H. h<sub>c</sub>=2c/(γ√Ka)<br>
+          • <b>Có tải q:</b> Hình thang — Ka·q ở đỉnh, Ka·(γH+q) ở đáy. E=E₁(chữ nhật)+E₂(tam giác)
+        </div>
+        <div class="fml-box" style="font-size:12px">
+          <div class="ftitle">Vị trí đặt hợp lực E</div>
+          <div class="frow">Tam giác: E đặt tại <em>H/3</em> từ đáy</div>
+          <div class="frow">Chữ nhật: E đặt tại <em>H/2</em> từ đáy</div>
+          <div class="frow">Hình thang: dùng nguyên lý hợp lực E₁+E₂</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 SVG biểu đồ áp lực -->
+    <div class="three-col">
+      <!-- SVG đất rời -->
+      <div class="svg-wrap">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <marker id="c-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#e53935"/></marker>
+            <marker id="c-org" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto"><path d="M0,0 L3.5,10 L7,0 Z" fill="#e65100"/></marker>
+            <linearGradient id="gs3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff9c4"/><stop offset="100%" stop-color="#ffe082"/></linearGradient>
+            <pattern id="hs3" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#bcaaa4" stroke-width="1.2"/></pattern>
+            <linearGradient id="gw3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#90a4ae"/><stop offset="100%" stop-color="#607d8b"/></linearGradient>
+            <linearGradient id="gpb3" x1="1" y1="0" x2="0" y2="0"><stop offset="0%" stop-color="rgba(21,101,192,0.35)"/><stop offset="100%" stop-color="rgba(21,101,192,0.05)"/></linearGradient>
+            <marker id="c-dn-o" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto"><path d="M0,0 L3.5,10 L7,0 Z" fill="#e65100"/></marker>
+          </defs>
+          <rect width="220" height="200" fill="#f8faff" rx="6"/>
+          <text x="110" y="14" text-anchor="middle" font-size="9" font-weight="700" fill="#0d47a1">Đất rời (c=0) — Tam giác</text>
+          <rect x="10" y="18" width="68" height="152" fill="url(#gs3)"/>
+          <rect x="10" y="18" width="68" height="152" fill="url(#hs3)" opacity="0.4"/>
+          <line x1="6" y1="18" x2="84" y2="18" stroke="#5d4037" stroke-width="1.5"/>
+          <rect x="78" y="18" width="16" height="152" fill="url(#gw3)" stroke="#455a64" stroke-width="1.5"/>
+          <rect x="6" y="170" width="208" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+          <polygon points="94,18 94,170 180,170" fill="url(#gpb3)" stroke="#1565c0" stroke-width="1.5"/>
+          <line x1="178" y1="170" x2="96" y2="170" stroke="#e53935" stroke-width="1.8" marker-end="url(#c-red)"/>
+          <line x1="152" y1="131" x2="96" y2="131" stroke="#e53935" stroke-width="1.2" marker-end="url(#c-red)" opacity="0.65"/>
+          <line x1="120" y1="90" x2="96" y2="90" stroke="#e53935" stroke-width="1" marker-end="url(#c-red)" opacity="0.4"/>
+          <rect x="148" y="161" width="68" height="13" fill="white" rx="2" opacity="0.9"/>
+          <text x="182" y="171" text-anchor="middle" font-size="8" fill="#e53935" font-weight="700">Ka·γ·H</text>
+          <line x1="196" y1="18" x2="196" y2="170" stroke="#e65100" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#c-dn-o)"/>
+          <text x="207" y="100" font-size="11" fill="#e65100" font-weight="700">H</text>
+          <line x1="94" y1="132" x2="165" y2="132" stroke="#7b1fa2" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="168" y="136" font-size="8" fill="#7b1fa2">H/3</text>
+          <text x="110" y="188" text-anchor="middle" font-size="8" fill="#1565c0">E=½·Ka·γ·H²</text>
+        </svg>
+      </div>
+      <!-- SVG đất dính -->
+      <div class="svg-wrap">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <marker id="d-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1565c0"/></marker>
+            <marker id="d-dn-r" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto"><path d="M0,0 L3.5,10 L7,0 Z" fill="#e53935"/></marker>
+            <linearGradient id="gc3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e8f5e9"/><stop offset="100%" stop-color="#c8e6c9"/></linearGradient>
+            <pattern id="hc3" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#a5d6a7" stroke-width="1.2"/></pattern>
+            <linearGradient id="gw4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#90a4ae"/><stop offset="100%" stop-color="#607d8b"/></linearGradient>
+          </defs>
+          <rect width="220" height="200" fill="#f8faff" rx="6"/>
+          <text x="110" y="14" text-anchor="middle" font-size="9" font-weight="700" fill="#1b5e20">Đất dính (c≠0) — Vùng âm hc</text>
+          <rect x="10" y="18" width="68" height="155" fill="url(#gc3)"/>
+          <rect x="10" y="18" width="68" height="155" fill="url(#hc3)" opacity="0.5"/>
+          <line x1="6" y1="18" x2="84" y2="18" stroke="#5d4037" stroke-width="1.5"/>
+          <rect x="78" y="18" width="16" height="155" fill="url(#gw4)" stroke="#455a64" stroke-width="1.5"/>
+          <rect x="6" y="173" width="208" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+          <!-- Vùng âm hc -->
+          <rect x="94" y="18" width="44" height="52" fill="rgba(229,57,53,0.08)" stroke="#e53935" stroke-width="1.2" stroke-dasharray="4,3" rx="2"/>
+          <text x="116" y="40" text-anchor="middle" font-size="8" fill="#e53935" font-style="italic">p &lt; 0</text>
+          <text x="116" y="52" text-anchor="middle" font-size="8" fill="#e53935">(bỏ qua)</text>
+          <line x1="78" y1="70" x2="148" y2="70" stroke="#e53935" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- hc đo -->
+          <line x1="62" y1="18" x2="62" y2="70" stroke="#e53935" stroke-width="1.2" marker-end="url(#d-dn-r)"/>
+          <line x1="56" y1="18" x2="68" y2="18" stroke="#e53935" stroke-width="1.2"/>
+          <text x="46" y="47" font-size="9" fill="#e53935" font-weight="700">hc</text>
+          <!-- Biểu đồ dương -->
+          <polygon points="94,70 94,173 180,173" fill="rgba(21,101,192,0.22)" stroke="#1565c0" stroke-width="1.5"/>
+          <line x1="178" y1="173" x2="96" y2="173" stroke="#1565c0" stroke-width="1.8" marker-end="url(#d-blue)"/>
+          <rect x="136" y="164" width="60" height="13" fill="white" rx="2" opacity="0.9"/>
+          <text x="166" y="174" text-anchor="middle" font-size="7.5" fill="#1565c0" font-weight="700">Ka·γH−2c√Ka</text>
+          <text x="110" y="188" text-anchor="middle" font-size="8" fill="#555" font-style="italic">hc = 2c / (γ·√Ka)</text>
+        </svg>
+      </div>
+      <!-- SVG có tải q -->
+      <div class="svg-wrap">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <marker id="e-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1565c0"/></marker>
+            <marker id="e-org" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#e65100"/></marker>
+            <marker id="e-dn-o" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto"><path d="M0,0 L3.5,10 L7,0 Z" fill="#e65100"/></marker>
+            <linearGradient id="gs4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff9c4"/><stop offset="100%" stop-color="#ffe082"/></linearGradient>
+            <pattern id="hs4" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#bcaaa4" stroke-width="1.2"/></pattern>
+            <linearGradient id="gw5" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#90a4ae"/><stop offset="100%" stop-color="#607d8b"/></linearGradient>
+            <linearGradient id="gpb4" x1="1" y1="0" x2="0" y2="0"><stop offset="0%" stop-color="rgba(21,101,192,0.35)"/><stop offset="100%" stop-color="rgba(21,101,192,0.05)"/></linearGradient>
+          </defs>
+          <rect width="220" height="200" fill="#f8faff" rx="6"/>
+          <text x="110" y="14" text-anchor="middle" font-size="9" font-weight="700" fill="#e65100">Có tải q — Hình thang</text>
+          <!-- Tải q -->
+          <line x1="8" y1="20" x2="80" y2="20" stroke="#e65100" stroke-width="2"/>
+          <line x1="20" y1="8" x2="20" y2="18" stroke="#e65100" stroke-width="1.5" marker-end="url(#e-dn-o)"/>
+          <line x1="40" y1="8" x2="40" y2="18" stroke="#e65100" stroke-width="1.5" marker-end="url(#e-dn-o)"/>
+          <line x1="60" y1="8" x2="60" y2="18" stroke="#e65100" stroke-width="1.5" marker-end="url(#e-dn-o)"/>
+          <text x="42" y="8" text-anchor="middle" font-size="8" fill="#e65100" font-weight="700">q</text>
+          <!-- Đất -->
+          <rect x="8" y="20" width="72" height="148" fill="url(#gs4)"/>
+          <rect x="8" y="20" width="72" height="148" fill="url(#hs4)" opacity="0.4"/>
+          <line x1="4" y1="20" x2="86" y2="20" stroke="#5d4037" stroke-width="1.5"/>
+          <rect x="80" y="20" width="14" height="148" fill="url(#gw5)" stroke="#455a64" stroke-width="1.5"/>
+          <rect x="4" y="168" width="210" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+          <!-- Hình thang -->
+          <polygon points="94,20 94,168 188,168 128,20" fill="url(#gpb4)" stroke="#1565c0" stroke-width="1.5"/>
+          <line x1="126" y1="20" x2="96" y2="20" stroke="#e65100" stroke-width="1.5" marker-end="url(#e-org)"/>
+          <line x1="185" y1="168" x2="96" y2="168" stroke="#1565c0" stroke-width="1.8" marker-end="url(#e-blue)"/>
+          <rect x="128" y="13" width="40" height="12" fill="#fff3e0" rx="2"/>
+          <text x="148" y="22" text-anchor="middle" font-size="7.5" fill="#e65100" font-weight="700">Ka·q</text>
+          <rect x="142" y="160" width="56" height="12" fill="#e3f2fd" rx="2"/>
+          <text x="170" y="170" text-anchor="middle" font-size="7.5" fill="#1565c0" font-weight="700">Ka·(γH+q)</text>
+          <rect x="95" y="80" width="86" height="40" fill="white" rx="4" opacity="0.9"/>
+          <text x="138" y="96" text-anchor="middle" font-size="8" fill="#1565c0" font-weight="700">E=E₁+E₂</text>
+          <text x="138" y="108" text-anchor="middle" font-size="7.5" fill="#7b1fa2">E₁=Ka·q·H (CN)</text>
+          <text x="138" y="118" text-anchor="middle" font-size="7.5" fill="#7b1fa2">E₂=½Ka·γH²(TG)</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn tập</div>
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q7</span>Với φ=30°, tỉ số Kb/Ka bằng bao nhiêu?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,2,'❌ 1 là khi φ=0 (Ka=Kb=1).')"><span class="mkey">A</span><span>≈ 1</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,2,'❌ 3 là giá trị Kb, không phải tỉ số.')"><span class="mkey">B</span><span>≈ 3</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,2,'✓ Ka=tg²30°=0.333, Kb=tg²60°=3.0 → Kb/Ka = 3.0/0.333 = 9. Đây là lý do áp lực bị động lớn hơn chủ động rất nhiều!')"><span class="mkey">C</span><span>≈ 9</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,2,'❌ 0.33 là Ka, không phải tỉ số.')"><span class="mkey">D</span><span>≈ 0.33</span></div>
+      </div><div class="mcq-exp" id="exp-q7"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q8</span>Biểu đồ áp lực chủ động của đất rời (c=0) lên tường thẳng có dạng:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q8-0" onclick="pickMCQ('q8',0,1,'❌ Chữ nhật xảy ra khi có tải q đều mà không có trọng lượng bản thân đất.')"><span class="mkey">A</span><span>Chữ nhật (đều khắp)</span></div>
+        <div class="mcq-opt" id="mco-q8-1" onclick="pickMCQ('q8',1,1,'✓ Đất rời: p=Ka·γ·z tăng tuyến tính → biểu đồ tam giác. Đỉnh p=0, đáy p=Ka·γ·H. E=½·Ka·γ·H² đặt tại H/3 từ đáy.')"><span class="mkey">B</span><span>Tam giác (đỉnh bằng 0, tăng xuống đáy)</span></div>
+        <div class="mcq-opt" id="mco-q8-2" onclick="pickMCQ('q8',2,1,'❌ Hình thang khi có thêm tải q hoặc nền 2 lớp.')"><span class="mkey">C</span><span>Hình thang</span></div>
+        <div class="mcq-opt" id="mco-q8-3" onclick="pickMCQ('q8',3,1,'❌ Parabol không đúng trong lý thuyết Rankine.')"><span class="mkey">D</span><span>Parabol</span></div>
+      </div><div class="mcq-exp" id="exp-q8"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q9</span>Chiều sâu h<sub>c</sub> trong biểu đồ áp lực chủ động đất dính là gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q9-0" onclick="pickMCQ('q9',0,1,'❌ h_c không liên quan đến áp lực bị động.')"><span class="mkey">A</span><span>Chiều sâu tại đó áp lực bị động bằng 0</span></div>
+        <div class="mcq-opt" id="mco-q9-1" onclick="pickMCQ('q9',1,1,'✓ h_c là chiều sâu mà tại đó áp lực chủ động = 0 (ranh giới âm-dương). Trên h_c áp lực âm (bỏ qua), dưới h_c áp lực dương. h_c = 2c/(γ·√Ka).')"><span class="mkey">B</span><span>Chiều sâu tại đó áp lực chủ động = 0 (ranh giới âm/dương)</span></div>
+        <div class="mcq-opt" id="mco-q9-2" onclick="pickMCQ('q9',2,1,'❌ Điểm đặt hợp lực E không phải h_c.')"><span class="mkey">C</span><span>Chiều sâu đặt hợp lực E</span></div>
+        <div class="mcq-opt" id="mco-q9-3" onclick="pickMCQ('q9',3,1,'❌')"><span class="mkey">D</span><span>Chiều sâu đặt móng tường</span></div>
+      </div><div class="mcq-exp" id="exp-q9"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q10</span>Khi mặt đất sau tường có tải phân bố đều q, biểu đồ áp lực chủ động (đất rời) có dạng:</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q10-0" onclick="pickMCQ('q10',0,1,'❌ Không còn là tam giác thuần túy nữa vì tải q tạo thêm thành phần đều Ka·q.')"><span class="mkey">A</span><span>Tam giác (không thay đổi)</span></div>
+        <div class="mcq-opt" id="mco-q10-1" onclick="pickMCQ('q10',1,1,'✓ Hình thang: Ka·q ở đỉnh (do q) + Ka·γH ở đáy. E = E₁(Ka·q·H = chữ nhật) + E₂(½·Ka·γ·H² = tam giác).')"><span class="mkey">B</span><span>Hình thang (Ka·q ở đỉnh, Ka·(γH+q) ở đáy)</span></div>
+        <div class="mcq-opt" id="mco-q10-2" onclick="pickMCQ('q10',2,1,'❌ Chữ nhật xảy ra khi chỉ có tải q mà không có đất (không thực tế).')"><span class="mkey">C</span><span>Chữ nhật (Ka·q toàn chiều cao)</span></div>
+        <div class="mcq-opt" id="mco-q10-3" onclick="pickMCQ('q10',3,1,'❌')"><span class="mkey">D</span><span>Parabol</span></div>
+      </div><div class="mcq-exp" id="exp-q10"></div></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 4: TỔNG HỢP & LỘ TRÌNH ══ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-books"></i>
+    <div><h2>4 — Tổng Hợp Công Thức & Lộ Trình Bài Tập</h2></div>
+    <span class="cbadge">LT 4</span></div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--brd)">
+      <table style="border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono)">
+        <thead><tr style="background:var(--Pdk);color:#fff">
+          <th style="padding:6px 10px;text-align:left">Loại</th>
+          <th style="padding:6px 10px;text-align:center">Hệ số K</th>
+          <th style="padding:6px 10px;text-align:center">Công thức</th>
+          <th style="padding:6px 10px;text-align:center">Tổng áp lực E</th>
+          <th style="padding:6px 10px;text-align:center">Điểm đặt</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#FFF9C4">
+            <td style="padding:5px 10px;font-weight:700;color:#E65100">Tĩnh E₀</td>
+            <td style="padding:5px 10px;text-align:center">K₀=μ/(1−μ)</td>
+            <td style="padding:5px 10px;text-align:center">p₀=K₀·γ·z</td>
+            <td style="padding:5px 10px;text-align:center">E₀=½·K₀·γ·H²</td>
+            <td style="padding:5px 10px;text-align:center">H/3 từ đáy</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 10px;font-weight:700;color:#0D47A1">Chủ động Ea</td>
+            <td style="padding:5px 10px;text-align:center">Ka=tg²(45−φ/2)</td>
+            <td style="padding:5px 10px;text-align:center">pa=Ka·γ·z−2c√Ka</td>
+            <td style="padding:5px 10px;text-align:center">E=½·Ka·γ·(H−hc)²</td>
+            <td style="padding:5px 10px;text-align:center">(H−hc)/3 từ đáy</td>
+          </tr>
+          <tr style="background:#E8F5E9">
+            <td style="padding:5px 10px;font-weight:700;color:#1B5E20">Bị động Eb</td>
+            <td style="padding:5px 10px;text-align:center">Kb=tg²(45+φ/2)</td>
+            <td style="padding:5px 10px;text-align:center">pb=Kb·γ·z+2c√Kb</td>
+            <td style="padding:5px 10px;text-align:center">E=½·Kb·γ·H²+2c√Kb·H</td>
+            <td style="padding:5px 10px;text-align:center">Tính theo E₁,E₂</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-lbl"><i class="ti ti-help-circle" style="font-size:13px"></i> Câu hỏi ôn tập cuối</div>
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q11</span>Hợp lực áp lực đất chủ động (đất rời) E = ½·Ka·γ·H² đặt tại vị trí nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q11-0" onclick="pickMCQ('q11',0,2,'❌ H/2 là vị trí của biểu đồ chữ nhật.')"><span class="mkey">A</span><span>H/2 từ đáy tường</span></div>
+        <div class="mcq-opt" id="mco-q11-1" onclick="pickMCQ('q11',1,2,'❌ 2H/3 là từ đỉnh, không phải từ đáy.')"><span class="mkey">B</span><span>2H/3 từ đáy tường</span></div>
+        <div class="mcq-opt" id="mco-q11-2" onclick="pickMCQ('q11',2,2,'✓ Biểu đồ tam giác → trọng tâm tại H/3 từ đáy (chỗ rộng nhất). Nhớ: tâm tam giác ở 1/3 từ đáy.')"><span class="mkey">C</span><span>H/3 từ đáy tường</span></div>
+        <div class="mcq-opt" id="mco-q11-3" onclick="pickMCQ('q11',3,2,'❌')"><span class="mkey">D</span><span>Tại đáy tường (z=H)</span></div>
+      </div><div class="mcq-exp" id="exp-q11"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q12</span>Khi đất sau tường có hai lớp γ₁,φ₁ (lớp trên) và γ₂,φ₂ (lớp dưới), áp lực chủ động tại ranh giới 2 lớp có đặc điểm gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q12-0" onclick="pickMCQ('q12',0,0,'✓ Tại ranh giới 2 lớp, có 2 giá trị: từ lớp trên (dùng Ka₁) và từ lớp dưới (dùng Ka₂). Nếu φ₁≠φ₂ → Ka₁≠Ka₂ → biểu đồ bị gãy khúc tại ranh giới.')"><span class="mkey">A</span><span>Biểu đồ áp lực bị gãy khúc do Ka thay đổi</span></div>
+        <div class="mcq-opt" id="mco-q12-1" onclick="pickMCQ('q12',1,0,'❌ Biểu đồ không liên tục tại điểm gãy nếu Ka thay đổi.')"><span class="mkey">B</span><span>Biểu đồ liên tục không gãy</span></div>
+        <div class="mcq-opt" id="mco-q12-2" onclick="pickMCQ('q12',2,0,'❌ Không bằng 0 tại ranh giới.')"><span class="mkey">C</span><span>Áp lực bằng 0 tại ranh giới 2 lớp</span></div>
+        <div class="mcq-opt" id="mco-q12-3" onclick="pickMCQ('q12',3,0,'❌ Chỉ dùng 1 Ka cho cả 2 lớp là sai kỹ thuật.')"><span class="mkey">D</span><span>Dùng chung 1 Ka trung bình cho cả 2 lớp</span></div>
+      </div><div class="mcq-exp" id="exp-q12"></div></div>
+
+    <div class="sec-lbl" style="margin-top:8px"><i class="ti ti-map-route" style="font-size:13px"></i> Lộ trình bài tập Chương 6</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <a class="nav-link" href="6.2_DANG_1.html">
+        <div class="nav-circle">1</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--Pdk)">6.2 — Áp lực đất tĩnh K₀</div><div style="font-size:12px;color:var(--muted)">Cường độ và tổng áp lực, đất rời & dính</div></div>
+        <i class="ti ti-arrow-right" style="margin-left:auto;color:var(--muted)"></i>
+      </a>
+      <a class="nav-link" href="6.3_DANG_2.html">
+        <div class="nav-circle">2</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--Pdk)">6.3 — Áp lực chủ động Ka</div><div style="font-size:12px;color:var(--muted)">Đất rời, dính, có tải q, nền 2 lớp</div></div>
+        <i class="ti ti-arrow-right" style="margin-left:auto;color:var(--muted)"></i>
+      </a>
+      <a class="nav-link" href="6.4_DANG_3.html">
+        <div class="nav-circle">3</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--Pdk)">6.4 — Áp lực bị động Kb</div><div style="font-size:12px;color:var(--muted)">Đất rời, dính, có tải q, nền 2 lớp</div></div>
+        <i class="ti ti-arrow-right" style="margin-left:auto;color:var(--muted)"></i>
+      </a>
+      <a class="nav-link" href="6.5_ON_DINH_TUONG.html">
+        <div class="nav-circle">4</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--Pdk)">6.5 — Kiểm tra ổn định tường trọng lực</div><div style="font-size:12px;color:var(--muted)">Chống trượt & chống lật</div></div>
+        <i class="ti ti-arrow-right" style="margin-left:auto;color:var(--muted)"></i>
+      </a>
+      <a class="nav-link" href="6.6_TONG_HOP.html">
+        <div class="nav-circle">5</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--Pdk)">6.6 — Ôn tập & tổng hợp công thức</div><div style="font-size:12px;color:var(--muted)">Bảng công thức toàn chương + MCQ</div></div>
+        <i class="ti ti-arrow-right" style="margin-left:auto;color:var(--muted)"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-weight:700">0/0</span>
+    <span style="opacity:.6;font-size:12px">câu đúng</span>
+  </div>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-nop btn-sm" id="btn-nop" onclick="submitResult()">🔒 Nộp bài</button>
+    <a href="index_C6.html" class="btn btn-ghost btn-sm"><i class="ti ti-home"></i> Chương 6</a>
+    <a href="6.2_DANG_1.html" class="btn btn-ghost btn-sm">6.2 Áp lực tĩnh →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS      : kết quả từng câu MCQ (null=chưa làm · true=đúng · false=sai)
+   _submitted: cờ ngăn nộp bài nhiều lần
+   MCQ_KEYS : danh sách 12 key câu hỏi (q1..q12)
+   ================================================================ */
+var ANS={}, _submitted=false;
+var MCQ_KEYS=['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12'];
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   getSV(): đọc {name, mssv, stt, lop} từ sessionStorage 'ncm_sv'
+   ================================================================ */
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và tiến độ
+   pickMCQ(…)  : xử lý chọn đáp án MCQ, khóa lựa chọn, tô xanh/đỏ, hiện giải thích
+   updateProg(): cập nhật thanh tiến độ, lưu localStorage 'prog_c6_61', mở nút Nộp
+   ================================================================ */
+function pickMCQ(name,idx,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(idx===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+idx).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.style.display='block';exp.className='mcq-exp show '+(ok?'ok-e':'no-e');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function updateProg(){
+  var total=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){total++;if(ANS[k]===true)done++;}});
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=done+' / '+total+' ('+pct+'%)';
+  document.getElementById('hdr-prog').textContent=done+' / '+total;
+  document.getElementById('nav-prog').textContent=done+'/'+total;
+  try{localStorage.setItem('prog_c6_61',JSON.stringify({done:done,total:total}));}catch(e){}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn&&!_submitted)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">('+pct+'%/'+minPct+'%)</span>';
+}
+/* ================================================================
+   KHỐI 5 — Nộp kết quả lên server
+   submitResult(): POST {chapter='6.1', score%, time} lên Cloudflare Worker
+   WORKER_URL      : endpoint Worker (từ config.js)
+   MIN_ATTEMPT_PCT : % tối thiểu phải làm trước khi nộp (từ config.js)
+   ================================================================ */
+function submitResult(){
+  if(_submitted){alert('Bài đã nộp rồi!');return;}
+  var total=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){total++;if(ANS[k]===true)done++;}});
+  var pct=total?Math.round(done/total*100):0;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(pct<minPct){alert('Cần trả lời ít nhất '+minPct+'% câu hỏi trước khi nộp ('+Math.ceil(total*minPct/100)+' câu).');return;}
+  var sv=getSV(),url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!url){alert('Chưa có Worker URL. Liên hệ GV.');return;}
+  var payload={name:sv?sv.name:'?',mssv:sv?sv.mssv:'?',stt:sv?sv.stt:0,lop:sv?sv.lop:'?',chapter:'6.1',score:pct,time:Math.round((Date.now()-(window._startTime||Date.now()))/1000)};
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(){_submitted=true;var btn=document.getElementById('btn-nop');btn.textContent='✅ Đã nộp ('+pct+'%)';btn.style.background='#2E7D32';})
+    .catch(function(){alert('Lỗi kết nối. Vui lòng thử lại.');});
+}
+/* ================================================================
+   Khởi tạo trang (window.onload)
+   Ghi _startTime để tính thời gian làm bài khi nộp.
+   Hiển thị tên SV, đăng ký 12 key MCQ vào ANS, hiển thị nút Nộp.
+   ================================================================ */
+window._startTime=Date.now();
+window.onload=function(){
+  var sv=getSV();
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — MSSV: '+sv.mssv+' · STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ để nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  MCQ_KEYS.forEach(function(k){ANS['mcq-'+k]=null;});
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

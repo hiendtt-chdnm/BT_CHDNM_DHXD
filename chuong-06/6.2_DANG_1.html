@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.2 — Áp Lực Đất Tĩnh (K₀)</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C6.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 6</a>
+    <div class="hdr-title">
+      <h1>6.2 — Áp Lực Đất Tĩnh (K₀)</h1>
+      <p>Cường độ p₀(z) · Tổng áp lực E₀ · Đất rời & đất dính</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 6.2 — Áp Lực Đất Tĩnh</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-line"></i>
+    <div><h2>Công thức Áp Lực Đất Tĩnh</h2></div>
+    <span class="cbadge">CÔNG THỨC</span></div>
+  <div class="card-body">
+    <div class="two-col">
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-sigma"></i> Hệ số áp lực tĩnh K₀</div>
+        <div class="frow" style="font-size:14px">K₀ = ξ = μ / (1 − μ)</div>
+        <div class="frow" style="font-size:12px;color:var(--muted)">μ = hệ số Poisson của đất (cho sẵn hoặc K₀ cho trực tiếp)</div>
+      </div>
+      <div class="fml-box">
+        <div class="ftitle"><i class="ti ti-triangle"></i> Cường độ & tổng áp lực</div>
+        <div class="frow">p₀(z) = K₀ · γ · z &nbsp;(cường độ tại độ sâu z)</div>
+        <div class="frow">E₀ = ½ · K₀ · γ · H² &nbsp;(đặt tại H/3 từ đáy)</div>
+      </div>
+    </div>
+    <div class="earth-box">💡 Đơn vị thường dùng trong tính toán tường chắn: γ [T/m³], p [T/m²], E [T/m]. (1 T/m² = 10 kPa)</div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Cường độ áp lực tĩnh, đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Cường độ áp lực tĩnh tại độ sâu z · Đất rời</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">p₀(z) = K₀ · γ · z</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Cường độ áp lực tĩnh, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Cường độ áp lực tĩnh tại độ sâu z · Đất dính</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức — K₀ tính từ hệ số Poisson μ</div>
+      <div class="frow">K₀ = μ / (1 − μ)</div>
+      <div class="frow">p₀(z) = K₀ · γ · z &nbsp;<span style="font-size:11px;color:var(--muted)">(áp lực tĩnh không phụ thuộc lực dính c)</span></div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+  </div>
+</div>
+
+<!-- A3: Tổng áp lực tĩnh, đất rời -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Tổng áp lực đất tĩnh E₀ lên tường · Đất rời</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">p₀(H) = K₀ · γ · H &nbsp;(cường độ lớn nhất tại đáy)</div>
+      <div class="frow">E₀ = ½ · K₀ · γ · H² &nbsp;(diện tích tam giác áp lực)</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+  </div>
+</div>
+
+<!-- A4: Tổng áp lực tĩnh, đất dính -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Tổng áp lực đất tĩnh E₀ lên tường · Đất dính</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① K₀ = μ / (1 − μ)</div>
+      <div class="frow">② E₀ = ½ · K₀ · γ · H²</div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+<!-- ══ NHÓM C ══ -->
+<div class="sec-lbl" style="margin-top:4px"><i class="ti ti-brain" style="font-size:12px"></i> Nhóm C — Tự nhận biết · Chỉ cho đầu bài</div>
+<div id="c-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>6.2 · Áp Lực Đất Tĩnh</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="6.3_DANG_2.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2()        : làm tròn 1/2 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và tiến độ
+   chkFill(id,ans,tol): so sánh đáp số ô nhập với đáp án, tô xanh/đỏ
+   makeQ(id,…)        : tạo HTML hàng nhập đáp số, đăng ký key vào ANS
+   updateProg()       : cập nhật thanh tiến độ, lưu localStorage 'prog_c6_62', mở nút Nộp
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c6_62',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 5 — Nộp kết quả lên server
+   submitResult()  : POST {chapterId='C6-62-ApLucTinh', score%, đúng/tổng} lên Worker
+   WORKER_URL      : endpoint Cloudflare Worker (từ config.js)
+   MIN_ATTEMPT_PCT : % tối thiểu phải làm trước khi nộp (từ config.js)
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C6-62-ApLucTinh',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   MU_OPTS       : bảng hệ số Poisson đất dính [0.25..0.40]
+   genA(stt)     : nhóm A có gợi ý — A1-A4: p₀, K₀, E₀ đất rời/dính
+   genBC(stt)    : nhóm B (có công thức sẵn) và C (tự nhận biết)
+   genOne(cfg,stt): render một bài con theo loại roi_p0/dinh_p0/roi_E0/dinh_E0
+   ================================================================ */
+var MU_OPTS=[0.25,0.28,0.30,0.32,0.35,0.40];
+function genA(stt){
+  // A1: Cường độ áp lực tĩnh, đất rời (K0 cho trực tiếp)
+  (function(){
+    var rng=seededRng(stt*7+1101);
+    var H=Math.floor(4+rng()*6);
+    var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.7+rng()*0.3);
+    var xi=r2(0.3+rng()*0.25);
+    var p0z=r2(xi*gamma*z);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>, lưng tường thẳng đứng. '
+      +'Đất sau lưng tường là đất rời, γ = <b>'+gamma+' T/m³</b>, hệ số áp lực đất tĩnh K₀ = ξ = <b>'+xi+'</b>. '
+      +'Mặt đất nằm ngang, bỏ qua ma sát tường–đất. Tính cường độ áp lực đất tĩnh tại độ sâu z = <b>'+z+' m</b>.';
+    document.getElementById('a1-hint').innerHTML=
+      'p₀('+z+') = '+xi+' × '+gamma+' × '+z+' = ?';
+    document.getElementById('a1-q').innerHTML=makeQ('a1-p0','p₀(z) (T/m²)',p0z,0.05,'T/m²');
+  })();
+
+  // A2: Cường độ áp lực tĩnh, đất dính (K0 từ mu)
+  (function(){
+    var rng=seededRng(stt*11+1103);
+    var H=Math.floor(4+rng()*6);
+    var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.75+rng()*0.3);
+    var mu=MU_OPTS[Math.floor(rng()*MU_OPTS.length)];
+    var c=Math.round(1+rng()*2); // hiện diện nhưng không dùng (ghi chú)
+    var K0=r2(mu/(1-mu));
+    var p0z=r2(K0*gamma*z);
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất sau tường là đất dính, '
+      +'γ = <b>'+gamma+' T/m³</b>, hệ số Poisson μ = <b>'+mu+'</b> (lực dính c = '+c+' T/m² không ảnh hưởng đến áp lực tĩnh). '
+      +'Tính K₀ và cường độ áp lực đất tĩnh tại độ sâu z = <b>'+z+' m</b>.';
+    document.getElementById('a2-hint').innerHTML=
+      'K₀ = '+mu+' / (1−'+mu+') = ?<br>'
+      +'p₀('+z+') = K₀ × '+gamma+' × '+z+' = ?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-K0','K₀ = μ/(1−μ)',K0,0.01,'')
+      +makeQ('a2-p0','p₀(z) (T/m²)',p0z,0.05,'T/m²');
+  })();
+
+  // A3: Tổng áp lực tĩnh, đất rời
+  (function(){
+    var rng=seededRng(stt*13+1105);
+    var H=Math.floor(4+rng()*6);
+    var gamma=r2(1.7+rng()*0.3);
+    var xi=r2(0.3+rng()*0.25);
+    var p0H=r2(xi*gamma*H);
+    var E0=r2(0.5*xi*gamma*H*H);
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất rời sau tường γ = <b>'+gamma+' T/m³</b>, '
+      +'K₀ = ξ = <b>'+xi+'</b>. Tính cường độ áp lực tại đáy tường p₀(H) và tổng áp lực đất tĩnh E₀.';
+    document.getElementById('a3-hint').innerHTML=
+      'p₀(H) = '+xi+'×'+gamma+'×'+H+' = ?<br>'
+      +'E₀ = ½×'+xi+'×'+gamma+'×'+H+'² = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-p0H','p₀(H) (T/m²)',p0H,0.05,'T/m²')
+      +makeQ('a3-E0','E₀ (T/m)',E0,r2(E0*0.04),'T/m');
+  })();
+
+  // A4: Tổng áp lực tĩnh, đất dính
+  (function(){
+    var rng=seededRng(stt*17+1107);
+    var H=Math.floor(4+rng()*5);
+    var gamma=r2(1.75+rng()*0.25);
+    var mu=MU_OPTS[Math.floor(rng()*MU_OPTS.length)];
+    var K0=r2(mu/(1-mu));
+    var E0=r2(0.5*K0*gamma*H*H);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn cứng cao H = <b>'+H+' m</b>. Đất dính sau tường γ = <b>'+gamma+' T/m³</b>, '
+      +'hệ số Poisson μ = <b>'+mu+'</b>. Mặt đất nằm ngang, bỏ qua ma sát tường–đất. Tính K₀ và tổng áp lực đất tĩnh E₀.';
+    document.getElementById('a4-hint').innerHTML=
+      'K₀ = '+mu+'/(1−'+mu+') = ?<br>'
+      +'E₀ = ½×K₀×'+gamma+'×'+H+'² = ?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-K0','K₀',K0,0.01,'')
+      +makeQ('a4-E0','E₀ (T/m)',E0,r2(E0*0.04),'T/m');
+  })();
+}
+
+function genBC(stt){
+  var BCFG=[
+    {id:'b1',title:'Bài B1 · Cường độ áp lực tĩnh · Đất rời',fml:'p₀(z) = K₀·γ·z',type:'roi_p0',seeds:[19,1201]},
+    {id:'b2',title:'Bài B2 · Cường độ áp lực tĩnh · Đất dính (K₀ từ μ)',fml:'K₀ = μ/(1−μ) &nbsp;·&nbsp; p₀(z) = K₀·γ·z',type:'dinh_p0',seeds:[23,1203]},
+    {id:'b3',title:'Bài B3 · Tổng áp lực tĩnh · Đất rời',fml:'E₀ = ½·K₀·γ·H²',type:'roi_E0',seeds:[29,1205]},
+    {id:'b4',title:'Bài B4 · Tổng áp lực tĩnh · Đất dính (K₀ từ μ)',fml:'K₀=μ/(1−μ) &nbsp;·&nbsp; E₀=½·K₀·γ·H²',type:'dinh_E0',seeds:[31,1207]},
+  ];
+
+  var bhtml='';
+  BCFG.forEach(function(b){
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>'+b.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+b.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+b.id+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+b.fml+'</div></div>'
+      +'<div id="'+b.id+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+  BCFG.forEach(function(b){genOne(b,stt);});
+
+  var CCFG=[
+    {id:'c1',title:'Bài C1 · Tự nhận biết — Cường độ tĩnh, đất rời',type:'roi_p0',seeds:[37,1301]},
+    {id:'c2',title:'Bài C2 · Tự nhận biết — Cường độ tĩnh, đất dính',type:'dinh_p0',seeds:[41,1303]},
+    {id:'c3',title:'Bài C3 · Tự nhận biết — Tổng áp lực tĩnh, đất rời',type:'roi_E0',seeds:[43,1305]},
+    {id:'c4',title:'Bài C4 · Tự nhận biết — Tổng áp lực tĩnh, đất dính',type:'dinh_E0',seeds:[47,1307]},
+  ];
+
+  var chtml='';
+  CCFG.forEach(function(c){
+    chtml+='<div class="card"><div class="card-hd"><i class="ti ti-brain"></i>'
+      +'<div><h2>'+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#E65100">🧠 '+c.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+c.id+'-prob">⏳</div>'
+      +'<div id="'+c.id+'-q"></div></div></div>';
+  });
+  document.getElementById('c-cards').innerHTML=chtml;
+  CCFG.forEach(function(c){genOne(c,stt);});
+}
+
+function genOne(cfg,stt){
+  var rng=seededRng(stt*cfg.seeds[0]+cfg.seeds[1]);
+  var id=cfg.id;
+
+  if(cfg.type==='roi_p0'){
+    var H=Math.floor(4+rng()*6);var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.7+rng()*0.3);var xi=r2(0.3+rng()*0.25);
+    var p0z=r2(xi*gamma*z);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời γ='+gamma+' T/m³, K₀='+xi+'. Tính p₀ tại z='+z+' m.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-p0','p₀(z) (T/m²)',p0z,0.05,'T/m²');
+  }
+  else if(cfg.type==='dinh_p0'){
+    var H=Math.floor(4+rng()*6);var z=Math.floor(1+rng()*(H-1));
+    var gamma=r2(1.75+rng()*0.3);var mu=MU_OPTS[Math.floor(rng()*MU_OPTS.length)];
+    var K0=r2(mu/(1-mu));var p0z=r2(K0*gamma*z);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính γ='+gamma+' T/m³, μ='+mu+'. Tính K₀ và p₀ tại z='+z+' m.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-K0','K₀',K0,0.01,'')+makeQ(id+'-p0','p₀(z) (T/m²)',p0z,0.05,'T/m²');
+  }
+  else if(cfg.type==='roi_E0'){
+    var H=Math.floor(4+rng()*6);var gamma=r2(1.7+rng()*0.3);var xi=r2(0.3+rng()*0.25);
+    var E0=r2(0.5*xi*gamma*H*H);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời γ='+gamma+' T/m³, K₀='+xi+'. Tính tổng áp lực E₀.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-E0','E₀ (T/m)',E0,r2(E0*0.04),'T/m');
+  }
+  else if(cfg.type==='dinh_E0'){
+    var H=Math.floor(4+rng()*5);var gamma=r2(1.75+rng()*0.25);var mu=MU_OPTS[Math.floor(rng()*MU_OPTS.length)];
+    var K0=r2(mu/(1-mu));var E0=r2(0.5*K0*gamma*H*H);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất dính γ='+gamma+' T/m³, μ='+mu+'. Tính K₀ và tổng áp lực E₀.';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-K0','K₀',K0,0.01,'')+makeQ(id+'-E0','E₀ (T/m)',E0,r2(E0*0.04),'T/m');
+  }
+}
+
+/* ================================================================
+   Khởi tạo trang (window.onload)
+   1. Đọc SV từ sessionStorage, hiển thị tên và STT lên header
+   2. Gọi genA(stt) và genBC(stt) để sinh đề bài
+   3. Đếm TOTAL_QUESTIONS, khởi tạo nút Nộp bài
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genBC(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>

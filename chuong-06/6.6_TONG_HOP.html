@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.6 — Ôn Tập & Tổng Hợp Chương 6</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+/* ── Biến màu sắc và font chữ dùng toàn trang:
+   --P=xanh chính, --G=xanh lá (đúng), --R=đỏ (sai), --A=cam (cảnh báo)
+   --bg=nền trang, --sur=nền card, --brd=viền, --muted=chữ mờ ── */
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:13px}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.mcq-item{border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.mcq-q{padding:10px 14px 8px;font-size:13px;font-weight:600;border-bottom:1px solid var(--Plt);background:#FAFCFF;line-height:1.5}
+.mcq-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--P);background:var(--Plt);padding:2px 7px;border-radius:4px;margin-right:6px}
+.mcq-opts{display:grid;gap:0}.mcq-opts.g2{grid-template-columns:1fr 1fr}
+.mcq-opt{padding:9px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;font-size:13px;border-top:1px solid var(--Plt);transition:background .12s;line-height:1.45}
+.mcq-opt:hover{background:var(--Plt)}
+.mkey{font-family:var(--mono);font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--Plt);color:var(--P);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mcq-opt.ok{background:var(--Glt)!important}.mcq-opt.ok .mkey{background:var(--G);color:#fff}
+.mcq-opt.no{background:var(--Rlt)!important}.mcq-opt.no .mkey{background:var(--R);color:#fff}
+.mcq-opt.reveal{background:var(--Glt)!important;opacity:.6}.mcq-opt.reveal .mkey{background:var(--G);color:#fff}
+.mcq-exp{padding:9px 14px;font-size:12px;line-height:1.6;border-top:1px solid var(--brd);display:none}
+.mcq-exp.show{display:block}
+.mcq-exp.ok-exp{background:var(--Glt);color:var(--Gdk)}
+.mcq-exp.no-exp{background:var(--Rlt);color:#b71c1c}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.warn-box{background:var(--Rlt);border-left:4px solid var(--R);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;color:var(--R);line-height:1.6}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;color:var(--Gdk);font-weight:600}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cf-card{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 10px 10px 0;padding:12px 15px}
+.cf-dang{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--P);letter-spacing:.7px;margin-bottom:6px}
+.cf-title{font-size:13px;font-weight:700;color:var(--Pdk);margin-bottom:8px}
+.cf-f{font-family:var(--mono);font-size:12px;color:var(--Pdk);line-height:1.9;background:rgba(21,101,192,.04);border-radius:6px;padding:7px 10px}
+.cf-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+@media(max-width:620px){.mcq-opts.g2{grid-template-columns:1fr}.cf-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C6.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 6</a>
+    <div class="hdr-title">
+      <h1>6.6 — Ôn Tập & Tổng Hợp Chương 6</h1>
+      <p>Rankine · Tam giác áp lực · Lật &amp; trượt tường chắn</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Ôn tập tổng hợp — Tiến độ</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Bài số tổng hợp sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ══ PHẦN 1: MCQ ÔN TẬP ══ -->
+<div class="sec-lbl"><i class="ti ti-brain" style="font-size:12px"></i> Phần 1 — Câu hỏi ôn tập tổng hợp</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-wall"></i>
+    <div><h2>Ôn tập: Khái niệm & Hệ số áp lực (6.1, 6.2)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q1</span>Tường chắn không chuyển vị, đất ở trạng thái nghỉ tự nhiên. Đây là áp lực gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q1-0" onclick="pickMCQ('q1',0,0,'✓ Không chuyển vị → áp lực tĩnh K₀.')"><span class="mkey">A</span><span>Áp lực tĩnh K₀</span></div>
+        <div class="mcq-opt" id="mco-q1-1" onclick="pickMCQ('q1',1,0,'❌')"><span class="mkey">B</span><span>Áp lực chủ động Ka</span></div>
+        <div class="mcq-opt" id="mco-q1-2" onclick="pickMCQ('q1',2,0,'❌')"><span class="mkey">C</span><span>Áp lực bị động Kb</span></div>
+        <div class="mcq-opt" id="mco-q1-3" onclick="pickMCQ('q1',3,0,'❌')"><span class="mkey">D</span><span>Không có áp lực</span></div>
+      </div><div class="mcq-exp" id="exp-q1"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q2</span>K₀ = μ/(1−μ). Với μ=0.3, K₀ bằng?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q2-0" onclick="pickMCQ('q2',0,1,'❌')"><span class="mkey">A</span><span>0.30</span></div>
+        <div class="mcq-opt" id="mco-q2-1" onclick="pickMCQ('q2',1,1,'✓ K₀=0.3/0.7≈0.43.')"><span class="mkey">B</span><span>≈ 0.43</span></div>
+        <div class="mcq-opt" id="mco-q2-2" onclick="pickMCQ('q2',2,1,'❌')"><span class="mkey">C</span><span>0.70</span></div>
+        <div class="mcq-opt" id="mco-q2-3" onclick="pickMCQ('q2',3,1,'❌')"><span class="mkey">D</span><span>1.43</span></div>
+      </div><div class="mcq-exp" id="exp-q2"></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrow-down"></i>
+    <div><h2>Ôn tập: Áp Lực Chủ Động & Bị Động (6.3, 6.4)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q3</span>Đất dính chủ động có vùng hc (p&lt;0). Cách xử lý vùng này khi tính tổng E?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q3-0" onclick="pickMCQ('q3',0,0,'✓ Vùng p&lt;0 không có ý nghĩa vật lý (đất không kéo) → bỏ qua khi tính tổng áp lực.')"><span class="mkey">A</span><span>Bỏ qua, chỉ tính phần dương</span></div>
+        <div class="mcq-opt" id="mco-q3-1" onclick="pickMCQ('q3',1,0,'❌ Không cộng dồn phần âm.')"><span class="mkey">B</span><span>Cộng cả phần âm vào E</span></div>
+        <div class="mcq-opt" id="mco-q3-2" onclick="pickMCQ('q3',2,0,'❌')"><span class="mkey">C</span><span>Lấy giá trị tuyệt đối</span></div>
+        <div class="mcq-opt" id="mco-q3-3" onclick="pickMCQ('q3',3,0,'❌')"><span class="mkey">D</span><span>Không ảnh hưởng gì</span></div>
+      </div><div class="mcq-exp" id="exp-q3"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q4</span>Biểu đồ áp lực bị động đất dính có dạng gì?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q4-0" onclick="pickMCQ('q4',0,1,'❌ Tam giác là đất rời.')"><span class="mkey">A</span><span>Tam giác đơn giản</span></div>
+        <div class="mcq-opt" id="mco-q4-1" onclick="pickMCQ('q4',1,1,'✓ p_b(0)=2c√Kb &gt; 0 tại đỉnh, tăng dần xuống đáy → hình thang, không có vùng âm.')"><span class="mkey">B</span><span>Hình thang (luôn dương)</span></div>
+        <div class="mcq-opt" id="mco-q4-2" onclick="pickMCQ('q4',2,1,'❌')"><span class="mkey">C</span><span>Tam giác cụt (có vùng âm)</span></div>
+        <div class="mcq-opt" id="mco-q4-3" onclick="pickMCQ('q4',3,1,'❌')"><span class="mkey">D</span><span>Hình chữ nhật</span></div>
+      </div><div class="mcq-exp" id="exp-q4"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q5</span>Tường có 2 lớp đất sau lưng, điểm M ở lớp 2. Công thức tính σv2 tại M?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q5-0" onclick="pickMCQ('q5',0,1,'❌ Thiếu thành phần lớp 1.')"><span class="mkey">A</span><span>σv2 = γ₂·z</span></div>
+        <div class="mcq-opt" id="mco-q5-1" onclick="pickMCQ('q5',1,1,'✓ Cộng dồn: hết lớp 1 rồi cộng phần trong lớp 2.')"><span class="mkey">B</span><span>σv2 = γ₁h₁ + γ₂(z−h₁)</span></div>
+        <div class="mcq-opt" id="mco-q5-2" onclick="pickMCQ('q5',2,1,'❌')"><span class="mkey">C</span><span>σv2 = γ₁z</span></div>
+        <div class="mcq-opt" id="mco-q5-3" onclick="pickMCQ('q5',3,1,'❌')"><span class="mkey">D</span><span>σv2 = (γ₁+γ₂)·z/2</span></div>
+      </div><div class="mcq-exp" id="exp-q5"></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-shield-check"></i>
+    <div><h2>Ôn tập: Ổn Định Tường Chắn (6.5)</h2></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body">
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q6</span>Hệ số an toàn chống lật K<sub>l</sub> được tính như thế nào?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q6-0" onclick="pickMCQ('q6',0,0,'✓ Momen giữ (do trọng lượng tường) chia momen gây lật (do áp lực đất).')"><span class="mkey">A</span><span>K<sub>l</sub> = M<sub>giữ</sub> / M<sub>lật</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-1" onclick="pickMCQ('q6',1,0,'❌')"><span class="mkey">B</span><span>K<sub>l</sub> = M<sub>lật</sub> / M<sub>giữ</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-2" onclick="pickMCQ('q6',2,0,'❌')"><span class="mkey">C</span><span>K<sub>l</sub> = W / E<sub>a</sub></span></div>
+        <div class="mcq-opt" id="mco-q6-3" onclick="pickMCQ('q6',3,0,'❌')"><span class="mkey">D</span><span>K<sub>l</sub> = E<sub>a</sub> / W</span></div>
+      </div><div class="mcq-exp" id="exp-q6"></div></div>
+
+    <div class="mcq-item"><div class="mcq-q"><span class="mcq-num">Q7</span>Tường trọng lực H=4m, φ=30°, γ=1.8 T/m³. E<sub>a</sub> = ?</div>
+      <div class="mcq-opts g2">
+        <div class="mcq-opt" id="mco-q7-0" onclick="pickMCQ('q7',0,1,'❌')"><span class="mkey">A</span><span>≈ 3.6 T/m</span></div>
+        <div class="mcq-opt" id="mco-q7-1" onclick="pickMCQ('q7',1,1,'✓ Ka=tg²30°=0.333; Ea=½×0.333×1.8×16≈4.8 T/m.')"><span class="mkey">B</span><span>≈ 4.8 T/m</span></div>
+        <div class="mcq-opt" id="mco-q7-2" onclick="pickMCQ('q7',2,1,'❌')"><span class="mkey">C</span><span>≈ 14.4 T/m</span></div>
+        <div class="mcq-opt" id="mco-q7-3" onclick="pickMCQ('q7',3,1,'❌')"><span class="mkey">D</span><span>≈ 28.8 T/m</span></div>
+      </div><div class="mcq-exp" id="exp-q7"></div></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 2: BÀI SỐ TỔNG HỢP ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Phần 2 — Bài số kiểm tra tổng hợp</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-calculator"></i>
+    <div><h2>Bài số tổng hợp — Sinh theo STT</h2><p>Kết hợp áp lực chủ động + kiểm tra ổn định tường</p></div>
+    <span class="cbadge" style="background:#6A1B9A">🧮 TH</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="th-prob">⏳ Đang tải đề bài...</div>
+    <div id="th-q"></div>
+  </div>
+</div>
+
+<!-- ══ PHẦN 3: BẢNG CÔNG THỨC TỔNG HỢP ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-file-description" style="font-size:12px"></i> Phần 3 — Bảng công thức chính cả chương</div>
+
+<div class="card">
+  <div class="card-hd"><i class="ti ti-math-function"></i>
+    <div><h2>Tổng hợp công thức Chương 6</h2><p>Chỉ các công thức cốt lõi cần nhớ</p></div>
+    <span class="cbadge">📋 CF</span>
+  </div>
+  <div class="card-body">
+    <div class="warn-box">⚠️ <b>Quan hệ:</b> Ka &lt; K₀ &lt; Kb &nbsp;·&nbsp; Ka·Kb = 1 &nbsp;·&nbsp; Đơn vị: γ[T/m³], c,q,p[T/m²], E[T/m], 1T/m²=10kPa</div>
+    <div class="cf-grid">
+      <div class="cf-card">
+        <div class="cf-dang">6.2 — Áp lực tĩnh</div>
+        <div class="cf-title">K₀ = ξ = μ/(1−μ)</div>
+        <div class="cf-f">p₀(z) = K₀·γ·z<br>E₀ = ½·K₀·γ·H²</div>
+        <div class="cf-note">Không phụ thuộc lực dính c</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">6.3 — Áp lực chủ động</div>
+        <div class="cf-title">Ka = tg²(45°−φ/2)</div>
+        <div class="cf-f">Rời: p<sub>a</sub>=Kaγz, E<sub>c</sub>=½Kaγh²<br>Dính: p<sub>a</sub>=Kaγz−2c√Ka, h<sub>c</sub>=2c/(γ√Ka)</div>
+        <div class="cf-note">Có tải q: p<sub>a</sub>=Ka(γz+q)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">6.4 — Áp lực bị động</div>
+        <div class="cf-title">Kb = tg²(45°+φ/2)</div>
+        <div class="cf-f">Rời: p<sub>b</sub>=Kbγz, E<sub>b</sub>=½Kbγh²<br>Dính: p<sub>b</sub>=Kbγz+2c√Kb (luôn dương)</div>
+        <div class="cf-note">Có tải q: p<sub>b</sub>=Kb(γz+q)</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-dang">6.5 — Ổn định tường</div>
+        <div class="cf-title">Chống trượt & chống lật</div>
+        <div class="cf-f">K<sub>tr</sub>=W·tgφ/E<sub>a</sub> ≥ 1.3~1.5<br>K<sub>l</sub>=M<sub>giữ</sub>/M<sub>lật</sub> ≥ 1.5~2.0</div>
+        <div class="cf-note">M<sub>giữ</sub>=W·x &nbsp;·&nbsp; M<sub>lật</sub>=E<sub>a</sub>·H/3</div>
+      </div>
+    </div>
+    <div class="succ-box">
+      📌 <b>Quy trình chung:</b> Xác định loại đất (rời/dính) → Chọn Ka/Kb/K₀ phù hợp → Tính cường độ tại các điểm đặc trưng → Tính tổng áp lực → (nếu có) kiểm tra ổn định lật/trượt
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>6.6 · Ôn tập &amp; Tổng hợp</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog" style="font-family:var(--mono);font-size:12px">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu tiếp</button>
+    <a href="6.5_ON_DINH_TUONG.html" class="btn btn-sm btn-ghost">← 6.5</a>
+    <a href="index_C6.html" class="btn btn-sm btn-ghost">Chương 6 ✓</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   TOTAL_QUESTIONS: tổng số câu (không có _submitted — trang ôn tập, không nộp)
+   ================================================================ */
+var ANS={};
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2/r3()     : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   deg2rad(d)     : chuyển độ → radian
+   calcKa(phi)    : hệ số áp lực chủ động Ka = tan²(45° − φ/2)
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+function deg2rad(d){return d*Math.PI/180}
+function calcKa(phi){return r3(Math.pow(Math.tan(deg2rad(45-phi/2)),2));}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và tiến độ
+   chkFill(id,ans,tol): so sánh đáp số ô nhập với đáp án, tô xanh/đỏ
+   pickMCQ(…)         : xử lý chọn đáp án MCQ ôn tập, hiện giải thích
+   makeQ(id,…)        : tạo HTML hàng nhập đáp số, đăng ký key vào ANS
+   updateProg()       : cập nhật thanh tiến độ, lưu localStorage 'prog_c6_66' (không nộp)
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function pickMCQ(name,picked,correct,expText){
+  if(ANS['mcq-'+name]!=null)return;
+  var ok=(picked===correct);
+  document.querySelectorAll('[id^="mco-'+name+'-"]').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('mco-'+name+'-'+picked).className='mcq-opt '+(ok?'ok':'no');
+  if(!ok)document.getElementById('mco-'+name+'-'+correct).className='mcq-opt reveal';
+  var exp=document.getElementById('exp-'+name);
+  if(exp){exp.classList.add('show');exp.classList.add(ok?'ok-exp':'no-exp');if(expText)exp.innerHTML=expText;}
+  ANS['mcq-'+name]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c6_66',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   genAll(stt): sinh toàn bộ đề tổng hợp —
+                7 MCQ ôn lý thuyết áp lực đất + bài số tính Ka, Ea,
+                kiểm tra trượt (Ktr) và lật (Kl) tường chắn trọng lực
+   ================================================================ */
+function genAll(stt){
+  ['q1','q2','q3','q4','q5','q6','q7'].forEach(function(k){ANS['mcq-'+k]=null;});
+
+  var rng=seededRng(stt*151+5901);
+  var phi=Math.floor(28+rng()*10);
+  var H=r1(3.5+rng()*2.5);
+  var gamma=r2(1.75+rng()*0.2);
+  var Ka=calcKa(phi);
+  var Ea=r2(0.5*Ka*gamma*H*H);
+  var zE=r2(H/3);
+  var A=r2(1.2+rng()*0.8);
+  var W=r2(2.4*A);
+  var x=r1(0.8+rng()*0.6);
+  var Ktr=r2(W*Math.tan(deg2rad(phi))/Ea);
+  var Mgiu=r2(W*x);
+  var Mlat=r2(Ea*zE);
+  var Kl=r2(Mgiu/Mlat);
+
+  document.getElementById('th-prob').innerHTML=
+    '🏗️ <b>Đề bài tổng hợp</b> (STT <b>'+stt+'</b>):<br>'
+    +'Tường chắn trọng lực bê tông (γ<sub>BT</sub>=2.4 T/m³), cao H=<b>'+H+' m</b>, diện tích mặt cắt A=<b>'+A+' m²</b>, '
+    +'trọng tâm cách mép trước x=<b>'+x+' m</b>. Đất đắp sau tường: φ=<b>'+phi+'°</b>, γ=<b>'+gamma+' T/m³</b>, c=0.<br>'
+    +'Tính áp lực chủ động và kiểm tra ổn định trượt, lật ([K<sub>tr</sub>]=1.3, [K<sub>l</sub>]=1.5).';
+
+  document.getElementById('th-q').innerHTML=
+    makeQ('th-Ka','① Ka = tg²(45°−φ/2)',Ka,0.01,'')
+    +makeQ('th-Ea','② E<sub>a</sub> (T/m)',Ea,r2(Ea*0.04+0.03),'T/m')
+    +makeQ('th-W','③ W (T/m)',W,r2(W*0.02),'T/m')
+    +makeQ('th-Ktr','④ K<sub>tr</sub>',Ktr,0.1,'')
+    +makeQ('th-Kl','⑤ K<sub>l</sub>',Kl,0.12,'');
+
+  updateProg();
+}
+
+/* ================================================================
+   Khởi tạo trang (window.onload)
+   1. Đọc SV từ sessionStorage, hiển thị tên và STT lên header
+   2. Gọi genAll(stt) để sinh toàn bộ đề tổng hợp chương 6
+   3. Đếm TOTAL_QUESTIONS từ các key đã đăng ký trong ANS
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genAll(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+};
+</script>
+</body>
+</html>

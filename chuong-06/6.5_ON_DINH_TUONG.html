@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.5 — Kiểm Tra Ổn Định Tường Chắn Trọng Lực</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<style>
+:root{--P:#1565C0;--Pdk:#0D47A1;--Plt:#E3F2FD;--G:#2E7D32;--Glt:#E8F5E9;--Gdk:#1B5E20;--R:#C62828;--Rlt:#FFEBEE;--A:#FF8F00;--Alt:#FFF8E1;--bg:#E8F4FD;--sur:#fff;--brd:#90CAF9;--muted:#546E7A;--text:#0D1B2A;--sans:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;--r:12px;--sh:0 2px 16px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--Pdk);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{max-width:960px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.back-btn{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hdr-title{flex:1}.hdr-title h1{font-size:15px;font-weight:700}.hdr-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hdr-prog{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.sv-badge{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--mono)}
+main{max-width:960px;margin:0 auto;padding:20px 20px 80px}
+.prog-wrap{margin-bottom:18px;background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);padding:12px 18px;box-shadow:var(--sh)}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.prog-track{height:8px;background:var(--Plt);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--P);border-radius:4px;transition:width .4s}
+.sv-infobar{background:linear-gradient(135deg,var(--Pdk),var(--P));color:#fff;border-radius:var(--r);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{padding:13px 20px;display:flex;align-items:center;gap:11px;border-bottom:1.5px solid var(--brd);background:var(--Plt)}
+.card-hd i{font-size:20px;color:var(--P)}.card-hd h2{font-size:14px;font-weight:700;color:var(--Pdk);flex:1}
+.card-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.cbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--P);color:#fff;letter-spacing:.6px;white-space:nowrap}
+.card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.fml-box{background:#F8FBFF;border:1.5px solid #BBDEFB;border-left:4px solid var(--P);border-radius:0 8px 8px 0;padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.9}
+.ftitle{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.frow{margin-bottom:3px;color:var(--Pdk)}
+.frow em{color:var(--Gdk);font-weight:700;font-style:normal}
+.earth-box{background:#FFF8E1;border-left:4px solid #FF8F00;border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;line-height:1.7;color:#4E342E}
+.succ-box{background:var(--Glt);border-left:4px solid var(--G);border-radius:0 8px 8px 0;padding:11px 15px;font-size:13px;color:var(--Gdk);font-weight:600}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--P);display:flex;align-items:center;gap:7px;margin:6px 0 12px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+.ans-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 12px;background:#FAFCFF;border:1px solid var(--brd);border-radius:8px}
+.ans-label{font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:200px;font-family:var(--mono)}
+.ans-inp{width:110px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:700;outline:none;text-align:center}
+.ans-inp.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.ans-inp.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.ans-unit{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:24px;text-align:center}
+.chip.ok{background:var(--Glt);color:var(--Gdk);border:1px solid #A5D6A7}
+.chip.no{background:var(--Rlt);color:var(--R);border:1px solid #FFCDD2}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:hover{opacity:.85}
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--Pdk);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:200;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+svg.wall-svg{width:100%;max-width:420px;display:block;margin:8px auto}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C6.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 6</a>
+    <div class="hdr-title">
+      <h1>6.5 — Kiểm Tra Ổn Định Tường Chắn Trọng Lực</h1>
+      <p>Bài tập thực hành · Áp lực chủ động đất rời · Lật &amp; trượt</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 6.5 — Ổn Định Tường Chắn</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1"><div style="font-size:14px;font-weight:700" id="sv-display">đang tải...</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.65)">Số liệu sinh theo STT sinh viên</div></div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- LÝ THUYẾT ỨNG DỤNG -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-shield-check"></i>
+    <div><h2>Bài toán thực tế — Tường chắn trọng lực</h2><p>Đặt vấn đề: tường có tự đứng vững được không?</p></div>
+    <span class="cbadge">ỨNG DỤNG</span></div>
+  <div class="card-body">
+    <svg class="wall-svg" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="240" fill="#f8faff" rx="8"/>
+      <rect x="20" y="40" width="150" height="170" fill="#fff9c4"/>
+      <line x1="14" y1="40" x2="170" y2="40" stroke="#5d4037" stroke-width="2"/>
+      <text x="20" y="32" font-size="9" fill="#5d4037" font-style="italic">Đất rời φ, γ</text>
+      <polygon points="170,40 170,210 240,210 220,40" fill="#90a4ae" stroke="#37474f" stroke-width="2"/>
+      <text x="195" y="125" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" transform="rotate(-78,195,125)">TƯỜNG TRỌNG LỰC</text>
+      <rect x="14" y="210" width="380" height="16" fill="#c8e6c9" stroke="#388e3c"/>
+      <polygon points="170,40 170,210 320,210" fill="rgba(21,101,192,.22)" stroke="#1565c0" stroke-width="2"/>
+      <line x1="310" y1="210" x2="173" y2="210" stroke="#1565c0" stroke-width="2" marker-end="url(#aE)"/>
+      <defs><marker id="aE" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#1565c0"/></marker></defs>
+      <rect x="320" y="160" width="60" height="15" fill="white" rx="3" opacity="0.9"/>
+      <text x="350" y="171" text-anchor="middle" font-size="9.5" fill="#1565c0" font-weight="700">E<tspan font-size="7">a</tspan></text>
+      <text x="205" y="225" text-anchor="middle" font-size="8.5" fill="#1565c0" font-weight="600">①Trượt đáy</text>
+      <path d="M 235 50 A 25 25 0 0 1 245 75" stroke="#e65100" stroke-width="2" fill="none" marker-end="url(#aL)"/>
+      <defs><marker id="aL" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#e65100"/></marker></defs>
+      <text x="262" y="60" font-size="8.5" fill="#e65100" font-weight="600">②Lật quanh A</text>
+      <circle cx="240" cy="210" r="3.5" fill="#e65100"/>
+      <text x="245" y="222" font-size="9" fill="#e65100" font-weight="700">A</text>
+    </svg>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-sigma"></i> Hai kiểm tra ổn định cơ bản</div>
+      <div class="frow">① <b>Chống trượt</b> theo đáy: K<sub>tr</sub> = (ΣW·f) / E<sub>a</sub> &nbsp;&nbsp;(f = tgφ<sub>đáy</sub> ≈ tgφ đất nền)</div>
+      <div class="frow">② <b>Chống lật</b> quanh mép trước A: K<sub>l</sub> = M<sub>giữ</sub> / M<sub>lật</sub></div>
+      <div class="frow" style="margin-top:6px;font-size:12px;color:var(--muted)">M<sub>giữ</sub> = ΣW·x<sub>i</sub> (cánh tay đòn trọng lượng đến A) &nbsp;·&nbsp; M<sub>lật</sub> = E<sub>a</sub>·z<sub>E</sub> (cánh tay đòn áp lực đất)</div>
+    </div>
+    <div class="earth-box">💡 Yêu cầu thiết kế: K<sub>tr</sub> ≥ 1.3~1.5 &nbsp;·&nbsp; K<sub>l</sub> ≥ 1.5~2.0. Đơn vị: γ,γ<sub>BT</sub> [T/m³], W,E [T/m], M [T·m/m].</div>
+  </div>
+</div>
+
+<!-- ══ NHÓM A ══ -->
+<div class="sec-lbl"><i class="ti ti-player-play" style="font-size:12px"></i> Nhóm A — Bài hướng dẫn đầy đủ</div>
+
+<!-- A1: Tính Ea đơn giản -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A1 — Tính áp lực chủ động E<sub>a</sub> tác dụng lên tường</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A1</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a1-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Công thức</div>
+      <div class="frow">Ka = tg²(45°−φ/2) &nbsp;·&nbsp; E<sub>a</sub> = ½·Ka·γ·H²</div>
+      <div class="frow" id="a1-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a1-q"></div>
+  </div>
+</div>
+
+<!-- A2: Trọng lượng tường + kiểm tra trượt -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A2 — Trọng lượng tường W và kiểm tra ổn định TRƯỢT</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A2</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a2-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① W = γ<sub>BT</sub> · A<sub>tường</sub> &nbsp;(A = diện tích mặt cắt ngang, cho sẵn)</div>
+      <div class="frow">② Lực ma sát giữ: F<sub>giữ</sub> = W · tgφ</div>
+      <div class="frow">③ K<sub>tr</sub> = F<sub>giữ</sub> / E<sub>a</sub> &nbsp;→ so sánh [K<sub>tr</sub>]</div>
+      <div class="frow" id="a2-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a2-q"></div>
+    <div class="succ-box" id="a2-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A3: Kiểm tra lật -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A3 — Kiểm tra ổn định LẬT quanh mép trước tường</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A3</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a3-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình</div>
+      <div class="frow">① M<sub>giữ</sub> = W · x &nbsp;(x = khoảng cách từ trọng tâm W đến mép trước A)</div>
+      <div class="frow">② M<sub>lật</sub> = E<sub>a</sub> · z<sub>E</sub> &nbsp;(z<sub>E</sub> = H/3, cánh tay đòn từ đáy)</div>
+      <div class="frow">③ K<sub>l</sub> = M<sub>giữ</sub> / M<sub>lật</sub> &nbsp;→ so sánh [K<sub>l</sub>]</div>
+      <div class="frow" id="a3-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a3-q"></div>
+    <div class="succ-box" id="a3-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- A4: Bài toàn diện - kết hợp cả 2 kiểm tra -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-player-play"></i>
+    <div><h2>Bài A4 — Bài tập tổng hợp: kiểm tra ĐỒNG THỜI trượt &amp; lật</h2></div>
+    <span class="cbadge" style="background:#E65100">📐 A4</span>
+  </div>
+  <div class="card-body">
+    <div class="earth-box" id="a4-prob">⏳</div>
+    <div class="fml-box">
+      <div class="ftitle"><i class="ti ti-lightbulb"></i> Quy trình đầy đủ — 5 bước</div>
+      <div class="frow">① Ka, E<sub>a</sub> = ½Ka·γ·H²</div>
+      <div class="frow">② W = γ<sub>BT</sub>·A &nbsp;·&nbsp; ③ K<sub>tr</sub> = W·tgφ / E<sub>a</sub></div>
+      <div class="frow">④ M<sub>giữ</sub>=W·x, M<sub>lật</sub>=E<sub>a</sub>·H/3 &nbsp;·&nbsp; ⑤ K<sub>l</sub> = M<sub>giữ</sub>/M<sub>lật</sub></div>
+      <div class="frow" id="a4-hint" style="margin-top:4px;font-size:12px;color:var(--muted)">Thay số: (...)</div>
+    </div>
+    <div id="a4-q"></div>
+    <div class="succ-box" id="a4-kq" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══ NHÓM B ══ -->
+<div class="sec-lbl" style="margin-top:8px"><i class="ti ti-pencil" style="font-size:12px"></i> Nhóm B — Có công thức · Tự thay số</div>
+<div id="b-cards"></div>
+
+</main>
+
+<div class="sticky-nav">
+  <span>6.5 · Ổn Định Tường Chắn</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" onclick="scrollNext()">▼ Câu chưa làm</button>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+    <a href="6.6_TONG_HOP.html" class="btn btn-sm btn-ghost">Bài tiếp ›</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — Biến toàn cục
+   ANS            : kết quả từng câu (null=chưa làm · true=đúng · false=sai)
+   _submitted     : cờ ngăn nộp bài nhiều lần
+   TOTAL_QUESTIONS: tổng số câu
+   ================================================================ */
+var ANS={};
+var _submitted=false;
+var TOTAL_QUESTIONS=0;
+
+/* ================================================================
+   KHỐI 2 — Hàm tiện ích
+   r1/r2/r3()     : làm tròn 1/2/3 chữ số thập phân
+   seededRng(seed): LCG tất định — cùng seed → cùng dãy số (Park-Miller)
+   getSV()        : đọc {name, mssv, stt, classId} từ sessionStorage 'ncm_sv'
+   scrollNext()   : cuộn đến ô nhập đầu tiên chưa đúng
+   deg2rad(d)     : chuyển độ → radian
+   calcKa(phi)    : hệ số áp lực chủ động Ka = tan²(45° − φ/2)
+   ================================================================ */
+function r1(v){return Math.round(v*10)/10}
+function r2(v){return Math.round(v*100)/100}
+function r3(v){return Math.round(v*1000)/1000}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
+function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
+function deg2rad(d){return d*Math.PI/180}
+function calcKa(phi){return r3(Math.pow(Math.tan(deg2rad(45-phi/2)),2));}
+
+/* ================================================================
+   KHỐI 3 — Chấm điểm và tiến độ
+   chkFill(id,ans,tol): so sánh đáp số ô nhập với đáp án, tô xanh/đỏ
+   makeQ(id,…)        : tạo HTML hàng nhập đáp số, đăng ký key vào ANS
+   updateProg()       : cập nhật thanh tiến độ, lưu localStorage 'prog_c6_65', mở nút Nộp
+   ================================================================ */
+function chkFill(id,ans,tol){
+  var inp=document.getElementById(id);var chip=document.getElementById('ck-'+id);
+  if(!inp||!chip)return;
+  var v=parseFloat(inp.value);
+  if(isNaN(v)){inp.classList.remove('ok','no');chip.className='chip';chip.textContent='';ANS[id]=null;updateProg();return;}
+  var ok=Math.abs(v-ans)<=tol;
+  inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);
+  chip.className='chip '+(ok?'ok':'no');chip.textContent=ok?'✓':'✗';
+  ANS[id]=ok;updateProg();
+}
+function makeQ(id,label,ans,tol,unit){
+  ANS[id]=null;
+  return '<div class="ans-row"><span class="ans-label">'+label+'</span>'
+    +'<input class="ans-inp" id="'+id+'" type="number" step="any" placeholder="?" oninput="chkFill(\''+id+'\','+ans+','+tol+')">'
+    +'<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
+}
+function updateProg(){
+  var attempted=0,done=0,total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var donePct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-fill').style.width=attemPct+'%';
+  document.getElementById('prog-text').textContent='Đã làm: '+attempted+'/'+total+' ('+attemPct+'%) · Đúng: '+done+' ('+donePct+'%)';
+  document.getElementById('nav-prog').textContent=attempted+'/'+total;
+  document.getElementById('hdr-prog').textContent=attempted+' / '+total;
+  try{localStorage.setItem('prog_c6_65',JSON.stringify({done:done,total:total,attempted:attempted}));}catch(e){}
+  if(!_submitted){
+    var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+    var btn=document.getElementById('btn-nop');
+    if(btn){
+      var ready=(attemPct>=minPct&&attempted>0);
+      btn.style.background=ready?'rgba(46,125,50,.7)':'rgba(150,150,150,.35)';
+      btn.style.borderColor=ready?'rgba(165,214,167,.6)':'rgba(200,200,200,.4)';
+      btn.innerHTML=(ready?'✅':'🔒')+' Nộp bài <span style="font-size:10px;opacity:.8">('+attemPct+'%/'+minPct+'%)</span>';
+    }
+  }
+}
+/* ================================================================
+   KHỐI 5 — Nộp kết quả lên server
+   submitResult()  : POST {chapterId='C6-65-OnDinhTuong', score%, đúng/tổng} lên Worker
+   WORKER_URL      : endpoint Cloudflare Worker (từ config.js)
+   MIN_ATTEMPT_PCT : % tối thiểu phải làm trước khi nộp (từ config.js)
+   ================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
+  if(_submitted){return;}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C6-65-OnDinhTuong',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+      alert('✅ Nộp thành công! Đúng: '+scorePct+'% ('+done+'/'+total+')');
+    } else {alert('❌ Lỗi: '+(d.error||'Không rõ'));}
+  })
+  .catch(function(err){alert('❌ Không kết nối được Worker: '+err.message);});
+}
+
+/* ================================================================
+   KHỐI 4 — Sinh số liệu theo STT sinh viên
+   genA(stt): nhóm A có gợi ý — A1-A4: Ka, Ea, kiểm tra trượt/lật tường chắn
+   genB(stt): nhóm B (có công thức sẵn) — Ea, W, Ktr, Kl từng bài riêng
+   ================================================================ */
+function genA(stt){
+  // A1: Tính Ea
+  (function(){
+    var rng=seededRng(stt*7+4101);
+    var phi=Math.floor(28+rng()*10);
+    var H=r1(3+rng()*3);
+    var gamma=r2(1.7+rng()*0.25);
+    var Ka=calcKa(phi);
+    var Ea=r2(0.5*Ka*gamma*H*H);
+    document.getElementById('a1-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn trọng lực cao H = <b>'+H+' m</b>. Đất đắp sau tường là đất rời: '
+      +'φ = <b>'+phi+'°</b>, γ = <b>'+gamma+' T/m³</b>, c = 0. Tính Ka và áp lực chủ động E<sub>a</sub> tác dụng lên tường.';
+    document.getElementById('a1-hint').innerHTML=
+      'Ka = tg²(45−'+phi+'/2)° = ?<br>E<sub>a</sub> = ½×Ka×'+gamma+'×'+H+'² = ?';
+    document.getElementById('a1-q').innerHTML=
+      makeQ('a1-Ka','Ka',Ka,0.01,'')
+      +makeQ('a1-Ea','E<sub>a</sub> (T/m)',Ea,r2(Ea*0.04+0.03),'T/m');
+  })();
+
+  // A2: Trọng lượng + trượt
+  (function(){
+    var rng=seededRng(stt*11+4103);
+    var phi=Math.floor(28+rng()*10);
+    var H=r1(3+rng()*3);
+    var gamma=r2(1.7+rng()*0.25);
+    var Ka=calcKa(phi);
+    var Ea=r2(0.5*Ka*gamma*H*H);
+    var A=r2(1.2+rng()*0.8); // m² mặt cắt ngang
+    var gamBT=2.4;
+    var W=r2(gamBT*A);
+    var Fgiu=r2(W*Math.tan(deg2rad(phi)));
+    var Ktr=r2(Fgiu/Ea);
+    var KtrReq=1.3;
+    document.getElementById('a2-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn trọng lực bê tông (γ<sub>BT</sub>=2.4 T/m³), diện tích mặt cắt ngang A = <b>'+A+' m²</b>. '
+      +'Đất đắp: H = <b>'+H+' m</b>, φ = <b>'+phi+'°</b>, γ = <b>'+gamma+' T/m³</b>. Áp lực chủ động E<sub>a</sub> = <b>'+Ea+' T/m</b> (đã tính). '
+      +'Tính W, lực ma sát giữ và hệ số an toàn chống trượt K<sub>tr</sub> (yêu cầu [K<sub>tr</sub>]='+KtrReq+').';
+    document.getElementById('a2-hint').innerHTML=
+      'W = 2.4 × '+A+' = ?<br>'
+      +'F<sub>giữ</sub> = W × tg'+phi+'° = ?<br>'
+      +'K<sub>tr</sub> = F<sub>giữ</sub> / '+Ea+' = ?';
+    document.getElementById('a2-q').innerHTML=
+      makeQ('a2-W','W (T/m)',W,r2(W*0.02),'T/m')
+      +makeQ('a2-Fgiu','F<sub>giữ</sub> (T/m)',Fgiu,r2(Fgiu*0.03),'T/m')
+      +makeQ('a2-Ktr','K<sub>tr</sub>',Ktr,0.1,'');
+    var verdict=Ktr>=KtrReq?'K<sub>tr</sub>='+Ktr+' ≥ [K<sub>tr</sub>]='+KtrReq+' → Tường <b>AN TOÀN</b> chống trượt.':'K<sub>tr</sub>='+Ktr+' < [K<sub>tr</sub>]='+KtrReq+' → Tường <b>KHÔNG an toàn</b>, cần tăng kích thước đáy.';
+    document.getElementById('a2-kq').innerHTML='📌 Kết luận: '+verdict;
+    document.getElementById('a2-kq').style.display='';
+  })();
+
+  // A3: Kiểm tra lật
+  (function(){
+    var rng=seededRng(stt*13+4105);
+    var phi=Math.floor(28+rng()*10);
+    var H=r1(3+rng()*3);
+    var gamma=r2(1.7+rng()*0.25);
+    var Ka=calcKa(phi);
+    var Ea=r2(0.5*Ka*gamma*H*H);
+    var zE=r2(H/3);
+    var A=r2(1.2+rng()*0.8);
+    var gamBT=2.4;
+    var W=r2(gamBT*A);
+    var x=r1(0.8+rng()*0.7); // cánh tay đòn W đến mép trước
+    var Mgiu=r2(W*x);
+    var Mlat=r2(Ea*zE);
+    var Kl=r2(Mgiu/Mlat);
+    var KlReq=1.5;
+    document.getElementById('a3-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn trọng lực, H = <b>'+H+' m</b>, trọng lượng W = <b>'+W+' T/m</b>, '
+      +'trọng tâm cách mép trước (điểm lật A) một khoảng x = <b>'+x+' m</b>. '
+      +'Áp lực chủ động E<sub>a</sub> = <b>'+Ea+' T/m</b>, đặt tại H/3 từ đáy. '
+      +'Tính M<sub>giữ</sub>, M<sub>lật</sub> và hệ số an toàn chống lật K<sub>l</sub> (yêu cầu [K<sub>l</sub>]='+KlReq+').';
+    document.getElementById('a3-hint').innerHTML=
+      'z<sub>E</sub> = H/3 = '+H+'/3 = ?<br>'
+      +'M<sub>giữ</sub> = '+W+' × '+x+' = ?<br>'
+      +'M<sub>lật</sub> = '+Ea+' × z<sub>E</sub> = ?<br>'
+      +'K<sub>l</sub> = M<sub>giữ</sub> / M<sub>lật</sub> = ?';
+    document.getElementById('a3-q').innerHTML=
+      makeQ('a3-zE','z<sub>E</sub> = H/3 (m)',zE,0.05,'m')
+      +makeQ('a3-Mgiu','M<sub>giữ</sub> (T·m/m)',Mgiu,r2(Mgiu*0.03),'T·m/m')
+      +makeQ('a3-Mlat','M<sub>lật</sub> (T·m/m)',Mlat,r2(Mlat*0.04),'T·m/m')
+      +makeQ('a3-Kl','K<sub>l</sub>',Kl,0.12,'');
+    var verdict=Kl>=KlReq?'K<sub>l</sub>='+Kl+' ≥ [K<sub>l</sub>]='+KlReq+' → Tường <b>AN TOÀN</b> chống lật.':'K<sub>l</sub>='+Kl+' < [K<sub>l</sub>]='+KlReq+' → Tường <b>KHÔNG an toàn</b>, có nguy cơ lật đổ.';
+    document.getElementById('a3-kq').innerHTML='📌 Kết luận: '+verdict;
+    document.getElementById('a3-kq').style.display='';
+  })();
+
+  // A4: Tổng hợp đầy đủ cả 2 kiểm tra
+  (function(){
+    var rng=seededRng(stt*17+4107);
+    var phi=Math.floor(28+rng()*10);
+    var H=r1(3.5+rng()*2.5);
+    var gamma=r2(1.75+rng()*0.2);
+    var Ka=calcKa(phi);
+    var Ea=r2(0.5*Ka*gamma*H*H);
+    var zE=r2(H/3);
+    var A=r2(1.3+rng()*0.7);
+    var gamBT=2.4;
+    var W=r2(gamBT*A);
+    var x=r1(0.8+rng()*0.6);
+    var Ktr=r2(W*Math.tan(deg2rad(phi))/Ea);
+    var Mgiu=r2(W*x);
+    var Mlat=r2(Ea*zE);
+    var Kl=r2(Mgiu/Mlat);
+    document.getElementById('a4-prob').innerHTML=
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Tường chắn trọng lực bê tông (γ<sub>BT</sub>=2.4 T/m³), cao H = <b>'+H+' m</b>, '
+      +'diện tích mặt cắt A = <b>'+A+' m²</b>, trọng tâm cách mép trước x = <b>'+x+' m</b>. '
+      +'Đất đắp sau tường: φ = <b>'+phi+'°</b>, γ = <b>'+gamma+' T/m³</b>, c = 0. '
+      +'Kiểm tra ổn định trượt và lật của tường (yêu cầu [K<sub>tr</sub>]=1.3, [K<sub>l</sub>]=1.5).';
+    document.getElementById('a4-hint').innerHTML=
+      'Ka=?, E<sub>a</sub>=½Ka×'+gamma+'×'+H+'²=?<br>'
+      +'W=2.4×'+A+'=? &nbsp;·&nbsp; K<sub>tr</sub>=W·tg'+phi+'°/E<sub>a</sub>=?<br>'
+      +'M<sub>giữ</sub>=W×'+x+'=?, M<sub>lật</sub>=E<sub>a</sub>×H/3=? &nbsp;·&nbsp; K<sub>l</sub>=M<sub>giữ</sub>/M<sub>lật</sub>=?';
+    document.getElementById('a4-q').innerHTML=
+      makeQ('a4-Ea','① E<sub>a</sub> (T/m)',Ea,r2(Ea*0.04+0.03),'T/m')
+      +makeQ('a4-W','② W (T/m)',W,r2(W*0.02),'T/m')
+      +makeQ('a4-Ktr','③ K<sub>tr</sub>',Ktr,0.1,'')
+      +makeQ('a4-Mgiu','④ M<sub>giữ</sub> (T·m/m)',Mgiu,r2(Mgiu*0.03),'T·m/m')
+      +makeQ('a4-Mlat','⑤ M<sub>lật</sub> (T·m/m)',Mlat,r2(Mlat*0.04),'T·m/m')
+      +makeQ('a4-Kl','⑥ K<sub>l</sub>',Kl,0.12,'');
+    var KtrReq=1.3,KlReq=1.5;
+    var ok1=Ktr>=KtrReq, ok2=Kl>=KlReq;
+    var verdict=(ok1&&ok2)?'K<sub>tr</sub>='+Ktr+' và K<sub>l</sub>='+Kl+' đều đạt yêu cầu → Tường <b>ỔN ĐỊNH AN TOÀN</b>.'
+      :'K<sub>tr</sub>='+Ktr+(ok1?' (đạt)':' (KHÔNG đạt)')+', K<sub>l</sub>='+Kl+(ok2?' (đạt)':' (KHÔNG đạt)')+' → Cần điều chỉnh kích thước tường.';
+    document.getElementById('a4-kq').innerHTML='📌 Kết luận: '+verdict;
+    document.getElementById('a4-kq').style.display='';
+  })();
+}
+
+function genB(stt){
+  var CFG=[
+    {id:'b1',title:'Bài B1 · Tính áp lực chủ động E<sub>a</sub>',fml:'Ka=tg²(45°−φ/2) &nbsp;·&nbsp; E<sub>a</sub>=½Ka·γ·H²',type:'Ea'},
+    {id:'b2',title:'Bài B2 · Trọng lượng tường &amp; kiểm tra trượt',fml:'W=γ<sub>BT</sub>·A &nbsp;·&nbsp; K<sub>tr</sub>=W·tgφ/E<sub>a</sub>',type:'truot'},
+    {id:'b3',title:'Bài B3 · Kiểm tra lật quanh mép trước',fml:'M<sub>giữ</sub>=W·x &nbsp;·&nbsp; M<sub>lật</sub>=E<sub>a</sub>·H/3 &nbsp;·&nbsp; K<sub>l</sub>=M<sub>giữ</sub>/M<sub>lật</sub>',type:'lat'},
+    {id:'b4',title:'Bài B4 · Kiểm tra đồng thời trượt &amp; lật',fml:'Tính đầy đủ E<sub>a</sub>, W, K<sub>tr</sub>, M<sub>giữ</sub>, M<sub>lật</sub>, K<sub>l</sub>',type:'full'},
+  ];
+  var bhtml='';
+  CFG.forEach(function(c){
+    bhtml+='<div class="card"><div class="card-hd"><i class="ti ti-pencil"></i>'
+      +'<div><h2>'+c.title+'</h2></div>'
+      +'<span class="cbadge" style="background:#6A1B9A">✏️ '+c.id.toUpperCase()+'</span></div>'
+      +'<div class="card-body">'
+      +'<div class="earth-box" id="'+c.id+'-prob">⏳</div>'
+      +'<div class="fml-box"><div class="ftitle">Công thức</div><div class="frow">'+c.fml+'</div></div>'
+      +'<div id="'+c.id+'-q"></div></div></div>';
+  });
+  document.getElementById('b-cards').innerHTML=bhtml;
+
+  CFG.forEach(function(c,idx){
+    var seedBase=[23,29,31,37][idx];
+    var rng=seededRng(stt*seedBase+5101+idx*30);
+    var id=c.id;
+
+    if(c.type==='Ea'){
+      var phi=Math.floor(28+rng()*10);var H=r1(3+rng()*3);var gamma=r2(1.7+rng()*0.25);
+      var Ka=calcKa(phi);var Ea=r2(0.5*Ka*gamma*H*H);
+      document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường H='+H+' m. Đất rời φ='+phi+'°, γ='+gamma+' T/m³. Tính Ka và E<sub>a</sub>.';
+      document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ka','Ka',Ka,0.01,'')+makeQ(id+'-Ea','E<sub>a</sub> (T/m)',Ea,r2(Ea*0.04+0.03),'T/m');
+    }
+    else if(c.type==='truot'){
+      var phi=Math.floor(28+rng()*10);var H=r1(3+rng()*3);var gamma=r2(1.7+rng()*0.25);
+      var Ka=calcKa(phi);var Ea=r2(0.5*Ka*gamma*H*H);
+      var A=r2(1.2+rng()*0.8);var W=r2(2.4*A);var Fgiu=r2(W*Math.tan(deg2rad(phi)));var Ktr=r2(Fgiu/Ea);
+      document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường BT (γ<sub>BT</sub>=2.4), A='+A+' m². E<sub>a</sub>='+Ea+' T/m, φ='+phi+'°. Tính W và K<sub>tr</sub>.';
+      document.getElementById(id+'-q').innerHTML=makeQ(id+'-W','W (T/m)',W,r2(W*0.02),'T/m')+makeQ(id+'-Ktr','K<sub>tr</sub>',Ktr,0.1,'');
+    }
+    else if(c.type==='lat'){
+      var phi=Math.floor(28+rng()*10);var H=r1(3+rng()*3);var gamma=r2(1.7+rng()*0.25);
+      var Ka=calcKa(phi);var Ea=r2(0.5*Ka*gamma*H*H);var zE=r2(H/3);
+      var A=r2(1.2+rng()*0.8);var W=r2(2.4*A);var x=r1(0.8+rng()*0.7);
+      var Mgiu=r2(W*x);var Mlat=r2(Ea*zE);var Kl=r2(Mgiu/Mlat);
+      document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: W='+W+' T/m, x='+x+' m. E<sub>a</sub>='+Ea+' T/m, H='+H+' m. Tính M<sub>giữ</sub>, M<sub>lật</sub>, K<sub>l</sub>.';
+      document.getElementById(id+'-q').innerHTML=makeQ(id+'-Mgiu','M<sub>giữ</sub> (T·m/m)',Mgiu,r2(Mgiu*0.03),'T·m/m')+makeQ(id+'-Mlat','M<sub>lật</sub> (T·m/m)',Mlat,r2(Mlat*0.04),'T·m/m')+makeQ(id+'-Kl','K<sub>l</sub>',Kl,0.12,'');
+    }
+    else if(c.type==='full'){
+      var phi=Math.floor(28+rng()*10);var H=r1(3.5+rng()*2.5);var gamma=r2(1.75+rng()*0.2);
+      var Ka=calcKa(phi);var Ea=r2(0.5*Ka*gamma*H*H);var zE=r2(H/3);
+      var A=r2(1.3+rng()*0.7);var W=r2(2.4*A);var x=r1(0.8+rng()*0.6);
+      var Ktr=r2(W*Math.tan(deg2rad(phi))/Ea);
+      var Mgiu=r2(W*x);var Mlat=r2(Ea*zE);var Kl=r2(Mgiu/Mlat);
+      document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Tường BT H='+H+' m, A='+A+' m², x='+x+' m. Đất φ='+phi+'°, γ='+gamma+' T/m³. Kiểm tra trượt và lật.';
+      document.getElementById(id+'-q').innerHTML=makeQ(id+'-Ea','E<sub>a</sub> (T/m)',Ea,r2(Ea*0.04+0.03),'T/m')+makeQ(id+'-Ktr','K<sub>tr</sub>',Ktr,0.1,'')+makeQ(id+'-Kl','K<sub>l</sub>',Kl,0.12,'');
+    }
+  });
+}
+
+/* ================================================================
+   Khởi tạo trang (window.onload)
+   1. Đọc SV từ sessionStorage, hiển thị tên và STT lên header
+   2. Gọi genA(stt) và genB(stt) để sinh đề bài ổn định tường chắn
+   3. Đếm TOTAL_QUESTIONS, khởi tạo nút Nộp bài
+   ================================================================ */
+window.onload=function(){
+  var sv=getSV();
+  var stt=1;
+  if(sv&&sv.name){
+    document.getElementById('sv-display').textContent=sv.name+' — STT: '+sv.stt;
+    document.getElementById('sv-chip').textContent='#'+sv.stt;
+    document.getElementById('sv-badge').textContent='SV #'+sv.stt;
+    stt=parseInt(sv.stt)||1;
+  } else {
+    document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ nhập thông tin';
+    document.getElementById('sv-chip').textContent='–';
+  }
+  genA(stt);
+  genB(stt);
+  TOTAL_QUESTIONS=Object.keys(ANS).length;
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  var btn=document.getElementById('btn-nop');
+  if(btn)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/'+minPct+'%)</span>';
+  updateProg();
+};
+</script>
+</body>
+</html>
