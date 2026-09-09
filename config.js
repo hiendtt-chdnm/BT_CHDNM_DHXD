@@ -8,7 +8,7 @@
 // ── Cloudflare Worker URL ─────────────────────────────────────────
 // Lấy từ Cloudflare Dashboard → Workers → tên worker → URL
 // Phải khớp với WORKER_URL trong DEF_CFG của index.html (fallback khi config.js chưa load)
-window.WORKER_URL = "https://dqt-chdnm.bm-cdnm.workers.dev";  // ← cập nhật nếu đổi Worker
+window.WORKER_URL = "https://bt-chdnm-dhxd.hiendtt.workers.dev/";  // ← cập nhật nếu đổi Worker
 
 // ── % số câu phải LÀM (không cần đúng) để được nộp bài ─
 //    Test: 5   |   Chính thức: 70 hoặc 80
