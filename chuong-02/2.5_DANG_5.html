@@ -1139,11 +1139,9 @@ function genAll(){
     var p=Math.round(100+rng()*300);
     var b=r1(2+rng()*4);
     var z=r1(0.5+rng()*4);
-    /* mép băng: M nằm dưới mép, góc nhìn = arctan(b/z) (nhìn tới mép đối và trục đứng) */
-    var bt=Math.round(Math.atan(b/z)*10000)/10000; /* beta đơn */
-    var betaFull=bt;
-    var s1=Math.round(p/Math.PI*(betaFull+Math.sin(betaFull))*100)/100;
-    var s3=Math.round(p/Math.PI*(betaFull-Math.sin(betaFull))*100)/100;
+    var bt=Math.round(Math.atan(b/z)/2*10000)/10000;
+    var s1=Math.round(p/Math.PI*(2*bt+Math.sin(2*bt))*100)/100;
+    var s3=Math.round(p/Math.PI*(2*bt-Math.sin(2*bt))*100)/100;
     document.getElementById('a6-prob').innerHTML=
       '&#127959;&#65039; <b>&#272;&#7873; b&#224;i</b> (STT <b>'+stt+'</b>): p=<b>'+p+' kN/m&#178;</b>, b=<b>'+b+' m</b>. '
       +'T&#237;nh <b>&sigma;&#8321;</b> v&#224; <b>&sigma;&#8323;</b> t&#7841;i m&#233;p b&#259;ng (M th&#7859;ng d&#432;&#7899;i m&#233;p), z=<b>'+z+' m</b>.';
@@ -1151,11 +1149,11 @@ function genAll(){
       '&#272;i&#7875;m d&#432;&#7899;i m&#233;p: x = 0 (m&#233;p g&#7847;n nh&#7845;t)<br>'
       +'G&#243;c nh&#236;n: M nh&#236;n t&#7899;i m&#233;p kia (kho&#7843;ng c&#225;ch b) v&#224; &#273;&#7871;n tr&#7909;c &#273;&#7913;ng &rarr; &beta; = arctan(b/z)';
     document.getElementById('a6-step2').innerHTML=
-      '&beta; = arctan('+b+'/'+z+') = ?<br>'
+      '&beta; = arctan('+b+'/'+z+')/2 = ?<br>'
       +'&sigma;&#8321; = ('+p+'/&pi;)(2&beta;+sin2&beta;) = ?<br>'
       +'&sigma;&#8323; = ('+p+'/&pi;)(2&beta;&minus;sin2&beta;) = ?';
     document.getElementById('a6-step3').innerHTML='Ghi k&#7871;t qu&#7843;';
-    document.getElementById('a6-q1').innerHTML=makeQ('a6-bt','&beta; = arctan(b/z) (rad)',bt,0.005,'rad');
+    document.getElementById('a6-q1').innerHTML=makeQ('a6-bt','&beta; = arctan(b/z)/2 (rad)',bt,0.005,'rad');
     document.getElementById('a6-q2').innerHTML=makeQ('a6-s1','&sigma;&#8321; (kN/m&#178;)',s1,r2(s1*0.04+0.5),'kN/m&#178;')+makeQ('a6-s3','&sigma;&#8323; (kN/m&#178;)',s3,r2(s3*0.04+0.3),'kN/m&#178;');
     document.getElementById('a6-q3').innerHTML='';
   })();
@@ -1171,7 +1169,7 @@ function genAll(){
     {num:'B4',pid:'b4',title:'B&#224;i B4 &middot; C&#243; CT &mdash; &#7912;ng su&#7845;t ch&#237;nh, t&#226;m b&#259;ng',
      fml:'&beta;=arctan(b/(2z)); &sigma;&#8321;=(p/&pi;)(2&beta;+sin2&beta;); &sigma;&#8323;=(p/&pi;)(2&beta;&minus;sin2&beta;)',seeds:[83,539],mode:'s13tam',interp:0},
     {num:'B5',pid:'b5',title:'B&#224;i B5 &middot; C&#243; CT &mdash; &#7912;ng su&#7845;t ch&#237;nh, m&#233;p b&#259;ng',
-     fml:'&beta;=arctan(b/z) (m&#233;p); &sigma;&#8321;,&sigma;&#8323; theo c&#244;ng th&#7913;c Flamant',seeds:[89,541],mode:'s13mep',interp:0},
+     fml:'&beta;=arctan(b/z)/2 (m&#233;p);&sigma;&#8321;,&sigma;&#8323; theo c&#244;ng th&#7913;c Flamant',seeds:[89,541],mode:'s13mep',interp:0},
     {num:'B6',pid:'b6',title:'B&#224;i B6 &middot; C&#243; CT &mdash; T&#237;nh c&#7843; tra b&#7843;ng + &#7913;ng su&#7845;t ch&#237;nh t&#7841;i t&#226;m',
      fml:'T&#237;nh &Delta;&sigma;<sub>z</sub>, &Delta;&sigma;<sub>x</sub> (tra b&#7843;ng) v&#224; &sigma;&#8321;, &sigma;&#8323; (c&#244;ng th&#7913;c Flamant)',seeds:[97,547],mode:'full',interp:0},
   ];
@@ -1194,7 +1192,7 @@ function genAll(){
     /* beta */
     var bt=0, s1=0, s3=0;
     if(b.mode==='s13tam'||b.mode==='full'){bt=Math.round(Math.atan(bw/2/z)*10000)/10000; var bf=bt; s1=Math.round(p/Math.PI*(2*bf+Math.sin(2*bf))*100)/100; s3=Math.round(p/Math.PI*(2*bf-Math.sin(2*bf))*100)/100;}
-    else if(b.mode==='s13mep'){bt=Math.round(Math.atan(bw/z)*10000)/10000; s1=Math.round(p/Math.PI*(bt+Math.sin(bt))*100)/100; s3=Math.round(p/Math.PI*(bt-Math.sin(bt))*100)/100;}
+    else if(b.mode==='s13mep'){bt=Math.round(Math.atan(bw/z)/2*10000)/10000; s1=Math.round(p/Math.PI*(2*bt+Math.sin(2*bt))*100)/100; s3=Math.round(p/Math.PI*(2*bt-Math.sin(2*bt))*100)/100;}
     var info='p=<b>'+p+' kN/m&#178;</b>, b=<b>'+bw+' m</b>';
     if(b.mode!=='s13tam'&&b.mode!=='s13mep') info+=', x=<b>'+x+' m</b> t&#7915; m&#233;p';
     info+=', z=<b>'+z+' m</b>.';
@@ -1208,7 +1206,7 @@ function genAll(){
     } else if(b.mode==='s13tam'){
       qh=makeQ(b.pid+'-bt','&beta;=arctan(b/(2z)) (rad)',bt,0.005,'rad')+makeQ(b.pid+'-s1','&sigma;&#8321; (kN/m&#178;)',s1,r2(s1*0.04+0.5),'kN/m&#178;')+makeQ(b.pid+'-s3','&sigma;&#8323; (kN/m&#178;)',s3,r2(s3*0.04+0.3),'kN/m&#178;');
     } else if(b.mode==='s13mep'){
-      qh=makeQ(b.pid+'-bt','&beta;=arctan(b/z) (rad)',bt,0.005,'rad')+makeQ(b.pid+'-s1','&sigma;&#8321; (kN/m&#178;)',s1,r2(s1*0.04+0.5),'kN/m&#178;')+makeQ(b.pid+'-s3','&sigma;&#8323; (kN/m&#178;)',s3,r2(s3*0.04+0.3),'kN/m&#178;');
+      qh=makeQ(b.pid+'-bt','&beta;=arctan(b/z)/2 (rad)',bt,0.005,'rad')+makeQ(b.pid+'-s1','&sigma;&#8321; (kN/m&#178;)',s1,r2(s1*0.04+0.5),'kN/m&#178;')+makeQ(b.pid+'-s3','&sigma;&#8323; (kN/m&#178;)',s3,r2(s3*0.04+0.3),'kN/m&#178;');
     } else {
       qh=makeQ(b.pid+'-kz','k<sub>z</sub>',kz,0.006,'')+makeQ(b.pid+'-kx','k<sub>x</sub>',kx,0.006,'')+makeQ(b.pid+'-sz','&Delta;&sigma;<sub>z</sub> (kN/m&#178;)',sz,r2(sz*0.05+0.5),'kN/m&#178;')+makeQ(b.pid+'-sx','&Delta;&sigma;<sub>x</sub> (kN/m&#178;)',sx,r2(sx*0.05+0.3),'kN/m&#178;')+makeQ(b.pid+'-bt','&beta;=arctan(b/(2z)) (rad)',bt,0.005,'rad')+makeQ(b.pid+'-s1','&sigma;&#8321; (kN/m&#178;)',s1,r2(s1*0.04+0.5),'kN/m&#178;')+makeQ(b.pid+'-s3','&sigma;&#8323; (kN/m&#178;)',s3,r2(s3*0.04+0.3),'kN/m&#178;');
     }
@@ -1234,7 +1232,7 @@ function genAll(){
     var xb1=XB_COLS[ic],xb2=XB_COLS[ic+1];
     var zb1=ZB_ROWS[ir],zb2=ZB_ROWS[ir+1];
     var xb, zb, x, z;
-    if(c.mode==='tam'){xb=0.5; zb=(c.interp===0)?ZB_ROWS[ir]:Math.round((zb1+0.3+rng()*0.4*(zb2-zb1))*1000)/1000;}
+    if(c.mode==='tam'||c.mode==='full'){xb=0.5; zb=(c.interp===0)?ZB_ROWS[ir]:Math.round((zb1+0.3+rng()*0.4*(zb2-zb1))*1000)/1000;}
     else{xb=Math.round((xb1+0.2+rng()*0.6*(xb2-xb1))*100)/100; zb=Math.round((zb1+0.2+rng()*0.6*(zb2-zb1))*1000)/1000;}
     x=r2(xb*bw); z=r2(zb*bw);
     var kz=interp2D(KZ,xb,zb), kx=interp2D(KX,xb,zb), kt=interp2D(KT,xb,zb);

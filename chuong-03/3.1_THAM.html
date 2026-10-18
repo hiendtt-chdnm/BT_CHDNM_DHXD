@@ -463,7 +463,7 @@ function genA(stt){
       'A = π×('+d_mm/10+'/2)² = ?<br>q = '+V_cm3+'/('+t_min+'×60) = ?<br>i = '+dh_mm/10+'/'+L_mm/10+' = ?<br>k = q×L/(A×Δh) = ?';
     document.getElementById('a1-q').innerHTML=
       makeQ('a1-A','A (cm²)',A_cm2,0.5,'cm²')
-      +makeQ('a1-q','q = V/t (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')
+      +makeQ('a1-qv','q = V/t (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')
       +makeQ('a1-i','i = Δh/L',i,0.01,'')
       +makeQ('a1-k','k (cm/s)',k_ans,r3(k_ans*0.06+0.0005),'cm/s');
   })();
@@ -662,7 +662,7 @@ function genOne(id,type,stt,s1,s2){
     var q_ans=r3(V_cm3/(t_min*60));
     var k_ans=r3(q_ans*(L_mm/10)/(A_cm2*(dh_mm/10)));
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: TN cột nước không đổi, d='+d_mm+'mm, L='+L_mm+'mm, t='+t_min+' phút, V='+V_cm3+' cm³, Δh='+dh_mm+'mm. Tính k.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-q','q (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.07+0.0005),'cm/s');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-qv','q (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.07+0.0005),'cm/s');
   }
   else if(type==='cntd'){
     var a_cm2=r2(0.5+rng()*1);var A_cm2=r2(15+rng()*15);var L_cm=r2(8+rng()*6);
