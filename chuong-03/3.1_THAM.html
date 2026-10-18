@@ -337,7 +337,7 @@ var TOTAL_QUESTIONS=0;
 function r1(v){return Math.round(v*10)/10}
 function r2(v){return Math.round(v*100)/100}
 function r3(v){return Math.round(v*1000)/1000}
-function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;var f=function(){s=s*16807%2147483647;return(s-1)/2147483646;};f();f();f();return f;}
 function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
 function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
 
@@ -463,9 +463,9 @@ function genA(stt){
       'A = π×('+d_mm/10+'/2)² = ?<br>q = '+V_cm3+'/('+t_min+'×60) = ?<br>i = '+dh_mm/10+'/'+L_mm/10+' = ?<br>k = q×L/(A×Δh) = ?';
     document.getElementById('a1-q').innerHTML=
       makeQ('a1-A','A (cm²)',A_cm2,0.5,'cm²')
-      +makeQ('a1-qv','q = V/t (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')
+      +makeQ('a1-qv','q = V/(t×60) (cm³/s)',q_ans,Math.max(q_ans*0.03,0.003),'cm³/s')
       +makeQ('a1-i','i = Δh/L',i,0.01,'')
-      +makeQ('a1-k','k (cm/s)',k_ans,r3(k_ans*0.06+0.0005),'cm/s');
+      +makeQ('a1-k','k (cm/s)',k_ans,Math.max(k_ans*0.04,0.0006),'cm/s');
   })();
 
   // A2: TN cột nước thay đổi
@@ -508,7 +508,7 @@ function genA(stt){
     document.getElementById('a3-hint').innerHTML=
       'k<sub>v</sub> = ('+h1+'+'+h2+') / ('+h1+'/k₁ + '+h2+'/k₂) = ?';
     document.getElementById('a3-q').innerHTML=
-      makeQ('a3-kv','k<sub>v</sub> (m/s) — nhập dạng số mũ 10, VD: 0.00004',kv,kv*0.08,'m/s');
+      makeQ('a3-kv','k<sub>v</sub> (m/s) — nhập số, VD: 4e-5 hoặc 0.00004',kv,kv*0.08,'m/s');
   })();
 
   // A4: k tương đương ngang (song song), 2 lớp
@@ -553,7 +553,7 @@ function genA(stt){
     document.getElementById('a5-q').innerHTML=
       makeQ('a5-kh','k<sub>h</sub> (m/s)',kh,kh*0.08,'m/s')
       +makeQ('a5-kv','k<sub>v</sub> (m/s)',kv,kv*0.08,'m/s')
-      +makeQ('a5-ratio','Tỷ lệ k<sub>h</sub>/k<sub>v</sub>',ratio,Math.max(ratio*0.15,0.5),'');
+      +makeQ('a5-ratio','Tỷ lệ k<sub>h</sub>/k<sub>v</sub>',ratio,Math.max(ratio*0.05,0.2),'');
   })();
 
   // A6: Ứng dụng TN trong phòng - i, v, Q
@@ -663,7 +663,7 @@ function genOne(id,type,stt,s1,s2){
     var k_ans=r3(q_ans*(L_mm/10)/(A_cm2*(dh_mm/10)));
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: TN cột nước không đổi, d='+d_mm+'mm, L='+L_mm+'mm, t='+t_min+' phút, V='+V_cm3+' cm³, Δh='+dh_mm+'mm. Tính k.'
       +'<div style="margin-top:6px;font-size:12px;color:#1565C0">Gợi ý: A=π×('+r2(d_mm/10)+'/2)² | q='+V_cm3+'/('+t_min+'×60) | i='+r2(dh_mm/10)+'/'+r2(L_mm/10)+' | k=q×L/(A×Δh)</div>';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-qv','q = V/(t×60) (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.07+0.0005),'cm/s');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-qv','q = V/(t×60) (cm³/s)',q_ans,Math.max(q_ans*0.03,0.003),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,Math.max(k_ans*0.04,0.0006),'cm/s');
   }
   else if(type==='cntd'){
     var a_cm2=r2(0.5+rng()*1);var A_cm2=r2(15+rng()*15);var L_cm=r2(8+rng()*6);
@@ -701,7 +701,7 @@ function genOne(id,type,stt,s1,s2){
     var kv=parseFloat(((h1+h2+h3)/(h1/k1+h2/k2+h3/k3)).toExponential(3));
     var ratio=r1(kh/kv);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Nền 3 lớp: h₁='+h1+'m(k₁='+k1.toExponential(2)+'), h₂='+h2+'m(k₂='+k2.toExponential(2)+'), h₃='+h3+'m(k₃='+k3.toExponential(2)+'). Tính tỷ lệ k<sub>h</sub>/k<sub>v</sub>.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-ratio','k<sub>h</sub>/k<sub>v</sub>',ratio,Math.max(ratio*0.15,0.5),'');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-ratio','k<sub>h</sub>/k<sub>v</sub>',ratio,Math.max(ratio*0.05,0.2),'');
   }
   else if(type==='app1'){
     var k_cms=r3(0.001+rng()*0.099);var k_ms=parseFloat((k_cms/100).toExponential(3));
@@ -709,7 +709,7 @@ function genOne(id,type,stt,s1,s2){
     var i=r3(dh/L);
     var v=parseFloat((k_ms*i).toExponential(3));
     var Q=parseFloat((k_ms*i*A).toExponential(3));
-    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Mẫu đất k='+k_cms+'cm/s, A='+A+'m², L='+L+'m, Δh='+dh+'m. Tính i, v, Q.';
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: Mẫu đất k='+k_cms+'cm/s, A='+A+'m², L='+L+'m, Δh='+dh+'m. Tính i, v, Q (đổi k sang m/s: 1 cm/s = 0,01 m/s).';
     document.getElementById(id+'-q').innerHTML=makeQ(id+'-i','i',i,0.01,'')+makeQ(id+'-v','v (m/s)',v,Math.max(Math.abs(v)*0.07,1e-7),'m/s')+makeQ(id+'-Q','Q (m³/s)',Q,Math.max(Math.abs(Q)*0.07,1e-8),'m³/s');
   }
   else if(type==='app2'){

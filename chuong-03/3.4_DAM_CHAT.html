@@ -278,7 +278,7 @@ var TOTAL_QUESTIONS=0;
 function r1(v){return Math.round(v*10)/10}
 function r2(v){return Math.round(v*100)/100}
 function r3(v){return Math.round(v*1000)/1000}
-function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;var f=function(){s=s*16807%2147483647;return(s-1)/2147483646;};f();f();f();return f;}
 function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
 function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
 

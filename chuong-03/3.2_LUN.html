@@ -705,7 +705,7 @@ svg.diag{width:100%;max-width:420px;display:block;margin:6px auto}
       <div class="ftitle">Bộ công thức xử lý số liệu Oedometer</div>
       <div class="frow">S<sub>i</sub> = h₀ − h<sub>i</sub> &nbsp;·&nbsp; S<sub>i→j</sub> = h<sub>i</sub> − h<sub>j</sub></div>
       <div class="frow">e<sub>i</sub> = e₀ − (S<sub>i</sub>/h₀)×(1+e₀)</div>
-      <div class="frow">a<sub>i-j</sub> = (e<sub>i</sub>−e<sub>j</sub>) / (σ<sub>j</sub>−σ<sub>i</sub>) &nbsp;·&nbsp; m<sub>v</sub> = a/(1+e₀)</div>
+      <div class="frow">a<sub>i-j</sub> = (e<sub>i</sub>−e<sub>j</sub>) / (σ<sub>j</sub>−σ<sub>i</sub>) &nbsp;·&nbsp; m<sub>v</sub> = a/(1+e₁)</div>
       <div class="frow">Nội suy: e<sub>j</sub>=e₁+(e₂−e₁)(σ<sub>j</sub>−σ₁)/(σ₂−σ₁) &nbsp;·&nbsp; S=h₀/(1+e₀)×(e₀−e<sub>j</sub>)</div>
     </div>
     <div class="fml-box">
@@ -756,7 +756,7 @@ var TOTAL_QUESTIONS=0;
 function r1(v){return Math.round(v*10)/10}
 function r2(v){return Math.round(v*100)/100}
 function r3(v){return Math.round(v*1000)/1000}
-function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function seededRng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;var f=function(){s=s*16807%2147483647;return(s-1)/2147483646;};f();f();f();return f;}
 function getSV(){try{return JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){return null;}}
 function scrollNext(){var inp=document.querySelector('.ans-inp:not(.ok)');if(inp)inp.closest('.ans-row').scrollIntoView({behavior:'smooth',block:'center'});}
 
@@ -859,7 +859,7 @@ function submitResult(){
 ================================================================ */
 // Sinh bảng TN oedometer
 function genOedo(rng){
-  var e0=r3(1.25+rng()*0.20);
+  var e0=r2(1.25+rng()*0.20);
   var h0=20;
   var sigma=[0.12,0.25,0.50,1.00,2.00,4.00,8.00];
   var h=[19.8,19.4,19.0,18.5,18.2,17.9,17.7];
@@ -879,6 +879,18 @@ function tableOedo(d){
 var TV_TABLE={10:0.008,20:0.031,30:0.071,40:0.126,50:0.197,60:0.287,70:0.403,80:0.567,90:0.848};
 var U_LIST=[10,20,30,40,50,60,70,80,90];
 function tvFromU(U){return TV_TABLE[U];}
+function sig3(x){return parseFloat(x.toPrecision(3));}
+function consolParams(rng){
+  var U=U_LIST[Math.floor(rng()*U_LIST.length)];
+  var Tv=tvFromU(U);
+  var H=10*Math.round(10+rng()*20);
+  var Cvm=Math.round(20+rng()*60)/10;
+  var Cv=Cvm*1e-4;
+  var tExact=Tv*H*H/Cv/86400;
+  return {U:U,Tv:Tv,H:H,Cvm:Cvm,Cv:Cv,t:sig3(tExact),tExact:tExact};
+}
+function cvTxt(p){return p.Cvm+'×10<sup>-4</sup> cm²/s';}
+function tvTol(tv){return Math.max(0.001,r3(tv*0.02));}
 function uClosestFromTv(Tv){
   // tìm U có Tv gần nhất trong bảng (vì bài tập chỉ dùng U tròn chục để khớp bảng)
   var bestU=10,bestDiff=Infinity;
@@ -1001,7 +1013,7 @@ function genA(stt){
       makeQ('a5-e1','e₁ tại σ₁ (bảng)',e1,0.005,'')
       +makeQ('a5-e2','e₂ tại σ₂ (bảng)',e2,0.005,'')
       +makeQ('a5-ej','e<sub>j</sub> nội suy',ej,0.006,'')
-      +makeQ('a5-S','S (mm)',S,0.12,'mm');
+      +makeQ('a5-S','S (mm)',S,0.03,'mm');
   })();
 
   // A6: Độ lún công trình từ a
@@ -1018,7 +1030,7 @@ function genA(stt){
     document.getElementById('a6-hint').innerHTML=
       'S = [a/(1+e₀)] × h × Δσ = ['+a+'/(1+'+e0+')] × '+h+'×1000(mm) × '+dSig+' = ?';
     document.getElementById('a6-q').innerHTML=
-      makeQ('a6-S','S (mm)',S,Math.max(Math.abs(S)*0.07,3),'mm');
+      makeQ('a6-S','S (mm)',S,Math.max(Math.abs(S)*0.02,0.5),'mm');
   })();
 
   // A7: Độ lún công trình từ mv
@@ -1034,33 +1046,25 @@ function genA(stt){
     document.getElementById('a7-hint').innerHTML=
       'S = m<sub>v</sub> × h × Δσ = '+mv+' × '+h+'×1000(mm) × '+dSig+' = ?';
     document.getElementById('a7-q').innerHTML=
-      makeQ('a7-S','S (mm)',S,Math.max(Math.abs(S)*0.07,3),'mm');
+      makeQ('a7-S','S (mm)',S,Math.max(Math.abs(S)*0.02,0.5),'mm');
   })();
 
   // A8: Độ cố kết từ Cv, t
   (function(){
     var rng=seededRng(stt*31+3205);
-    var Uchon=U_LIST[Math.floor(rng()*U_LIST.length)];
-    var Tv=tvFromU(Uchon);
-    var H=r1(200+rng()*300); // cm
-    var Cv=r2((Tv*H*H)/(Math.round(2+rng()*8)*1e7)*1e7); // placeholder sẽ tính lại bên dưới chuẩn
-    // tính lại chuẩn: chọn t hợp lý rồi suy Cv để khớp đúng U
-    var t_nam=r1(0.5+rng()*4.5); // năm
-    var t_s=t_nam*365*24*3600;
-    var Cv_cms2=r2((Tv*H*H)/t_s*1e4)/1e4; // cm2/s xấp xỉ
-    Cv_cms2=r3((Tv*H*H)/t_s);
+    var p=consolParams(rng);
+    var Tv_ans=Math.round(p.Cv*p.t*86400/(p.H*p.H)*10000)/10000;
     document.getElementById('a8-prob').innerHTML=
-      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Lớp đất sét chiều dày thoát nước H=<b>'+H+' cm</b>, hệ số cố kết C<sub>v</sub>=<b>'+Cv_cms2.toExponential(2)+' cm²/s</b>. '
-      +'Sau thời gian t=<b>'+t_nam+' năm</b> kể từ khi đặt tải, xác định độ cố kết U(%) của lớp đất.';
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Lớp đất sét chiều dày thoát nước H=<b>'+p.H+' cm</b>, hệ số cố kết C<sub>v</sub>=<b>'+cvTxt(p)+'</b>. '
+      +'Sau thời gian t=<b>'+p.t+' ngày</b> kể từ khi đặt tải, xác định độ cố kết U(%) của lớp đất.';
     document.getElementById('a8-hint').innerHTML=
-      't(s) = '+t_nam+'×365×24×3600 = ?<br>'
+      't(s) = '+p.t+'×86400 = ?<br>'
       +'T<sub>v</sub> = C<sub>v</sub>×t / H² = ?<br>'
-      +'Tra bảng T<sub>v</sub> → U(%) = '+Uchon+'%';
+      +'Tra bảng T<sub>v</sub> → U(%)';
     document.getElementById('a8-q').innerHTML=
-      makeQ('a8-Tv','T<sub>v</sub> = C<sub>v</sub>t/H²',Tv,r2(Tv*0.08+0.005),'')
-      +makeQ('a8-U','U (%)',Uchon,2,'%');
+      makeQ('a8-Tv','T<sub>v</sub> = C<sub>v</sub>t/H²',Tv_ans,tvTol(Tv_ans),'')
+      +makeQ('a8-U','U (%)',p.U,2,'%');
   })();
-
   // A9: Độ lún cố kết St
   (function(){
     var rng=seededRng(stt*37+3207);
@@ -1073,29 +1077,24 @@ function genA(stt){
     document.getElementById('a9-hint').innerHTML=
       'S<sub>t</sub> = U × S<sub>c</sub> = '+(Uchon/100)+' × '+Sc+' = ?';
     document.getElementById('a9-q').innerHTML=
-      makeQ('a9-St','S<sub>t</sub> (mm)',St,Math.max(Math.abs(St)*0.05,2),'mm');
+      makeQ('a9-St','S<sub>t</sub> (mm)',St,Math.max(Math.abs(St)*0.02,0.3),'mm');
   })();
 
   // A10: Tính thời gian t
   (function(){
     var rng=seededRng(stt*41+3209);
-    var Uchon=U_LIST[Math.floor(rng()*U_LIST.length)];
-    var Tv=tvFromU(Uchon);
-    var H=r1(200+rng()*300);
-    var Cv_cms2=r3((1+rng()*9)*1e-3); // cm2/s, khoảng hợp lý
-    var t_s=r1(Tv*H*H/Cv_cms2);
-    var t_nam=r2(t_s/(365*24*3600));
+    var p=consolParams(rng);
+    var t_ngay=r2(p.tExact);
     document.getElementById('a10-prob').innerHTML=
-      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Lớp đất sét chiều dày thoát nước H=<b>'+H+' cm</b>, hệ số cố kết C<sub>v</sub>=<b>'+Cv_cms2.toExponential(2)+' cm²/s</b>. '
-      +'Xác định thời gian t (năm) cần thiết để đạt độ cố kết U=<b>'+Uchon+'%</b>.';
+      '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): Lớp đất sét chiều dày thoát nước H=<b>'+p.H+' cm</b>, hệ số cố kết C<sub>v</sub>=<b>'+cvTxt(p)+'</b>. '
+      +'Xác định thời gian t (ngày) cần thiết để đạt độ cố kết U=<b>'+p.U+'%</b>.';
     document.getElementById('a10-hint').innerHTML=
-      'Tra bảng U='+Uchon+'% → T<sub>v</sub> = ?<br>'
-      +'t(s) = T<sub>v</sub>×H²/C<sub>v</sub> = ? → quy đổi sang năm';
+      'Tra bảng U='+p.U+'% → T<sub>v</sub> = ?<br>'
+      +'t(s) = T<sub>v</sub>×H²/C<sub>v</sub> = ? → quy đổi sang ngày (chia 86400)';
     document.getElementById('a10-q').innerHTML=
-      makeQ('a10-Tv','T<sub>v</sub> (tra bảng)',Tv,0.01,'')
-      +makeQ('a10-t','t (năm)',t_nam,Math.max(Math.abs(t_nam)*0.08,0.1),'năm');
-  })();
-}
+      makeQ('a10-Tv','T<sub>v</sub> (tra bảng)',p.Tv,tvTol(p.Tv),'')
+      +makeQ('a10-t','t (ngày)',t_ngay,Math.max(t_ngay*0.03,0.05),'ngày');
+  })();}
 
 /* ================================================================
    KHỐI 7 — SINH BÀI B/C (genBC + genOne)
@@ -1191,45 +1190,37 @@ function genOne(id,type,stt,s1,s2){
     var ej=r3(e1+(e2-e1)*(sig-s1v)/(s2v-s1v));
     var S=r2(od.h0/(1+od.e0)*(od.e0-ej));
     document.getElementById(id+'-prob').innerHTML=tableOedo(od)+'<div style="margin-top:8px">Tính S tại σ<sub>j</sub>='+sig+' kG/cm² (nội suy).</div>';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-ej','e<sub>j</sub> nội suy',ej,0.006,'')+makeQ(id+'-S','S (mm)',S,0.13,'mm');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-ej','e<sub>j</sub> nội suy',ej,0.006,'')+makeQ(id+'-S','S (mm)',S,0.03,'mm');
   }
   else if(type==='fromA'){
     var a=r3(0.015+rng()*0.045);var e0=r2(0.75+rng()*0.55);
     var h=r1(2+rng()*4);var dSig=r1(0.5+rng()*1.5);
     var S=r1((a/(1+e0))*h*dSig*1000);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: h='+h+'m, e₀='+e0+', a='+a+'cm²/kG, Δσ='+dSig+'kG/cm². Tính S.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-S','S (mm)',S,Math.max(Math.abs(S)*0.08,3),'mm');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-S','S (mm)',S,Math.max(Math.abs(S)*0.02,0.5),'mm');
   }
   else if(type==='fromMv'){
     var mv=r3(0.008+rng()*0.025);var h=r1(2+rng()*4);var dSig=r1(0.5+rng()*1.5);
     var S=r1(mv*h*dSig*1000);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: h='+h+'m, m<sub>v</sub>='+mv+'cm²/kG, Δσ='+dSig+'kG/cm². Tính S.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-S','S (mm)',S,Math.max(Math.abs(S)*0.08,3),'mm');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-S','S (mm)',S,Math.max(Math.abs(S)*0.02,0.5),'mm');
   }
   else if(type==='Ufrom'){
-    var Uchon=U_LIST[Math.floor(rng()*U_LIST.length)];
-    var Tv=tvFromU(Uchon);
-    var H=r1(200+rng()*300);
-    var t_nam=r1(0.5+rng()*4.5);var t_s=t_nam*365*24*3600;
-    var Cv_cms2=r3((Tv*H*H)/t_s);
-    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: H='+H+'cm, C<sub>v</sub>='+Cv_cms2.toExponential(2)+'cm²/s, t='+t_nam+' năm. Tính U(%).';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',Tv,r2(Tv*0.08+0.005),'')+makeQ(id+'-U','U (%)',Uchon,2,'%');
-  }
-  else if(type==='St'){
+    var p=consolParams(rng);
+    var Tv_ans=Math.round(p.Cv*p.t*86400/(p.H*p.H)*10000)/10000;
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: H='+p.H+'cm, C<sub>v</sub>='+cvTxt(p)+', t='+p.t+' ngày. Tính U(%).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',Tv_ans,tvTol(Tv_ans),'')+makeQ(id+'-U','U (%)',p.U,2,'%');
+  }  else if(type==='St'){
     var Uchon=U_LIST[Math.floor(rng()*U_LIST.length)];
     var Sc=r1(80+rng()*120);var St=r1(Sc*Uchon/100);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: S<sub>c</sub>='+Sc+'mm, U='+Uchon+'%. Tính S<sub>t</sub>.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-St','S<sub>t</sub> (mm)',St,Math.max(Math.abs(St)*0.06,2),'mm');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-St','S<sub>t</sub> (mm)',St,Math.max(Math.abs(St)*0.02,0.3),'mm');
   }
   else if(type==='tfrom'){
-    var Uchon=U_LIST[Math.floor(rng()*U_LIST.length)];
-    var Tv=tvFromU(Uchon);var H=r1(200+rng()*300);
-    var Cv_cms2=r3((1+rng()*9)*1e-3);
-    var t_s=r1(Tv*H*H/Cv_cms2);var t_nam=r2(t_s/(365*24*3600));
-    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: H='+H+'cm, C<sub>v</sub>='+Cv_cms2.toExponential(2)+'cm²/s, U='+Uchon+'%. Tính t (năm).';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',Tv,0.01,'')+makeQ(id+'-t','t (năm)',t_nam,Math.max(Math.abs(t_nam)*0.09,0.12),'năm');
-  }
-}
+    var p=consolParams(rng);var t_ngay=r2(p.tExact);
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: H='+p.H+'cm, C<sub>v</sub>='+cvTxt(p)+', U='+p.U+'%. Tính t (ngày).';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',p.Tv,tvTol(p.Tv),'')+makeQ(id+'-t','t (ngày)',t_ngay,Math.max(t_ngay*0.03,0.05),'ngày');
+  }}
 
 /* ================================================================
    KHỐI 8 — KHỞI TẠO TRANG (window.onload)
