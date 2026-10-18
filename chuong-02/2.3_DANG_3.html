@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -145,7 +145,7 @@ table.tbl tr:nth-child(even) td{background:#F0F7FF}
   <a href="index_C2.html" class="hdr-back"><i class="ti ti-arrow-left"></i> Ch&#432;&#417;ng 2</a>
   <div class="hdr-t">
     <h1>D&#7841;ng 3 &mdash; T&#7843;i T&#7853;p Trung (Boussinesq)</h1>
-    <p>Ch&#432;&#417;ng 2 &middot; C&#417; H&#7885;c &#272;&#7845;t &middot; B&#7897; m&ocirc;n C&#417; h&#7885;c &#273;&#7845;t &middot; NM &middot; &#272;HXD H&#224; N&#7897;i</p>
+    <p>Ch&#432;&#417;ng 2 &middot; C&#417; H&#7885;c &#272;&#7845;t &middot; TS. Ph&#7841;m Vi&#7879;t Anh &middot; &#272;HXD H&#224; N&#7897;i</p>
   </div>
   <div class="hdr-sv" id="hdr-sv">SV #&ndash;</div>
 </div></header>
@@ -632,7 +632,7 @@ function submitResult(){
   var attemPct=total?Math.round(attempted/total*100):0;
   var scorePct=total?Math.round(done/total*100):0;
   if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
-  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.phamvietanh158.workers.dev';
   var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
   if(attemPct<minPct){
     toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);

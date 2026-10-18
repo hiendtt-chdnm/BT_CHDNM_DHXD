@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -145,7 +145,7 @@ main{max-width:900px;margin:0 auto;padding:24px 20px 40px}
     <a href="index_C0.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 0</a>
     <div class="hdr-title">
       <h1>0.3 — Tổng Kết Chương Mở Đầu</h1>
-      <p>6 vấn đề cốt lõi · 4 nghiệp vụ KTXD · TCVN · Bộ môn CHDNM — ĐHXD Hà Nội</p>
+      <p>6 vấn đề cốt lõi · 4 nghiệp vụ KTXD · TCVN · TS. Phạm Việt Anh — ĐHXD Hà Nội</p>
     </div>
     <div class="hdr-prog" id="hdr-prog">0 / 19</div>
   </div>
@@ -810,7 +810,7 @@ function submitResult() {
   if (attempted === 0) { alert('⚠️ Chưa làm câu nào!'); return; }
   var minPct = (typeof window.MIN_ATTEMPT_PCT !== 'undefined') ? window.MIN_ATTEMPT_PCT : 5;
   if (attemPct < minPct) { alert('⚠️ Cần làm tối thiểu ' + minPct + '% số câu mới được nộp! Đã làm: ' + attemPct + '%'); return; }
-  var workerUrl = (typeof window.WORKER_URL !== 'undefined') ? window.WORKER_URL : 'https://dqt-chdnm.bmchdnm.workers.dev';
+  var workerUrl = (typeof window.WORKER_URL !== 'undefined') ? window.WORKER_URL : 'https://dqt-chdnm.phamvietanh158.workers.dev';
   fetch(workerUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: sv.name, mssv: sv.mssv, stt: Number(sv.stt) || 0, classId: sv.classId,
       chapterId: 'C0-03-TongKet', score: scorePct, correct: correct, total: total, duration: 0 })

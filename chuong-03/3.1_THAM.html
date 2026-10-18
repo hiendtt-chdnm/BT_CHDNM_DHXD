@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -413,7 +413,7 @@ function submitResult(){
   if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
   var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
   if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'%');return;}
-  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.bmchdnm.workers.dev';
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'https://dqt-chdnm.phamvietanh158.workers.dev';
   fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
       chapterId:'C3-31-Tham',score:scorePct,correct:done,total:total,duration:0})
@@ -478,10 +478,10 @@ function genA(stt){
     var h2_cm=r2(10+rng()*15);
     var ln_h=Math.log(h1_cm/h2_cm);
     var t_max=3600;
-    var k_min=r3(a_cm2*L_cm*ln_h/(A_cm2*t_max));
-    var k_cms=r3(Math.max(k_min*1.2,1e-4)+rng()*5e-3);
+    var k_min=parseFloat((a_cm2*L_cm*ln_h/(A_cm2*t_max)).toExponential(3));
+    var k_cms=parseFloat((Math.max(k_min*1.2,1e-4)+rng()*5e-3).toExponential(3));
     var t_s=Math.round(a_cm2*L_cm*ln_h/(A_cm2*k_cms));
-    var k_ans=r3(a_cm2*L_cm*ln_h/(A_cm2*t_s));
+    var k_ans=parseFloat((a_cm2*L_cm*ln_h/(A_cm2*t_s)).toExponential(3));
     document.getElementById('a2-prob').innerHTML=
       '🏗️ <b>Đề bài</b> (STT <b>'+stt+'</b>): TN thấm cột nước thay đổi: diện tích ống đứng a=<b>'+a_cm2+' cm²</b>, diện tích mẫu A=<b>'+A_cm2+' cm²</b>, chiều dài mẫu L=<b>'+L_cm+' cm</b>. '
       +'Cột nước giảm từ h₁=<b>'+h1_cm+' cm</b> xuống h₂=<b>'+h2_cm+' cm</b> trong t=<b>'+t_s+' s</b>. Xác định k (cm/s).';
@@ -489,7 +489,7 @@ function genA(stt){
       'ln(h₁/h₂) = ln('+h1_cm+'/'+h2_cm+') = ?<br>k = ('+a_cm2+'×'+L_cm+')/('+A_cm2+'×'+t_s+') × ln(h₁/h₂) = ?';
     document.getElementById('a2-q').innerHTML=
       makeQ('a2-ln','ln(h₁/h₂)',r3(ln_h),0.01,'')
-      +makeQ('a2-k','k (cm/s)',k_ans,r3(k_ans*0.08+0.0001),'cm/s');
+      +makeQ('a2-k','k (cm/s)',k_ans,Math.max(k_ans*0.08,1e-5),'cm/s');
   })();
 
   // A3: k tương đương đứng (nối tiếp), 2 lớp
@@ -560,7 +560,7 @@ function genA(stt){
   (function(){
     var rng=seededRng(stt*23+1111);
     var k_cms=r3(0.001+rng()*0.099);
-    var k_ms=r3(k_cms/100);
+    var k_ms=parseFloat((k_cms/100).toExponential(3));
     var A=r2(0.05+rng()*0.15);
     var L=r2(0.3+rng()*0.5);
     var dh=r2(0.2+rng()*0.4);
@@ -612,7 +612,7 @@ function genA(stt){
 ================================================================ */
 function genBC(stt){
   var CFG=[
-    {id:'1',title:'TN cột nước không đổi — xác định k',fml:'k = q·L/(A·Δh) &nbsp;·&nbsp; A=πd²/4, q=V/t',type:'cnkd'},
+    {id:'1',title:'TN cột nước không đổi — xác định k',fml:'k = q·L/(A·Δh) &nbsp;·&nbsp; A=πd²/4 &nbsp;·&nbsp; q=V/t <small>(t: giây)</small>',type:'cnkd'},
     {id:'2',title:'TN cột nước thay đổi — xác định k',fml:'k = (a·L)/(A·t) × ln(h₁/h₂)',type:'cntd'},
     {id:'3',title:'Hệ số thấm đứng tương đương (nối tiếp)',fml:'k<sub>v</sub> = Σh<sub>i</sub> / Σ(h<sub>i</sub>/k<sub>i</sub>)',type:'kv'},
     {id:'4',title:'Hệ số thấm ngang tương đương (song song)',fml:'k<sub>h</sub> = Σ(k<sub>i</sub>h<sub>i</sub>) / Σh<sub>i</sub>',type:'kh'},
@@ -661,19 +661,20 @@ function genOne(id,type,stt,s1,s2){
     var V_cm3=Math.round(q_cms*t_min*60);
     var q_ans=r3(V_cm3/(t_min*60));
     var k_ans=r3(q_ans*(L_mm/10)/(A_cm2*(dh_mm/10)));
-    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: TN cột nước không đổi, d='+d_mm+'mm, L='+L_mm+'mm, t='+t_min+' phút, V='+V_cm3+' cm³, Δh='+dh_mm+'mm. Tính k.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-qv','q (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.07+0.0005),'cm/s');
+    document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: TN cột nước không đổi, d='+d_mm+'mm, L='+L_mm+'mm, t='+t_min+' phút, V='+V_cm3+' cm³, Δh='+dh_mm+'mm. Tính k.'
+      +'<div style="margin-top:6px;font-size:12px;color:#1565C0">Gợi ý: A=π×('+r2(d_mm/10)+'/2)² | q='+V_cm3+'/('+t_min+'×60) | i='+r2(dh_mm/10)+'/'+r2(L_mm/10)+' | k=q×L/(A×Δh)</div>';
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-A','A (cm²)',A_cm2,0.5,'cm²')+makeQ(id+'-qv','q = V/(t×60) (cm³/s)',q_ans,r2(q_ans*0.05+0.005),'cm³/s')+makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.07+0.0005),'cm/s');
   }
   else if(type==='cntd'){
     var a_cm2=r2(0.5+rng()*1);var A_cm2=r2(15+rng()*15);var L_cm=r2(8+rng()*6);
     var h1_cm=r2(50+rng()*30);var h2_cm=r2(10+rng()*15);
     var ln_h=Math.log(h1_cm/h2_cm);var t_max=3600;
-    var k_min=r3(a_cm2*L_cm*ln_h/(A_cm2*t_max));
-    var k_cms=r3(Math.max(k_min*1.2,1e-4)+rng()*5e-3);
+    var k_min=parseFloat((a_cm2*L_cm*ln_h/(A_cm2*t_max)).toExponential(3));
+    var k_cms=parseFloat((Math.max(k_min*1.2,1e-4)+rng()*5e-3).toExponential(3));
     var t_s=Math.round(a_cm2*L_cm*ln_h/(A_cm2*k_cms));
-    var k_ans=r3(a_cm2*L_cm*ln_h/(A_cm2*t_s));
+    var k_ans=parseFloat((a_cm2*L_cm*ln_h/(A_cm2*t_s)).toExponential(3));
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài</b>: TN cột nước thay đổi, a='+a_cm2+'cm², A='+A_cm2+'cm², L='+L_cm+'cm, h₁='+h1_cm+'→h₂='+h2_cm+'cm, t='+t_s+'s. Tính k.';
-    document.getElementById(id+'-q').innerHTML=makeQ(id+'-k','k (cm/s)',k_ans,r3(k_ans*0.09+0.0001),'cm/s');
+    document.getElementById(id+'-q').innerHTML=makeQ(id+'-k','k (cm/s)',k_ans,Math.max(k_ans*0.09,1e-5),'cm/s');
   }
   else if(type==='kv'){
     var h1=r2(2+rng()*3);var h2=r2(3+rng()*4);
@@ -703,7 +704,7 @@ function genOne(id,type,stt,s1,s2){
     document.getElementById(id+'-q').innerHTML=makeQ(id+'-ratio','k<sub>h</sub>/k<sub>v</sub>',ratio,Math.max(ratio*0.15,0.5),'');
   }
   else if(type==='app1'){
-    var k_cms=r3(0.001+rng()*0.099);var k_ms=r3(k_cms/100);
+    var k_cms=r3(0.001+rng()*0.099);var k_ms=parseFloat((k_cms/100).toExponential(3));
     var A=r2(0.05+rng()*0.15);var L=r2(0.3+rng()*0.5);var dh=r2(0.2+rng()*0.4);
     var i=r3(dh/L);
     var v=parseFloat((k_ms*i).toExponential(3));
