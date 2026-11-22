@@ -377,6 +377,10 @@ function submitResult(){
      A4: Tính U(t) từ S(t)/S∞, tra ngược Tv và kiểm tra
 ================================================================ */
 /* ════ SINH SỐ LIỆU NHÓM A ════ */
+/* H_dr = H/2 chính xác (không làm tròn); fitT giảm t để T_v không vượt 2,5 thay vì chặn đáp án */
+function hdr2(H){return Math.round(H*50)/100;}
+function fitT(Cv,t,Hdr){while(Cv*t/(Hdr*Hdr)>2.5&&t>1)t--;return t;}
+
 function genA(stt){
 
   // A1: Tính S(t) — 1 mặt thoát
@@ -387,7 +391,7 @@ function genA(stt){
     var t=Math.round(1+rng()*4);
     var Scuoi=r1(6+rng()*16);
     var Hdr=H; // 1 mat thoat
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);
     var St=r1(U/100*Scuoi);
     document.getElementById('a1-prob').innerHTML=
@@ -397,7 +401,7 @@ function genA(stt){
     document.getElementById('a1-hint').innerHTML=
       '<div class="ftitle"><i class="ti ti-lightbulb"></i> Gợi ý từng bước</div>'+
       '<div class="frow">B1: 1 mặt → H<sub>dr</sub> = H = <em>'+Hdr+'m</em></div>'+
-      '<div class="frow">B2: T<sub>v</sub> = '+Cv+'×'+t+' / '+Hdr+'² = '+Cv*t+' / '+r2(Hdr*Hdr)+' = ?</div>'+
+      '<div class="frow">B2: T<sub>v</sub> = '+Cv+'×'+t+' / '+Hdr+'² = '+r2(Cv*t)+' / '+r2(Hdr*Hdr)+' = ?</div>'+
       '<div class="frow">B3: Tra bảng T<sub>v</sub>='+Tv+' → U ≈ ? %</div>'+
       '<div class="frow">B4: S(t) = U/100 × '+Scuoi+' = ? cm</div>';
     document.getElementById('a1-q').innerHTML=
@@ -414,8 +418,8 @@ function genA(stt){
     var Cv=r1(0.5+rng()*3);
     var t=Math.round(1+rng()*5);
     var Scuoi=r1(5+rng()*18);
-    var Hdr=r1(H/2); // 2 mat thoat
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var Hdr=hdr2(H); // 2 mat thoat
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);
     var St=r1(U/100*Scuoi);
     document.getElementById('a2-prob').innerHTML=
@@ -441,7 +445,7 @@ function genA(stt){
     var H=r1(3+rng()*5);
     var Cv=r1(0.5+rng()*2.5);
     var mat=(rng()<0.5)?1:2;
-    var Hdr=(mat===2)?r1(H/2):H;
+    var Hdr=(mat===2)?hdr2(H):H;
     // Chọn U từ bảng chuẩn để t cho đẹp
     var U_opts=[50,60,70,80,90];
     var U=U_opts[Math.floor(rng()*U_opts.length)];
@@ -468,10 +472,10 @@ function genA(stt){
     var H=r1(3+rng()*5);
     var Cv=r1(0.5+rng()*2.5);
     var mat=(rng()<0.5)?1:2;
-    var Hdr=(mat===2)?r1(H/2):H;
+    var Hdr=(mat===2)?hdr2(H):H;
     var t=Math.round(1+rng()*5);
     var Scuoi=r1(8+rng()*20);
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);
     var St=r1(U/100*Scuoi);
     var Tv_check=getTv(U);
@@ -542,22 +546,22 @@ function genOne(id,type,stt,s1,s2){
   if(type==='st_1mat'){
     var t=Math.round(1+rng()*5);
     var Hdr=H;
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);var St=r1(U/100*Scuoi);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>1 mặt</b>. C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. <b>Tính T<sub>v</sub>, U(%), S(t) sau t='+t+' năm.</b>';
     document.getElementById(id+'-q').innerHTML=makeQ(id+'-Tv','T<sub>v</sub>',Tv,0.05,'')+makeQ(id+'-U','U (%)',U,6,'%')+makeQ(id+'-St','S(t) (cm)',St,0.8,'cm');
   }
   else if(type==='st_2mat'){
     var t=Math.round(1+rng()*6);
-    var Hdr=r1(H/2);
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    var Hdr=hdr2(H);
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);var St=r1(U/100*Scuoi);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>2 mặt</b>. C<sub>v</sub>=<b>'+Cv+' m²/năm</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. <b>Tính H<sub>dr</sub>, T<sub>v</sub>, U(%), S(t) sau t='+t+' năm.</b>';
     document.getElementById(id+'-q').innerHTML=makeQ(id+'-Hdr','H<sub>dr</sub> (m)',Hdr,0.15,'m')+makeQ(id+'-Tv','T<sub>v</sub>',Tv,0.05,'')+makeQ(id+'-U','U (%)',U,6,'%')+makeQ(id+'-St','S(t) (cm)',St,0.8,'cm');
   }
   else if(type==='tinht'){
     var mat=(rng()<0.5)?1:2;
-    var Hdr=(mat===2)?r1(H/2):H;
+    var Hdr=(mat===2)?hdr2(H):H;
     var U_opts=[50,60,70,80,90];
     var U=U_opts[Math.floor(rng()*U_opts.length)];
     var Tv=getTv(U);
@@ -567,9 +571,9 @@ function genOne(id,type,stt,s1,s2){
   }
   else if(type==='tinhU'){
     var mat=(rng()<0.5)?1:2;
-    var Hdr=(mat===2)?r1(H/2):H;
+    var Hdr=(mat===2)?hdr2(H):H;
     var t=Math.round(1+rng()*5);
-    var Tv=r3(Math.min(Cv*t/(Hdr*Hdr),2.5));
+    t=fitT(Cv,t,Hdr);var Tv=r3(Cv*t/(Hdr*Hdr));
     var U=getU(Tv);var St=r1(U/100*Scuoi);
     document.getElementById(id+'-prob').innerHTML='🏗️ <b>Đề bài:</b> Lớp sét H=<b>'+H+'m</b>, thoát nước <b>'+(mat===2?'2 mặt':'1 mặt')+'</b>. S<sub>∞</sub>=<b>'+Scuoi+' cm</b>. Sau t=<b>'+t+' năm</b> đo được S(t)=<b>'+St+' cm</b>. <b>Tính U(t) (%).</b>';
     document.getElementById(id+'-q').innerHTML=makeQ(id+'-U','U(t) (%)',U,6,'%');
