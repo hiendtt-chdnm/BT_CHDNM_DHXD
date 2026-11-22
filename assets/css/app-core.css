@@ -1,0 +1,335 @@
+/* ═══════════════════════════════════════════════════════════════
+   app-core.css — HP CHDNM · Hệ thống Bài tập Online BMCHDNM-ĐHXDHN
+   Layout, biến màu, header, progress, nav, buttons — dùng chung mọi trang
+   Để đổi màu toàn hệ thống: chỉ sửa các biến --P, --G, --R, --A trong :root
+   v1.0 — 2026
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. CSS CUSTOM PROPERTIES (Design Tokens) ─────────────────────── */
+:root {
+  /* Màu chủ đạo (Primary Blue) */
+  --P:   #1565C0;   /* Xanh chính — nút, viền nổi bật, icon */
+  --Pdk: #0D47A1;   /* Xanh đậm — header, tiêu đề quan trọng */
+  --Plt: #E3F2FD;   /* Xanh nhạt — nền badge, nền input, nền công thức */
+  --Pmd: #1976D2;   /* Xanh trung gian — gradient hero */
+
+  /* Màu trạng thái Đúng (Success Green) */
+  --G:   #2E7D32;
+  --Glt: #E8F5E9;
+  --Gdk: #1B5E20;
+
+  /* Màu trạng thái Sai (Danger Red) */
+  --R:   #C62828;
+  --Rlt: #FFEBEE;
+
+  /* Màu cảnh báo (Warning Amber) */
+  --A:   #FF8F00;
+  --Alt: #FFF8E1;
+  --Adk: #E65100;
+
+  /* Màu nền & Bố cục */
+  --bg:    #E8F4FD;  /* Nền toàn trang */
+  --sur:   #FFFFFF;  /* Nền card */
+  --brd:   #90CAF9;  /* Màu viền */
+  --muted: #546E7A;  /* Chữ phụ, ghi chú, đơn vị */
+  --text:  #0D1B2A;  /* Chữ chính */
+
+  /* Font chữ */
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  /* Bo góc & Bóng đổ */
+  --r:  12px;
+  --sh: 0 2px 16px rgba(21, 101, 192, .10);
+}
+
+/* ── 2. RESET & BASE ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--sans);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── 3. HEADER STICKY ────────────────────────────────────────────── */
+.hdr {
+  background: var(--Pdk);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .2);
+}
+
+.hdr-in {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  color: rgba(255, 255, 255, .75);
+  text-decoration: none;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.back-btn:hover { background: rgba(255,255,255,.1); }
+
+.hdr-title { flex: 1; min-width: 0; }
+.hdr-title h1 { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hdr-title p  { font-size: 11px; color: rgba(255, 255, 255, .6); }
+
+.hdr-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.hdr-prog {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(255, 255, 255, .15);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.sv-badge {
+  font-size: 11px;
+  color: rgba(255, 255, 255, .55);
+  font-family: var(--mono);
+}
+
+/* ── 4. MAIN CONTAINER ───────────────────────────────────────────── */
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 20px 90px;
+}
+
+/* ── 5. HERO BLOCK (trang mục lục chương) ───────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--Pdk), var(--Pmd));
+  color: #fff;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 24px rgba(13, 71, 161, .25);
+}
+
+.hero h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.hero p  { font-size: 13px; color: rgba(255, 255, 255, .75); margin-bottom: 16px; }
+
+.hero-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.hero-chip {
+  background: rgba(255, 255, 255, .15);
+  border: 1px solid rgba(255, 255, 255, .25);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--mono);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── 6. STUDENT INFO BAR ─────────────────────────────────────────── */
+/* Thanh thông tin SV — trang bài tập (gradient) */
+.sv-infobar {
+  background: linear-gradient(135deg, var(--Pdk), var(--P));
+  color: #fff;
+  border-radius: var(--r);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+/* Thanh thông tin SV — trang mục lục chương (card trắng) */
+.sv-bar {
+  background: var(--sur);
+  border: 1px solid var(--brd);
+  border-radius: var(--r);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  box-shadow: var(--sh);
+}
+
+.sv-bar > i   { font-size: 24px; color: var(--P); }
+.sv-name      { font-size: 15px; font-weight: 700; }
+.sv-sub       { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.sv-num {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--P);
+  background: var(--Plt);
+  padding: 6px 18px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+/* ── 7. PROGRESS BAR ─────────────────────────────────────────────── */
+.prog-wrap {
+  margin-bottom: 18px;
+  background: var(--sur);
+  border-radius: var(--r);
+  border: 1px solid var(--brd);
+  padding: 12px 18px;
+  box-shadow: var(--sh);
+}
+
+.prog-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+
+.prog-track {
+  height: 8px;
+  background: var(--Plt);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  background: var(--P);
+  border-radius: 4px;
+  transition: width .4s;
+}
+
+/* ── 8. SECTION LABEL ────────────────────────────────────────────── */
+.sec-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--P);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 8px 0 12px;
+}
+
+.sec-lbl::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--brd);
+}
+
+/* ── 9. STICKY BOTTOM NAV ────────────────────────────────────────── */
+.sticky-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--Pdk);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 200;
+  font-size: 13px;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, .2);
+}
+
+/* ── 10. BUTTONS ─────────────────────────────────────────────────── */
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.btn-sm { padding: 6px 13px; font-size: 12px; }
+
+.btn-ghost {
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .25);
+}
+
+.btn:hover { opacity: .85; }
+
+/* ── 11. CHAPTER LOCK OVERLAY (khi chương bị đóng) ──────────────── */
+.chapter-lock {
+  background: var(--sur);
+  border: 2px solid var(--brd);
+  border-radius: var(--r);
+  padding: 40px 32px;
+  text-align: center;
+  margin: 60px auto;
+  max-width: 480px;
+  box-shadow: var(--sh);
+}
+
+.chapter-lock .lock-icon {
+  font-size: 48px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 16px;
+}
+
+.chapter-lock h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--Pdk);
+  margin-bottom: 10px;
+}
+
+.chapter-lock p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.chapter-lock a { color: var(--P); }
+
+/* ── 12. RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 620px) {
+  .hdr-in { padding: 0 14px; gap: 10px; }
+  main { padding: 14px 14px 90px; }
+  .hero { padding: 20px 18px; }
+  .hero h2 { font-size: 18px; }
+  .sticky-nav { padding: 10px 14px; }
+}
