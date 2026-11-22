@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -365,7 +365,8 @@ function makeQ(id,label,ans,tol,unit){
     +'<span class="chip" id="ck-'+id+'"></span></div>';
 }
 
-// makeMCQState: tạo 3 lựa chọn kết luận trạng thái điểm M
+function makeMCQState(name,sinVal,sinPhi,correct){
+  // correct: 0=đàn hồi, 1=giới hạn, 2=phá hoại
   var opts=[
     'Trạng thái <b>đàn hồi</b> — sinθmax &lt; sinφ (an toàn)',
     'Trạng thái <b>cân bằng giới hạn</b> — sinθmax = sinφ',
