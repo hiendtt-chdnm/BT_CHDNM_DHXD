@@ -151,22 +151,6 @@ main{max-width:960px;margin:0 auto;padding:24px 20px 80px}
         <a class="go-btn" href="8.4_DANG_2.html">Vào bài <i class="ti ti-arrow-right"></i></a>
       </div>
     </div>
-
-    <div class="dc">
-      <div class="dc-hd">
-        <div class="dc-icon" style="background:#F3E5F5"><i class="ti ti-trending-down" style="color:#6A1B9A"></i></div>
-        <div><h3>8.5 — Kiểm Tra Lún</h3><p>Tính S · Xác định B từ điều kiện lún · So sánh</p></div>
-      </div>
-      <div class="dc-body">
-        <div class="dc-feat"><i class="ti ti-math-function"></i> S = β·(p_gl/E₀)·B·ω</div>
-        <div class="dc-feat"><i class="ti ti-layers"></i> Móng đơn & móng băng, MNN cao</div>
-        <div class="dc-feat"><i class="ti ti-balance"></i> Kiểm tra chênh lún Δs/L</div>
-      </div>
-      <div class="dc-foot">
-        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="prog-85">– / –</span>
-        <a class="go-btn" href="8.5_DANG_3.html">Vào bài <i class="ti ti-arrow-right"></i></a>
-      </div>
-    </div>
   </div>
 
   <div class="prog-wrap">
@@ -179,13 +163,12 @@ main{max-width:960px;margin:0 auto;padding:24px 20px 80px}
 /* ================================================================
    KHỐI 1 — KHỞI TẠO TRANG INDEX CHƯƠNG 8
    - Hiển thị tên SV, MSSV, STT từ sessionStorage
-   - Đọc 5 key localStorage và hiện tiến độ từng bài:
+   - Đọc 4 key localStorage và hiện tiến độ từng bài:
        prog_c8_81 → 8.1 Lý Thuyết Móng Nông (MCQ)
        prog_c8_82 → 8.2 Lý Thuyết Tính Toán (tĩnh)
        prog_c8_83 → 8.3 Phương Án Móng (MCQ + Picker + fill)
        prog_c8_84 → 8.4 Kiểm Tra SCT Nền (fill + MCQ)
-       prog_c8_85 → 8.5 Kiểm Tra Lún (dự phòng)
-   - Tổng hợp tD/tA → tính % tiến độ chung, cập nhật thanh progress
+          - Tổng hợp tD/tA → tính % tiến độ chung, cập nhật thanh progress
 ================================================================ */
 window.onload=function(){
   var sv=null;try{sv=JSON.parse(sessionStorage.getItem('ncm_sv'));}catch(e){}
@@ -196,8 +179,8 @@ window.onload=function(){
     document.getElementById('sv-display').textContent='Chưa đăng nhập — về Trang chủ để nhập thông tin';
     document.getElementById('sv-badge').textContent='–';
   }
-  var keys=['prog_c8_81','prog_c8_82','prog_c8_83','prog_c8_84','prog_c8_85'];
-  var ids=['prog-81','prog-82','prog-83','prog-84','prog-85'];
+  var keys=['prog_c8_81','prog_c8_82','prog_c8_83','prog_c8_84'];
+  var ids=['prog-81','prog-82','prog-83','prog-84'];
   var tD=0,tA=0;
   keys.forEach(function(k,i){
     try{var d=JSON.parse(localStorage.getItem(k)||'null');
