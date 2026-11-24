@@ -33,9 +33,29 @@
 details > summary { cursor:pointer; font-weight:700; padding:10px 14px; background:var(--Alt); border-radius:8px; list-style:none; display:flex; align-items:center; gap:8px; }
 details[open] > summary { border-radius:8px 8px 0 0; }
 details > div { border:1px solid var(--Brd); border-top:none; border-radius:0 0 8px 8px; padding:14px; }
+
+/* ── Bổ sung: biến màu viết hoa dùng trong trang này, và kiểu cho câu trắc nghiệm, nút nộp ── */
+:root { --Brd: var(--brd); --Muted: var(--muted); }
+.qcard { background:#fff; border:1px solid var(--brd); border-radius:10px; margin-bottom:12px; overflow:hidden; }
+.qcard-hd { display:flex; gap:10px; padding:10px 14px; background:var(--Plt); font-weight:600; font-size:13px; }
+.qnum { background:var(--Pdk); color:#fff; border-radius:6px; padding:0 8px; font-weight:700; height:22px; line-height:22px; flex-shrink:0; }
+.opts { display:flex; flex-direction:column; gap:6px; padding:10px 14px; }
+.opt { display:flex; align-items:center; gap:10px; text-align:left; font:inherit; padding:8px 12px; border:1.5px solid var(--brd); border-radius:8px; background:#fff; cursor:pointer; }
+.opt:hover:not(:disabled) { border-color:var(--P); }
+.opt .ol { flex:0 0 24px; height:24px; border-radius:50%; background:var(--Plt); color:var(--Pdk); font-weight:700; display:flex; align-items:center; justify-content:center; }
+.opt.ok { border-color:var(--G); background:var(--Glt); }
+.opt.no { border-color:var(--R); background:var(--Rlt); }
+.opt.reveal { border-color:var(--G); border-style:dashed; }
+.opt:disabled { cursor:default; }
+.hint { padding:0 14px 10px; font-size:12px; }
+.submit-wrap { text-align:center; margin:18px 0; }
+.submit-btn { background:var(--P); color:#fff; border:none; border-radius:10px; padding:12px 28px; font:inherit; font-weight:700; cursor:pointer; }
+.submit-btn:disabled { background:#9e9e9e; cursor:default; }
+.submit-note { font-size:12px; color:var(--muted); margin-top:6px; }
 </style>
 </head>
 <body>
+<div id="toast"></div>
 <header class="hdr">
   <div class="hdr-in">
     <a href="index_C10.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 10</a>
@@ -574,6 +594,85 @@ details > div { border:1px solid var(--Brd); border-top:none; border-radius:0 0 
 <script>
 var MCQ_KEYS = ['q1','q2','q3','q4'];
 var FILL_KEYS = ['a1-pgh','a1-P','a2-qp','a2-pgh','a2-P'];
+
+/* Câu trắc nghiệm dạng nút .opt của trang này (hàm pickMCQ của engine dành cho thẻ mco-... nên ghi đè ở đây) */
+function pickMCQ(name, picked, correct){
+  if (ANS['mcq-' + name] != null) return;
+  var card = document.getElementById('qc-' + name);
+  if (!card) return;
+  var ok = (picked === correct);
+  card.querySelectorAll('.opt').forEach(function(b, i){
+    b.disabled = true;
+    if (i === picked) b.classList.add(ok ? 'ok' : 'no');
+    else if (i === correct && !ok) b.classList.add('reveal');
+  });
+  var h = document.getElementById('hint-' + name);
+  if (h) { h.style.color = ok ? '#1B5E20' : '#b71c1c'; h.textContent = ok ? '✓ Đúng.' : '✗ Chưa đúng. Đáp án đúng là ' + String.fromCharCode(65 + correct) + '.'; }
+  ANS['mcq-' + name] = ok;
+  updateProg();
+}
+
+/* ================================================================
+   KHỐI — NỘP BÀI LÊN CLOUDFLARE WORKER (+ khóa nộp lại bằng localStorage)
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var lsKey='submitted_'+window.CHAPTER_ID+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){toast('ℹ️ Bạn đã nộp bài này rồi, kết quả đã được ghi nhận.',4000);return;}}catch(e){}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!workerUrl){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  var btnSend=document.getElementById('submit-btn');
+  if(btnSend){btnSend.disabled=true;}
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:window.CHAPTER_ID,score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      if(btnSend){btnSend.innerHTML='✓ Đã nộp ('+scorePct+'%)';btnSend.disabled=true;btnSend.style.background='rgba(46,125,50,.5)';}
+    } else {
+      if(btnSend){btnSend.disabled=false;}
+      toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);
+    }
+  })
+  .catch(function(err){
+    if(btnSend){btnSend.disabled=false;}
+    toast('❌ Không kết nối được Worker: '+err.message,5000);
+  });
+}
+
+/* Khóa nút nộp nếu sinh viên đã nộp bài này (đọc localStorage khi tải trang) */
+function checkSubmittedOnLoad(){
+  try{
+    var sv=getSV();
+    if(!sv||!sv.mssv)return;
+    var lsKey='submitted_'+window.CHAPTER_ID+'_'+sv.mssv;
+    if(localStorage.getItem(lsKey)){
+      _submitted=true;
+      var btn=document.getElementById('submit-btn');
+      if(btn){btn.disabled=true;btn.innerHTML='✓ Đã nộp';btn.style.background='rgba(46,125,50,.5)';}
+    }
+  }catch(e){}
+}
+
 window.CHAPTER_ID = 'C10-102-SCTCoc';
 window.onload = function() {
   var info = initChapterPage('c10');
@@ -582,6 +681,7 @@ window.onload = function() {
   FILL_KEYS.forEach(function(k) { ANS[k] = null; });
   TOTAL_QUESTIONS = MCQ_KEYS.length + FILL_KEYS.length; /* 4 MCQ + 5 fill = 9 */
   updateProg();
+  checkSubmittedOnLoad();
 };
 </script>
 </body>
