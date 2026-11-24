@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -571,7 +571,7 @@ svg text{font-family:'Plus Jakarta Sans',sans-serif}
   </div>
 <div class="step-blk" style="margin-top:10px">
 <div class="step-hd"><span class="snum">3</span><span class="sname">Lựa chọn phương án móng — từng bước</span></div>
-<script>window.PKC["b1"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_tn"]},{id:"lop",label:"Chọn lớp đất đặt đáy móng",correct:["lop1"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["1_5m"]}]};</script>
+<script>window.PKC=window.PKC||{};window.PKC["b1"]={groups:[{id:"loai",label:"Phương án móng",correct:["mong_nong_tn"]},{id:"lop",label:"Chọn lớp đất đặt đáy móng",correct:["lop1"]},{id:"sau",label:"Chiều sâu đặt đáy móng",correct:["1_5m"]}]};</script>
 <div class="pk-sec">
 <div class="pk-lbl"><i class="ti ti-point-filled"></i>Phương án móng</div>
 <div class="pk-opts">
@@ -1256,7 +1256,7 @@ function sub(){var sv=gSV();if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập!
    pkCheck(bid)  : so sánh lựa chọn với đáp án trong PKC[bid];
                    tô ok/no, lưu ANS['pk-bid'], gọi up()
 ================================================================ */
-window.PKC = {};
+window.PKC = window.PKC || {};
 function pkPick(bid, grp, val) {
   if (_sub) return;
   var btn = document.querySelector('[data-pk="' + bid + '-' + grp + '"][data-val="' + val + '"]');

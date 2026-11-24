@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10.2 — Sức Chịu Tải Cọc Đơn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="../assets/css/app-core.css?v=1.0">
+<link rel="stylesheet" href="../assets/css/app-components.css?v=1.0">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<script src="../assets/js/app-engine.js?v=1.0"></script>
+<style>
+.ref-tbl { width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; }
+.ref-tbl th { background:var(--A); color:#fff; padding:7px 10px; text-align:center; font-weight:600; }
+.ref-tbl td { padding:6px 10px; text-align:center; border-bottom:1px solid var(--Brd); }
+.ref-tbl tr:nth-child(even) td { background:var(--Alt); }
+.ref-tbl tr:hover td { background:rgba(var(--A-rgb,33,150,243),.08); }
+.tbl-caption { font-size:12px; color:var(--Muted); margin-bottom:4px; font-style:italic; }
+.step-box { background:var(--Alt); border-left:3px solid var(--A); border-radius:0 8px 8px 0; padding:12px 16px; margin:8px 0; font-size:14px; }
+.step-box b { display:block; color:var(--A); margin-bottom:4px; font-size:13px; text-transform:uppercase; letter-spacing:.5px; }
+.math { font-family:var(--mono); background:var(--AltD,rgba(0,0,0,.06)); padding:2px 6px; border-radius:4px; font-size:13px; }
+.result-box { background:rgba(76,175,80,.12); border:1.5px solid rgba(76,175,80,.4); border-radius:8px; padding:12px 16px; margin:12px 0; text-align:center; font-weight:700; font-size:15px; }
+.problem-box { background:rgba(255,152,0,.10); border:1.5px solid rgba(255,152,0,.4); border-radius:8px; padding:14px 18px; margin:8px 0; }
+.problem-box h4 { margin:0 0 8px; color:var(--A); font-size:14px; }
+.soil-row { display:flex; gap:8px; align-items:center; padding:5px 0; border-bottom:1px dashed var(--Brd); font-size:13px; }
+.soil-row:last-child { border:none; }
+.soil-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+.formula-inline { font-family:var(--mono); font-size:13px; }
+.interp-box { background:var(--Alt); border-radius:6px; padding:8px 12px; margin:4px 0; font-size:13px; font-family:var(--mono); }
+.ans-tag { display:inline-block; background:rgba(76,175,80,.15); color:#2e7d32; border:1px solid rgba(76,175,80,.4); border-radius:4px; padding:2px 8px; font-size:12px; font-weight:700; margin-left:6px; }
+details > summary { cursor:pointer; font-weight:700; padding:10px 14px; background:var(--Alt); border-radius:8px; list-style:none; display:flex; align-items:center; gap:8px; }
+details[open] > summary { border-radius:8px 8px 0 0; }
+details > div { border:1px solid var(--Brd); border-top:none; border-radius:0 0 8px 8px; padding:14px; }
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C10.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 10</a>
+    <div class="hdr-title">
+      <h1>10.2 — Sức Chịu Tải Cọc Đơn</h1>
+      <p>Tra bảng TCVN 10304 · SPT Meyerhof · Bài A → B → C</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 10.2 — SCT Cọc</span><span id="prog-text">0 / 4 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:700">Sức chịu tải cọc đơn — <span id="sv-display">đang tải...</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65)">4 câu MCQ kiểm tra tại bài B1 & B2 · Đáp án cố định</div>
+  </div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<!-- ===== BẢNG TRA THAM CHIẾU ===== -->
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#E3F2FD"><i class="ti ti-table" style="color:#1565C0"></i></div>
+    <div><h2>Bảng Tra Tham Chiếu — TCVN 10304:2014</h2><p>Tra trong suốt quá trình làm bài · Giữ mở bảng này khi tính toán</p></div>
+    <span class="cbadge">REF</span>
+  </div>
+  <div class="card-body">
+
+    <details style="margin-bottom:12px">
+      <summary><i class="ti ti-list-numbers" style="color:var(--A)"></i> Bảng 6.1 — Sức kháng bên đơn vị τᵢ (kPa)</summary>
+      <div>
+        <p class="tbl-caption">Nội suy tuyến tính khi độ sâu z nằm giữa hai hàng trong bảng.</p>
+        <div style="overflow-x:auto">
+        <table class="ref-tbl">
+          <thead>
+            <tr>
+              <th>Độ sâu z (m)</th>
+              <th>Cát nhỏ</th>
+              <th>Cát bột</th>
+              <th>Sét B=0,2</th>
+              <th>Sét B=0,4</th>
+              <th>Sét B=0,6</th>
+              <th>Sét B=0,8</th>
+              <th>Sét B=1,0</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2</td><td>30</td><td>21</td><td>12</td><td>7</td><td>4</td><td>4</td><td>5</td></tr>
+            <tr><td>3</td><td>35</td><td>25</td><td>14</td><td>8</td><td>6</td><td>5</td><td>6</td></tr>
+            <tr><td>4</td><td>38</td><td>27</td><td>16</td><td>9</td><td>7</td><td>6</td><td>7</td></tr>
+            <tr><td>5</td><td>40</td><td>29</td><td>17</td><td>10</td><td>8</td><td>7</td><td>8</td></tr>
+            <tr><td>6</td><td>42</td><td>31</td><td>18</td><td>10</td><td>8</td><td>7</td><td>8</td></tr>
+            <tr><td>8</td><td>44</td><td>33</td><td>19</td><td>10</td><td>8</td><td>7</td><td>8</td></tr>
+            <tr><td>10</td><td>46</td><td>34</td><td>19</td><td>10</td><td>8</td><td>7</td><td>8</td></tr>
+            <tr><td>15</td><td>51</td><td>38</td><td>20</td><td>11</td><td>8</td><td>7</td><td>8</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary><i class="ti ti-arrow-down-circle" style="color:var(--A)"></i> Bảng 6.2 — Sức kháng mũi đơn vị Rₙ (kPa)</summary>
+      <div>
+        <p class="tbl-caption">Tra theo loại đất tại mũi cọc và độ sâu mũi cọc Lmũi (m).</p>
+        <div style="overflow-x:auto">
+        <table class="ref-tbl">
+          <thead>
+            <tr>
+              <th>Độ sâu (m)</th>
+              <th>Cát nhỏ</th>
+              <th>Cát bột</th>
+              <th>Sét B=0,2</th>
+              <th>Sét B=0,4</th>
+              <th>Sét B=0,6</th>
+              <th>Sét B=0,8</th>
+              <th>Sét B=1,0</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>5</td><td>3400</td><td>2200</td><td>800</td><td>400</td><td>300</td><td>200</td><td>200</td></tr>
+            <tr><td>8</td><td>3700</td><td>2400</td><td>900</td><td>500</td><td>400</td><td>300</td><td>300</td></tr>
+            <tr><td>10</td><td>4000</td><td>2600</td><td>1000</td><td>600</td><td>500</td><td>400</td><td>400</td></tr>
+            <tr><td>12</td><td>4200</td><td>2800</td><td>1100</td><td>700</td><td>600</td><td>500</td><td>500</td></tr>
+            <tr><td>15</td><td>4400</td><td>3000</td><td>1200</td><td>800</td><td>700</td><td>600</td><td>600</td></tr>
+            <tr><td>20</td><td>4800</td><td>3200</td><td>1400</td><td>1000</td><td>900</td><td>800</td><td>800</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="fml-wrap" style="margin-top:12px">
+          <div class="fg">
+            <div class="fml-item">
+              <b>Công thức nội suy tuyến tính</b>
+              y = y<sub>1</sub> + (z − z<sub>1</sub>) / (z<sub>2</sub> − z<sub>1</sub>) × (y<sub>2</sub> − y<sub>1</sub>)
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- ===== PHẦN A: VÍ DỤ MẪU ===== -->
+<div class="sec-lbl"><i class="ti ti-book-2"></i> Phần A — Ví Dụ Mẫu (Đọc & Học Cách Làm)</div>
+
+<!-- BÀI A1 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#E8F5E9"><i class="ti ti-clipboard-text" style="color:#2E7D32"></i></div>
+    <div><h2>Bài A1 — Tra Bảng TCVN</h2><p>Cọc 30×30 cm · L=14 m · 2 lớp đất · FS=2,0</p></div>
+    <span class="cbadge">VÍ DỤ</span>
+  </div>
+  <div class="card-body">
+
+    <div class="problem-box">
+      <h4><i class="ti ti-file-description"></i> Đề bài A1</h4>
+      <p style="margin:0 0 8px">Tính P<sub>gh</sub> và [P] của cọc BTCT <b>30×30 cm</b>, chiều dài <b>14 m</b> (đáy đài ở độ sâu 1,5 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 1:</b> Sét dính, dày 8,5 m kể từ đáy đài, B = 0,5</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 2:</b> Cát nhỏ, chặt vừa (mũi cọc đặt ở lớp 2)</div>
+    </div>
+
+    <details style="margin-top:10px">
+      <summary><i class="ti ti-calculator" style="color:var(--A)"></i> Gợi ý thay số A1 — Sinh viên tự tính Bước 5 rồi điền đáp số</summary>
+      <div>
+
+        <div class="step-box">
+          <b>Bước 1 — Thông số cọc & địa tầng</b>
+          u<sub>c</sub> = 4 × 0,30 = <b>1,2 m</b> &nbsp;|&nbsp; F<sub>c</sub> = 0,30² = <b>0,09 m²</b><br>
+          Mũi cọc: L<sub>mũi</sub> = 1,5 + 14 = <b>15,5 m</b><br>
+          Phân cách lớp: từ đáy đài đến hết Lớp 1 = 1,5 + 8,5 = <b>10,0 m</b>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 2 — Chia phân tố</b>
+          <table class="ref-tbl" style="margin-top:6px">
+            <thead><tr><th>PT</th><th>Lớp đất</th><th>Δlᵢ (m)</th><th>z trung bình (m)</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Sét B=0,5</td><td>7,0</td><td>1,5 + 7,0/2 = <b>5,0</b></td></tr>
+              <tr><td>2</td><td>Sét B=0,5</td><td>1,5</td><td>1,5 + 7,0 + 1,5/2 = <b>9,25</b></td></tr>
+              <tr><td>3</td><td>Cát nhỏ</td><td>5,5</td><td>1,5 + 8,5 + 5,5/2 = <b>13,25</b></td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px;margin:6px 0 0;color:var(--Muted)">Tổng Δl = 7,0 + 1,5 + 5,5 = 14,0 m = L ✓</p>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 3 — Tra Bảng 6.1 → τᵢ</b>
+          <div class="interp-box">PT1: Sét B=0,5, z=5,0 m → nội suy giữa B=0,4 (τ=10) và B=0,6 (τ=8) tại z=5m<br>
+          τ₁ = 10 + (0,5−0,4)/(0,6−0,4) × (8−10) = 10 − 1 = <b>8 kPa</b></div>
+          <div class="interp-box">PT2: Sét B=0,5, z=9,25 m → giữa z=8m (τ=8,5) và z=10m (τ=8,5): <b>τ₂ = 8 kPa</b></div>
+          <div class="interp-box">PT3: Cát nhỏ, z=13,25 m → giữa z=10m (τ=46) và z=15m (τ=51)<br>
+          τ₃ = 46 + (13,25−10)/(15−10) × 5 = 46 + 3,25 = <b>49,25 kPa</b></div>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 4 — Tra Bảng 6.2 → Rₙ</b>
+          <div class="interp-box">Mũi: Cát nhỏ, z=15,5 m → giữa z=15m (Rn=4400) và z=20m (Rn=4800)<br>
+          Rₙ = 4400 + (15,5−15)/(20−15) × 400 = 4400 + 40 = <b>4440 kPa</b></div>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 5 — Tính Q<sub>ms</sub>, Q<sub>p</sub>, P<sub>gh</sub>, [P] — Sinh viên điền đáp số cuối</b>
+          Q<sub>ms</sub> = u<sub>c</sub> × Σ(Δlᵢ×τᵢ) = 1,2 × (7,0×8 + 1,5×8 + 5,5×49,25) = 1,2 × 338,9 = ___<br>
+          Q<sub>p</sub> = R<sub>n</sub> × F<sub>c</sub> = 4440 × 0,09 = ___<br>
+          P<sub>gh</sub> = Q<sub>ms</sub> + Q<sub>p</sub> = ___ &nbsp;→&nbsp; [P] = P<sub>gh</sub> / 2,0 = ___
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin:10px 0 4px 0">
+          <div class="ans-row">
+            <span class="ans-label">📌 P<sub>gh</sub> (A1)</span>
+            <input class="ans-inp" id="a1-pgh" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-pgh',806.25,10)">
+            <span class="ans-unit">kN</span><span class="chip" id="ck-a1-pgh"></span>
+          </div>
+          <div class="ans-row">
+            <span class="ans-label">📌 [P] = P<sub>gh</sub> / FS (A1)</span>
+            <input class="ans-inp" id="a1-P" type="number" step="0.1" placeholder="?" oninput="chkFill('a1-P',403.13,5)">
+            <span class="ans-unit">kN</span><span class="chip" id="ck-a1-P"></span>
+          </div>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- BÀI A2 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#FFF3E0"><i class="ti ti-chart-bar" style="color:#E65100"></i></div>
+    <div><h2>Bài A2 — Phương Pháp SPT (Meyerhof)</h2><p>Cọc 35×35 cm · L=16 m · 4 lớp đất SPT · FS=2,0</p></div>
+    <span class="cbadge">VÍ DỤ</span>
+  </div>
+  <div class="card-body">
+
+    <div class="problem-box">
+      <h4><i class="ti ti-file-description"></i> Đề bài A2</h4>
+      <p style="margin:0 0 8px">Tính P<sub>gh</sub> và [P] của cọc BTCT <b>35×35 cm</b>, chiều dài <b>16 m</b> (đáy đài ở độ sâu 2,0 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#A5D6A7"></div><b>Lớp 1:</b> Cát bột, dày 4,0 m, N = 8</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 2:</b> Sét, dày 5,0 m, N = 5</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 3:</b> Cát vừa, dày 4,5 m, N = 12</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FF8F00"></div><b>Lớp 4:</b> Cát to, chặt chắc, N = 20 (mũi cọc)</div>
+    </div>
+
+    <div class="fml-wrap" style="margin:10px 0">
+      <h3><i class="ti ti-sigma"></i> Công thức SPT Meyerhof</h3>
+      <div class="fg">
+        <div class="fml-item">
+          <b>Sức kháng mũi</b>
+          Q<sub>p</sub> = C<sub>1</sub> × N<sub>b</sub> × 1000 × A<sub>p</sub><br>
+          C<sub>1</sub> = 0,4 kN/m² (cát); 0,3 (sét)
+        </div>
+        <div class="fml-item">
+          <b>Sức kháng bên</b>
+          Q<sub>s</sub> = 2 × τ<sub>s</sub> × A<sub>s</sub><br>
+          τ<sub>s</sub> = 0,005 × σ<sub>v</sub> × N̄
+        </div>
+        <div class="fml-item">
+          <b>SPT trung bình</b>
+          N̄ = Σ(N<sub>i</sub> × Δl<sub>i</sub>) / L<br>
+          L = chiều dài cọc trong đất
+        </div>
+        <div class="fml-item">
+          <b>Ứng suất hiệu</b>
+          σ<sub>v</sub> = γ' × L<sub>mũi</sub><br>
+          γ' ≈ 9 kN/m³ (bão hòa thông thường)
+        </div>
+      </div>
+    </div>
+
+    <details style="margin-top:10px">
+      <summary><i class="ti ti-calculator" style="color:var(--A)"></i> Gợi ý thay số A2 — Sinh viên tự tính Bước 4 &amp; 5 rồi điền đáp số</summary>
+      <div>
+
+        <div class="step-box">
+          <b>Bước 1 — Thông số cọc</b>
+          u<sub>c</sub> = 4 × 0,35 = <b>1,4 m</b> &nbsp;|&nbsp; F<sub>c</sub> = 0,35² = <b>0,1225 m²</b><br>
+          A<sub>s</sub> = u<sub>c</sub> × L = 1,4 × 16 = <b>22,4 m²</b><br>
+          Mũi cọc: L<sub>mũi</sub> = 2,0 + 16 = <b>18,0 m</b> &nbsp;|&nbsp; N<sub>b</sub> = <b>20</b> (Lớp 4)
+        </div>
+
+        <div class="step-box">
+          <b>Bước 2 — SPT trung bình N̄ dọc thân cọc</b>
+          <p style="font-size:13px;margin:4px 0">Thân cọc từ 2,0m đến 18,0m: qua Lớp 1 (4m), Lớp 2 (5m), Lớp 3 (4,5m) — Lớp 4 chỉ tính ở mũi.</p>
+          <div class="interp-box">N̄ = (8×4 + 5×5 + 12×4,5) / (4+5+4,5) = (32+25+54) / 13,5 = 111/13,5 ≈ <b>8</b> (làm tròn)</div>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 3 — Ứng suất pháp tuyến hiệu σ<sub>v</sub></b>
+          <div class="interp-box">σ<sub>v</sub> = 9 × L<sub>mũi</sub> = 9 × 18 = <b>162 kPa</b></div>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 4 — Sức kháng mũi Q<sub>p</sub> — Sinh viên tự tính</b>
+          <div class="interp-box">Q<sub>p</sub> = C<sub>1</sub> × N<sub>b</sub> × 1000 × F<sub>c</sub> = 0,4 × 20 × 1000 × 0,1225 = ___</div>
+          <p style="font-size:12px;color:var(--Muted);margin:4px 0">Lưu ý: C₁ × Nb × 1000 = đơn vị kPa → nhân với Ap (m²) ra kN.</p>
+        </div>
+
+        <div class="step-box">
+          <b>Bước 5 — Sức kháng bên Q<sub>s</sub> — Sinh viên tự tính</b>
+          <div class="interp-box">τ<sub>s</sub> = 0,005 × σ<sub>v</sub> × N̄ = 0,005 × 162 × 8 = ___<br>
+          Q<sub>s</sub> = 2 × τ<sub>s</sub> × A<sub>s</sub> = 2 × τ<sub>s</sub> × 22,4 = ___</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;margin:10px 0 4px 0">
+          <div class="ans-row">
+            <span class="ans-label">📌 Q<sub>p</sub> (A2)</span>
+            <input class="ans-inp" id="a2-qp" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-qp',980,10)">
+            <span class="ans-unit">kN</span><span class="chip" id="ck-a2-qp"></span>
+          </div>
+          <div class="ans-row">
+            <span class="ans-label">📌 P<sub>gh</sub> (A2)</span>
+            <input class="ans-inp" id="a2-pgh" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-pgh',1270.3,15)">
+            <span class="ans-unit">kN</span><span class="chip" id="ck-a2-pgh"></span>
+          </div>
+          <div class="ans-row">
+            <span class="ans-label">📌 [P] = P<sub>gh</sub> / FS (A2)</span>
+            <input class="ans-inp" id="a2-P" type="number" step="0.1" placeholder="?" oninput="chkFill('a2-P',635.15,8)">
+            <span class="ans-unit">kN</span><span class="chip" id="ck-a2-P"></span>
+          </div>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PHẦN B: BÀI TẬP SINH VIÊN ===== -->
+<div class="sec-lbl"><i class="ti ti-pencil"></i> Phần B — Bài Tập Sinh Viên (Có Kiểm Tra MCQ)</div>
+
+<!-- BÀI B1 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#E3F2FD"><i class="ti ti-calculator" style="color:#1565C0"></i></div>
+    <div><h2>Bài B1 — Tra Bảng TCVN</h2><p>Cọc 35×35 cm · L=15 m · 2 lớp đất · FS=2,0</p></div>
+    <span class="cbadge">LUYỆN TẬP</span>
+  </div>
+  <div class="card-body">
+
+    <div class="problem-box">
+      <h4><i class="ti ti-file-description"></i> Đề bài B1</h4>
+      <p style="margin:0 0 8px">Tính P<sub>gh</sub> và [P] của cọc BTCT <b>35×35 cm</b>, chiều dài <b>15 m</b> (đáy đài ở độ sâu 1,5 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 1:</b> Sét dính, dày 7,5 m kể từ đáy đài, B = 0,6</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 2:</b> Cát nhỏ, chặt vừa (mũi cọc đặt ở lớp 2)</div>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 1 — Thông số cọc</b>
+      u<sub>c</sub> = 4 × 0,35 = <b>1,4 m</b> &nbsp;|&nbsp; F<sub>c</sub> = 0,35² = <b>0,1225 m²</b><br>
+      L<sub>mũi</sub> = 1,5 + 15 = <b>16,5 m</b><br>
+      Phân cách lớp (từ mặt đất): 1,5 + 7,5 = <b>9,0 m</b>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 2 — Chia phân tố</b>
+      <table class="ref-tbl" style="margin-top:6px">
+        <thead><tr><th>PT</th><th>Lớp đất</th><th>Δlᵢ (m)</th><th>z trung bình (m)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Sét B=0,6</td><td>6,0</td><td>(1,5 + 7,5)/2 = <b>4,5</b></td></tr>
+          <tr><td>2</td><td>Sét B=0,6</td><td>1,5</td><td>1,5 + 6,0 + 1,5/2 = <b>8,25</b></td></tr>
+          <tr><td>3</td><td>Cát nhỏ</td><td>7,5</td><td>9,0 + 7,5/2 = <b>12,75</b></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;margin:6px 0 0;color:var(--Muted)">Tổng = 6,0 + 1,5 + 7,5 = 15,0 m = L ✓ &nbsp;|&nbsp; PT1+PT2 = 7,5 m = chiều dày Lớp 1 ✓</p>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 3 — Tra Bảng 6.1 → τᵢ</b>
+      <div class="interp-box">PT1: Sét B=0,6, z=4,5 m → nội suy giữa z=4m (τ=7) và z=5m (τ=8)<br>
+      τ₁ = 7 + (4,5−4)/(5−4) × (8−7) = 7 + 0,5 = <b>7,5 kPa</b></div>
+      <div class="interp-box">PT2: Sét B=0,6, z=8,25 m → giữa z=8m (τ=8) và z=10m (τ=8): <b>τ₂ = 8 kPa</b></div>
+      <div class="interp-box">PT3: Cát nhỏ, z=12,75 m → giữa z=10m (τ=46) và z=15m (τ=51)<br>
+      τ₃ = 46 + (12,75−10)/(15−10) × 5 = 46 + 2,75 = <b>48,75 kPa</b></div>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 4 — Tra Bảng 6.2 → Rₙ tại mũi 16,5 m (Cát nhỏ)</b>
+      <div class="interp-box">R<sub>n</sub> = 4400 + (16,5−15)/(20−15) × 400 = 4400 + 120 = <b>4520 kPa</b></div>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 5 — Tính Q<sub>ms</sub></b>
+      <div class="interp-box">Tính Σ(Δlᵢ × τᵢ) = 6,0×7,5 + 1,5×8,0 + 7,5×48,75<br>
+      = 45,0 + 12,0 + 365,6 = <span style="font-weight:700">422,6</span><br>
+      Q<sub>ms</sub> = u<sub>c</sub> × 422,6 = 1,4 × 422,6 = ? kN</div>
+    </div>
+
+    <!-- MCQ q1 -->
+    <div class="qcard" id="qc-q1">
+      <div class="qcard-hd"><span class="qnum">Q1</span><span class="qtxt">Tổng sức kháng bên Q<sub>ms</sub> của bài B1 bằng bao nhiêu?</span></div>
+      <div class="opts">
+        <button class="opt" onclick="pickMCQ('q1',0,1)"><span class="ol">A</span> 456,8 kN</button>
+        <button class="opt" onclick="pickMCQ('q1',1,1)"><span class="ol">B</span> 591,7 kN</button>
+        <button class="opt" onclick="pickMCQ('q1',2,1)"><span class="ol">C</span> 532,4 kN</button>
+        <button class="opt" onclick="pickMCQ('q1',3,1)"><span class="ol">D</span> 621,3 kN</button>
+      </div>
+      <div class="hint" id="hint-q1"></div>
+    </div>
+
+    <!-- MCQ q2 -->
+    <div class="qcard" id="qc-q2">
+      <div class="qcard-hd"><span class="qnum">Q2</span><span class="qtxt">Sức chịu tải cho phép [P] của bài B1 (FS = 2,0) là bao nhiêu?</span></div>
+      <div class="opts">
+        <button class="opt" onclick="pickMCQ('q2',0,2)"><span class="ol">A</span> 480,5 kN</button>
+        <button class="opt" onclick="pickMCQ('q2',1,2)"><span class="ol">B</span> 536,8 kN</button>
+        <button class="opt" onclick="pickMCQ('q2',2,2)"><span class="ol">C</span> 572,7 kN</button>
+        <button class="opt" onclick="pickMCQ('q2',3,2)"><span class="ol">D</span> 618,2 kN</button>
+      </div>
+      <div class="hint" id="hint-q2"></div>
+    </div>
+
+    <details style="margin-top:12px">
+      <summary><i class="ti ti-check-square" style="color:var(--A)"></i> Xem đáp án đầy đủ B1</summary>
+      <div>
+        <div class="result-box">
+          Q<sub>ms</sub> = 1,4 × 422,6 = <b>591,7 kN</b><br>
+          Q<sub>p</sub> = 4520 × 0,1225 = <b>553,7 kN</b><br>
+          P<sub>gh</sub> = 591,7 + 553,7 = <b>1145,4 kN</b><br>
+          ✓ [P] = 1145,4 / 2,0 = <b>572,7 kN ≈ 57,3 tấn</b>
+        </div>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- BÀI B2 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#FCE4EC"><i class="ti ti-math-function" style="color:#C62828"></i></div>
+    <div><h2>Bài B2 — Phương Pháp SPT (Meyerhof)</h2><p>Cọc 30×30 cm · L=14 m · 4 lớp đất SPT · FS=2,0</p></div>
+    <span class="cbadge">LUYỆN TẬP</span>
+  </div>
+  <div class="card-body">
+
+    <div class="problem-box">
+      <h4><i class="ti ti-file-description"></i> Đề bài B2</h4>
+      <p style="margin:0 0 8px">Tính P<sub>gh</sub> và [P] của cọc BTCT <b>30×30 cm</b>, chiều dài <b>14 m</b> (đáy đài ở độ sâu 2,0 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#A5D6A7"></div><b>Lớp 1:</b> Cát bột, dày 3,0 m, N = 10</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 2:</b> Sét, dày 5,5 m, N = 6</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 3:</b> Cát to, dày 3,0 m, N = 14</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FF8F00"></div><b>Lớp 4:</b> Cát to, N = 18 (mũi cọc)</div>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 1 — Thông số cọc</b>
+      u<sub>c</sub> = 4 × 0,30 = <b>1,2 m</b> &nbsp;|&nbsp; F<sub>c</sub> = 0,30² = <b>0,09 m²</b><br>
+      A<sub>s</sub> = 1,2 × 14 = <b>16,8 m²</b> &nbsp;|&nbsp; L<sub>mũi</sub> = 2,0 + 14 = <b>16,0 m</b><br>
+      N<sub>b</sub> = <b>18</b> (SPT tại Lớp 4 — mũi cọc)
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 2 — N̄ dọc thân cọc</b>
+      <p style="font-size:13px;margin:4px 0">Thân cọc qua: Lớp 1 (3m, N=10), Lớp 2 (5,5m, N=6), Lớp 3 (3m, N=14). Lớp 4 chỉ ở mũi.</p>
+      <div class="interp-box">N̄ = (10×3 + 6×5,5 + 14×3) / (3+5,5+3)<br>
+      = (30 + 33 + 42) / 11,5 → Thực tế: dùng L tổng = 14m<br>
+      N̄ = (10×3 + 6×5,5 + 14×3) / 14 = (30+33+42) / 14 = 105/14 = ?</div>
+    </div>
+
+    <!-- MCQ q3 -->
+    <div class="qcard" id="qc-q3">
+      <div class="qcard-hd"><span class="qnum">Q3</span><span class="qtxt">Giá trị SPT trung bình N̄ dọc thân cọc bài B2 bằng bao nhiêu?</span></div>
+      <div class="opts">
+        <button class="opt" onclick="pickMCQ('q3',0,3)"><span class="ol">A</span> 8,5</button>
+        <button class="opt" onclick="pickMCQ('q3',1,3)"><span class="ol">B</span> 9,0</button>
+        <button class="opt" onclick="pickMCQ('q3',2,3)"><span class="ol">C</span> 6,5</button>
+        <button class="opt" onclick="pickMCQ('q3',3,3)"><span class="ol">D</span> 7,5</button>
+      </div>
+      <div class="hint" id="hint-q3"></div>
+    </div>
+
+    <div class="step-box">
+      <b>Hướng dẫn Bước 3 — σ<sub>v</sub>, Q<sub>p</sub>, Q<sub>s</sub></b>
+      <div class="interp-box">σ<sub>v</sub> = 9 × L<sub>mũi</sub> = 9 × 16 = <b>144 kPa</b></div>
+      <div class="interp-box">Q<sub>p</sub> = 0,4 × N<sub>b</sub> × 1000 × F<sub>c</sub> = 0,4 × 18 × 1000 × 0,09 = <b>648 kN</b></div>
+      <div class="interp-box">τ<sub>s</sub> = 0,005 × 144 × N̄ = ? kPa<br>
+      Q<sub>s</sub> = 2 × τ<sub>s</sub> × A<sub>s</sub> = 2 × ? × 16,8 = ? kN</div>
+    </div>
+
+    <!-- MCQ q4 -->
+    <div class="qcard" id="qc-q4">
+      <div class="qcard-hd"><span class="qnum">Q4</span><span class="qtxt">Sức chịu tải cho phép [P] của bài B2 (FS = 2,0) gần bằng bao nhiêu?</span></div>
+      <div class="opts">
+        <button class="opt" onclick="pickMCQ('q4',0,0)"><span class="ol">A</span> 415 kN</button>
+        <button class="opt" onclick="pickMCQ('q4',1,0)"><span class="ol">B</span> 360 kN</button>
+        <button class="opt" onclick="pickMCQ('q4',2,0)"><span class="ol">C</span> 490 kN</button>
+        <button class="opt" onclick="pickMCQ('q4',3,0)"><span class="ol">D</span> 530 kN</button>
+      </div>
+      <div class="hint" id="hint-q4"></div>
+    </div>
+
+    <details style="margin-top:12px">
+      <summary><i class="ti ti-check-square" style="color:var(--A)"></i> Xem đáp án đầy đủ B2</summary>
+      <div>
+        <div class="result-box">
+          N̄ = 105/14 = <b>7,5</b><br>
+          σ<sub>v</sub> = 9 × 16 = 144 kPa<br>
+          Q<sub>p</sub> = 0,4 × 18 × 1000 × 0,09 = <b>648 kN</b><br>
+          τ<sub>s</sub> = 0,005 × 144 × 7,5 = <b>5,4 kPa</b><br>
+          Q<sub>s</sub> = 2 × 5,4 × 16,8 = <b>181,4 kN</b><br>
+          P<sub>gh</sub> = 648 + 181,4 = <b>829,4 kN</b><br>
+          ✓ [P] = 829,4 / 2,0 = <b>414,7 kN ≈ 415 kN ≈ 41,5 tấn</b>
+        </div>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- ===== PHẦN C: TỰ LÀM ===== -->
+<div class="sec-lbl"><i class="ti ti-pencil-plus"></i> Phần C — Bài Tập Tự Làm (Nộp trên giấy hoặc theo yêu cầu GV)</div>
+
+<div class="card">
+  <div class="card-hd">
+    <div class="dc-icon" style="background:#E8F5E9"><i class="ti ti-writing" style="color:#2E7D32"></i></div>
+    <div><h2>Bài C1 & C2 — Tự Tính Toán</h2><p>Làm đầy đủ các bước · Không có gợi ý trung gian</p></div>
+    <span class="cbadge">TỰ LÀM</span>
+  </div>
+  <div class="card-body">
+
+    <div class="problem-box" style="margin-bottom:12px">
+      <h4><i class="ti ti-bookmark"></i> Bài C1 — Tra Bảng TCVN</h4>
+      <p style="margin:0 0 8px">Cọc BTCT <b>32×32 cm</b>, chiều dài <b>13 m</b> (đáy đài ở độ sâu 1,8 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 1:</b> Sét, dày 6,5 m kể từ đáy đài, B = 0,4</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 2:</b> Cát nhỏ, chặt vừa (mũi cọc)</div>
+      <p style="font-size:12px;color:var(--Muted);margin:8px 0 0">Thực hiện 5 bước: (1) Thông số cọc → (2) Phân tố → (3) Tra τᵢ → (4) Tra Rₙ → (5) Tính Q<sub>ms</sub>, Q<sub>p</sub>, P<sub>gh</sub>, [P]</p>
+    </div>
+
+    <div class="problem-box">
+      <h4><i class="ti ti-bookmark"></i> Bài C2 — Phương Pháp SPT (Meyerhof)</h4>
+      <p style="margin:0 0 8px">Cọc BTCT <b>36×36 cm</b>, chiều dài <b>17 m</b> (đáy đài ở độ sâu 2,5 m). FS = 2,0.</p>
+      <div class="soil-row"><div class="soil-dot" style="background:#8D6E63"></div><b>Lớp 1:</b> Sét, dày 4,5 m, N = 7</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#A5D6A7"></div><b>Lớp 2:</b> Cát vừa, dày 5,0 m, N = 11</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FDD835"></div><b>Lớp 3:</b> Cát to, dày 4,0 m, N = 15</div>
+      <div class="soil-row"><div class="soil-dot" style="background:#FF8F00"></div><b>Lớp 4:</b> Cát to, N = 22 (mũi cọc)</div>
+      <p style="font-size:12px;color:var(--Muted);margin:8px 0 0">Thực hiện 5 bước: (1) Thông số → (2) N̄, N<sub>b</sub>, σ<sub>v</sub> → (3) Q<sub>p</sub> → (4) τ<sub>s</sub>, Q<sub>s</sub> → (5) P<sub>gh</sub>, [P]</p>
+    </div>
+
+    <div class="earth-box" style="margin-top:12px">
+      <b>Bảng tổng hợp kết quả:</b>
+      <table class="ref-tbl" style="margin-top:8px">
+        <thead><tr><th>Bài</th><th>Phương pháp</th><th>P<sub>gh</sub> (kN)</th><th>[P] (kN)</th><th>[P] (tấn)</th></tr></thead>
+        <tbody>
+          <tr><td><b>A1</b></td><td>Tra bảng</td><td>___</td><td>___</td><td>___</td></tr>
+          <tr><td><b>A2</b></td><td>SPT Meyerhof</td><td>___</td><td>___</td><td>___</td></tr>
+          <tr><td><b>B1</b></td><td>Tra bảng</td><td>1145,4</td><td>572,7</td><td>57,3</td></tr>
+          <tr><td><b>B2</b></td><td>SPT Meyerhof</td><td>829,4</td><td>414,7</td><td>41,5</td></tr>
+          <tr><td><b>C1</b></td><td>Tra bảng</td><td>___</td><td>___</td><td>___</td></tr>
+          <tr><td><b>C2</b></td><td>SPT Meyerhof</td><td>___</td><td>___</td><td>___</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- NỘP KẾT QUẢ -->
+<div class="submit-wrap">
+  <button class="submit-btn" id="submit-btn" onclick="submitResult()">
+    <i class="ti ti-send"></i> Nộp kết quả
+  </button>
+  <div class="submit-note">Nộp khi đã điền đủ các ô Nhóm A và trả lời cả 4 câu MCQ ở B1, B2</div>
+</div>
+
+</main>
+
+<script>
+var MCQ_KEYS = ['q1','q2','q3','q4'];
+var FILL_KEYS = ['a1-pgh','a1-P','a2-qp','a2-pgh','a2-P'];
+window.CHAPTER_ID = 'C10-102-SCTCoc';
+window.onload = function() {
+  var info = initChapterPage('c10');
+  if (!info.isOpen) return;
+  MCQ_KEYS.forEach(function(k) { ANS[k] = null; });
+  FILL_KEYS.forEach(function(k) { ANS[k] = null; });
+  TOTAL_QUESTIONS = MCQ_KEYS.length + FILL_KEYS.length; /* 4 MCQ + 5 fill = 9 */
+  updateProg();
+};
+</script>
+</body>
+</html>
