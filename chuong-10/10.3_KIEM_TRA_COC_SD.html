@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10.3 — Kiểm Tra Cọc Giai Đoạn Sử Dụng (Đài 4, 5, 6, 7 Cọc)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="../assets/css/app-core.css?v=1.0">
+<link rel="stylesheet" href="../assets/css/app-components.css?v=1.0">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<script src="../assets/js/app-engine.js?v=1.0"></script>
+<style>
+/* ── CSS RIÊNG BÀI 10.3 ── */
+.seq{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.seq-card{flex:1 1 140px;max-width:190px;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;text-align:center}
+.seq-card svg{width:100%;height:auto;display:block}
+.seq-card .sq-n{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--Pdk);color:#fff;font-size:12px;font-weight:700;line-height:22px;margin-right:4px}
+.seq-card .sq-t{font-size:12px;font-weight:600;color:var(--Pdk);margin-top:2px}
+.svg-box{background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;margin:10px 0;overflow-x:auto}
+.svg-box svg{width:100%;height:auto;min-width:520px;display:block}
+.dat-tbl{border-collapse:collapse;font-size:13px;margin:8px 0;width:100%}
+.dat-tbl td,.dat-tbl th{border:1px solid var(--brd);padding:4px 8px;text-align:left}
+.dat-tbl th{background:var(--Plt);color:var(--Pdk)}
+.dat-tbl td.v{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.sub-hd{font-size:14px;font-weight:700;color:var(--Pdk);margin:14px 0 4px;display:flex;align-items:center;gap:6px}
+.sub-hd .tag{font-size:11px;color:#fff;background:var(--P);border-radius:6px;padding:1px 8px}
+.sub-hd .tag.c{background:#E65100}
+.q-blk{margin-bottom:10px}
+.know li{margin-bottom:3px}
+.know{margin:6px 0 6px 18px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C10.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 10</a>
+    <div class="hdr-title">
+      <h1>10.3 — Kiểm Tra Cọc Giai Đoạn Sử Dụng (Đài 4, 5, 6, 7 Cọc)</h1>
+      <p>Dạng A có gợi ý đầy đủ · Dạng C chỉ có đề · Số liệu sinh theo STT</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 10.3 — Kiểm tra cọc giai đoạn sử dụng</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:700">Kiểm tra cọc — <span id="sv-display">đang tải...</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65)">Kích thước đài, tải trọng và sức chịu tải sinh theo STT của bạn · cùng STT luôn cùng đề</div>
+  </div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<div class="earth-box" style="margin-bottom:14px"><b>Mục tiêu:</b> kiểm tra cọc trong đài ở giai đoạn sử dụng (không kiểm tra đài cọc): lực tác dụng lên từng cọc P<sub>i</sub>, P<sub>max</sub>, P<sub>min</sub>, điều kiện chịu lực và điều kiện kinh tế, cho đài 4, 5, 6 và 7 cọc. Dạng A có gợi ý công thức và số thay (bạn tự điền kết quả). Dạng C chỉ có đề bài. Công thức theo mục 3.3.5 của hướng dẫn đồ án móng cọc.</div>
+
+<div id="sol-wrap"></div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>10.3 · Kiểm tra cọc giai đoạn sử dụng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — HÀM PHỤ
+================================================================ */
+function $(id){ return document.getElementById(id); }
+function fmt(x){ return String(Math.round(x * 1000) / 1000); }
+function mkRng(seed){ var r = seededRng(seed); r(); r(); r(); return r; }
+function pick(arr, rng){ return arr[Math.floor(rng() * arr.length)]; }
+function ri(a, b, rng){ return a + Math.floor(rng() * (b - a + 1)); }
+function r2(x){ return Math.round(x * 100) / 100; }
+
+var GTB = 20;   /* kN/m3, trọng lượng thể tích trung bình đài + đất trên đài */
+var GC  = 25;   /* kN/m3, bê tông cọc */
+
+/* ================================================================
+   KHỐI 2 — BỐ TRÍ CỌC VÀ TÍNH TOÁN (nguồn: hướng dẫn đồ án móng cọc, mục 3.3.5)
+   Hệ trục x-y đặt tại trọng tâm nhóm cọc (cũng là trọng tâm đáy đài).
+   Pi = N/nc + Mx·yi/Σyi² + My·xi/Σxi²
+================================================================ */
+function layout(n, ax, ay){
+  if (n === 4) return [[-ax/2, ay/2], [ax/2, ay/2], [-ax/2, -ay/2], [ax/2, -ay/2]];
+  if (n === 5) return [[-ax/2, ay/2], [ax/2, ay/2], [0, 0], [-ax/2, -ay/2], [ax/2, -ay/2]];
+  if (n === 6) return [[-ax, ay/2], [0, ay/2], [ax, ay/2], [-ax, -ay/2], [0, -ay/2], [ax, -ay/2]];
+  return [[-ax/2, ay], [ax/2, ay], [-ax, 0], [0, 0], [ax, 0], [-ax/2, -ay], [ax/2, -ay]];
+}
+
+function calc(P){
+  var R = {};
+  R.G = GTB * P.B * P.L * P.hm;
+  R.N = P.N0 + R.G;
+  R.My = P.My0 + P.Q0 * P.hd;
+  R.Sx2 = 0; R.Sy2 = 0;
+  P.pts.forEach(function(p){ R.Sx2 += p[0] * p[0]; R.Sy2 += p[1] * p[1]; });
+  R.Pi = P.pts.map(function(p){ return R.N / P.n + P.Mx * p[1] / R.Sy2 + R.My * p[0] / R.Sx2; });
+  R.Pmax = Math.max.apply(null, R.Pi);
+  R.Pmin = Math.min.apply(null, R.Pi);
+  R.Gc = GC * (P.D / 1000) * (P.D / 1000) * P.Lc;
+  R.PmGc = R.Pmax + R.Gc;
+  if (P.Pcap) R.KT = (P.Pcap - R.PmGc) / P.Pcap * 100;
+  return R;
+}
+
+function gen(n, rng){
+  var D = pick([250, 300, 350, 400], rng), d = D / 1000;
+  /* đài 5 cọc: cọc giữa cách cọc góc ≥ 3D nên khoảng cách lưới phải lớn hơn */
+  var ks = (n === 5) ? [4.25, 4.5, 4.75, 5] : [3, 3.25, 3.5, 4];
+  var ax = r2(Math.ceil(pick(ks, rng) * d / 0.05 - 1e-9) * 0.05);
+  var ay = r2(Math.ceil(pick(ks, rng) * d / 0.05 - 1e-9) * 0.05);
+  var pts = layout(n, ax, ay);
+  /* đài 6 và 7 cọc: một nửa số sinh viên nhận bố trí xoay 90 độ (hàng thành cột) */
+  if ((n === 6 || n === 7) && rng() < 0.5) { pts = pts.map(function(p){ return [p[1], p[0]]; }); pts.sort(function(p, q){ return (q[1] - p[1]) || (p[0] - q[0]); }); }
+  var xs = pts.map(function(p){ return p[0]; }), ys = pts.map(function(p){ return p[1]; });
+  var xext = Math.max.apply(null, xs) - Math.min.apply(null, xs);
+  var yext = Math.max.apply(null, ys) - Math.min.apply(null, ys);
+  var e = pick([0.3, 0.35, 0.4, 0.45], rng);
+  var P = { n: n, D: D, ax: ax, ay: ay, pts: pts, B: r2(xext + 2 * e), L: r2(yext + 2 * e) };
+  P.hd = pick([0.7, 0.8, 0.9, 1.0], rng);
+  P.hm = Math.round((P.hd + ri(4, 9, rng) / 10) * 10) / 10;
+  P.Lc = ri(10, 25, rng);
+  P.Q0 = 5 * ri(4, 14, rng);
+  var Pavg = Math.round(4000 * d * d * (0.55 + 0.2 * rng()) / 5) * 5;
+  var Sx2 = 0, Sy2 = 0, xm = 0, ym = 0;
+  pts.forEach(function(p){ Sx2 += p[0] * p[0]; Sy2 += p[1] * p[1]; xm = Math.max(xm, Math.abs(p[0])); ym = Math.max(ym, Math.abs(p[1])); });
+  P.N0 = Math.max(100, 5 * Math.round((n * Pavg - GTB * P.B * P.L * P.hm) / 5));
+  P.Mx = Math.round((0.05 + 0.17 * rng()) * Pavg * Sy2 / ym);
+  P.My0 = Math.max(10, Math.round((0.05 + 0.17 * rng()) * Pavg * Sx2 / xm - P.Q0 * P.hd));
+  var R0 = calc(P);
+  var s = pick([-0.04, 0.02, 0.05, 0.07, 0.12, 0.15], rng);
+  P.Pcap = 10 * Math.ceil((R0.Pmax + R0.Gc) / (1 - s) / 10);
+  /* tránh các số liệu sát ngưỡng 0% và 10% để kết luận không phụ thuộc làm tròn */
+  while (true) {
+    var kt = (P.Pcap - R0.PmGc) / P.Pcap * 100;
+    if (Math.abs(kt) > 1 && Math.abs(kt - 10) > 1) break;
+    P.Pcap += 10;
+  }
+  /* cọc được hỏi riêng: không lấy cọc ở tâm (x = y = 0) */
+  var cand = [];
+  pts.forEach(function(p, i){ if (!(p[0] === 0 && p[1] === 0)) cand.push(i); });
+  P.k = cand[Math.floor(rng() * cand.length)];
+  P.shuf = ri(0, 5, rng);
+  P.R = calc(P);
+  return P;
+}
+
+/* nhóm các giá trị |x| giống nhau để viết gợi ý: "4×0.525² + 2×0.85²" */
+function sumTxt(P, ix){
+  var cnt = {};
+  P.pts.forEach(function(p){ var v = Math.abs(p[ix]); if (v > 1e-9) { var key = fmt(v); cnt[key] = (cnt[key] || 0) + 1; } });
+  var parts = [];
+  Object.keys(cnt).forEach(function(v){ parts.push(cnt[v] + ' × ' + v + '²'); });
+  return parts.join(' + ');
+}
+
+/* ================================================================
+   KHỐI 3 — HÌNH MẶT BẰNG ĐÀI VÀ MẶT CẮT
+================================================================ */
+function txt(x, y, s, anchor, fill, size, wt){
+  return '<text x="' + x + '" y="' + y + '" font-family="Plus Jakarta Sans, sans-serif" font-size="' + (size || 12) + '" fill="' + (fill || '#0D1B2A') + '" text-anchor="' + (anchor || 'middle') + '"' + (wt ? ' font-weight="' + wt + '"' : '') + '>' + s + '</text>';
+}
+function ln(x1, y1, x2, y2, col, w, dash){
+  return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + (col || '#455a64') + '" stroke-width="' + (w || 1.2) + '"' + (dash ? ' stroke-dasharray="' + dash + '"' : '') + '/>';
+}
+
+function svgDai(P){
+  var s = Math.min(215 / P.B, 150 / P.L), cx = 150, cy = 130, r = P.D / 2000 * s;
+  var o = '<svg viewBox="0 0 640 270" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="640" height="270" fill="#fff"/>';
+  o += '<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#c62828"/></marker><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#0D1B2A"/></marker></defs>';
+  o += txt(175, 16, 'MẶT BẰNG ĐÀI VÀ BỐ TRÍ CỌC', 'middle', '#0D47A1', 12, 700);
+  o += '<rect x="' + (cx - P.B / 2 * s) + '" y="' + (cy - P.L / 2 * s) + '" width="' + (P.B * s) + '" height="' + (P.L * s) + '" fill="#cfd8dc" stroke="#455a64" stroke-width="1.5"/>';
+  /* trục x, y qua trọng tâm */
+  o += ln(cx - P.B / 2 * s - 16, cy, cx + P.B / 2 * s + 24, cy, '#c62828', 1.2, '5,3').replace('/>', ' marker-end="url(#ar)"/>');
+  o += ln(cx, cy + P.L / 2 * s + 6, cx, cy - P.L / 2 * s - 20, '#c62828', 1.2, '5,3').replace('/>', ' marker-end="url(#ar)"/>');
+  o += txt(cx + P.B / 2 * s + 20, cy - 8, 'x', 'start', '#c62828', 13, 700) + txt(cx + 8, cy - P.L / 2 * s - 22, 'y', 'start', '#c62828', 13, 700);
+  P.pts.forEach(function(p, i){
+    var X = cx + p[0] * s, Y = cy - p[1] * s;
+    o += '<circle cx="' + X + '" cy="' + Y + '" r="' + r + '" fill="#fff" stroke="#1565c0" stroke-width="2"/>';
+    o += txt(X, Y + 4, String(i + 1), 'middle', '#0D47A1', 12, 700);
+  });
+  /* chuỗi kích thước: khoảng cách giữa các tọa độ x (phía dưới đài) và y (bên phải đài) */
+  function uniq(a){ var u = []; a.sort(function(p, q){ return p - q; }).forEach(function(v){ if (!u.length || Math.abs(v - u[u.length - 1]) > 1e-9) u.push(v); }); return u; }
+  var ux = uniq(P.pts.map(function(p){ return p[0]; })), uy = uniq(P.pts.map(function(p){ return p[1]; }));
+  var ex = (P.B - (ux[ux.length - 1] - ux[0])) / 2, ey = (P.L - (uy[uy.length - 1] - uy[0])) / 2;
+  var cxs = [ux[0] - ex].concat(ux).concat([ux[ux.length - 1] + ex]);
+  var cys = [uy[uy.length - 1] + ey].concat(uy.slice().reverse()).concat([uy[0] - ey]);
+  var yd = cy + P.L / 2 * s + 14, xd = cx + P.B / 2 * s + 40, k, tx, ty;
+  o += ln(cx + cxs[0] * s, yd, cx + cxs[cxs.length - 1] * s, yd, '#0D1B2A', 1);
+  for (k = 0; k < cxs.length; k++) {
+    tx = cx + cxs[k] * s; o += ln(tx, yd - 4, tx, yd + 4, '#0D1B2A', 1);
+    if (k > 0) o += txt((tx + cx + cxs[k - 1] * s) / 2, ((cxs[k] - cxs[k - 1]) * s < 24 ? yd - 6 : yd + 13), fmt(cxs[k] - cxs[k - 1]), 'middle', '#0D1B2A', ((cxs[k] - cxs[k - 1]) * s < 42 ? 8 : 10), 600);
+  }
+  o += ln(xd, cy - cys[0] * s, xd, cy - cys[cys.length - 1] * s, '#0D1B2A', 1);
+  for (k = 0; k < cys.length; k++) {
+    ty = cy - cys[k] * s; o += ln(xd - 4, ty, xd + 4, ty, '#0D1B2A', 1);
+    if (k > 0) o += '<text transform="translate(' + (xd + ((cys[k - 1] - cys[k]) * s < 24 ? -7 : 13)) + ',' + ((ty + cy - cys[k - 1] * s) / 2) + ') rotate(-90)" font-family="Plus Jakarta Sans, sans-serif" font-size="' + ((cys[k - 1] - cys[k]) * s < 42 ? 8 : 10) + '" font-weight="600" fill="#0D1B2A" text-anchor="middle">' + fmt(cys[k - 1] - cys[k]) + '</text>';
+  }
+  o += txt(175, cy + P.L / 2 * s + 46, 'Đơn vị m · B<tspan font-size="9" dy="3">đ</tspan><tspan dy="-3"> × L</tspan><tspan font-size="9" dy="3">đ</tspan><tspan dy="-3"> = ' + fmt(P.B) + ' × ' + fmt(P.L) + ' · D = ' + P.D + ' mm</tspan>', 'middle', '#37474f', 10.5);
+  /* mặt cắt (không theo tỉ lệ) */
+  o += '<rect x="350" y="62" width="280" height="190" fill="#efe6d8"/>';
+  o += ln(350, 62, 630, 62, '#6d4c41', 1.6) + txt(626, 56, 'mặt đất', 'end', '#6d4c41', 10);
+  o += txt(490, 16, 'MẶT CẮT ĐỨNG (không theo tỉ lệ)', 'middle', '#0D47A1', 12, 700);
+  o += '<rect x="480" y="44" width="30" height="51" fill="#90a4ae" stroke="#455a64"/>';
+  o += '<rect x="440" y="95" width="110" height="30" fill="#cfd8dc" stroke="#455a64" stroke-width="1.5"/>';
+  [458, 495, 532].forEach(function(px){ o += '<rect x="' + (px - 7) + '" y="125" width="14" height="95" fill="#b0bec5" stroke="#455a64"/>'; });
+  o += ln(495, 24, 495, 42, '#c62828', 2).replace('/>', ' marker-end="url(#ar)"/>') + txt(502, 36, 'N<tspan font-size="9" dy="3">0</tspan>', 'start', '#c62828', 12, 700);
+  o += ln(430, 54, 478, 54, '#c62828', 2).replace('/>', ' marker-end="url(#ar)"/>') + txt(436, 48, 'Q<tspan font-size="9" dy="3">0</tspan>', 'start', '#c62828', 12, 700);
+  o += txt(516, 58, 'M<tspan font-size="9" dy="3">0x</tspan><tspan dy="-3">, M</tspan><tspan font-size="9" dy="3">0y</tspan>', 'start', '#c62828', 11, 700);
+  o += ln(425, 62, 425, 125, '#0D1B2A', 1) + ln(421, 62, 429, 62, '#0D1B2A', 1) + ln(421, 125, 429, 125, '#0D1B2A', 1) + txt(421, 98, 'h<tspan font-size="9" dy="3">m</tspan><tspan dy="-3"> = ' + fmt(P.hm) + '</tspan>', 'end', '#0D1B2A', 11, 600);
+  o += ln(565, 95, 565, 125, '#0D1B2A', 1) + ln(561, 95, 569, 95, '#0D1B2A', 1) + ln(561, 125, 569, 125, '#0D1B2A', 1) + txt(571, 114, 'h<tspan font-size="9" dy="3">đ</tspan><tspan dy="-3"> = ' + fmt(P.hd) + '</tspan>', 'start', '#0D1B2A', 11, 600);
+  o += ln(565, 125, 565, 220, '#0D1B2A', 1) + ln(561, 125, 569, 125, '#0D1B2A', 1) + ln(561, 220, 569, 220, '#0D1B2A', 1) + txt(571, 176, 'L<tspan font-size="9" dy="3">c</tspan><tspan dy="-3"> = ' + P.Lc + ' m</tspan>', 'start', '#0D1B2A', 11, 600);
+  o += txt(490, 242, 'cọc chịu nén hoặc nhổ, đất dưới đài không chịu tải', 'middle', '#5d4037', 10);
+  return o + '</svg>';
+}
+
+/* ================================================================
+   KHỐI 4 — CÂU HỎI CỦA MỖI BỐ TRÍ
+================================================================ */
+function sub(a, b){ return a + '<sub>' + b + '</sub>'; }
+
+function qs(P){
+  var R = P.R, n = P.n, pk = P.pts[P.k];
+  var Q = [];
+  Q.push({ k: 'G', lb: 'Trọng lượng đài và đất trên đài G', ans: R.G, tol: 1, un: 'kN',
+    hint: 'G = γ<sub>tb</sub>·B<sub>đ</sub>·L<sub>đ</sub>·h<sub>m</sub> với γ<sub>tb</sub> = ' + GTB + ' kN/m³ (đài và đất lấp có trọng lượng gần nhau, lấy trung bình)<br>G = ' + GTB + ' × ' + fmt(P.B) + ' × ' + fmt(P.L) + ' × ' + fmt(P.hm) + ' = ___ kN' });
+  Q.push({ k: 'N', lb: 'Tải trọng đứng tại đáy đài N', ans: R.N, tol: 1, un: 'kN',
+    hint: 'N = N<sub>0</sub><sup>tc</sup> + G = ' + P.N0 + ' + G (lấy G ở câu trên) = ___ kN' });
+  Q.push({ k: 'My', lb: 'Momen quanh trục y tại đáy đài M<sub>y</sub>', ans: R.My, tol: 1, un: 'kN·m',
+    hint: 'Lực ngang Q<sub>0</sub> tác dụng theo phương x ở đỉnh đài, cách đáy đài h<sub>đ</sub>, nên sinh thêm momen quanh trục y.<br>M<sub>y</sub> = M<sub>0y</sub> + Q<sub>0</sub>·h<sub>đ</sub> = ' + P.My0 + ' + ' + P.Q0 + ' × ' + fmt(P.hd) + ' = ___ kN·m<br>(M<sub>x</sub> = M<sub>0x</sub> = ' + P.Mx + ' kN·m, vì không có lực ngang theo phương y)' });
+  Q.push({ k: 'Sx2', lb: 'Σx<sub>i</sub>² của các cọc', ans: R.Sx2, tol: 0.01, un: 'm²',
+    hint: 'Cộng bình phương hoành độ x<sub>i</sub> của mọi cọc (cọc nằm trên trục y có x = 0 nên không đóng góp).<br>Σx<sub>i</sub>² = ' + sumTxt(P, 0) + ' = ___ m²' });
+  Q.push({ k: 'Sy2', lb: 'Σy<sub>i</sub>² của các cọc', ans: R.Sy2, tol: 0.01, un: 'm²',
+    hint: 'Cộng bình phương tung độ y<sub>i</sub> của mọi cọc.<br>Σy<sub>i</sub>² = ' + sumTxt(P, 1) + ' = ___ m²' });
+  Q.push({ k: 'Pk', lb: 'Lực tác dụng lên cọc số ' + (P.k + 1) + ', P' + '<sub>' + (P.k + 1) + '</sub>', ans: R.Pi[P.k], tol: 1, un: 'kN',
+    hint: 'P<sub>i</sub> = N/n<sub>c</sub> + M<sub>x</sub>·y<sub>i</sub>/Σy<sub>i</sub>² + M<sub>y</sub>·x<sub>i</sub>/Σx<sub>i</sub>²<br>Cọc số ' + (P.k + 1) + ' có x = ' + fmt(pk[0]) + ' m, y = ' + fmt(pk[1]) + ' m; n<sub>c</sub> = ' + n + '; M<sub>x</sub> = ' + P.Mx + ' kN·m. Lấy N, M<sub>y</sub>, Σx<sub>i</sub>², Σy<sub>i</sub>² ở các câu trên.<br>P<sub>' + (P.k + 1) + '</sub> = N/' + n + ' + ' + P.Mx + ' × (' + fmt(pk[1]) + ')/Σy² + M<sub>y</sub> × (' + fmt(pk[0]) + ')/Σx² = ___ kN' });
+  Q.push({ k: 'Pmax', lb: 'P<sub>max</sub> = max{P<sub>i</sub>}', ans: R.Pmax, tol: 1, un: 'kN',
+    hint: 'Tính P<sub>i</sub> cho từng cọc theo bảng tọa độ rồi chọn giá trị lớn nhất. Cọc chịu lớn nhất là cọc xa trục nhất về phía có momen dương (x, y cùng dấu dương); với bố trí ' + n + ' cọc, hãy tính đủ các cọc ở phía đó rồi so sánh.<br>P<sub>max</sub> = ___ kN' });
+  Q.push({ k: 'Pmin', lb: 'P<sub>min</sub> = min{P<sub>i</sub>}', ans: R.Pmin, tol: 1, un: 'kN',
+    hint: 'Chọn giá trị nhỏ nhất trong các P<sub>i</sub> (cọc đối xứng với cọc chịu lớn nhất qua trọng tâm). Nếu P<sub>min</sub> > 0 thì mọi cọc đều chịu nén, không có cọc bị nhổ.<br>P<sub>min</sub> = ___ kN' });
+  Q.push({ k: 'Gc', lb: 'Trọng lượng bản thân một cọc G<sub>c</sub>', ans: R.Gc, tol: 0.2, un: 'kN',
+    hint: 'G<sub>c</sub> = γ<sub>c</sub>·A<sub>c</sub>·L<sub>c</sub> với γ<sub>c</sub> = ' + GC + ' kN/m³, A<sub>c</sub> = D² = ' + fmt(P.D / 1000) + '² m²<br>G<sub>c</sub> = ' + GC + ' × ' + fmt(P.D / 1000) + '² × ' + P.Lc + ' = ___ kN' });
+  Q.push({ k: 'PmGc', lb: 'P<sub>max</sub> + G<sub>c</sub>', ans: R.PmGc, tol: 1, un: 'kN',
+    hint: 'Lực nén lớn nhất tại đầu cọc cộng trọng lượng cọc, so với [P] = ' + P.Pcap + ' kN.<br>P<sub>max</sub> + G<sub>c</sub> = ___ kN' });
+  Q.push({ k: 'KT', lb: 'Chỉ tiêu kinh tế ([P] − P<sub>max</sub> − G<sub>c</sub>) / [P]', ans: R.KT, tol: 0.3, un: '%',
+    hint: 'Cọc dùng hợp lý khi phần sức chịu tải còn dư không quá 10% [P]. Nếu giá trị âm thì cọc bị quá tải.<br>([P] − P<sub>max</sub> − G<sub>c</sub>)/[P] × 100 = (' + P.Pcap + ' − (P<sub>max</sub> + G<sub>c</sub>)) / ' + P.Pcap + ' × 100 = ___ %' });
+  return Q;
+}
+
+function datTable(P){
+  var rows = [
+    ['n<sub>c</sub>', 'Số cọc trong đài', P.n, 'cọc'],
+    ['D', 'Cạnh tiết diện cọc vuông', P.D, 'mm'],
+    ['L<sub>c</sub>', 'Chiều dài cọc', P.Lc, 'm'],
+    ['[P]', 'Sức chịu tải cho phép của cọc (nén)', P.Pcap, 'kN'],
+    ['B<sub>đ</sub> × L<sub>đ</sub>', 'Kích thước đài (theo x × theo y)', fmt(P.B) + ' × ' + fmt(P.L), 'm'],
+    ['h<sub>đ</sub>', 'Chiều cao đài', fmt(P.hd), 'm'],
+    ['h<sub>m</sub>', 'Độ sâu đáy đài so với mặt đất', fmt(P.hm), 'm'],
+    ['N<sub>0</sub><sup>tc</sup>', 'Tải trọng đứng tiêu chuẩn tại đỉnh đài', P.N0, 'kN'],
+    ['M<sub>0x</sub>', 'Momen tiêu chuẩn quanh trục x', P.Mx, 'kN·m'],
+    ['M<sub>0y</sub>', 'Momen tiêu chuẩn quanh trục y', P.My0, 'kN·m'],
+    ['Q<sub>0</sub>', 'Lực ngang tiêu chuẩn theo phương x', P.Q0, 'kN']
+  ];
+  var h = '<table class="dat-tbl"><tr><th>Ký hiệu</th><th>Ý nghĩa</th><th>Giá trị</th><th>Đơn vị</th></tr>';
+  rows.forEach(function(r){ h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td class="v">' + r[2] + '</td><td>' + r[3] + '</td></tr>'; });
+  return h + '</table>';
+}
+
+function coordTable(P){
+  var h = '<table class="dat-tbl"><tr><th>Cọc</th><th>x<sub>i</sub> (m)</th><th>y<sub>i</sub> (m)</th></tr>';
+  P.pts.forEach(function(p, i){ h += '<tr><td>' + (i + 1) + '</td><td class="v">' + fmt(p[0]) + '</td><td class="v">' + fmt(p[1]) + '</td></tr>'; });
+  return h + '</table>';
+}
+
+var MCQS = [];
+function concBlock(id, P, rng){
+  var R = P.R;
+  var base = ['Đạt cả hai: P<sub>max</sub> + G<sub>c</sub> ≤ [P] và chỉ tiêu kinh tế ≤ 10%',
+              'Không đạt: P<sub>max</sub> + G<sub>c</sub> > [P], cọc bị quá tải',
+              'Đạt về chịu lực nhưng không kinh tế: phần dư sức chịu tải lớn hơn 10% [P]'];
+  var truth = (R.PmGc > P.Pcap) ? 1 : (R.KT > 10 ? 2 : 0);
+  var order = [0, 1, 2], sh = P.shuf % 6, perms = [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+  order = perms[sh];
+  var opts = order.map(function(i){ return base[i]; });
+  var correct = order.indexOf(truth);
+  MCQS.push({ id: id, opts: opts, correct: correct });
+  var expTxt = ['Pmax + Gc ≤ [P] và phần dư không quá 10%: cọc đạt cả điều kiện chịu lực và kinh tế.',
+                'Pmax + Gc lớn hơn [P]: phải tăng sức chịu tải cọc hoặc tăng số cọc.',
+                'Cọc đủ sức chịu nhưng phần dư lớn hơn 10%: có thể giảm chiều dài hoặc tiết diện cọc.'][truth];
+  return '<div class="mcq-wrap"><div class="mcq-q">Kết luận kiểm tra cọc ở giai đoạn sử dụng (điều kiện chịu lực và điều kiện kinh tế):</div>'
+    + '<div class="mcq-opts" id="' + id + '-opts"></div><div class="mcq-exp" id="exp-' + id + '">✓ ' + expTxt + '</div></div>';
+}
+
+function blockHTML(n, dang, P, rng){
+  var withHint = (dang === 'A');
+  var h = '<div class="sub-hd"><span class="tag' + (withHint ? '' : ' c') + '">Dạng ' + dang + '</span>' + (withHint ? 'Có gợi ý đầy đủ' : 'Chỉ có đề bài') + '</div>';
+  h += '<div class="earth-box">Đài ' + n + ' cọc, tải trọng tiêu chuẩn tại đỉnh đài cho trong bảng. Hãy kiểm tra cọc ở giai đoạn sử dụng: lực tác dụng lên từng cọc, P<sub>max</sub>, P<sub>min</sub>, điều kiện chịu lực và điều kiện kinh tế.'
+    + (withHint ? '' : ' Tự xác định tọa độ các cọc từ các khoảng cách ghi trên hình.') + '</div>';
+  h += '<div class="svg-box">' + svgDai(P) + '</div>' + datTable(P);
+  if (withHint) h += '<div class="sub-hd" style="margin-top:8px">Tọa độ các cọc (gốc tại trọng tâm nhóm cọc)</div>' + coordTable(P);
+  qs(P).forEach(function(q){
+    var id = 'n' + n + '-' + dang + '-' + q.k;
+    h += '<div class="q-blk">';
+    if (withHint) h += '<div class="fml-box hint"><div class="fml-title">Gợi ý — ' + q.lb + '</div><div>' + q.hint + '</div></div>';
+    h += makeQ(id, q.lb, q.ans, q.tol, q.un) + '</div>';
+  });
+  h += concBlock('n' + n + '-' + dang + '-kl', P, rng);
+  return h;
+}
+
+function theoryBlock(){
+  var docs = [
+    '<b>Giả thiết:</b> đài thấp, tuyệt đối cứng; cọc không chịu momen uốn do đài truyền xuống; đất dưới đài không chịu tải, cọc chịu toàn bộ tải trọng; mỗi cọc chỉ chịu nén hoặc nhổ.',
+    '<b>Hệ trục:</b> gốc tại trọng tâm đáy đài (cũng là trọng tâm nhóm cọc), x_i và y_i là tọa độ tâm cọc thứ i. Cọc bố trí đối xứng nên trọng tâm nằm ở giữa nhóm.',
+    '<b>Tải trọng:</b> dùng tải tiêu chuẩn tại đáy đài. N = N<sub>0</sub> + G (G là trọng lượng đài cộng đất trên đài); momen tại đáy đài = momen tại đỉnh đài + lực ngang × chiều cao đài.',
+    '<b>Công thức:</b> P<sub>i</sub> = N/n<sub>c</sub> + M<sub>x</sub>·y<sub>i</sub>/Σy<sub>i</sub>² + M<sub>y</sub>·x<sub>i</sub>/Σx<sub>i</sub>². Cọc có tọa độ cùng chiều momen dương chịu lực lớn nhất, cọc đối diện chịu lực nhỏ nhất.',
+    '<b>Điều kiện:</b> (1) P<sub>min</sub> > 0: mọi cọc chịu nén (nếu P<sub>min</sub> < 0 cọc bị nhổ, phải kiểm tra riêng theo sức chịu nhổ). (2) P<sub>max</sub> + G<sub>c</sub> ≤ [P] với G<sub>c</sub> = γ<sub>c</sub>·A<sub>c</sub>·L<sub>c</sub> là trọng lượng cọc. (3) Kinh tế: ([P] − P<sub>max</sub> − G<sub>c</sub>)/[P] ≤ 10%.',
+    '<b>Bốn bố trí cọc dưới đây</b> (4, 5, 6, 7 cọc) dùng cùng công thức, chỉ khác tọa độ cọc. Khoảng cách giữa các cọc từ 3D trở lên.'
+  ];
+  var h = '<div class="card"><div class="card-hd"><i class="ti ti-book"></i><div><h2>Đọc trước: kiểm tra cọc ở giai đoạn sử dụng</h2><p>Phần 3.3.5 của hướng dẫn đồ án móng cọc</p></div></div><div class="card-body"><ul class="know">';
+  docs.forEach(function(d){ h += '<li>' + d + '</li>'; });
+  return h + '</ul></div></div>';
+}
+
+function build(stt){
+  var h = theoryBlock();
+  [4, 5, 6, 7].forEach(function(n){
+    var PA = gen(n, mkRng(stt * 83 + 3000 + n * 101)), PC = gen(n, mkRng(stt * 83 + 7000 + n * 101));
+    var rA = mkRng(stt + n), rC = mkRng(stt + n + 1);
+    h += '<div class="card"><div class="card-hd"><i class="ti ti-grid-dots"></i><div><h2>Đài ' + n + ' cọc</h2><p>Lực tác dụng lên cọc, điều kiện chịu lực và điều kiện kinh tế</p></div><span class="cbadge">A + C</span></div><div class="card-body">'
+      + blockHTML(n, 'A', PA, rA) + blockHTML(n, 'C', PC, rC) + '</div></div>';
+  });
+  $('sol-wrap').innerHTML = h;
+  MCQS.forEach(function(m){ makeMCQGeneric(m.id, m.opts, m.correct); });
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN CLOUDFLARE WORKER
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var lsKey='submitted_'+(window.CHAPTER_ID||'C10-103-KiemTraCocSD')+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){toast('ℹ️ Bạn đã nộp bài này rồi, kết quả đã được ghi nhận.',4000);return;}}catch(e){}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!workerUrl){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  var btnSend=document.getElementById('btn-nop');
+  if(btnSend){btnSend.disabled=true;}
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C10-103-KiemTraCocSD',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {
+      if(btnSend){btnSend.disabled=false;}
+      toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);
+    }
+  })
+  .catch(function(err){
+    if(btnSend){btnSend.disabled=false;}
+    toast('❌ Không kết nối được Worker: '+err.message,5000);
+  });
+}
+
+/* Khóa nút nộp nếu sinh viên đã nộp bài này (đọc localStorage khi tải trang) */
+function checkSubmittedOnLoad(){
+  try{
+    var sv=getSV();
+    if(!sv||!sv.mssv)return;
+    var lsKey='submitted_'+(window.CHAPTER_ID||'C10-103-KiemTraCocSD')+'_'+sv.mssv;
+    if(localStorage.getItem(lsKey)){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.disabled=true;btn.innerHTML='✓ Đã nộp';btn.style.background='rgba(46,125,50,.5)';}
+    }
+  }catch(e){}
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+================================================================ */
+window.CHAPTER_ID = 'C10-103-KiemTraCocSD';
+window.onload = function() {
+  var info = initChapterPage('c10');
+  if (!info.isOpen) return;
+  build(info.stt);
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  updateProg();
+  checkSubmittedOnLoad();
+};
+</script>
+</body>
+</html>
