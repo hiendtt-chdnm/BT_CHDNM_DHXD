@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9.2 — Cấu Tạo, Trình Tự Thi Công & Ứng Dụng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="../assets/css/app-core.css?v=1.0">
+<link rel="stylesheet" href="../assets/css/app-components.css?v=1.0">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<script src="../assets/js/app-engine.js?v=1.0"></script>
+<style>
+/* ── CSS RIÊNG BÀI 9.2: ô chọn, hình minh họa, hàng sắp xếp ── */
+.sel9{font-family:var(--sans);font-size:13px;padding:6px 8px;border:1.5px solid var(--brd);border-radius:8px;background:#fff;color:var(--text);max-width:100%;min-width:200px}
+.sel9:focus{outline:none;border-color:var(--P);box-shadow:0 0 0 3px rgba(21,101,192,.12)}
+.sel9.ok{border-color:var(--G);background:var(--Glt);color:var(--Gdk)}
+.sel9.no{border-color:var(--R);background:var(--Rlt);color:var(--R)}
+.svg-box{background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;margin-bottom:12px;overflow-x:auto}
+.svg-box svg{width:100%;height:auto;min-width:520px;display:block}
+.lbl-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--brd);flex-wrap:wrap}
+.lbl-row:last-child{border-bottom:none}
+.lbl-no{flex:0 0 28px;height:28px;border-radius:50%;background:var(--Pdk);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.lbl-txt{flex:1 1 220px;font-size:13px}
+.ord-set{margin-bottom:18px}
+.ord-set h3{font-size:14px;color:var(--Pdk);margin-bottom:4px}
+.ord-note{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ord-msg{font-size:12px;margin-top:6px;min-height:18px}
+.ord-msg.ok{color:var(--Gdk)}
+.ord-msg.no{color:var(--R)}
+.self-list{margin:6px 0 6px 18px;font-size:13px}
+.self-list li{margin-bottom:3px}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C9.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 9</a>
+    <div class="hdr-title">
+      <h1>9.2 — Cấu Tạo, Trình Tự Thi Công & Ứng Dụng</h1>
+      <p>Điền cấu kiện trên hình · Sắp xếp trình tự · Ghép giải pháp · Đúng/Sai · Tình huống</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 9.2 — Cấu tạo, trình tự thi công & ứng dụng</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:700">Bài tự học có kiểm tra — <span id="sv-display">đang tải...</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65)">Không tính toán. Thứ tự các bước, các dòng và các lựa chọn được xáo theo STT</div>
+  </div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<div class="earth-box" style="margin-bottom:14px">
+  <b>Cách làm:</b> bài này kiểm tra bạn hiểu <b>cấu tạo</b> của từng giải pháp gia cố nền, <b>trình tự thi công</b> và <b>nơi nào dùng</b> giải pháp đó. Nếu chưa biết, hãy đọc lại 9.1 và tự tìm tài liệu, hình ảnh, dự án thực tế (xem phiếu tự học ở cuối trang) rồi quay lại làm. Các ô chọn có thể sửa lại; kết quả tính theo lựa chọn cuối cùng.
+</div>
+
+<!-- ═════ PHẦN I: ĐIỀN CẤU KIỆN TRÊN HÌNH ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-layout-board"></i>
+    <div><h2>Phần I — Điền cấu kiện trên hình vẽ</h2><p>Hai sơ đồ mặt cắt giản lược, không theo tỷ lệ. Chọn tên cấu kiện ứng với từng số.</p></div>
+    <span class="cbadge">12 ô</span>
+  </div>
+  <div class="card-body">
+
+    <h3 style="font-size:14px;color:var(--Pdk);margin-bottom:6px">Hình 1 — Gia tải trước kết hợp bấc thấm</h3>
+    <div class="svg-box">
+<svg viewBox="0 0 650 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mặt cắt gia tải trước kết hợp bấc thấm">
+  <rect x="0" y="0" width="650" height="320" fill="#ffffff"/>
+  <rect x="50" y="240" width="520" height="70" fill="#c8b79a" stroke="#6b5b45"/>
+  <rect x="50" y="120" width="520" height="120" fill="#a9b8c4" stroke="#5c6e7c"/>
+  <rect x="70" y="90" width="500" height="30" fill="#e8d08a" stroke="#9a8440"/>
+  <polygon points="120,90 180,20 460,20 520,90" fill="#b98b5e" stroke="#6e4c2c"/>
+  <line x1="50" y1="120" x2="570" y2="120" stroke="#2e7d32" stroke-width="3" stroke-dasharray="8 4"/>
+  <g fill="#2b2b2b">
+    <rect x="198" y="100" width="6" height="140"/><rect x="248" y="100" width="6" height="140"/>
+    <rect x="298" y="100" width="6" height="140"/><rect x="348" y="100" width="6" height="140"/>
+    <rect x="398" y="100" width="6" height="140"/><rect x="448" y="100" width="6" height="140"/>
+  </g>
+  <g stroke="#0D47A1" stroke-width="1.5" fill="none">
+    <line x1="570" y1="105" x2="598" y2="105"/><line x1="570" y1="180" x2="598" y2="180"/>
+    <line x1="570" y1="275" x2="598" y2="275"/><line x1="254" y1="200" x2="263" y2="200"/>
+    <line x1="25" y1="120" x2="50" y2="120"/>
+  </g>
+  <g fill="#fff" stroke="#0D47A1" stroke-width="2">
+    <circle cx="320" cy="55" r="13"/><circle cx="612" cy="105" r="13"/><circle cx="276" cy="200" r="13"/>
+    <circle cx="612" cy="180" r="13"/><circle cx="612" cy="275" r="13"/><circle cx="13" cy="120" r="12"/>
+  </g>
+  <g font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="700" fill="#0D47A1" text-anchor="middle">
+    <text x="320" y="60">1</text><text x="612" y="110">2</text><text x="276" y="205">3</text>
+    <text x="612" y="185">4</text><text x="612" y="280">5</text><text x="13" y="125">6</text>
+  </g>
+  <text x="325" y="14" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#546E7A">Mặt cắt giản lược · không theo tỷ lệ</text>
+</svg>
+    </div>
+    <div id="a1-rows"></div>
+
+    <h3 style="font-size:14px;color:var(--Pdk);margin:18px 0 6px">Hình 2 — Cọc đất xi măng dưới móng</h3>
+    <div class="svg-box">
+<svg viewBox="0 0 650 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mặt cắt móng trên đệm và cọc đất xi măng">
+  <rect x="0" y="0" width="650" height="320" fill="#ffffff"/>
+  <rect x="60" y="240" width="520" height="62" fill="#c8b79a" stroke="#6b5b45"/>
+  <rect x="60" y="100" width="520" height="140" fill="#a9b8c4" stroke="#5c6e7c"/>
+  <rect x="120" y="70" width="400" height="30" fill="#e8d08a" stroke="#9a8440"/>
+  <line x1="120" y1="88" x2="520" y2="88" stroke="#2e7d32" stroke-width="3" stroke-dasharray="8 4"/>
+  <rect x="180" y="40" width="280" height="30" fill="#9e9e9e" stroke="#555"/>
+  <g stroke="#555" stroke-width="2"><line x1="230" y1="14" x2="230" y2="38"/><line x1="320" y1="14" x2="320" y2="38"/><line x1="410" y1="14" x2="410" y2="38"/></g>
+  <g fill="#555"><polygon points="224,38 236,38 230,46"/><polygon points="314,38 326,38 320,46"/><polygon points="404,38 416,38 410,46"/></g>
+  <g fill="#6d6d6d" stroke="#333">
+    <rect x="170" y="100" width="18" height="140"/><rect x="235" y="100" width="18" height="140"/>
+    <rect x="300" y="100" width="18" height="140"/><rect x="365" y="100" width="18" height="140"/>
+    <rect x="430" y="100" width="18" height="140"/>
+  </g>
+  <g stroke="#0D47A1" stroke-width="1.5" fill="none">
+    <line x1="460" y1="55" x2="520" y2="40"/><line x1="520" y1="80" x2="548" y2="80"/>
+    <line x1="92" y1="88" x2="120" y2="88"/><line x1="318" y1="175" x2="328" y2="175"/>
+    <line x1="580" y1="170" x2="608" y2="170"/><line x1="580" y1="272" x2="608" y2="272"/>
+  </g>
+  <g fill="#fff" stroke="#0D47A1" stroke-width="2">
+    <circle cx="534" cy="36" r="13"/><circle cx="561" cy="80" r="13"/><circle cx="79" cy="88" r="13"/>
+    <circle cx="341" cy="175" r="13"/><circle cx="621" cy="170" r="13"/><circle cx="621" cy="272" r="13"/>
+  </g>
+  <g font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="700" fill="#0D47A1" text-anchor="middle">
+    <text x="534" y="41">1</text><text x="561" y="85">2</text><text x="79" y="93">3</text>
+    <text x="341" y="180">4</text><text x="621" y="175">5</text><text x="621" y="277">6</text>
+  </g>
+  <text x="250" y="12" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#546E7A">Tải công trình</text>
+</svg>
+    </div>
+    <div id="a2-rows"></div>
+
+  </div>
+</div>
+
+<!-- ═════ PHẦN II: SẮP XẾP TRÌNH TỰ THI CÔNG ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-list-numbers"></i>
+    <div><h2>Phần II — Sắp xếp trình tự thi công</h2><p>Các bước bên dưới đã bị xáo thứ tự. Chọn số thứ tự đúng (1 là bước đầu tiên) cho từng bước.</p></div>
+    <span class="cbadge">3 bài</span>
+  </div>
+  <div class="card-body" id="ord-wrap"></div>
+</div>
+
+<!-- ═════ PHẦN III: GHÉP GIẢI PHÁP ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-arrows-join"></i>
+    <div><h2>Phần III — Ghép giải pháp với đặc điểm</h2><p>Mỗi giải pháp dùng đúng một lần. Chọn giải pháp phù hợp với mô tả ở từng dòng.</p></div>
+    <span class="cbadge">6 ô</span>
+  </div>
+  <div class="card-body">
+    <div id="match-rows"></div>
+    <div class="mcq-exp" id="match-exp" style="display:none;margin-top:10px;border:1px solid var(--brd);border-radius:8px"></div>
+  </div>
+</div>
+
+<!-- ═════ PHẦN IV: ĐÚNG / SAI ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-checks"></i>
+    <div><h2>Phần IV — Nhận định Đúng / Sai</h2><p>Về cấu tạo, thi công và phạm vi áp dụng. Chọn một lần, có giải thích sau khi chọn.</p></div>
+    <span class="cbadge">9 câu</span>
+  </div>
+  <div class="card-body" id="tf-wrap"></div>
+</div>
+
+<!-- ═════ PHẦN V: TÌNH HUỐNG ỨNG DỤNG ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-building-bridge"></i>
+    <div><h2>Phần V — Tình huống ứng dụng trong dự án</h2><p>Chọn giải pháp hoặc biện pháp phù hợp. Thứ tự các phương án được xáo theo STT.</p></div>
+    <span class="cbadge">MCQ</span>
+  </div>
+  <div class="card-body" id="mcq-wrap"></div>
+</div>
+
+<!-- ═════ PHẦN VI: PHIẾU TỰ HỌC (không chấm) ═════ -->
+<div class="card">
+  <div class="card-hd"><i class="ti ti-book-2"></i>
+    <div><h2>Phần VI — Phiếu tự học ở nhà (không chấm điểm)</h2><p>Mỗi giải pháp, bạn tự tìm câu trả lời từ giáo trình, tiêu chuẩn, catalogue thiết bị và hồ sơ dự án.</p></div>
+    <span class="cbadge" style="background:#6A1B9A">Tự học</span>
+  </div>
+  <div class="card-body">
+    <div class="step"><div class="step-hd" onclick="togS(this)"><i class="ti ti-help-circle"></i> Với mỗi giải pháp, hãy trả lời 6 câu hỏi sau <i class="ti ti-chevron-down chev" style="margin-left:auto"></i></div>
+      <div class="step-body"><ol class="self-list">
+        <li><b>Cấu tạo:</b> gồm những cấu kiện, vật liệu nào? Vẽ lại mặt cắt và ghi tên từng bộ phận.</li>
+        <li><b>Nguyên lý:</b> làm tăng sức chịu tải, giảm lún hay rút ngắn thời gian lún?</li>
+        <li><b>Trình tự thi công:</b> các bước, thiết bị chính, các khâu cần kiểm soát chất lượng.</li>
+        <li><b>Khi nào dùng:</b> loại đất, chiều dày lớp yếu, tải trọng, mặt bằng, tiến độ.</li>
+        <li><b>Hạn chế:</b> điều kiện không nên dùng, rủi ro, ảnh hưởng đến công trình lân cận.</li>
+        <li><b>Dự án thực tế:</b> tìm ít nhất một dự án có dùng giải pháp này (tên công trình, địa điểm, lý do chọn).</li>
+      </ol></div></div>
+    <div class="step"><div class="step-hd" onclick="togS(this)"><i class="ti ti-search"></i> Giải pháp nên tự tìm hiểu thêm ngoài 9.1 <i class="ti ti-chevron-down chev" style="margin-left:auto"></i></div>
+      <div class="step-body"><ul class="self-list">
+        <li>Đầm động và đầm rung lòng đất cho đất rời.</li>
+        <li>Cọc cát và cọc đá dăm (cột vật liệu rời): cấu tạo, cách thi công, khác biệt giữa hai loại.</li>
+        <li>Hút chân không kết hợp bấc thấm: màng kín khí, ống thu, hệ bơm.</li>
+        <li>Cọc đất xi măng (trộn sâu) và các biến thể trộn khô, trộn ướt.</li>
+        <li>Gia cố bằng vôi hoặc xi măng cho lớp đất mặt.</li>
+        <li>Giải pháp truyền thống tại địa phương (cừ tràm, cọc tre) và vì sao ngày nay ít dùng cho công trình lớn.</li>
+      </ul></div></div>
+    <div class="step"><div class="step-hd" onclick="togS(this)"><i class="ti ti-table"></i> Bảng gợi ý để bạn tự lập (nộp cho giảng viên nếu được yêu cầu) <i class="ti ti-chevron-down chev" style="margin-left:auto"></i></div>
+      <div class="step-body"><p style="font-size:13px">Lập bảng gồm các cột: <b>Giải pháp · Cấu kiện chính · Thiết bị · Các bước thi công · Loại nền phù hợp · Ưu điểm · Hạn chế · Một dự án thực tế (nguồn tài liệu)</b>. Mỗi ô ghi nguồn bạn đã đọc.</p></div></div>
+  </div>
+</div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>9.2 · Cấu tạo, trình tự thi công & ứng dụng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — DỮ LIỆU BÀI 9.2 (toàn bộ nội dung chỉnh ở đây)
+   Mỗi câu trong ANS có một khóa riêng; điểm = số câu đúng / tổng câu.
+   - HINH: hai hình, mỗi hình có danh sách cấu kiện (opts) và đáp án theo số 1..6.
+   - TRINH_TU: các bộ bước thi công; thứ tự trong mảng là thứ tự ĐÚNG.
+   - GHEP: giải pháp và mô tả; mô tả i ứng với giải pháp i.
+   - DUNGSAI: nhận định, đáp án (true = Đúng), giải thích.
+   - TINHHUONG: câu hỏi, đáp án đúng đặt ĐẦU TIÊN trong mảng opts.
+================================================================ */
+var HINH = {
+  a1: {
+    opts: ['Khối đất đắp gia tải trước','Đệm cát thoát nước ngang','Bấc thấm (PVD)','Lớp đất yếu cần xử lý','Lớp đất tốt bên dưới','Vải địa kỹ thuật','Cọc đất xi măng','Móng bê tông cốt thép'],
+    ans:  [0,1,2,3,4,5]
+  },
+  a2: {
+    opts: ['Móng công trình','Đệm cát hoặc đá dăm phân bố tải','Vải (lưới) địa kỹ thuật','Cọc đất xi măng','Lớp đất yếu','Lớp đất tốt đặt mũi cọc','Bấc thấm (PVD)','Khối đất đắp gia tải trước'],
+    ans:  [0,1,2,3,4,5]
+  }
+};
+
+var TRINH_TU = [
+  { id:'t1', tieude:'Bài 1 — Gia tải trước kết hợp bấc thấm',
+    steps:[
+      'Dọn mặt bằng, san phẳng; trải vải địa kỹ thuật (nếu thiết kế yêu cầu) và đắp lớp đệm cát thoát nước ngang',
+      'Định vị các điểm cắm bấc thấm theo lưới thiết kế',
+      'Cắm bấc thấm bằng máy có ống dẫn đến chiều sâu thiết kế, rút ống và cắt bấc, để đầu bấc nằm trong đệm cát',
+      'Đắp gia tải trước theo từng giai đoạn',
+      'Quan trắc lún và áp lực nước lỗ rỗng cho đến khi đạt độ cố kết yêu cầu',
+      'Dỡ phần gia tải không cần thiết và thi công móng, công trình'
+    ],
+    why:'Đệm cát đi trước vì vừa là nền làm việc cho máy, vừa là đường dẫn nước ngang. Bấc phải cắm xong rồi mới đắp tải. Quan trắc quyết định thời điểm dỡ tải.' },
+  { id:'t2', tieude:'Bài 2 — Cọc đất xi măng (trộn sâu)',
+    steps:[
+      'San mặt bằng và định vị tim cọc theo thiết kế',
+      'Đưa máy vào vị trí, dựng cần khoan thẳng đứng',
+      'Hạ cần có cánh trộn xuống độ sâu thiết kế, phun chất kết dính (xi măng) và trộn với đất yếu',
+      'Rút cần lên, tiếp tục trộn để cột đất xi măng đồng đều',
+      'Di chuyển máy sang vị trí cọc kế tiếp, lặp lại các bước trên',
+      'Chờ cọc đóng rắn, kiểm tra chất lượng, rồi thi công đệm cát hoặc đá dăm (kèm vải, lưới địa kỹ thuật) và móng'
+    ],
+    why:'Cọc được tạo tại chỗ bằng cách trộn đất với xi măng nên phải hoàn thành và đóng rắn trước khi đặt đệm phân bố tải và móng lên trên.' },
+  { id:'t3', tieude:'Bài 3 — Thay đất bằng đệm cát',
+    steps:[
+      'Khảo sát, xác định chiều dày lớp đất yếu cần thay và phạm vi hố đào',
+      'Đào bỏ lớp đất yếu đến cao độ thiết kế (có biện pháp thoát nước hố đào nếu cần)',
+      'Kiểm tra, san phẳng đáy hố đào',
+      'Trải vải địa kỹ thuật ngăn cách (nếu thiết kế yêu cầu)',
+      'Đổ cát và đầm chặt từng lớp đến độ chặt thiết kế',
+      'Kiểm tra độ chặt đệm cát bằng thí nghiệm hiện trường rồi mới thi công móng'
+    ],
+    why:'Phải đào xong và kiểm tra đáy trước khi trải vải. Cát đổ và đầm theo từng lớp mỏng; chỉ thi công móng khi đệm đạt độ chặt.' }
+];
+
+var GHEP = {
+  sol: ['Đệm cát (thay đất)','Bấc thấm kết hợp gia tải trước','Cọc đất xi măng','Cọc cát hoặc cọc đá dăm','Vải địa kỹ thuật','Hút chân không'],
+  desc:[
+    'Đào bỏ lớp đất yếu nông, thay bằng vật liệu rời và đầm chặt để tăng sức chịu tải.',
+    'Rút ngắn đường thoát nước của nước lỗ rỗng để nền cố kết nhanh dưới tải đắp.',
+    'Trộn đất yếu tại chỗ với xi măng bằng cần khoan có cánh trộn, tạo cột có cường độ lớn hơn đất xung quanh.',
+    'Cột vật liệu rời được chèn vào nền, làm tăng độ chặt (nhất là cát bụi rời) và tạo thêm đường thoát nước.',
+    'Vật liệu dạng tấm đặt giữa đất yếu và đệm cát, có chức năng ngăn cách, lọc và gia cường.',
+    'Phủ màng kín khí lên đệm cát, nối ống thu và bơm hút để tạo chênh áp, thay một phần tải đắp.'
+  ],
+  why:'Đệm cát: thay đất. Bấc thấm và gia tải: rút ngắn thời gian lún. Cọc đất xi măng: trộn tại chỗ. Cọc cát, cọc đá dăm: cột vật liệu rời. Vải địa kỹ thuật: ngăn cách, lọc, gia cường. Hút chân không: tải trước bằng chênh áp.'
+};
+
+var DUNGSAI = [
+  { t:'Bấc thấm gồm lõi nhựa có rãnh dọc và lớp vỏ vải lọc bọc ngoài; nước đi qua vỏ vào lõi nhưng hạt đất bị giữ lại.', a:true,
+    e:'Cấu tạo bấc thấm: <b>lõi nhựa có rãnh</b> dẫn nước và <b>vỏ vải địa kỹ thuật</b> làm lớp lọc.' },
+  { t:'Trong hệ bấc thấm, lớp đệm cát có nhiệm vụ dẫn nước từ đầu bấc ra khỏi phạm vi xử lý theo phương ngang.', a:true,
+    e:'Nước theo bấc đi lên, sau đó được <b>đệm cát thoát nước ngang</b> dẫn ra ngoài.' },
+  { t:'Cọc đất xi măng được thi công bằng cách đóng hoặc ép cọc bê tông cốt thép đúc sẵn vào nền đất yếu.', a:false,
+    e:'Cọc đất xi măng được <b>tạo tại chỗ</b> bằng cách trộn đất yếu với xi măng. Cọc bê tông cốt thép đúc sẵn thuộc về móng cọc (chương 10).' },
+  { t:'Khi gia tải trước, có thể đắp tải theo từng giai đoạn để đất yếu kịp cố kết và tăng sức chống cắt giữa các giai đoạn.', a:true,
+    e:'Đắp quá nhanh có thể làm nền mất ổn định. Đắp <b>theo giai đoạn</b> kết hợp quan trắc là cách làm thông thường.' },
+  { t:'Đã cắm bấc thấm thì không cần quan trắc lún và áp lực nước lỗ rỗng nữa.', a:false,
+    e:'Quan trắc dùng để theo dõi cố kết và độ ổn định, quyết định tốc độ đắp tải và thời điểm dỡ tải.' },
+  { t:'Vải địa kỹ thuật chỉ có một chức năng là làm khô đất nền.', a:false,
+    e:'Vải địa kỹ thuật có nhiều chức năng: <b>ngăn cách, lọc, gia cường</b> (và tiêu thoát tùy loại).' },
+  { t:'Tác dụng chính của bấc thấm là rút ngắn thời gian lún (đẩy nhanh cố kết).', a:true,
+    e:'Bấc thấm rút ngắn đường thoát nước nên <b>thời gian lún</b> giảm; đây là nhóm giải pháp ở Phần V của 9.1.' },
+  { t:'Cọc đất xi măng vừa thi công xong đã đạt đầy đủ cường độ thiết kế nên có thể chất tải ngay.', a:false,
+    e:'Cột đất xi măng cần <b>thời gian đóng rắn</b> mới đạt cường độ; kiểm tra chất lượng sau khi đóng rắn.' },
+  { t:'Thay đất bằng đệm cát thường phù hợp khi lớp đất yếu mỏng và nằm nông.', a:true,
+    e:'Lớp yếu mỏng và nông thì đào bỏ và thay thế còn khả thi về khối lượng đào và chi phí.' }
+];
+
+var TINHHUONG = [
+  { id:'e1', q:'Đoạn đường đầu cầu đắp trên lớp bùn sét dày khoảng 12 m, yêu cầu rút ngắn thời gian chờ lún. Hệ giải pháp phù hợp nhất là:',
+    opts:['Bấc thấm kết hợp đệm cát thoát nước ngang và gia tải trước.','Chỉ rải một lớp cát mỏng lên mặt nền rồi thi công ngay.','Chỉ trải vải địa kỹ thuật, không có biện pháp thoát nước.','Thay toàn bộ 12 m đất yếu bằng bê tông.'],
+    e:'Bùn sét dày thì lún kéo dài. <b>Bấc thấm</b> rút ngắn đường thoát nước, <b>đệm cát</b> dẫn nước ra ngoài, <b>gia tải trước</b> làm nền lún sớm trước khi xây dựng.' },
+  { id:'e2', q:'Nhà kho nhẹ xây trên lớp đất yếu chỉ dày khoảng 1,5–2 m sát mặt đất, mặt bằng rộng, gần nguồn cát. Giải pháp thường được xét trước vì kinh tế là:',
+    opts:['Đào bỏ lớp đất yếu, thay bằng đệm cát (có thể kèm vải địa kỹ thuật) và đầm chặt từng lớp.','Cọc khoan nhồi sâu hàng chục mét.','Hút chân không toàn bộ mặt bằng.','Cắm bấc thấm sâu 30 m.'],
+    e:'Lớp yếu <b>mỏng và nông</b>, tải nhẹ, có sẵn vật liệu: thay đất bằng đệm cát là phương án gọn và rẻ. Các phương án còn lại quá lớn so với bài toán.' },
+  { id:'e3', q:'Vì sao phải đặt lớp đệm cát hoặc đá dăm (thường kèm vải, lưới địa kỹ thuật) giữa đầu cọc đất xi măng và móng?',
+    opts:['Phân bố tải xuống cọc và đất giữa các cọc để hai thành phần cùng làm việc.','Làm cho cọc đất xi măng đóng rắn nhanh hơn.','Thay thế hoàn toàn vai trò của cọc.','Chỉ để mặt nền đẹp hơn.'],
+    e:'Đệm phân bố tải, tránh tập trung ứng suất ở đầu cọc, giúp <b>cọc và đất giữa cọc cùng chịu tải</b>.' },
+  { id:'e4', q:'Khi gia tải trước có bấc thấm, mục đích chính của quan trắc lún và áp lực nước lỗ rỗng là:',
+    opts:['Theo dõi tiến trình cố kết và độ ổn định để quyết định tốc độ đắp tải và thời điểm dỡ tải.','Chỉ để có số liệu nghiệm thu, không ảnh hưởng đến thi công.','Để đo độ pH của nước trong đất.','Để đếm số lượng bấc thấm đã cắm.'],
+    e:'Số liệu quan trắc là cơ sở điều chỉnh <b>thi công đắp tải</b> và quyết định dỡ tải khi đã đạt độ cố kết yêu cầu.' },
+  { id:'e5', q:'Chất lượng cọc đất xi măng sau thi công thường được kiểm tra bằng cách:',
+    opts:['Khoan lấy mẫu lõi để nén mẫu trong phòng và thí nghiệm nén tại hiện trường.','Chỉ quan sát màu đất trên mặt nền quanh cọc.','Chỉ đo chiều dài cần khoan mà không cần thí nghiệm.','Đợi đến khi công trình nứt rồi mới đánh giá.'],
+    e:'Cọc được tạo trong lòng đất nên không nhìn thấy được; phải <b>lấy mẫu và thí nghiệm</b> để biết cường độ và độ đồng đều.' },
+  { id:'e6', q:'Hút chân không (màng kín khí phủ trên đệm cát, ống thu và bơm hút) khác gia tải trước bằng đất đắp ở điểm nào?',
+    opts:['Tạo tải trước bằng chênh áp dưới màng thay cho khối đất đắp nặng, nhưng cần màng kín khí và bơm hoạt động liên tục.','Không cần đệm cát và không cần ống thu.','Làm tăng tổng độ lún cuối cùng của nền.','Chỉ dùng được cho đất cát sạch.'],
+    e:'Hút chân không dùng <b>chênh áp</b> thay tải đắp. Hệ thống phải <b>kín khí</b> và duy trì bơm; thường kết hợp với bấc thấm để dẫn nước.' }
+];
+
+/* ================================================================
+   KHỐI 2 — HÀM PHỤ: xáo trộn theo STT, ô chọn, chấm
+================================================================ */
+var CORR = {};   /* khóa -> chỉ số đáp án đúng của ô chọn */
+var ORD  = {};   /* mã bộ trình tự -> thông tin các bước */
+var ORDER_SEL = []; /* thứ tự hiển thị các lựa chọn */
+
+function $(id){ return document.getElementById(id); }
+
+/* Xáo mảng chỉ số 0..n-1 bằng PRNG theo seed (bỏ 3 lượt đầu để seed gần nhau ít giống nhau) */
+function shufIdx(n, seed){
+  var rng = seededRng(seed); rng(); rng(); rng();
+  var a = []; for (var i = 0; i < n; i++) a.push(i);
+  for (var j = n - 1; j > 0; j--) {
+    var k = Math.floor(rng() * (j + 1));
+    var t = a[j]; a[j] = a[k]; a[k] = t;
+  }
+  return a;
+}
+
+/* Ô chọn có chấm: id, danh sách tên, chỉ số đúng, thứ tự hiển thị */
+function selHTML(id, opts, ci, order){
+  CORR[id] = ci; ANS[id] = null;
+  var h = '<select class="sel9" id="' + id + '" onchange="chkSel(\'' + id + '\')"><option value="">— chọn —</option>';
+  order.forEach(function(i){ h += '<option value="' + i + '">' + opts[i] + '</option>'; });
+  return h + '</select><span class="chip" id="ck-' + id + '"></span>';
+}
+function chkSel(id){
+  var el = $(id), chip = $('ck-' + id);
+  if (el.value === '') { el.className = 'sel9'; chip.className = 'chip'; chip.textContent = ''; ANS[id] = null; updateProg(); return; }
+  var ok = (parseInt(el.value, 10) === CORR[id]);
+  el.className = 'sel9 ' + (ok ? 'ok' : 'no');
+  chip.className = 'chip ' + (ok ? 'ok' : 'no');
+  chip.textContent = ok ? '✓' : '✗';
+  ANS[id] = ok;
+  updateProg();
+}
+
+/* Chấm bộ trình tự: chỉ tính đúng khi chọn đủ và đúng hết */
+function chkOrd(sid){
+  var set = ORD[sid], n = set.n, filled = 0, allok = true, used = {}, dup = false;
+  for (var i = 0; i < n; i++) {
+    var el = $(sid + '-' + i), chip = $('ck-' + sid + '-' + i);
+    if (el.value === '') { el.className = 'sel9'; chip.className = 'chip'; chip.textContent = ''; allok = false; continue; }
+    filled++;
+    if (used[el.value]) dup = true; used[el.value] = true;
+    var ok = (parseInt(el.value, 10) === set.pos[i]);
+    el.className = 'sel9 ' + (ok ? 'ok' : 'no');
+    chip.className = 'chip ' + (ok ? 'ok' : 'no');
+    chip.textContent = ok ? '✓' : '✗';
+    if (!ok) allok = false;
+  }
+  var msg = $('msg-' + sid);
+  if (filled < n) { ANS[sid] = null; msg.className = 'ord-msg'; msg.textContent = 'Đã chọn ' + filled + '/' + n + ' bước.'; }
+  else {
+    ANS[sid] = allok;
+    if (allok) { msg.className = 'ord-msg ok'; msg.innerHTML = '✓ Đúng trình tự. ' + set.why; }
+    else { msg.className = 'ord-msg no'; msg.textContent = dup ? '✗ Có hai bước trùng số thứ tự, hãy xem lại.' : '✗ Chưa đúng trình tự, hãy sửa các bước bị đánh dấu ✗.'; }
+  }
+  updateProg();
+}
+
+/* Khung một câu MCQ để makeMCQGeneric đổ lựa chọn vào */
+function mcqWrap(id, num, q, exp){
+  return '<div class="mcq-wrap"><div class="mcq-q"><span class="mcq-num">' + num + '</span>' + q + '</div>'
+    + '<div class="mcq-opts" id="' + id + '-opts"></div>'
+    + '<div class="mcq-exp" id="exp-' + id + '">✓ ' + exp + '</div></div>';
+}
+
+/* ================================================================
+   KHỐI 3 — DỰNG GIAO DIỆN THEO STT
+================================================================ */
+function buildAll(stt){
+  var seed = stt * 53 + 9101;
+  var circ = ['①','②','③','④','⑤','⑥'];
+
+  /* Phần I: hai hình */
+  ['a1','a2'].forEach(function(k, hi){
+    var H = HINH[k], order = shufIdx(H.opts.length, seed + hi * 7), h = '';
+    H.ans.forEach(function(ci, i){
+      h += '<div class="lbl-row"><div class="lbl-no">' + (i + 1) + '</div><div class="lbl-txt">Cấu kiện số ' + (i + 1) + ' trên hình là:</div>'
+        + selHTML(k + '-' + i, H.opts, ci, order) + '</div>';
+    });
+    $(k + '-rows').innerHTML = h;
+  });
+
+  /* Phần II: trình tự */
+  var oh = '';
+  TRINH_TU.forEach(function(S, si){
+    var n = S.steps.length, order = shufIdx(n, seed + 100 + si * 11), pos = [], rows = '';
+    order.forEach(function(orig, disp){
+      pos.push(orig + 1);
+      var opts = ''; for (var p = 1; p <= n; p++) opts += '<option value="' + p + '">' + p + '</option>';
+      rows += '<div class="lbl-row"><select class="sel9" style="min-width:90px" id="' + S.id + '-' + disp + '" onchange="chkOrd(\'' + S.id + '\')"><option value="">Bước?</option>' + opts + '</select>'
+        + '<span class="chip" id="ck-' + S.id + '-' + disp + '"></span><div class="lbl-txt">' + S.steps[orig] + '</div></div>';
+    });
+    ORD[S.id] = { n: n, pos: pos, why: S.why }; ANS[S.id] = null;
+    oh += '<div class="ord-set"><h3>' + S.tieude + '</h3><div class="ord-note">Một bài này tính là 1 câu: đúng khi tất cả các bước đều đúng vị trí.</div>'
+      + rows + '<div class="ord-msg" id="msg-' + S.id + '"></div></div>';
+  });
+  $('ord-wrap').innerHTML = oh;
+
+  /* Phần III: ghép giải pháp */
+  var mo = shufIdx(GHEP.desc.length, seed + 300), so = shufIdx(GHEP.sol.length, seed + 311), mh = '';
+  mo.forEach(function(di, r){
+    mh += '<div class="lbl-row"><div class="lbl-no" style="background:var(--P)">' + (r + 1) + '</div><div class="lbl-txt">' + GHEP.desc[di] + '</div>'
+      + selHTML('m' + r, GHEP.sol, di, so) + '</div>';
+  });
+  $('match-rows').innerHTML = mh;
+
+  /* Phần IV: đúng / sai */
+  var td = shufIdx(DUNGSAI.length, seed + 400), th = '';
+  td.forEach(function(di, r){
+    var D = DUNGSAI[di], id = 'd' + r;
+    th += mcqWrap(id, 'Đ' + (r + 1), D.t, D.e);
+  });
+  $('tf-wrap').innerHTML = th;
+  td.forEach(function(di, r){
+    makeMCQGeneric('d' + r, ['Đúng', 'Sai'], DUNGSAI[di].a ? 0 : 1);
+  });
+
+  /* Phần V: tình huống (đáp án đúng đặt đầu mảng, rồi xáo) */
+  var eh = '';
+  TINHHUONG.forEach(function(T, i){ eh += mcqWrap(T.id, 'T' + (i + 1), T.q, T.e); });
+  $('mcq-wrap').innerHTML = eh;
+  TINHHUONG.forEach(function(T, i){
+    var ord = shufIdx(T.opts.length, seed + 500 + i * 13), shuffled = [], correct = 0;
+    ord.forEach(function(o, p){ shuffled.push(T.opts[o]); if (o === 0) correct = p; });
+    makeMCQGeneric(T.id, shuffled, correct);
+  });
+
+  /* Tổng hợp */
+  $('match-exp').innerHTML = '';
+}
+
+/* Giải thích phần III sau khi chọn đủ 6 ô, đúng hết */
+function checkMatchDone(){
+  var all = true, ok = true;
+  for (var r = 0; r < 6; r++) { if (ANS['m' + r] === null) all = false; else if (ANS['m' + r] === false) ok = false; }
+  var ex = $('match-exp');
+  if (all && ok) { ex.style.display = 'block'; ex.className = 'mcq-exp show ok-e'; ex.innerHTML = '✓ ' + GHEP.why; }
+  else ex.style.display = 'none';
+}
+var _chkSelBase = chkSel;
+chkSel = function(id){ _chkSelBase(id); if (id.charAt(0) === 'm') checkMatchDone(); };
+
+/* ================================================================
+   KHỐI 4 — NỘP BÀI LÊN CLOUDFLARE WORKER
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var lsKey='submitted_'+(window.CHAPTER_ID||'C9-92-CauTaoThiCong')+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){toast('ℹ️ Bạn đã nộp bài này rồi, kết quả đã được ghi nhận.',4000);return;}}catch(e){}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!workerUrl){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  var btnSend=document.getElementById('btn-nop');
+  if(btnSend){btnSend.disabled=true;}
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C9-92-CauTaoThiCong',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {
+      if(btnSend){btnSend.disabled=false;}
+      toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);
+    }
+  })
+  .catch(function(err){
+    if(btnSend){btnSend.disabled=false;}
+    toast('❌ Không kết nối được Worker: '+err.message,5000);
+  });
+}
+
+/* Khóa nút nộp nếu sinh viên đã nộp bài này (đọc localStorage khi tải trang) */
+function checkSubmittedOnLoad(){
+  try{
+    var sv=getSV();
+    if(!sv||!sv.mssv)return;
+    var lsKey='submitted_'+(window.CHAPTER_ID||'C9-92-CauTaoThiCong')+'_'+sv.mssv;
+    if(localStorage.getItem(lsKey)){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.disabled=true;btn.innerHTML='✓ Đã nộp';btn.style.background='rgba(46,125,50,.5)';}
+    }
+  }catch(e){}
+}
+
+/* ================================================================
+   KHỐI 5 — KHỞI TẠO TRANG
+================================================================ */
+window.CHAPTER_ID = 'C9-92-CauTaoThiCong';
+window.onload = function() {
+  var info = initChapterPage('c9');
+  if (!info.isOpen) return;
+  buildAll(info.stt);
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  updateProg();
+  checkSubmittedOnLoad();
+};
+</script>
+</body>
+</html>

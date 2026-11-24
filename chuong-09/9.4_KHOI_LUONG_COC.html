@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9.4 — Khối Lượng & Trình Tự Thi Công: Cọc Cát, Cọc Đá Dăm, Cọc Đất Xi Măng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="../assets/css/app-core.css?v=1.0">
+<link rel="stylesheet" href="../assets/css/app-components.css?v=1.0">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<script src="../assets/js/app-engine.js?v=1.0"></script>
+<style>
+/* ── CSS RIÊNG BÀI 9.4/9.5 (cùng khung 9.3) ── */
+.seq{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.seq-card{flex:1 1 140px;max-width:190px;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;text-align:center}
+.seq-card svg{width:100%;height:auto;display:block}
+.seq-card .sq-n{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--Pdk);color:#fff;font-size:12px;font-weight:700;line-height:22px;margin-right:4px}
+.seq-card .sq-t{font-size:12px;font-weight:600;color:var(--Pdk);margin-top:2px}
+.svg-box{background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;margin:10px 0;overflow-x:auto}
+.svg-box svg{width:100%;height:auto;min-width:520px;display:block}
+.dat-tbl{border-collapse:collapse;font-size:13px;margin:8px 0;width:100%}
+.dat-tbl td,.dat-tbl th{border:1px solid var(--brd);padding:4px 8px;text-align:left}
+.dat-tbl th{background:var(--Plt);color:var(--Pdk)}
+.dat-tbl td.v{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.sub-hd{font-size:14px;font-weight:700;color:var(--Pdk);margin:14px 0 4px;display:flex;align-items:center;gap:6px}
+.sub-hd .tag{font-size:11px;color:#fff;background:var(--P);border-radius:6px;padding:1px 8px}
+.sub-hd .tag.c{background:#E65100}
+.q-blk{margin-bottom:10px}
+.know li{margin-bottom:3px}
+.know{margin:6px 0 6px 18px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C9.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 9</a>
+    <div class="hdr-title">
+      <h1>9.4 — Khối Lượng & Trình Tự Thi Công: Cọc Cát, Cọc Đá Dăm, Cọc Đất Xi Măng</h1>
+      <p>Dạng A có gợi ý đầy đủ · Dạng C chỉ có đề · Số liệu sinh theo STT</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 9.4 — Khối lượng cọc cát, đá dăm, đất xi măng</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:700">Bài tính khối lượng — <span id="sv-display">đang tải...</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65)">Kích thước, hệ số và đơn giá sinh theo STT của bạn · cùng STT luôn cùng đề</div>
+  </div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<div class="earth-box" style="margin-bottom:14px">
+  <b>Mục tiêu:</b> không tính kỹ thuật nền móng, mà tính <b>khối lượng thi công và chi phí</b> của giải pháp gia cố nền. Để làm được, bạn phải hiểu cấu tạo, cách bố trí theo lưới, trình tự các bước và vật liệu của từng giải pháp. Hãy xem kỹ hình vẽ và phần "Đọc trước". <b>Đơn giá trong đề là giả định để luyện tập</b>, không phải giá thị trường. Dạng A có gợi ý công thức và số thay (bạn tự điền kết quả). Dạng C chỉ có đề bài.
+</div>
+
+<div id="sol-wrap"></div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>9.4 · Khối lượng cọc cát, đá dăm, đất xi măng</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — HÀM PHỤ (làm tròn, chọn ngẫu nhiên theo STT)
+================================================================ */
+function $(id){ return document.getElementById(id); }
+function fmt(x){ return String(Math.round(x * 1000) / 1000); }        /* hiển thị số, dấu chấm thập phân */
+function ceilS(x){ return Math.ceil(Math.round(x * 1e6) / 1e6); }    /* làm tròn lên, tránh lỗi số thực */
+function mkRng(seed){ var r = seededRng(seed); r(); r(); r(); return r; } /* bỏ 3 lượt đầu */
+function pick(arr, rng){ return arr[Math.floor(rng() * arr.length)]; }
+function ri(a, b, rng){ return a + Math.floor(rng() * (b - a + 1)); }
+
+/* Thể tích khối có đáy chữ nhật dài x rộng, cao h, mái dốc 1:m ra phía ngoài khi đi ra xa mặt đáy nhỏ.
+   Chia thành: hình hộp + 4 lăng trụ tam giác + 4 chóp góc (công thức chính xác). */
+function volMai(L, B, h, m){
+  return h * L * B + m * h * h * (L + B) + 4 / 3 * m * m * h * h * h;
+}
+
+/* ================================================================
+   KHỐI 2 — ĐỊNH NGHĨA CÁC GIẢI PHÁP (nhóm cọc, lưới bố trí vuông)
+   Mỗi giải pháp: tiêu đề, phần đọc trước, các bước thi công,
+   gen(rng) sinh tham số, dat(P) bảng số liệu, de(P) lời đề,
+   svg(P) hình, qs(P) các câu hỏi (C:true = chỉ có ở dạng C).
+   Quy ước lưới: cọc đầu tiên đặt tại góc vùng xử lý, mỗi cạnh có
+   n = ⌊L/s⌋ + 1 cọc; vùng xử lý rộng hơn móng mỗi bên c.
+================================================================ */
+var SOLS = [];
+var PI = Math.PI;
+
+function nGrid(L, s){ return Math.floor(Math.round(L / s * 1e6) / 1e6) + 1; }
+function baseCot(r){
+  var P = { a: ri(14, 30, r), b: ri(8, 16, r), c: pick([0.5, 1.0, 1.5], r), s: pick([1.2, 1.5, 1.8, 2.0], r) };
+  P.Lx = P.a + 2 * P.c; P.Ly = P.b + 2 * P.c;
+  P.nx = nGrid(P.Lx, P.s); P.ny = nGrid(P.Ly, P.s); P.N = P.nx * P.ny;
+  return P;
+}
+function hintN(P){
+  return 'Vùng xử lý: L<sub>x</sub> = a + 2c = ' + fmt(P.a) + ' + 2×' + fmt(P.c) + ' ; L<sub>y</sub> = b + 2c = ' + fmt(P.b) + ' + 2×' + fmt(P.c)
+    + '<br>Mỗi cạnh có n = ⌊L / s⌋ + 1 cọc (cọc đầu tiên đặt ở góc, s = ' + fmt(P.s) + ' m, ⌊ ⌋ là lấy phần nguyên).'
+    + '<br>N = n<sub>x</sub> · n<sub>y</sub> = (⌊L<sub>x</sub>/s⌋ + 1)·(⌊L<sub>y</sub>/s⌋ + 1) = <b>___ cọc</b>';
+}
+function datBase(P){ return [
+  ['a × b', 'Kích thước móng (mặt bằng chữ nhật)', fmt(P.a) + ' × ' + fmt(P.b), 'm'],
+  ['c', 'Vùng xử lý rộng hơn mép móng, mỗi bên', fmt(P.c), 'm'],
+  ['s', 'Khoảng cách giữa các cọc, lưới vuông, cọc đầu tiên ở góc vùng xử lý', fmt(P.s), 'm']
+]; }
+
+/* ---------- 1. CỌC CÁT ---------- */
+SOLS.push({
+  id: 'cat', ten: 'Giải pháp 1 — Cọc cát', icon: 'ti-circles',
+  doc: [
+    '<b>Cấu tạo:</b> cột cát được tạo trong nền bằng cách hạ ống chống đến độ sâu thiết kế, đổ cát vào ống rồi rút ống lên, đồng thời đầm hoặc rung cho cát chặt. Các cọc bố trí theo lưới (vuông hoặc tam giác).',
+    '<b>Tác dụng:</b> làm chặt đất xung quanh, tăng sức chịu tải, giảm lún; với cát bụi rời bão hòa còn giúp giảm nguy cơ hóa lỏng. Cát trong cọc cũng thoát nước tốt hơn đất yếu.',
+    '<b>Tỷ lệ thay thế diện tích</b> a<sub>s</sub> = diện tích tiết diện cọc / diện tích ô lưới mà cọc chiếm. Lưới càng dày hoặc cọc càng to thì a<sub>s</sub> càng lớn và nền càng được gia cố mạnh.',
+    '<b>Điều cần chú ý khi tính khối lượng:</b> số cọc phụ thuộc cách đếm theo lưới; thể tích cọc tính theo tiết diện tròn; cát mua về ở trạng thái rời nên lớn hơn thể tích cọc đã chặt.'
+  ],
+  buoc: ['Định vị cọc', 'Hạ ống chống', 'Đổ cát vào ống', 'Rút ống, đầm chặt cát', 'Đệm, xây móng'],
+  gen: function(r){
+    var P = baseCot(r);
+    P.d = pick([0.4, 0.5, 0.6], r); P.Lc = ri(5, 12, r); P.kd = pick([1.2, 1.25, 1.3], r); P.NS = pick([60, 80, 100, 120], r);
+    P.gc = ri(60, 110, r) * 1000; P.gs = ri(22, 32, r) * 10000;
+    P.Ac = PI * P.d * P.d / 4; P.sumL = P.N * P.Lc; P.V = P.Ac * P.sumL; P.mua = P.V * P.kd;
+    P.as = P.Ac / (P.s * P.s) * 100; P.cost = (P.sumL * P.gc + P.mua * P.gs) / 1e6; P.ca = ceilS(P.sumL / P.NS);
+    return P;
+  },
+  dat: function(P){ return datBase(P).concat([
+    ['d', 'Đường kính cọc cát', fmt(P.d), 'm'],
+    ['L<sub>c</sub>', 'Chiều dài mỗi cọc', fmt(P.Lc), 'm'],
+    ['k<sub>đ</sub>', 'Hệ số: 1 m³ cọc đã chặt cần k<sub>đ</sub> m³ cát rời mua về (kể cả hao hụt)', fmt(P.kd), ''],
+    ['NS', 'Năng suất một máy thi công cọc', fmt(P.NS) + ' m dài cọc/ca', ''],
+    ['Đơn giá (giả định)', 'Thi công cọc: ' + fmt(P.gc) + ' đ/m dài · Cát mua về: ' + fmt(P.gs) + ' đ/m³ rời', '', '']
+  ]); },
+  de: function(P){ return 'Một móng chữ nhật <b>' + fmt(P.a) + ' m × ' + fmt(P.b) + ' m</b> trên nền cát bụi rời được gia cố bằng cọc cát đường kính <b>' + fmt(P.d) + ' m</b>, dài <b>' + fmt(P.Lc) + ' m</b>, bố trí lưới vuông <b>' + fmt(P.s) + ' m</b> trong vùng xử lý rộng hơn móng mỗi bên <b>' + fmt(P.c) + ' m</b>.'; },
+  svg: function(P){ return svgPlanSec(P, { type: 'col', col: '#e8d08a', w: 10, d: P.d, lbl: 'cọc cát', L: P.Lc }); },
+  qs: function(P){ return [
+    { k: 'q1', lb: 'Số cọc cát', un: 'cọc', ans: P.N, hint: hintN(P) },
+    { k: 'q2', lb: 'Tổng chiều dài cọc', un: 'm', ans: P.sumL, hint: 'Tổng chiều dài = N × L<sub>c</sub> = N × ' + fmt(P.Lc) + ' = <b>___ m</b>' },
+    { k: 'q3', lb: 'Thể tích cát trong các cọc (đã chặt)', un: 'm³', ans: P.V,
+      hint: 'Tiết diện một cọc A = π·d²/4 = π × ' + fmt(P.d) + '² / 4<br>V = A × tổng chiều dài = <b>___ m³</b>' },
+    { k: 'q4', lb: 'Khối lượng cát mua về (rời)', un: 'm³', ans: P.mua, hint: 'Cát mua = V × k<sub>đ</sub> = V × ' + fmt(P.kd) + ' = <b>___ m³</b>' },
+    { k: 'q5', lb: 'Tỷ lệ thay thế diện tích a<sub>s</sub>', un: '%', ans: P.as,
+      hint: 'Lưới vuông: mỗi cọc chiếm một ô s × s.<br>a<sub>s</sub> = A / s² × 100 = (π·' + fmt(P.d) + '²/4) / ' + fmt(P.s) + '² × 100 = <b>___ %</b>' },
+    { k: 'q6', lb: 'Tổng chi phí (thi công cọc + cát)', un: 'triệu đồng', ans: P.cost, tol: 0.05,
+      hint: 'Tổng = tổng chiều dài·đơn giá thi công + cát mua·đơn giá cát, chia 1 000 000 = <b>___ triệu đồng</b>' },
+    { k: 'q7', lb: 'Số ca máy thi công cọc (làm tròn lên)', un: 'ca', ans: P.ca, C: true, hint: '' }
+  ]; }
+});
+
+/* ---------- 2. CỌC ĐÁ DĂM ---------- */
+SOLS.push({
+  id: 'da', ten: 'Giải pháp 2 — Cọc đá dăm', icon: 'ti-grain',
+  doc: [
+    '<b>Cấu tạo:</b> cột đá dăm tạo trong nền đất yếu bằng cách khoan hoặc rung tạo lỗ, đổ đá dăm từng đoạn rồi đầm rung. Phía trên đầu cọc có lớp đệm đá dăm để phân bố tải.',
+    '<b>Tác dụng:</b> cột đá cứng hơn đất xung quanh nên nhận một phần tải lớn; đồng thời là đường thoát nước giúp đất yếu cố kết nhanh hơn. Thường dùng cho đất dính yếu.',
+    '<b>Điều cần chú ý khi tính khối lượng:</b> đá dăm gồm hai phần là cột đá và lớp đệm đầu cọc; cả hai đều mua về ở trạng thái rời nên cần nhân hệ số k<sub>đ</sub>. Cọc đá thường có đường kính lớn hơn cọc cát.'
+  ],
+  buoc: ['Định vị cọc', 'Tạo lỗ (khoan hoặc rung)', 'Đổ đá dăm từng đoạn', 'Đầm rung đá, nâng dần', 'Đệm đá dăm, xây móng'],
+  gen: function(r){
+    var P = baseCot(r);
+    P.d = pick([0.6, 0.8, 1.0], r); P.Lc = ri(4, 10, r); P.kd = pick([1.25, 1.3, 1.35, 1.4], r); P.td = pick([0.3, 0.4, 0.5], r);
+    P.NS = pick([50, 70, 90], r); P.gc = ri(90, 150, r) * 1000; P.gda = ri(30, 42, r) * 10000;
+    P.Ac = PI * P.d * P.d / 4; P.sumL = P.N * P.Lc; P.Vcot = P.Ac * P.sumL; P.Vdem = P.Lx * P.Ly * P.td;
+    P.tong = (P.Vcot + P.Vdem) * P.kd; P.as = P.Ac / (P.s * P.s) * 100;
+    P.cost = (P.sumL * P.gc + P.tong * P.gda) / 1e6; P.ca = ceilS(P.sumL / P.NS);
+    return P;
+  },
+  dat: function(P){ return datBase(P).concat([
+    ['d', 'Đường kính cọc đá dăm', fmt(P.d), 'm'],
+    ['L<sub>c</sub>', 'Chiều dài mỗi cọc', fmt(P.Lc), 'm'],
+    ['t<sub>đ</sub>', 'Lớp đệm đá dăm trên đầu cọc, phủ kín vùng xử lý L<sub>x</sub> × L<sub>y</sub>', fmt(P.td), 'm'],
+    ['k<sub>đ</sub>', 'Hệ số: 1 m³ đá đã lèn chặt cần k<sub>đ</sub> m³ đá dăm rời mua về', fmt(P.kd), ''],
+    ['NS', 'Năng suất một máy thi công cọc', fmt(P.NS) + ' m dài cọc/ca', ''],
+    ['Đơn giá (giả định)', 'Thi công cọc: ' + fmt(P.gc) + ' đ/m dài · Đá dăm mua về: ' + fmt(P.gda) + ' đ/m³ rời', '', '']
+  ]); },
+  de: function(P){ return 'Nền đất sét yếu dưới móng <b>' + fmt(P.a) + ' m × ' + fmt(P.b) + ' m</b> được gia cố bằng cọc đá dăm đường kính <b>' + fmt(P.d) + ' m</b>, dài <b>' + fmt(P.Lc) + ' m</b>, lưới vuông <b>' + fmt(P.s) + ' m</b>, vùng xử lý rộng hơn móng mỗi bên <b>' + fmt(P.c) + ' m</b>. Trên đầu cọc là lớp đệm đá dăm dày <b>' + fmt(P.td) + ' m</b>.'; },
+  svg: function(P){ return svgPlanSec(P, { type: 'col', col: '#b7bcc2', w: 12, d: P.d, lbl: 'cọc đá dăm', L: P.Lc, dem: '#d7d9dc', demLbl: 'đệm đá dăm' }); },
+  qs: function(P){ return [
+    { k: 'q1', lb: 'Số cọc đá dăm', un: 'cọc', ans: P.N, hint: hintN(P) },
+    { k: 'q2', lb: 'Thể tích các cột đá (đã lèn chặt)', un: 'm³', ans: P.Vcot,
+      hint: 'Tổng chiều dài = N × L<sub>c</sub> = N × ' + fmt(P.Lc) + '<br>V<sub>cột</sub> = π·d²/4 × tổng chiều dài = π × ' + fmt(P.d) + '² / 4 × tổng chiều dài = <b>___ m³</b>' },
+    { k: 'q3', lb: 'Thể tích lớp đệm đá dăm đầu cọc', un: 'm³', ans: P.Vdem,
+      hint: 'V<sub>đệm</sub> = L<sub>x</sub> × L<sub>y</sub> × t<sub>đ</sub> = L<sub>x</sub> × L<sub>y</sub> × ' + fmt(P.td) + ' = <b>___ m³</b>' },
+    { k: 'q4', lb: 'Tổng khối lượng đá dăm mua về (rời)', un: 'm³', ans: P.tong,
+      hint: 'Đá dăm mua = (V<sub>cột</sub> + V<sub>đệm</sub>) × k<sub>đ</sub> = (V<sub>cột</sub> + V<sub>đệm</sub>) × ' + fmt(P.kd) + ' = <b>___ m³</b>' },
+    { k: 'q5', lb: 'Tỷ lệ thay thế diện tích a<sub>s</sub>', un: '%', ans: P.as,
+      hint: 'a<sub>s</sub> = (π·d²/4) / s² × 100 = (π·' + fmt(P.d) + '²/4) / ' + fmt(P.s) + '² × 100 = <b>___ %</b>' },
+    { k: 'q6', lb: 'Tổng chi phí (thi công cọc + đá dăm)', un: 'triệu đồng', ans: P.cost, tol: 0.05,
+      hint: 'Tổng = tổng chiều dài cọc·đơn giá thi công + đá dăm mua·đơn giá đá, chia 1 000 000 = <b>___ triệu đồng</b>' },
+    { k: 'q7', lb: 'Số ca máy thi công cọc (làm tròn lên)', un: 'ca', ans: P.ca, C: true, hint: '' }
+  ]; }
+});
+
+/* ---------- 3. CỌC ĐẤT XI MĂNG ---------- */
+SOLS.push({
+  id: 'cdm', ten: 'Giải pháp 3 — Cọc đất xi măng', icon: 'ti-cylinder',
+  doc: [
+    '<b>Cấu tạo:</b> cột đất xi măng được tạo tại chỗ bằng máy có cần khoan gắn cánh trộn: hạ cần đến độ sâu thiết kế, phun chất kết dính (xi măng, dạng bột hoặc vữa) và trộn với đất yếu, rút cần lên để lại cột đất đã trộn. Trên đầu cọc thường có đệm cát hoặc đá dăm kèm vải, lưới địa kỹ thuật.',
+    '<b>Tác dụng:</b> cột sau khi đóng rắn có cường độ và độ cứng lớn hơn đất xung quanh, làm tăng sức chịu tải và giảm lún.',
+    '<b>Hàm lượng xi măng</b> là khối lượng xi măng trộn vào mỗi m³ đất được xử lý (kg/m³). Đây là thông số chính quyết định lượng xi măng và chi phí.',
+    '<b>Điều cần chú ý khi tính khối lượng:</b> xi măng thường mua theo tấn và bán lẻ theo bao 50 kg; số bao làm tròn lên. Cọc cần thời gian đóng rắn trước khi chất tải.'
+  ],
+  buoc: ['Định vị, dựng máy', 'Hạ cần trộn xuống', 'Phun xi măng và trộn', 'Rút cần, cột đóng rắn', 'Đệm phân bố tải, xây móng'],
+  gen: function(r){
+    var P = baseCot(r);
+    P.d = pick([0.6, 0.8, 1.0], r); P.Lc = ri(6, 14, r); P.hl = pick([120, 150, 180, 200], r); P.NS = pick([60, 80, 100], r);
+    P.gc = ri(180, 280, r) * 1000; P.gxm = ri(14, 19, r) * 100000;
+    P.Ac = PI * P.d * P.d / 4; P.sumL = P.N * P.Lc; P.V = P.Ac * P.sumL; P.xm = P.V * P.hl / 1000; P.bao = ceilS(P.xm * 1000 / 50);
+    P.as = P.Ac / (P.s * P.s) * 100; P.cost = (P.sumL * P.gc + P.xm * P.gxm) / 1e6; P.ca = ceilS(P.sumL / P.NS);
+    return P;
+  },
+  dat: function(P){ return datBase(P).concat([
+    ['d', 'Đường kính cột đất xi măng', fmt(P.d), 'm'],
+    ['L<sub>c</sub>', 'Chiều dài mỗi cột', fmt(P.Lc), 'm'],
+    ['Hàm lượng', 'Khối lượng xi măng trộn vào mỗi m³ đất được xử lý', fmt(P.hl), 'kg/m³'],
+    ['NS', 'Năng suất một máy trộn', fmt(P.NS) + ' m dài cột/ca', ''],
+    ['Đơn giá (giả định)', 'Thi công cột (chưa gồm xi măng): ' + fmt(P.gc) + ' đ/m dài · Xi măng: ' + fmt(P.gxm) + ' đ/tấn · Bao xi măng 50 kg', '', '']
+  ]); },
+  de: function(P){ return 'Nền đất yếu dưới móng <b>' + fmt(P.a) + ' m × ' + fmt(P.b) + ' m</b> được gia cố bằng cọc đất xi măng đường kính <b>' + fmt(P.d) + ' m</b>, dài <b>' + fmt(P.Lc) + ' m</b>, lưới vuông <b>' + fmt(P.s) + ' m</b>, vùng xử lý rộng hơn móng mỗi bên <b>' + fmt(P.c) + ' m</b>. Hàm lượng xi măng <b>' + fmt(P.hl) + ' kg/m³</b>.'; },
+  svg: function(P){ return svgPlanSec(P, { type: 'col', col: '#6d6d6d', w: 14, d: P.d, lbl: 'cọc đất xi măng', L: P.Lc }); },
+  qs: function(P){ return [
+    { k: 'q1', lb: 'Số cọc đất xi măng', un: 'cọc', ans: P.N, hint: hintN(P) },
+    { k: 'q2', lb: 'Thể tích đất được trộn xi măng', un: 'm³', ans: P.V,
+      hint: 'Tổng chiều dài = N × L<sub>c</sub> = N × ' + fmt(P.Lc) + '<br>V = π·d²/4 × tổng chiều dài = π × ' + fmt(P.d) + '² / 4 × tổng chiều dài = <b>___ m³</b>' },
+    { k: 'q3', lb: 'Khối lượng xi măng', un: 'tấn', ans: P.xm,
+      hint: 'Xi măng = V × hàm lượng / 1000 = V × ' + fmt(P.hl) + ' / 1000 = <b>___ tấn</b>' },
+    { k: 'q4', lb: 'Số bao xi măng 50 kg (làm tròn lên)', un: 'bao', ans: P.bao,
+      hint: 'Số bao = (khối lượng xi măng theo tấn × 1000) / 50 → làm tròn lên số nguyên = <b>___ bao</b>' },
+    { k: 'q5', lb: 'Tỷ lệ thay thế diện tích a<sub>s</sub>', un: '%', ans: P.as,
+      hint: 'a<sub>s</sub> = (π·d²/4) / s² × 100 = (π·' + fmt(P.d) + '²/4) / ' + fmt(P.s) + '² × 100 = <b>___ %</b>' },
+    { k: 'q6', lb: 'Tổng chi phí (thi công cột + xi măng)', un: 'triệu đồng', ans: P.cost, tol: 0.05,
+      hint: 'Tổng = tổng chiều dài·đơn giá thi công + xi măng (tấn)·đơn giá xi măng, chia 1 000 000 = <b>___ triệu đồng</b>' },
+    { k: 'q7', lb: 'Số ca máy trộn (làm tròn lên)', un: 'ca', ans: P.ca, C: true, hint: '' }
+  ]; }
+});
+
+/* ================================================================
+   KHỐI 3 — HÌNH MẶT BẰNG VÀ MẶT CẮT THEO SỐ LIỆU CỦA SINH VIÊN
+================================================================ */
+function svgHead(){ return '<svg viewBox="0 0 640 270" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="640" height="270" fill="#fff"/>'; }
+function txt(x, y, s, anchor, fill, size){ return '<text x="' + x + '" y="' + y + '" font-family="Plus Jakarta Sans, sans-serif" font-size="' + (size || 12) + '" fill="' + (fill || '#0D1B2A') + '" text-anchor="' + (anchor || 'middle') + '">' + s + '</text>'; }
+
+function halo(x, y, s){ return '<text x="' + x + '" y="' + y + '" font-family="Plus Jakarta Sans, sans-serif" font-size="12" font-weight="700" fill="#263238" text-anchor="middle" stroke="#fff" stroke-width="4" paint-order="stroke">' + s + '</text>'; }
+
+function svgPlanSec(P, K){
+  var o = svgHead();
+  /* mặt bằng (trái) */
+  var ox = 18, oy = 36, sp = Math.min(290 / P.Lx, 175 / P.Ly), W = P.Lx * sp, Hh = P.Ly * sp;
+  o += txt(ox + 145, 20, 'MẶT BẰNG vùng xử lý (lưới vuông)', 'middle', '#0D47A1', 12);
+  o += '<rect x="' + ox + '" y="' + oy + '" width="' + W + '" height="' + Hh + '" fill="#eef5fb" stroke="#0D47A1"/>';
+  o += '<rect x="' + (ox + P.c * sp) + '" y="' + (oy + P.c * sp) + '" width="' + (P.a * sp) + '" height="' + (P.b * sp) + '" fill="#cfd8dc" stroke="#607d8b" stroke-dasharray="5 3"/>';
+  var rr = Math.max(1.6, Math.min(5, (K.d || 0.3) / 2 * sp));
+  for (var j = 0; j < P.ny; j++) for (var i = 0; i < P.nx; i++)
+    o += '<circle cx="' + (ox + i * P.s * sp).toFixed(1) + '" cy="' + (oy + j * P.s * sp).toFixed(1) + '" r="' + rr.toFixed(1) + '" fill="' + K.col + '" stroke="#444" stroke-width="0.6"/>';
+  o += halo(ox + W / 2, oy + Hh / 2 + 4, 'móng ' + fmt(P.a) + ' × ' + fmt(P.b) + ' m');
+  o += txt(ox, oy + Hh + 16, 's = ' + fmt(P.s) + ' m · c = ' + fmt(P.c) + ' m mỗi bên · cọc đầu tiên ở góc', 'start', '#0D47A1', 11);
+  /* mặt cắt (phải) */
+  var sx = 350, sw = 275, g0 = 120, H = 80, gy = g0 + H;
+  o += txt(sx + sw / 2, 20, 'MẶT CẮT (giản lược, không theo tỷ lệ)', 'middle', '#0D47A1', 12);
+  o += '<rect x="' + sx + '" y="' + g0 + '" width="' + sw + '" height="' + H + '" fill="#a9b8c4" stroke="#5c6e7c"/>';
+  o += '<rect x="' + sx + '" y="' + gy + '" width="' + sw + '" height="40" fill="#c8b79a" stroke="#6b5b45"/>';
+  for (var k = 0; k < 6; k++) { var cxk = sx + 22 + k * (sw - 44) / 5;
+    o += '<rect x="' + (cxk - K.w / 2) + '" y="' + g0 + '" width="' + K.w + '" height="' + H + '" fill="' + K.col + '" stroke="#333"/>'; }
+  var yb = g0;
+  if (K.dem) { o += '<rect x="' + sx + '" y="' + (g0 - 14) + '" width="' + sw + '" height="14" fill="' + K.dem + '" stroke="#777"/>' + txt(sx + 6, g0 - 3, K.demLbl, 'start', '#37474f', 10); yb = g0 - 14; }
+  o += '<rect x="' + (sx + 60) + '" y="' + (yb - 20) + '" width="155" height="20" fill="#9e9e9e" stroke="#555"/>' + txt(sx + 137, yb - 6, 'móng', 'middle', '#fff', 11);
+  o += txt(sx + 6, gy + 56, 'đất tốt', 'start', '#37474f', 11);
+  o += txt(sx + sw / 2, gy + 66, K.lbl + ': d = ' + fmt(K.d) + ' m, L = ' + fmt(K.L) + ' m (đến đáy lớp đất yếu)', 'middle', '#0D47A1', 11);
+  return o + '</svg>';
+}
+
+/* Hình nhỏ minh họa từng bước thi công (120 x 80) */
+var SK = {
+  cat: { seq: ['mark', 'hole', 'part', 'pull', 'top'], col: '#e8d08a' },
+  da:  { seq: ['mark', 'hole', 'part', 'full', 'top'], col: '#b7bcc2' },
+  cdm: { seq: ['mark', 'rod', 'mix', 'full', 'top'], col: '#6d6d6d' }
+};
+function sketch(sid, i){
+  var K = SK[sid], k = K.seq[i], c = K.col;
+  var o = '<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="80" fill="#fff"/>';
+  o += '<rect x="0" y="34" width="120" height="28" fill="#a9b8c4"/><rect x="0" y="62" width="120" height="18" fill="#c8b79a"/>';
+  var col = '<rect x="53" y="34" width="14" height="28" fill="' + c + '" stroke="#333"/>';
+  if (k === 'mark') [30, 60, 90].forEach(function(x){ o += '<polygon points="' + (x - 4) + ',27 ' + (x + 4) + ',27 ' + x + ',34" fill="#c62828"/>'; });
+  if (k === 'hole') o += '<rect x="53" y="34" width="14" height="28" fill="#fff" stroke="#333"/>';
+  if (k === 'part') o += '<rect x="53" y="34" width="14" height="28" fill="#fff" stroke="#333"/><rect x="53" y="48" width="14" height="14" fill="' + c + '" stroke="#333"/>';
+  if (k === 'pull') o += col + '<line x1="60" y1="14" x2="60" y2="28" stroke="#c62828" stroke-width="2"/><polygon points="55,16 65,16 60,8" fill="#c62828"/>';
+  if (k === 'full') o += col;
+  if (k === 'top') o += col + '<rect x="8" y="26" width="104" height="8" fill="#e8d08a" stroke="#9a8440"/><rect x="36" y="10" width="48" height="16" fill="#9e9e9e" stroke="#555"/>';
+  if (k === 'rod' || k === 'mix') {
+    if (k === 'mix') o += '<rect x="48" y="44" width="24" height="18" fill="' + c + '" fill-opacity="0.45" stroke="#555" stroke-dasharray="3 2"/>';
+    o += '<line x1="60" y1="10" x2="60" y2="62" stroke="#222" stroke-width="3"/><rect x="54" y="60" width="12" height="4" fill="#222"/>';
+  }
+  return o + '</svg>';
+}
+
+/* ================================================================
+   KHỐI 4 — DỰNG TRANG
+================================================================ */
+function datTable(rows){
+  var h = '<table class="dat-tbl"><tr><th>Ký hiệu</th><th>Ý nghĩa</th><th>Giá trị</th><th>Đơn vị</th></tr>';
+  rows.forEach(function(r){ h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td class="v">' + r[2] + '</td><td>' + r[3] + '</td></tr>'; });
+  return h + '</table>';
+}
+
+function blockHTML(S, dang, P){
+  var withHint = (dang === 'A');
+  var h = '<div class="sub-hd"><span class="tag' + (withHint ? '' : ' c') + '">Dạng ' + dang + '</span>' + (withHint ? 'Có gợi ý đầy đủ' : 'Chỉ có đề bài') + '</div>';
+  h += '<div class="earth-box">' + S.de(P) + '</div><div class="svg-box">' + S.svg(P) + '</div>' + datTable(S.dat(P));
+  S.qs(P).forEach(function(q){
+    if (q.C && withHint) return;
+    var id = S.id + '-' + dang + '-' + q.k;
+    h += '<div class="q-blk">';
+    if (withHint && q.hint) h += '<div class="fml-box hint"><div class="fml-title">Gợi ý — ' + q.lb + '</div><div>' + q.hint + '</div></div>';
+    h += makeQ(id, q.lb, q.ans, q.tol || 0.5, q.un) + '</div>';
+  });
+  return h;
+}
+
+function build(stt){
+  var h = '';
+  SOLS.forEach(function(S, si){
+    var seq = '<div class="seq">';
+    S.buoc.forEach(function(b, i){
+      seq += '<div class="seq-card">' + sketch(S.id, i) + '<div class="sq-t"><span class="sq-n">' + (i + 1) + '</span>' + b + '</div></div>';
+    });
+    seq += '</div>';
+    var know = '<div class="step"><div class="step-hd" onclick="togS(this)"><i class="ti ti-book"></i> Đọc trước: cấu tạo, tác dụng, điều cần chú ý <i class="ti ti-chevron-down chev" style="margin-left:auto"></i></div><div class="step-body"><ul class="know">';
+    S.doc.forEach(function(d){ know += '<li>' + d + '</li>'; });
+    know += '</ul></div></div>';
+    var PA = S.gen(mkRng(stt * 71 + 1000 + si * 97)), PC = S.gen(mkRng(stt * 71 + 5000 + si * 97));
+    h += '<div class="card"><div class="card-hd"><i class="ti ' + S.icon + '"></i><div><h2>' + S.ten + '</h2><p>Trình tự thi công và khối lượng</p></div><span class="cbadge">A + C</span></div><div class="card-body">'
+      + know + '<div class="sub-hd">Trình tự thi công</div>' + seq
+      + blockHTML(S, 'A', PA) + blockHTML(S, 'C', PC) + '</div></div>';
+  });
+  $('sol-wrap').innerHTML = h;
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN CLOUDFLARE WORKER
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var lsKey='submitted_'+(window.CHAPTER_ID||'C9-94-KhoiLuongCoc')+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){toast('ℹ️ Bạn đã nộp bài này rồi, kết quả đã được ghi nhận.',4000);return;}}catch(e){}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!workerUrl){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  var btnSend=document.getElementById('btn-nop');
+  if(btnSend){btnSend.disabled=true;}
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C9-94-KhoiLuongCoc',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {
+      if(btnSend){btnSend.disabled=false;}
+      toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);
+    }
+  })
+  .catch(function(err){
+    if(btnSend){btnSend.disabled=false;}
+    toast('❌ Không kết nối được Worker: '+err.message,5000);
+  });
+}
+
+/* Khóa nút nộp nếu sinh viên đã nộp bài này (đọc localStorage khi tải trang) */
+function checkSubmittedOnLoad(){
+  try{
+    var sv=getSV();
+    if(!sv||!sv.mssv)return;
+    var lsKey='submitted_'+(window.CHAPTER_ID||'C9-94-KhoiLuongCoc')+'_'+sv.mssv;
+    if(localStorage.getItem(lsKey)){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.disabled=true;btn.innerHTML='✓ Đã nộp';btn.style.background='rgba(46,125,50,.5)';}
+    }
+  }catch(e){}
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+================================================================ */
+window.CHAPTER_ID = 'C9-94-KhoiLuongCoc';
+window.onload = function() {
+  var info = initChapterPage('c9');
+  if (!info.isOpen) return;
+  build(info.stt);
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  updateProg();
+  checkSubmittedOnLoad();
+};
+</script>
+</body>
+</html>

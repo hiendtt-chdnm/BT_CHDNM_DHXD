@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9.3 — Khối Lượng & Trình Tự Thi Công: Đệm Cát, Đệm Đá Dăm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="../assets/css/app-core.css?v=1.0">
+<link rel="stylesheet" href="../assets/css/app-components.css?v=1.0">
+<script src="../config.js" onerror="console.log('[NCM] config.js not found')"></script>
+<script src="../assets/js/app-engine.js?v=1.0"></script>
+<style>
+/* ── CSS RIÊNG BÀI 9.3 ── */
+.seq{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.seq-card{flex:1 1 140px;max-width:190px;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;text-align:center}
+.seq-card svg{width:100%;height:auto;display:block}
+.seq-card .sq-n{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--Pdk);color:#fff;font-size:12px;font-weight:700;line-height:22px;margin-right:4px}
+.seq-card .sq-t{font-size:12px;font-weight:600;color:var(--Pdk);margin-top:2px}
+.svg-box{background:#fff;border:1px solid var(--brd);border-radius:10px;padding:6px;margin:10px 0;overflow-x:auto}
+.svg-box svg{width:100%;height:auto;min-width:520px;display:block}
+.dat-tbl{border-collapse:collapse;font-size:13px;margin:8px 0;width:100%}
+.dat-tbl td,.dat-tbl th{border:1px solid var(--brd);padding:4px 8px;text-align:left}
+.dat-tbl th{background:var(--Plt);color:var(--Pdk)}
+.dat-tbl td.v{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.sub-hd{font-size:14px;font-weight:700;color:var(--Pdk);margin:14px 0 4px;display:flex;align-items:center;gap:6px}
+.sub-hd .tag{font-size:11px;color:#fff;background:var(--P);border-radius:6px;padding:1px 8px}
+.sub-hd .tag.c{background:#E65100}
+.q-blk{margin-bottom:10px}
+.know li{margin-bottom:3px}
+.know{margin:6px 0 6px 18px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="index_C9.html" class="back-btn"><i class="ti ti-arrow-left"></i> Chương 9</a>
+    <div class="hdr-title">
+      <h1>9.3 — Khối Lượng & Trình Tự Thi Công: Đệm Cát, Đệm Đá Dăm</h1>
+      <p>Dạng A có gợi ý đầy đủ · Dạng C chỉ có đề · Số liệu sinh theo STT</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-prog" id="hdr-prog">0 / 0</div>
+      <div class="sv-badge-hdr" id="sv-badge">SV #–</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="prog-wrap">
+  <div class="prog-top"><span><i class="ti ti-target" style="vertical-align:-2px;margin-right:4px"></i>Tiến độ 9.3 — Khối lượng đệm cát, đệm đá dăm</span><span id="prog-text">0 / 0 (0%)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="sv-infobar">
+  <i class="ti ti-id-badge" style="font-size:20px;opacity:.8"></i>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:700">Bài tính khối lượng — <span id="sv-display">đang tải...</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65)">Kích thước, hệ số và đơn giá sinh theo STT của bạn · cùng STT luôn cùng đề</div>
+  </div>
+  <div id="sv-chip" style="font-family:var(--mono);font-size:22px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:8px">–</div>
+</div>
+
+<div class="earth-box" style="margin-bottom:14px">
+  <b>Mục tiêu:</b> không tính kỹ thuật nền móng, mà tính <b>khối lượng thi công và chi phí</b> của giải pháp gia cố nền. Để làm được, bạn phải hiểu hình dạng hố đào hoặc khối đệm, trình tự các bước và vật liệu của từng giải pháp. Hãy xem kỹ hình vẽ và phần "Đọc trước". <b>Đơn giá trong đề là giả định để luyện tập</b>, không phải giá thị trường. Dạng A có gợi ý công thức và số thay (bạn tự điền kết quả). Dạng C chỉ có đề bài.
+</div>
+
+<div id="sol-wrap"></div>
+
+</main>
+<div style="height:64px"></div>
+<div class="sticky-nav">
+  <span>9.3 · Khối lượng đệm cát, đệm đá dăm</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-prog">0/0</span>
+    <button class="btn btn-sm btn-ghost" id="btn-nop" onclick="submitResult()" style="background:rgba(150,150,150,.35);border-color:rgba(200,200,200,.4)">🔒 Nộp bài <span style="font-size:10px;opacity:.8">(0%/?%)</span></button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   KHỐI 1 — HÀM PHỤ (làm tròn, chọn ngẫu nhiên theo STT)
+================================================================ */
+function $(id){ return document.getElementById(id); }
+function fmt(x){ return String(Math.round(x * 1000) / 1000); }        /* hiển thị số, dấu chấm thập phân */
+function ceilS(x){ return Math.ceil(Math.round(x * 1e6) / 1e6); }    /* làm tròn lên, tránh lỗi số thực */
+function mkRng(seed){ var r = seededRng(seed); r(); r(); r(); return r; } /* bỏ 3 lượt đầu */
+function pick(arr, rng){ return arr[Math.floor(rng() * arr.length)]; }
+function ri(a, b, rng){ return a + Math.floor(rng() * (b - a + 1)); }
+
+/* Thể tích khối có đáy chữ nhật dài x rộng, cao h, mái dốc 1:m ra phía ngoài khi đi ra xa mặt đáy nhỏ.
+   Chia thành: hình hộp + 4 lăng trụ tam giác + 4 chóp góc (công thức chính xác). */
+function volMai(L, B, h, m){
+  return h * L * B + m * h * h * (L + B) + 4 / 3 * m * m * h * h * h;
+}
+
+/* ================================================================
+   KHỐI 2 — ĐỊNH NGHĨA CÁC GIẢI PHÁP
+   Mỗi giải pháp: tiêu đề, phần đọc trước, các bước thi công,
+   hàm gen(rng) sinh tham số, hàm dat(P) bảng số liệu,
+   hàm de(P) lời đề, hàm svg(P) hình mặt cắt, hàm qs(P) các câu hỏi.
+   Câu hỏi có cờ C:true nếu chỉ xuất hiện ở dạng C.
+================================================================ */
+var SOLS = [];
+
+/* ---------- 1. ĐỆM CÁT THAY ĐẤT YẾU ---------- */
+SOLS.push({
+  id: 'cat', ten: 'Giải pháp 1 — Đệm cát thay đất yếu', icon: 'ti-stack-2',
+  doc: [
+    '<b>Cấu tạo:</b> đào bỏ lớp đất yếu nông, thay bằng cát hạt trung hoặc thô, sạch; đầm chặt từng lớp mỏng. Đệm thường rộng hơn móng mỗi bên một đoạn để phân tán tải. Có thể trải vải địa kỹ thuật ở đáy và mái hố đào để ngăn đất yếu trộn lẫn với cát.',
+    '<b>Tác dụng:</b> tăng sức chịu tải và phân bố tải xuống nền; cát còn thoát nước một phần cho đất yếu bên dưới.',
+    '<b>Khi nào dùng:</b> lớp đất yếu mỏng và nằm nông, có sẵn nguồn cát, mặt bằng đủ rộng để đào mái dốc. Nếu mực nước ngầm cao thì phải có biện pháp thoát nước hố đào.',
+    '<b>Điều cần chú ý khi tính khối lượng:</b> hố đào có mái dốc nên thể tích đào <b>lớn hơn</b> thể tích đệm theo kích thước móng; đất đào ra và cát đưa vào đều ở trạng thái <b>rời</b> nên thể tích vận chuyển lớn hơn thể tích nguyên khối hoặc đã đầm.'
+  ],
+  buoc: ['Đào hố', 'Trải vải', 'Đổ cát, đầm từng lớp', 'Kiểm tra độ chặt', 'Thi công móng'],
+  gen: function(r){
+    var P = { a: ri(14, 30, r), b: ri(8, 16, r), c: pick([0.5, 0.75, 1.0], r), h: ri(10, 20, r) / 10,
+      m: pick([0.5, 0.75, 1.0], r), kd: pick([1.15, 1.2, 1.25], r), kn: pick([1.2, 1.25, 1.3], r),
+      q: pick([8, 10, 12], r), N: pick([200, 250, 300, 350], r), n: pick([1, 2], r), hh: 0.05,
+      gd: ri(70, 110, r) * 1000, gc: ri(22, 32, r) * 10000, gm: ri(45, 75, r) * 1000, gv: ri(15, 25, r) * 1000 };
+    P.L = P.a + 2 * P.c; P.B = P.b + 2 * P.c;
+    P.Vd = volMai(P.L, P.B, P.h, P.m);
+    P.sl = P.h * Math.sqrt(1 + P.m * P.m);
+    P.Smai = 2 * P.sl * (P.L + P.m * P.h) + 2 * P.sl * (P.B + P.m * P.h);
+    P.Svai = (P.L * P.B + P.Smai) * (1 + P.hh);
+    P.Vcat = P.Vd * P.kd;
+    P.trips = ceilS(P.Vd * P.kn / P.q);
+    P.cost = (P.Vd * P.gd + P.Vcat * P.gc + P.Vd * P.gm + P.Svai * P.gv) / 1e6;
+    P.days = ceilS(P.Vd / (P.N * P.n));
+    return P;
+  },
+  dat: function(P){ return [
+    ['a × b', 'Kích thước móng (mặt bằng chữ nhật)', fmt(P.a) + ' × ' + fmt(P.b), 'm'],
+    ['c', 'Đệm mở rộng ra ngoài mép móng, mỗi bên', fmt(P.c), 'm'],
+    ['h', 'Chiều dày lớp đất yếu bị thay (hố đào sâu bằng h, đệm lấp đầy đến mặt đất)', fmt(P.h), 'm'],
+    ['1 : m', 'Mái dốc hố đào (m = ' + fmt(P.m) + ')', '1 : ' + fmt(P.m), ''],
+    ['k<sub>đ</sub>', 'Hệ số: 1 m³ đệm đã đầm cần k<sub>đ</sub> m³ cát rời mua về', fmt(P.kd), ''],
+    ['k<sub>n</sub>', 'Hệ số nở rời của đất đào: 1 m³ nguyên khối thành k<sub>n</sub> m³ đất rời', fmt(P.kn), ''],
+    ['q', 'Sức chở của một xe tải (đo thể tích rời)', fmt(P.q), 'm³'],
+    ['Vải', 'Vải địa kỹ thuật trải kín đáy và 4 mái hố đào, cộng ' + fmt(P.hh * 100) + '% chồng mép và hao hụt', '', ''],
+    ['N, n', 'Năng suất mỗi máy đào ' + fmt(P.N) + ' m³/ca (nguyên khối); số máy đào ' + fmt(P.n), '', ''],
+    ['Đơn giá (giả định)', 'Đào và chở đất thải: ' + fmt(P.gd) + ' đ/m³ nguyên khối · Cát mua về: ' + fmt(P.gc) + ' đ/m³ rời · Đổ và đầm cát: ' + fmt(P.gm) + ' đ/m³ đã đầm · Vải: ' + fmt(P.gv) + ' đ/m²', '', '']
+  ]; },
+  de: function(P){ return 'Một công trình có móng dạng chữ nhật <b>' + fmt(P.a) + ' m × ' + fmt(P.b) + ' m</b> được xây trên lớp đất yếu dày <b>' + fmt(P.h) + ' m</b>. Người ta đào bỏ toàn bộ lớp đất yếu này trong một hố có đáy chữ nhật rộng hơn móng mỗi bên <b>' + fmt(P.c) + ' m</b>, mái dốc <b>1 : ' + fmt(P.m) + '</b>. Sau đó trải vải địa kỹ thuật, đổ cát và đầm chặt từng lớp cho đến cao độ mặt đất tự nhiên rồi mới xây móng.'; },
+  svg: function(P){ return svgCat(P); },
+  qs: function(P){ return [
+    { k: 'q1', lb: 'Khối lượng đào (nguyên khối)', un: 'm³', ans: P.Vd,
+      hint: 'Đáy hố: L = a + 2c = ' + fmt(P.a) + ' + 2×' + fmt(P.c) + ' ; B = b + 2c = ' + fmt(P.b) + ' + 2×' + fmt(P.c) + '<br>Hố có mái dốc nên chia thành: hình hộp + 4 lăng trụ tam giác + 4 chóp ở góc. Với mái 1 : m và sâu h:<br>V = h·L·B + m·h²·(L + B) + (4/3)·m²·h³<br>V = ' + fmt(P.h) + '·L·B + ' + fmt(P.m) + '·' + fmt(P.h) + '²·(L + B) + (4/3)·' + fmt(P.m) + '²·' + fmt(P.h) + '³ = <b>___ m³</b>' },
+    { k: 'q2', lb: 'Khối lượng cát mua về (rời)', un: 'm³', ans: P.Vcat,
+      hint: 'Đệm lấp đầy hố đào nên thể tích đệm đã đầm bằng thể tích hố.<br>Cát mua (rời) = V<sub>đệm đã đầm</sub> × k<sub>đ</sub> = V × ' + fmt(P.kd) + ' = <b>___ m³</b>' },
+    { k: 'q3', lb: 'Số chuyến xe chở đất đào đi (làm tròn lên)', un: 'chuyến', ans: P.trips,
+      hint: 'Đất đào ra nở rời: V<sub>rời</sub> = V × k<sub>n</sub> = V × ' + fmt(P.kn) + '<br>Số chuyến = V<sub>rời</sub> / q = V<sub>rời</sub> / ' + fmt(P.q) + ' → làm tròn lên số nguyên = <b>___ chuyến</b>' },
+    { k: 'q4', lb: 'Diện tích vải địa kỹ thuật cần mua', un: 'm²', ans: P.Svai,
+      hint: 'Chiều dài mái nghiêng s = h·√(1 + m²) = ' + fmt(P.h) + '·√(1 + ' + fmt(P.m) + '²)<br>Hai mái dài là hình thang cao s, hai đáy L và L + 2mh nên diện tích mỗi mái = s·(L + m·h); tương tự hai mái ngắn = s·(B + m·h).<br>S<sub>vải</sub> = [L·B + 2s(L + m·h) + 2s(B + m·h)] × (1 + ' + fmt(P.hh) + ') = <b>___ m²</b>' },
+    { k: 'q5', lb: 'Tổng chi phí (đào + cát + đầm + vải)', un: 'triệu đồng', ans: P.cost, tol: 0.05,
+      hint: 'Tổng = V·đơn giá đào + V<sub>cát rời</sub>·đơn giá cát + V·đơn giá đầm + S<sub>vải</sub>·đơn giá vải<br>Chia cho 1 000 000 để ra triệu đồng = <b>___ triệu đồng</b>' },
+    { k: 'q6', lb: 'Số ca máy đào (làm tròn lên)', un: 'ca', ans: P.days, C: true,
+      hint: '' }
+  ]; }
+});
+
+/* ---------- 2. ĐỆM ĐÁ DĂM ĐẮP TRÊN MẶT NỀN ---------- */
+SOLS.push({
+  id: 'da', ten: 'Giải pháp 2 — Đệm đá dăm trên mặt nền', icon: 'ti-stack-3',
+  doc: [
+    '<b>Cấu tạo:</b> đệm đắp bằng đá dăm cấp phối, trải trên mặt nền đã san phẳng, thường có vải địa kỹ thuật ở đáy để ngăn đất yếu lẫn vào đá. Mặt đệm rộng hơn móng mỗi bên một đoạn, hai bên có mái dốc. Đá dăm được đổ và lu lèn <b>từng lớp</b>.',
+    '<b>Tác dụng:</b> tạo lớp đệm cứng, phân bố tải xuống nền yếu và làm mặt bằng thi công cho máy móc.',
+    '<b>Khác đệm cát:</b> đệm này đắp cao hơn mặt nền, không phải đào; vật liệu là đá dăm (rời, cần lu lèn bằng máy lu); chiều dày mỗi lớp lu phụ thuộc thiết bị.',
+    '<b>Điều cần chú ý khi tính khối lượng:</b> khối đệm có mặt trên nhỏ hơn mặt dưới do mái dốc; số lớp lu lèn bằng chiều dày đệm chia chiều dày một lớp (làm tròn lên); đá dăm mua về là thể tích rời nên lớn hơn thể tích đã lu lèn.'
+  ],
+  buoc: ['San phẳng nền', 'Trải vải', 'Đổ đá dăm lớp 1', 'Lu lèn từng lớp', 'Hoàn thiện, xây móng'],
+  gen: function(r){
+    var P = { a: ri(14, 30, r), b: ri(8, 16, r), c: pick([0.75, 1.0, 1.25], r), h: ri(6, 12, r) / 10,
+      m: pick([1.0, 1.5], r), t: pick([0.2, 0.25, 0.3], r), kd: pick([1.2, 1.25, 1.3], r),
+      q: pick([8, 10, 12], r), P: pick([120, 150, 180, 200], r), hv: 0.10,
+      gd: ri(30, 42, r) * 10000, gl: ri(35, 55, r) * 1000, gv: ri(15, 25, r) * 1000 };
+    P.Lt = P.a + 2 * P.c; P.Bt = P.b + 2 * P.c;
+    P.V = volMai(P.Lt, P.Bt, P.h, P.m);
+    P.layers = ceilS(P.h / P.t);
+    P.mua = P.V * P.kd;
+    P.trips = ceilS(P.mua / P.q);
+    P.Sday = (P.Lt + 2 * P.m * P.h) * (P.Bt + 2 * P.m * P.h);
+    P.Svai = P.Sday * (1 + P.hv);
+    P.cost = (P.mua * P.gd + P.V * P.gl + P.Svai * P.gv) / 1e6;
+    P.ca = ceilS(P.V / P.P);
+    return P;
+  },
+  dat: function(P){ return [
+    ['a × b', 'Kích thước móng (mặt bằng chữ nhật)', fmt(P.a) + ' × ' + fmt(P.b), 'm'],
+    ['c', 'Mặt trên đệm rộng hơn mép móng, mỗi bên', fmt(P.c), 'm'],
+    ['h', 'Chiều dày đệm đá dăm (đắp trên mặt nền đã san phẳng)', fmt(P.h), 'm'],
+    ['1 : m', 'Mái dốc của đệm (m = ' + fmt(P.m) + ')', '1 : ' + fmt(P.m), ''],
+    ['t', 'Chiều dày mỗi lớp lu lèn', fmt(P.t), 'm'],
+    ['k<sub>đ</sub>', 'Hệ số: 1 m³ đệm đã lu lèn cần k<sub>đ</sub> m³ đá dăm rời mua về', fmt(P.kd), ''],
+    ['q', 'Sức chở của một xe tải (đo thể tích rời)', fmt(P.q), 'm³'],
+    ['Vải', 'Vải địa kỹ thuật trải dưới đáy đệm, cộng ' + fmt(P.hv * 100) + '% chồng mép và neo', '', ''],
+    ['P', 'Năng suất lu lèn của một ca máy lu: ' + fmt(P.P) + ' m³ đệm đã lu lèn/ca', '', ''],
+    ['Đơn giá (giả định)', 'Đá dăm mua về: ' + fmt(P.gd) + ' đ/m³ rời · Thi công lu lèn: ' + fmt(P.gl) + ' đ/m³ đã lu lèn · Vải: ' + fmt(P.gv) + ' đ/m²', '', '']
+  ]; },
+  de: function(P){ return 'Một công trình có móng chữ nhật <b>' + fmt(P.a) + ' m × ' + fmt(P.b) + ' m</b> đặt trên một đệm đá dăm dày <b>' + fmt(P.h) + ' m</b> đắp trên mặt nền đã san phẳng. Mặt trên của đệm rộng hơn mép móng mỗi bên <b>' + fmt(P.c) + ' m</b>, hai bên có mái dốc <b>1 : ' + fmt(P.m) + '</b> (xòe ra phía dưới). Dưới đáy đệm trải vải địa kỹ thuật; đá dăm được đổ và lu lèn từng lớp.'; },
+  svg: function(P){ return svgDa(P); },
+  qs: function(P){ return [
+    { k: 'q1', lb: 'Thể tích đệm đã lu lèn', un: 'm³', ans: P.V,
+      hint: 'Mặt trên: L<sub>t</sub> = a + 2c = ' + fmt(P.a) + ' + 2×' + fmt(P.c) + ' ; B<sub>t</sub> = b + 2c = ' + fmt(P.b) + ' + 2×' + fmt(P.c) + '<br>Đệm là khối có mặt trên L<sub>t</sub> × B<sub>t</sub> và mái 1 : m xòe ra phía dưới: hình hộp + 4 lăng trụ tam giác + 4 chóp góc:<br>V = h·L<sub>t</sub>·B<sub>t</sub> + m·h²·(L<sub>t</sub> + B<sub>t</sub>) + (4/3)·m²·h³ = <b>___ m³</b> (h = ' + fmt(P.h) + ', m = ' + fmt(P.m) + ')' },
+    { k: 'q2', lb: 'Số lớp lu lèn (làm tròn lên)', un: 'lớp', ans: P.layers,
+      hint: 'Số lớp = h / t = ' + fmt(P.h) + ' / ' + fmt(P.t) + ' → làm tròn lên số nguyên = <b>___ lớp</b>' },
+    { k: 'q3', lb: 'Khối lượng đá dăm mua về (rời)', un: 'm³', ans: P.mua,
+      hint: 'Đá dăm mua (rời) = V × k<sub>đ</sub> = V × ' + fmt(P.kd) + ' = <b>___ m³</b>' },
+    { k: 'q4', lb: 'Số chuyến xe chở đá dăm (làm tròn lên)', un: 'chuyến', ans: P.trips,
+      hint: 'Số chuyến = đá dăm rời / q = đá dăm rời / ' + fmt(P.q) + ' → làm tròn lên số nguyên = <b>___ chuyến</b>' },
+    { k: 'q5', lb: 'Diện tích vải địa kỹ thuật', un: 'm²', ans: P.Svai,
+      hint: 'Đáy đệm có kích thước mỗi cạnh lớn hơn mặt trên thêm 2·m·h:<br>L<sub>đ</sub> = L<sub>t</sub> + 2·m·h ; B<sub>đ</sub> = B<sub>t</sub> + 2·m·h<br>S<sub>vải</sub> = L<sub>đ</sub>·B<sub>đ</sub> × (1 + ' + fmt(P.hv) + ') = <b>___ m²</b>' },
+    { k: 'q6', lb: 'Tổng chi phí (đá dăm + lu lèn + vải)', un: 'triệu đồng', ans: P.cost, tol: 0.05,
+      hint: 'Tổng = đá dăm rời·đơn giá đá + V·đơn giá lu lèn + S<sub>vải</sub>·đơn giá vải, chia 1 000 000 = <b>___ triệu đồng</b>' },
+    { k: 'q7', lb: 'Số ca máy lu (làm tròn lên)', un: 'ca', ans: P.ca, C: true, hint: '' }
+  ]; }
+});
+
+/* ================================================================
+   KHỐI 3 — HÌNH MẶT CẮT THEO SỐ LIỆU CỦA TỪNG SINH VIÊN
+   (chiều đứng phóng đại để nhìn rõ, ghi chú trên hình)
+================================================================ */
+function svgHead(){ return '<svg viewBox="0 0 640 270" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="640" height="270" fill="#fff"/>'; }
+function txt(x, y, s, anchor, fill, size){ return '<text x="' + x + '" y="' + y + '" font-family="Plus Jakarta Sans, sans-serif" font-size="' + (size || 12) + '" fill="' + (fill || '#0D1B2A') + '" text-anchor="' + (anchor || 'middle') + '">' + s + '</text>'; }
+
+function svgCat(P){
+  var cx = 320, y0 = 90, Lt = P.L + 2 * P.m * P.h, s = Math.min(430 / Lt, 26), hp = Math.min(P.h * s * 3, 100);
+  var ht = Lt / 2 * s, hb = P.L / 2 * s, ya = y0 + hp, ma = P.a / 2 * s;
+  var o = svgHead();
+  o += '<rect x="20" y="' + y0 + '" width="600" height="' + hp + '" fill="#a9b8c4" stroke="#5c6e7c"/>';
+  o += '<rect x="20" y="' + ya + '" width="600" height="60" fill="#c8b79a" stroke="#6b5b45"/>';
+  o += '<polygon points="' + (cx - ht) + ',' + y0 + ' ' + (cx + ht) + ',' + y0 + ' ' + (cx + hb) + ',' + ya + ' ' + (cx - hb) + ',' + ya + '" fill="#e8d08a" stroke="#9a8440"/>';
+  o += '<polyline points="' + (cx - ht) + ',' + y0 + ' ' + (cx - hb) + ',' + ya + ' ' + (cx + hb) + ',' + ya + ' ' + (cx + ht) + ',' + y0 + '" fill="none" stroke="#2e7d32" stroke-width="3" stroke-dasharray="8 4"/>';
+  o += '<rect x="' + (cx - ma) + '" y="' + (y0 - 24) + '" width="' + (2 * ma) + '" height="24" fill="#9e9e9e" stroke="#555"/>';
+  o += '<line x1="' + (cx - ma) + '" y1="' + (y0 - 40) + '" x2="' + (cx + ma) + '" y2="' + (y0 - 40) + '" stroke="#0D47A1" stroke-width="1.5"/>' + txt(cx, y0 - 46, 'a = ' + fmt(P.a) + ' m (móng)', 'middle', '#0D47A1');
+  o += '<line x1="' + (cx + ht + 16) + '" y1="' + y0 + '" x2="' + (cx + ht + 16) + '" y2="' + ya + '" stroke="#0D47A1" stroke-width="1.5"/>' + txt(cx + ht + 22, (y0 + ya) / 2 + 4, 'h = ' + fmt(P.h) + ' m', 'start', '#0D47A1');
+  o += txt(cx - hb + 2, ya + 18, 'c = ' + fmt(P.c) + ' m mỗi bên', 'start', '#0D47A1');
+  o += txt(cx - ht - 4, y0 + hp / 2, 'mái 1 : ' + fmt(P.m), 'end', '#0D47A1');
+  o += txt(30, ya + 34, 'đất tốt', 'start', '#37474f', 11);
+  o += txt(cx, ya - 8, 'đệm cát', 'middle', '#6b5b1a', 11);
+  o += txt(320, 262, 'Mặt cắt giản lược · chiều đứng phóng đại · hố đào thay hết lớp đất yếu · vải địa kỹ thuật (nét đứt xanh) phủ đáy và mái hố', 'middle', '#546E7A', 11);
+  return o + '</svg>';
+}
+
+function svgDa(P){
+  var cx = 320, y0 = 190, Lb = P.Lt + 2 * P.m * P.h, s = Math.min(430 / Lb, 26), hp = Math.min(P.h * s * 3, 100);
+  var ht = P.Lt / 2 * s, hb = Lb / 2 * s, yt = y0 - hp, ma = P.a / 2 * s;
+  var o = svgHead();
+  o += '<rect x="20" y="' + y0 + '" width="600" height="60" fill="#a9b8c4" stroke="#5c6e7c"/>';
+  o += '<polygon points="' + (cx - hb) + ',' + y0 + ' ' + (cx - ht) + ',' + yt + ' ' + (cx + ht) + ',' + yt + ' ' + (cx + hb) + ',' + y0 + '" fill="#b7bcc2" stroke="#6b7076"/>';
+  o += '<line x1="' + (cx - hb - 10) + '" y1="' + y0 + '" x2="' + (cx + hb + 10) + '" y2="' + y0 + '" stroke="#2e7d32" stroke-width="3" stroke-dasharray="8 4"/>';
+  o += '<rect x="' + (cx - ma) + '" y="' + (yt - 24) + '" width="' + (2 * ma) + '" height="24" fill="#9e9e9e" stroke="#555"/>';
+  o += '<line x1="' + (cx - ma) + '" y1="' + (yt - 40) + '" x2="' + (cx + ma) + '" y2="' + (yt - 40) + '" stroke="#0D47A1" stroke-width="1.5"/>' + txt(cx, yt - 46, 'a = ' + fmt(P.a) + ' m (móng)', 'middle', '#0D47A1');
+  o += '<line x1="' + (cx + hb + 16) + '" y1="' + yt + '" x2="' + (cx + hb + 16) + '" y2="' + y0 + '" stroke="#0D47A1" stroke-width="1.5"/>' + txt(cx + hb + 22, (yt + y0) / 2 + 4, 'h = ' + fmt(P.h) + ' m', 'start', '#0D47A1');
+  o += txt(cx - ht, yt + 16, 'c = ' + fmt(P.c) + ' m', 'end', '#0D47A1') + txt(cx - hb - 4, (yt + y0) / 2 + 4, 'mái 1 : ' + fmt(P.m), 'end', '#0D47A1');
+  o += txt(cx, y0 - hp / 2 + 4, 'đệm đá dăm (lu lèn từng lớp ' + fmt(P.t) + ' m)', 'middle', '#37474f', 11);
+  o += txt(60, y0 + 34, 'nền đất yếu đã san phẳng', 'start', '#37474f', 11);
+  o += txt(320, 262, 'Mặt cắt giản lược · chiều đứng phóng đại · vải địa kỹ thuật (nét đứt xanh) trải dưới đáy đệm', 'middle', '#546E7A', 11);
+  return o + '</svg>';
+}
+
+/* Hình nhỏ minh họa từng bước thi công (120 x 80) */
+function sketch(sid, i){
+  var o = '<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="80" fill="#fff"/>';
+  var good = '<rect x="0" y="58" width="120" height="22" fill="#c8b79a"/>';
+  if (sid === 'cat') {
+    var soft = '<rect x="0" y="30" width="120" height="28" fill="#a9b8c4"/>';
+    var hole = '<polygon points="22,30 98,30 84,58 36,58" ';
+    o += good;
+    if (i === 0) o += soft + hole + 'fill="#fff" stroke="#5c6e7c"/>';
+    else {
+      o += soft + hole + 'fill="' + (i === 1 ? '#fff' : '#e8d08a') + '" stroke="#9a8440"/>';
+      o += '<polyline points="22,30 36,58 84,58 98,30" fill="none" stroke="#2e7d32" stroke-width="2.5" stroke-dasharray="5 3"/>';
+      if (i >= 2) o += '<line x1="40" y1="52" x2="80" y2="52" stroke="#9a8440"/><line x1="36" y1="46" x2="84" y2="46" stroke="#9a8440"/><line x1="30" y1="38" x2="90" y2="38" stroke="#9a8440"/>';
+      if (i === 3) o += '<line x1="60" y1="20" x2="60" y2="44" stroke="#c62828" stroke-width="2"/><polygon points="56,20 64,20 60,14" fill="#c62828"/>';
+      if (i === 4) o += '<rect x="30" y="14" width="60" height="16" fill="#9e9e9e" stroke="#555"/>';
+    }
+  } else {
+    o += '<rect x="0" y="50" width="120" height="30" fill="#a9b8c4"/>';
+    if (i >= 1) o += '<line x1="6" y1="50" x2="114" y2="50" stroke="#2e7d32" stroke-width="2.5" stroke-dasharray="5 3"/>';
+    if (i === 2) o += '<polygon points="16,50 28,40 92,40 104,50" fill="#b7bcc2" stroke="#6b7076"/>';
+    if (i >= 3) o += '<polygon points="16,50 38,22 82,22 104,50" fill="#b7bcc2" stroke="#6b7076"/><line x1="26" y1="40" x2="94" y2="40" stroke="#6b7076"/><line x1="32" y1="31" x2="88" y2="31" stroke="#6b7076"/>';
+    if (i === 3) o += '<rect x="44" y="10" width="28" height="10" fill="#F9A825" stroke="#795548"/><circle cx="50" cy="22" r="4" fill="#555"/><circle cx="68" cy="22" r="4" fill="#555"/>';
+    if (i === 4) o += '<rect x="38" y="10" width="44" height="12" fill="#9e9e9e" stroke="#555"/>';
+  }
+  return o + '</svg>';
+}
+
+/* ================================================================
+   KHỐI 4 — DỰNG TRANG
+================================================================ */
+function datTable(rows){
+  var h = '<table class="dat-tbl"><tr><th>Ký hiệu</th><th>Ý nghĩa</th><th>Giá trị</th><th>Đơn vị</th></tr>';
+  rows.forEach(function(r){ h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td class="v">' + r[2] + '</td><td>' + r[3] + '</td></tr>'; });
+  return h + '</table>';
+}
+
+function blockHTML(S, dang, P){
+  var withHint = (dang === 'A');
+  var h = '<div class="sub-hd"><span class="tag' + (withHint ? '' : ' c') + '">Dạng ' + dang + '</span>' + (withHint ? 'Có gợi ý đầy đủ' : 'Chỉ có đề bài') + '</div>';
+  h += '<div class="earth-box">' + S.de(P) + '</div><div class="svg-box">' + S.svg(P) + '</div>' + datTable(S.dat(P));
+  S.qs(P).forEach(function(q){
+    if (q.C && withHint) return;
+    var id = S.id + '-' + dang + '-' + q.k;
+    h += '<div class="q-blk">';
+    if (withHint && q.hint) h += '<div class="fml-box hint"><div class="fml-title">Gợi ý — ' + q.lb + '</div><div>' + q.hint + '</div></div>';
+    h += makeQ(id, q.lb, q.ans, q.tol || 0.5, q.un) + '</div>';
+  });
+  return h;
+}
+
+function build(stt){
+  var h = '';
+  SOLS.forEach(function(S, si){
+    var seq = '<div class="seq">';
+    S.buoc.forEach(function(b, i){
+      seq += '<div class="seq-card">' + sketch(S.id, i) + '<div class="sq-t"><span class="sq-n">' + (i + 1) + '</span>' + b + '</div></div>';
+    });
+    seq += '</div>';
+    var know = '<div class="step"><div class="step-hd" onclick="togS(this)"><i class="ti ti-book"></i> Đọc trước: cấu tạo, tác dụng, điều cần chú ý <i class="ti ti-chevron-down chev" style="margin-left:auto"></i></div><div class="step-body"><ul class="know">';
+    S.doc.forEach(function(d){ know += '<li>' + d + '</li>'; });
+    know += '</ul></div></div>';
+    var PA = S.gen(mkRng(stt * 71 + 1000 + si * 97)), PC = S.gen(mkRng(stt * 71 + 5000 + si * 97));
+    h += '<div class="card"><div class="card-hd"><i class="ti ' + S.icon + '"></i><div><h2>' + S.ten + '</h2><p>Trình tự thi công và khối lượng</p></div><span class="cbadge">A + C</span></div><div class="card-body">'
+      + know + '<div class="sub-hd">Trình tự thi công</div>' + seq
+      + blockHTML(S, 'A', PA) + blockHTML(S, 'C', PC) + '</div></div>';
+  });
+  $('sol-wrap').innerHTML = h;
+}
+
+/* ================================================================
+   KHỐI 5 — NỘP BÀI LÊN CLOUDFLARE WORKER
+================================================================ */
+function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){toast('⚠️ Không tìm thấy thông tin SV. Về trang chủ đăng nhập lại.');return;}
+  if(_submitted){toast('ℹ️ Bài đã được nộp rồi.');return;}
+  var lsKey='submitted_'+(window.CHAPTER_ID||'C9-93-KhoiLuongDem')+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){toast('ℹ️ Bạn đã nộp bài này rồi, kết quả đã được ghi nhận.',4000);return;}}catch(e){}
+  var total=TOTAL_QUESTIONS||Object.keys(ANS).length;
+  var attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0;
+  var scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){toast('⚠️ Chưa làm câu nào!');return;}
+  var workerUrl=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!workerUrl){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
+  if(attemPct<minPct){
+    toast('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp! Đã làm: '+attemPct+'% ('+attempted+'/'+total+')',4000);
+    return;
+  }
+  toast('📤 Đang gửi kết quả...',8000);
+  var btnSend=document.getElementById('btn-nop');
+  if(btnSend){btnSend.disabled=true;}
+  fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,
+      chapterId:'C9-93-KhoiLuongDem',score:scorePct,correct:done,total:total,duration:0})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      toast('✅ Nộp thành công! Đã làm: '+attemPct+'% · Đúng: '+scorePct+'% ('+done+'/'+total+')',5000);
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.innerHTML='✓ Đã nộp ('+scorePct+'%)';btn.disabled=true;btn.style.background='rgba(46,125,50,.5)';}
+    } else {
+      if(btnSend){btnSend.disabled=false;}
+      toast('❌ Lỗi: '+(d.error||'Không rõ'),5000);
+    }
+  })
+  .catch(function(err){
+    if(btnSend){btnSend.disabled=false;}
+    toast('❌ Không kết nối được Worker: '+err.message,5000);
+  });
+}
+
+/* Khóa nút nộp nếu sinh viên đã nộp bài này (đọc localStorage khi tải trang) */
+function checkSubmittedOnLoad(){
+  try{
+    var sv=getSV();
+    if(!sv||!sv.mssv)return;
+    var lsKey='submitted_'+(window.CHAPTER_ID||'C9-93-KhoiLuongDem')+'_'+sv.mssv;
+    if(localStorage.getItem(lsKey)){
+      _submitted=true;
+      var btn=document.getElementById('btn-nop');
+      if(btn){btn.disabled=true;btn.innerHTML='✓ Đã nộp';btn.style.background='rgba(46,125,50,.5)';}
+    }
+  }catch(e){}
+}
+
+/* ================================================================
+   KHỐI 6 — KHỞI TẠO TRANG
+================================================================ */
+window.CHAPTER_ID = 'C9-93-KhoiLuongDem';
+window.onload = function() {
+  var info = initChapterPage('c9');
+  if (!info.isOpen) return;
+  build(info.stt);
+  TOTAL_QUESTIONS = Object.keys(ANS).length;
+  updateProg();
+  checkSubmittedOnLoad();
+};
+</script>
+</body>
+</html>
