@@ -336,7 +336,7 @@ function pickMCQ(name,picked,correct,expText){
 }
 function updateProg(){
   var total=0,done=0;
-  Object.keys(ANS).forEach(function(k){total++;if(ANS[k]===true)done++;});
+  var attempted=0;Object.keys(ANS).forEach(function(k){total++;if(ANS[k]===true)done++;if(ANS[k]!==null&&ANS[k]!==undefined)attempted++;});
   var pct=total?Math.round(done/total*100):0;
   document.getElementById('prog-fill').style.width=pct+'%';
   document.getElementById('prog-text').textContent=done+' / '+total+' ('+pct+'%)';
@@ -345,7 +345,7 @@ function updateProg(){
   try{localStorage.setItem('prog_c4_43',JSON.stringify({done:done,total:total}));}catch(e){}
   var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
   var btn=document.getElementById('btn-nop');
-  if(btn&&!_submitted)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">('+pct+'%/'+minPct+'%)</span>';
+  if(btn&&!_submitted)btn.innerHTML='🔒 Nộp bài <span style="font-size:10px;opacity:.8">('+(total?Math.round(attempted/total*100):0)+'%/'+minPct+'%)</span>';
 }
 function makeQ(id,label,ans,tol,unit){
   ANS[id]=null;
@@ -354,18 +354,42 @@ function makeQ(id,label,ans,tol,unit){
     '<span class="ans-unit">'+unit+'</span><span class="chip" id="ck-'+id+'"></span></div>';
 }
 function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
   if(_submitted){alert('Bài đã nộp rồi!');return;}
-  var total=Object.keys(ANS).length,done=0;
-  Object.keys(ANS).forEach(function(k){if(ANS[k]===true)done++;});
-  var pct=total?Math.round(done/total*100):0;
+  var CID='C4-43-CoKet';
+  var lsKey='submitted_'+CID+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){alert('ℹ️ Bạn đã nộp bài "'+CID+'" rồi!\nKết quả đã được ghi nhận.');return;}}catch(e){}
+  var total=(typeof TOTAL_QUESTIONS!=='undefined'&&TOTAL_QUESTIONS)||Object.keys(ANS).length,attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0,scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
   var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
-  if(pct<minPct){alert('Cần đạt ít nhất '+minPct+'% trước khi nộp.');return;}
-  var sv=getSV(),url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
-  if(!url){alert('Chưa có Worker URL.');return;}
-  var payload={name:sv?sv.name:'?',mssv:sv?sv.mssv:'?',stt:sv?sv.stt:0,lop:sv?sv.lop:'?',chapter:'4.3',score:pct,time:Math.round((Date.now()-(window._startTime||Date.now()))/1000)};
-  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-    .then(function(){_submitted=true;document.getElementById('btn-nop').textContent='✅ Đã nộp ('+pct+'%)';document.getElementById('btn-nop').style.background='#2E7D32';})
-    .catch(function(){alert('Lỗi kết nối. Vui lòng thử lại.');});
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp!\nHiện tại: '+attemPct+'%');return;}
+  var url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!url){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var btn=document.getElementById('btn-nop');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Đang nộp...';}
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,chapterId:CID,
+    score:scorePct,correct:done,total:total,
+    duration:Math.round((Date.now()-(window._startTime||Date.now()))/1000)})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      if(btn){btn.textContent='✅ Đã nộp ('+scorePct+'%)';btn.style.background='#2E7D32';}
+      alert('✅ Nộp thành công!\nĐúng: '+scorePct+'% ('+done+'/'+total+' câu)');
+    }else{
+      if(btn){btn.disabled=false;updateProg();}
+      alert('❌ Lỗi từ server: '+(d.error||'Không rõ nguyên nhân'));
+    }
+  })
+  .catch(function(err){
+    if(btn){btn.disabled=false;updateProg();}
+    alert('❌ Không kết nối được Worker.\nKiểm tra mạng Internet và thử lại.\n('+err.message+')');
+  });
 }
 
 /* ================================================================

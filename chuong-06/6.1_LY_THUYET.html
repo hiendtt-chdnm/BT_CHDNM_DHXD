@@ -658,18 +658,42 @@ function updateProg(){
    MIN_ATTEMPT_PCT : % tối thiểu phải làm trước khi nộp (từ config.js)
    ================================================================ */
 function submitResult(){
+  var sv=getSV();
+  if(!sv||!sv.name){alert('⚠️ Chưa đăng nhập. Về trang chủ nhập thông tin trước!');return;}
   if(_submitted){alert('Bài đã nộp rồi!');return;}
-  var total=0,done=0;
-  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){total++;if(ANS[k]===true)done++;}});
-  var pct=total?Math.round(done/total*100):0;
+  var CID='C6-61-LyThuyet';
+  var lsKey='submitted_'+CID+'_'+(sv.mssv||'');
+  try{if(localStorage.getItem(lsKey)){alert('ℹ️ Bạn đã nộp bài "'+CID+'" rồi!\nKết quả đã được ghi nhận.');return;}}catch(e){}
+  var total=(typeof TOTAL_QUESTIONS!=='undefined'&&TOTAL_QUESTIONS)||Object.keys(ANS).length,attempted=0,done=0;
+  Object.keys(ANS).forEach(function(k){if(ANS[k]!==null&&ANS[k]!==undefined){attempted++;if(ANS[k]===true)done++;}});
+  var attemPct=total?Math.round(attempted/total*100):0,scorePct=total?Math.round(done/total*100):0;
+  if(attempted===0){alert('⚠️ Chưa làm câu nào!');return;}
   var minPct=(typeof window.MIN_ATTEMPT_PCT!=='undefined')?window.MIN_ATTEMPT_PCT:5;
-  if(pct<minPct){alert('Cần trả lời ít nhất '+minPct+'% câu hỏi trước khi nộp ('+Math.ceil(total*minPct/100)+' câu).');return;}
-  var sv=getSV(),url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
-  if(!url){alert('Chưa có Worker URL. Liên hệ GV.');return;}
-  var payload={name:sv?sv.name:'?',mssv:sv?sv.mssv:'?',stt:sv?sv.stt:0,lop:sv?sv.lop:'?',chapter:'6.1',score:pct,time:Math.round((Date.now()-(window._startTime||Date.now()))/1000)};
-  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-    .then(function(){_submitted=true;var btn=document.getElementById('btn-nop');btn.textContent='✅ Đã nộp ('+pct+'%)';btn.style.background='#2E7D32';})
-    .catch(function(){alert('Lỗi kết nối. Vui lòng thử lại.');});
+  if(attemPct<minPct){alert('⚠️ Cần làm tối thiểu '+minPct+'% số câu mới được nộp!\nHiện tại: '+attemPct+'%');return;}
+  var url=(typeof window.WORKER_URL!=='undefined')?window.WORKER_URL:'';
+  if(!url){alert('⚠️ Chưa cấu hình Worker URL. Liên hệ giảng viên!');return;}
+  var btn=document.getElementById('btn-nop');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Đang nộp...';}
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    name:sv.name,mssv:sv.mssv,stt:Number(sv.stt)||0,classId:sv.classId,chapterId:CID,
+    score:scorePct,correct:done,total:total,
+    duration:Math.round((Date.now()-(window._startTime||Date.now()))/1000)})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){
+      _submitted=true;
+      try{localStorage.setItem(lsKey,Date.now());}catch(e){}
+      if(btn){btn.textContent='✅ Đã nộp ('+scorePct+'%)';btn.style.background='#2E7D32';}
+      alert('✅ Nộp thành công!\nĐúng: '+scorePct+'% ('+done+'/'+total+' câu)');
+    }else{
+      if(btn){btn.disabled=false;updateProg();}
+      alert('❌ Lỗi từ server: '+(d.error||'Không rõ nguyên nhân'));
+    }
+  })
+  .catch(function(err){
+    if(btn){btn.disabled=false;updateProg();}
+    alert('❌ Không kết nối được Worker.\nKiểm tra mạng Internet và thử lại.\n('+err.message+')');
+  });
 }
 /* ================================================================
    Khởi tạo trang (window.onload)
